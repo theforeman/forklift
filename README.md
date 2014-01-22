@@ -21,7 +21,8 @@ This will create a libvirt based virtual machine running the Katello server on C
 
 ## Direct Deployment
 
-This repository can also be used to setup and deploy directly on to a VM you have already spun up.
+This repository can also be used to setup and deploy directly on to a VM you have already spun up. From 
+the VM itself:
 
 1. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
 2. Enter the repository - `cd katello-deploy`
