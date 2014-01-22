@@ -1,8 +1,9 @@
 # Katello Deployment
 
-This repository provides methods to easily test and deploy a Katello server.
+This repository provides methods to easily test and deploy a Katello server. 
+Currently Katello is only supported on EL6 and available in the Katello nightly repositories.
 
-## Nightly
+## Vagrant Deployment
 
 Currently Katello is only supported on EL6 and available in the Katello nightly repositories. Provided
 is a Vagrant setup that will setup and install Katello on a CentOS box. Any base CentOS box and Vagrant 
@@ -17,3 +18,11 @@ for setup with libvirt.
 6. Start the installation - `vagrant up`
 
 This will create a libvirt based virtual machine running the Katello server on CentOS.
+
+## Direct Deployment
+
+This repository can also be used to setup and deploy directly on to a VM you have already spun up.
+
+1. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
+2. Enter the repository - `cd katello-deploy`
+3. Run the bootstrap script `./bootstrap-centos.sh`
