@@ -19,11 +19,42 @@ for setup with libvirt.
 
 This will create a libvirt based virtual machine running the Katello server on CentOS.
 
-## Direct Deployment
+## Direct Deployment CentOS
 
 This repository can also be used to setup and deploy directly on to a VM you have already spun up. From 
 the VM itself:
 
-1. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
-2. Enter the repository - `cd katello-deploy`
-3. Run the bootstrap script `./bootstrap-centos.sh`
+1. ssh to target machine
+2. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
+3. Enter the repository - `cd katello-deploy`
+4. Run the bootstrap script `./bootstrap-centos.sh`
+
+
+## Direct Deployment RHEL 6.X
+
+You can also deploy to an already running RHEL system.  Note you have to specify a Red Hat Portal username and password as well as a 'poolid' to subscribe your system to.
+
+This poolid should grant you access to Red Hat Enterprise Linux and is found via the 'subscription-manager list --available' command, similar to:
+
+```
+# subscription-manager list --available
++-------------------------------------------+
+    Available Subscriptions
++-------------------------------------------+
+..
+Subscription Name: Red Hat Enterprise Linux Server, Self-support (8 sockets) (Up to 1 guest)
+SKU:               RH00000
+Pool ID:           893e2a37b6a64622bf78f7836eea031a
+Quantity:          75
+Service Level:     SELF-SUPPORT
+Service Type:      L1-L3
+Multi-Entitlement: No
+Ends:              03/05/2014
+System Type:       Physical
+```
+
+1. ssh to target machine
+2. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
+3. Enter the repository - `cd katello-deploy`
+4. Run the bootstrap script `./bootstrap-rhel.sh <RH Portal Username> <RH Portal Password> <poolid>`
+
