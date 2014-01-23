@@ -1,3 +1,4 @@
+setenforce 0
 
 pushd /etc/yum.repos.d/
 if [ ! -e "scl.repo" ]

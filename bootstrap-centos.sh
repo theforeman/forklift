@@ -1,3 +1,3 @@
-setenforce 0
+#!/bin/bash
 
 ./_repos_install.sh
