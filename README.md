@@ -44,7 +44,7 @@ This poolid should grant you access to Red Hat Enterprise Linux and is found via
 ..
 Subscription Name: Red Hat Enterprise Linux Server, Self-support (8 sockets) (Up to 1 guest)
 SKU:               RH00000
-Pool ID:           893e2a37b6a64622bf78f7836eea031a
+Pool ID:           <YOUR POOLID HERE>
 Quantity:          75
 Service Level:     SELF-SUPPORT
 Service Type:      L1-L3
