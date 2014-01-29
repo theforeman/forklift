@@ -13,4 +13,3 @@ yum -y --disablerepo=* --enablerepo=SCL,epel,foreman,foreman-plugins,katello,kat
 
 katello-installer -v -d
 
-ip addr show eth0|grep 'inet '
