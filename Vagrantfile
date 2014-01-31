@@ -8,6 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     centos.vm.provision :shell do |shell|
       shell.path = 'bootstrap-centos.sh'
+      shell.args = "'/vagrant'"
     end
   end
 

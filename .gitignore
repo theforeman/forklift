@@ -2,3 +2,5 @@
 .swo
 .swp
 .swn
+katello-installer
+puppet-*
