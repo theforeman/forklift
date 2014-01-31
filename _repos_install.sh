@@ -9,7 +9,7 @@ popd
 yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/RHEL/6Server/x86_64/katello-repos-latest.rpm 2> /dev/null
 yum -y localinstall http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm > /dev/null
 yum -y localinstall http://yum.theforeman.org/nightly/el6/x86_64/foreman-release.rpm 2> /dev/null
-yum -y --disablerepo=* --enablerepo=SCL,epel,foreman,foreman-plugins,katello,katello-candlepin,katello-pulp,rhel-6-server-optional-rpms,rhel-6-server-rpms install katello
+yum -y install katello
 
 katello-installer -v -d
 
