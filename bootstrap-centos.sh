@@ -1,4 +1,4 @@
-setenforce 0
+#!/bin/bash
 
 if [ $1 ]
 then

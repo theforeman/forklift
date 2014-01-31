@@ -1,3 +1,4 @@
+#!/bin/bash
 
 usage(){
   echo "Usage: <RH Portal Username> <RH Portal Password> <poolid>"
