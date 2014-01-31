@@ -19,4 +19,3 @@ else
   katello-installer -v -d
 fi
 
-ip addr show eth0|grep 'inet '
