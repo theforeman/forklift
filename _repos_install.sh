@@ -1,12 +1,9 @@
 setenforce 0
 
-pushd /etc/yum.repos.d/
-if [ ! -e "scl.repo" ]
+if [ ! -e "/etc/yum.repos.d/scl.repo" ]
 then
-  yum -y install wget
-  wget http://dev.centos.org/centos/6/SCL/scl.repo
+  cp ./scl.repo /etc/yum.repos.d/
 fi
-popd
 
 yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/RHEL/6Server/x86_64/katello-repos-latest.rpm 2> /dev/null
 yum -y localinstall http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm > /dev/null
