@@ -12,7 +12,7 @@ yum -y install katello
 
 if [ -d /vagrant/katello-installer ]
 then
-  cd /vagrant
+  cd /vagrant/katello-installer
   ./bin/katello-installer -v -d
 else
   katello-installer -v -d
