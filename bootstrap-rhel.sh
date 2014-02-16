@@ -28,12 +28,12 @@ fi
 
 
 # Clean out any previous runs
-rpm -e epel-release 
+rpm -e epel-release
 rpm -e foreman-release
 rpm -e katello-repos
 rm -f /etc/yum.repos.d/scl.repo
 
-subscription-manager register --force --username=$USERNAME --password=$PASSWORD
+subscription-manager register --force --username=$USERNAME --password=$PASSWORD --autosubscribe
 subscription-manager subscribe --pool=$POOLID
 
 # Setup RHEL specific repos
