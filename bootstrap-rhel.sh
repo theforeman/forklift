@@ -42,6 +42,7 @@ yum repolist
 yum-config-manager --disable "*"
 yum-config-manager --enable rhel-6-server-rpms epel
 yum-config-manager --enable rhel-6-server-optional-rpms
+yum-config-manager --enable rhel-server-rhscl-6-rpms
 
 
 # Do the actual install
