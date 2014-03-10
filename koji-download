@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ "${1/http*brewweb.devel.redhat.com*/X}" == 'X' ] ; then
+        KOJI=http://brewweb.devel.redhat.com/koji/
+elif [ "${1/http*koji.katello.org*/X}" = 'X' ] ; then
+        KOJI=http://koji.katello.org/koji/
+else
+     echo unknown koji
+     exit 1
+fi
+
+DIR=$(mktemp -du -t koji-XXXX)
+mkdir $DIR
+pushd $DIR >/dev/null
+
+wget --no-check-certificate -O - $1 \
+    | awk -F\" 'function basename(f) {
+                        gsub(".*[/=]", "", f)
+                        return f}
+                />download</ && ! /src\.rpm/ {
+                        print $4 " -O " basename($4)}
+                /"getfile?.*\.rpm"/ && ! /src\.rpm/ {
+                        print "'"$KOJI"'" $2 " -O " basename($2)} ' \
+    | xargs -n 3 wget --no-check-certificate
+
+popd >/dev/null
+
+find $DIR
+echo "yum -y install $DIR/* && rm -f $DIR/*"

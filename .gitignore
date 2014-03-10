@@ -1,6 +1,6 @@
 .vagrant
-.swo
-.swp
-.swn
+*.swo
+*.swp
+*.swn
 katello-installer
 puppet-*
