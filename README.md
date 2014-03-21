@@ -15,9 +15,9 @@ for setup with libvirt.
 3. Install the `centos64` box
 4. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
 5. Enter the repository - `cd katello-deploy`
-6. Start the installation - `vagrant up`
+6. Start the installation - `vagrant up centos`
 
-This will create a libvirt based virtual machine running the Katello server on CentOS.
+This will create a libvirt based virtual machine running the Katello server on CentOS. Note that on step 6, other options besides `centos` would include `centos-devel` and `f19-devel`.
 
 ## Direct Deployment CentOS
 
