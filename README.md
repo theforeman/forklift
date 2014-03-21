@@ -22,7 +22,7 @@ The first step in using Vagrant to deploy a Katello environment is to ensure tha
 
 The Vagrantfile provides default setup and boxes for use with the `vagrant-libvirt` provider. To set this up:
 
-1. Install the libvirt plugin for Vagrant (see vagrant plugin install vagrant-libvirt for more information) - `vagrant plugin install vagrant-libvirt`
+1. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) - `vagrant plugin install vagrant-libvirt`
 2. Set the libvirt environment variables in your `.bashrc` or for your current session - `export VAGRANT_DEFAULT_PROVIDER=libvirt`
 3. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
 4. Enter the repository - `cd katello-deploy`
@@ -104,3 +104,25 @@ System Type:       Physical
 3. Enter the repository - `cd katello-deploy`
 4. Run the bootstrap script `./bootstrap-rhel.sh <RH Portal Username> <RH Portal Password> <poolid>`
 
+## Troubleshooting
+
+### vagrant-libvirt
+
+If you have problems installing the libvirt plugin, be sure to checkout the [troubleshooting section](https://github.com/pradels/vagrant-libvirt#possible-problems-with-plugin-installation-on-linux) of their README.
+
+### nfs
+
+If you get this error:
+
+```
+mount.nfs: rpc.statd is not running but is required for remote locking.
+mount.nfs: Either use '-o nolock' to keep locks local, or start statd.
+mount.nfs: an incorrect mount option was specified
+```
+
+Make sure nfs is installed and running:
+
+```
+sudo yum install nfs-util
+sudo service start nfs-server
+```
