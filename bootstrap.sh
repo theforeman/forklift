@@ -2,7 +2,7 @@
 
 setenforce 0
 
-if [ $1 ]
+if [ -d $1 ]
 then
   cd $1
 fi

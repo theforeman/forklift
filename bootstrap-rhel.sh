@@ -44,6 +44,4 @@ yum-config-manager --enable rhel-6-server-rpms epel
 yum-config-manager --enable rhel-6-server-optional-rpms
 yum-config-manager --enable rhel-server-rhscl-6-rpms
 
-
-# Do the actual install
-./_repos_install.sh
+./bootstrap.sh rhel $@
