@@ -11,7 +11,7 @@ setup should work but we have been testing and using Vagrant with libvirt. Thus,
 for setup with libvirt.
 
 1. Ensure you have Vagrant installed, specifically version 1.3+ available from - http://downloads.vagrantup.com/tags/v1.3.5
-2. Follow the instructions to install the `vagrant-libvirt` plugin - http://downloads.vagrantup.com/tags/v1.3.5
+2. Follow the instructions to install the `vagrant-libvirt` plugin - https://github.com/pradels/vagrant-libvirt#installation (you may need to refer to 'Possible problems')
 3. Install the `centos64` box
 4. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
 5. Enter the repository - `cd katello-deploy`
