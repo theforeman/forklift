@@ -104,3 +104,25 @@ System Type:       Physical
 3. Enter the repository - `cd katello-deploy`
 4. Run the bootstrap script `./bootstrap-rhel.sh <RH Portal Username> <RH Portal Password> <poolid>`
 
+## Mounted Development Workflow
+
+This worflow is based on [the Rails usage of Vagrant](https://github.com/rails/rails-dev-box#recommended-workflow).  The
+guide will automatically mount your files into the VM. By doing this, you can recreate your dev environment at will.
+Moreover, it gives you the convenience of editing your files in an IDE and the use of your host's setup, ssh keys, etc.
+
+1. Run `git clone https://github.com/Katello/katello-deploy.git && cd
+   katello-deploy`
+1. Check out your katello and foreman directories into katello-deploy 
+1. Run `vagrant up centos-devel`
+1. SSH into the dev environment (`vagrant ssh centos-devel`)
+1. Install libxml2: `sudo yum install -y libxml2 libxml2-devel libxslt libxslt-devel`
+1. Install rvm with `\curl -sSL https://get.rvm.io | bash -s stable`
+1. Install ruby 1.9.3 with `rvm install 1.9.3`
+1. Go into your foreman directory with `cd /vagrant/foreman`
+1. Setup your configs: `cp config/settings.yaml.example config/settings.yaml &&
+   cp config/database.yml.example config/database.yml`
+1. Setup the katello engine: `ln -s ../../katello/doc/katello.local.rb
+   bundler.d/`
+1. Install the gems: `bundle`
+1. Run rails with `rails s`
+1. Profit!
