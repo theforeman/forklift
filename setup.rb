@@ -8,7 +8,7 @@ if ARGV.include?('fedora19')
   system('cp ./fedora-release /etc')
 elsif ARGV.include?('centos') || ARGV.include?('rhel')
 
-  if !File.directory?('/etc/rum.repos.d/scl.repo')
+  if !File.directory?('/etc/yum.repos.d/scl.repo')
     system('cp ./scl.repo /etc/yum.repos.d/')
   end
 
