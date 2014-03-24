@@ -17,15 +17,22 @@ Supported development environments:
 The first step in using Vagrant to deploy a Katello environment is to ensure that Vagrant and this repository are installed and setup. To do so:
 
 1. Ensure you have Vagrant installed, specifically version 1.3+ available from - http://downloads.vagrantup.com/tags/v1.3.5
+2. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
+3. Enter the repository - `cd katello-deploy`
 
-## Using Libvirt
+### Using VirtualBox (Windows, OS X)
+
+If you're using Linux, we recommend libvirt (see next section). The default setup in the Vagrantfile is for VirtualBox.
+It has been tested against VirtualBox 4.2.18.  To use Install VirtualBox from [the 4.2 downloads
+page](https://www.virtualbox.org/wiki/Download_Old_Builds_4_2)
+
+### Using Libvirt (Linux)
 
 The Vagrantfile provides default setup and boxes for use with the `vagrant-libvirt` provider. To set this up:
 
-1. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) - `vagrant plugin install vagrant-libvirt`
-2. Set the libvirt environment variables in your `.bashrc` or for your current session - `export VAGRANT_DEFAULT_PROVIDER=libvirt`
-3. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
-4. Enter the repository - `cd katello-deploy`
+1. Install libvirt. On CentOS/Fedora/RHEL, run "sudo yum install @virtualization libvirt-devel"
+2. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) - `vagrant plugin install vagrant-libvirt`
+3. Set the libvirt environment variables in your `.bashrc` or for your current session - `export VAGRANT_DEFAULT_PROVIDER=libvirt`
 
 ### Nightly Production Install
 
