@@ -40,7 +40,7 @@ subscription-manager subscribe --pool=$POOLID
 yum -y  --disablerepo="*" --enablerepo=rhel-6-server-rpms install yum-utils wget
 yum repolist
 yum-config-manager --disable "*"
-yum-config-manager --enable rhel-6-server-rpms epel
+yum-config-manager --enable rhel-6-server-rpms
 yum-config-manager --enable rhel-6-server-optional-rpms
 
 
