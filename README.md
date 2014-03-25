@@ -16,7 +16,7 @@ Supported development environments:
 
 The first step in using Vagrant to deploy a Katello environment is to ensure that Vagrant and this repository are installed and setup. To do so:
 
-1. Ensure you have Vagrant installed, specifically version 1.3+ available from - http://downloads.vagrantup.com/tags/v1.3.5
+1. Ensure you have Vagrant installed ([1.4.3](http://www.vagrantup.com/download-archive/v1.4.3.html) for libvirt, 1.5+ for VirtualBox)
 2. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
 3. Enter the repository - `cd katello-deploy`
 
