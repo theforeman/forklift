@@ -21,6 +21,7 @@ end
 if ARGV.include?('--devel')
   system('yum -y install rubygems')
   system('yum -y install rubygem-kafo')
+  system('yum -y install katello-installer')
 else
   system('yum -y install katello')
 end
