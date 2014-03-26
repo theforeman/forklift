@@ -1,18 +1,26 @@
 # Katello Deployment
 
-This repository provides methods to easily test and deploy a Katello server. 
-Currently Katello is only supported on EL6 and available in the Katello nightly repositories.
+This repository provides methods to easily test and deploy a Katello server.  There are two
+different types of setups&mdash;nightly and development. The latter is for setting up Katello from
+git repositories so that you can contribute to Katello. Nightly installs are production installs
+from the nightly RPMs that contain the bleeding edge Katello code.
 
-Supported production environments:
+In terms of the type of deployments, there are also two options: VM and direct. Using Vagrant will
+automatically provision the VM with VirtualBox or libvirt while a direct deployment assumes you are
+not using a VM or you already have the VM created. Check the table below to verify which operating
+system you can use for which type of deployment.
 
-  * EL6
+| OS        | Nightly | Development | Direct | Vagrant |
+|-----------|:--------|:------------|:-------|:--------|
+| CentOS 6  | X       | X           | X      | X       |
+| RHEL 6    | X       | X           | X      |         |
+| Fedora 19 |         | X           | X      | X       |
 
-Supported development environments:
-
-  * EL6
-  * Fedora 19
 
 ## Vagrant Deployment
+
+A Vagrant deployment will provision either a development setup (using git repositories) or an
+install using the nightly RPMs.
 
 The first step in using Vagrant to deploy a Katello environment is to ensure that Vagrant and this repository are installed and setup. To do so:
 
@@ -65,7 +73,36 @@ The box can now be accessed via ssh and the Rails server started directly:
     sudo service iptables stop
     rails s
 
-## Direct Deployment CentOS
+### Troubleshooting
+
+#### vagrant-libvirt
+
+If you have problems installing the libvirt plugin, be sure to checkout the [troubleshooting section](https://github.com/pradels/vagrant-libvirt#possible-problems-with-plugin-installation-on-linux) of their README.
+
+#### nfs
+
+If you get this error:
+
+```
+mount.nfs: rpc.statd is not running but is required for remote locking.
+mount.nfs: Either use '-o nolock' to keep locks local, or start statd.
+mount.nfs: an incorrect mount option was specified
+```
+
+Make sure nfs is installed and running:
+
+```
+sudo yum install nfs-util
+sudo service start nfs-server
+```
+
+
+## Direct Deployment
+
+This setup assumes you are either deploying on a non-VM environment or you
+already have a VM setup and are logged into that VM.
+
+### CentOS direct deployment
 
 This repository can also be used to setup and deploy directly on to a VM you have already spun up. From 
 the VM itself:
@@ -83,7 +120,7 @@ For development:
     ./bootstrap.sh centos --devel
 
 
-## Direct Deployment RHEL 6.X
+### RHEL 6 direct deployment
 
 You can also deploy to an already running RHEL system.  Note you have to specify a Red Hat Portal username and password as well as a 'poolid' to subscribe your system to.
 
@@ -111,25 +148,3 @@ System Type:       Physical
 3. Enter the repository - `cd katello-deploy`
 4. Run the bootstrap script `./bootstrap-rhel.sh <RH Portal Username> <RH Portal Password> <poolid>`
 
-## Troubleshooting
-
-### vagrant-libvirt
-
-If you have problems installing the libvirt plugin, be sure to checkout the [troubleshooting section](https://github.com/pradels/vagrant-libvirt#possible-problems-with-plugin-installation-on-linux) of their README.
-
-### nfs
-
-If you get this error:
-
-```
-mount.nfs: rpc.statd is not running but is required for remote locking.
-mount.nfs: Either use '-o nolock' to keep locks local, or start statd.
-mount.nfs: an incorrect mount option was specified
-```
-
-Make sure nfs is installed and running:
-
-```
-sudo yum install nfs-util
-sudo service start nfs-server
-```
