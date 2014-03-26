@@ -23,7 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "centos-devel" do |centos|
     centos.vm.box = "centos64"
     centos.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box"
-    centos.vm.hostname = "centos.installer"
+    centos.vm.hostname = "centos.dev"
 
     config.vm.network :forwarded_port, guest: 3000, host: 3330
     config.vm.network :forwarded_port, guest: 443, host: 4430
@@ -41,7 +41,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "f19-devel" do |centos|
     centos.vm.box = "fedora19"
     centos.vm.box_url = "https://dl.dropboxusercontent.com/u/86066173/fedora-19.box"
-    centos.vm.hostname = "fedora.installer"
+    centos.vm.hostname = "fedora.dev"
 
     config.vm.network :forwarded_port, guest: 3000, host: 3333
     config.vm.network :forwarded_port, guest: 443, host: 4443
