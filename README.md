@@ -38,7 +38,7 @@ page](https://www.virtualbox.org/wiki/Download_Old_Builds_4_2)
 
 The Vagrantfile provides default setup and boxes for use with the `vagrant-libvirt` provider. To set this up:
 
-1. Install libvirt. On CentOS/Fedora/RHEL, run "sudo yum install @virtualization libvirt-devel"
+1. Install libvirt. On CentOS/Fedora/RHEL, run `sudo yum install @virtualization libvirt-devel`
 2. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) - `vagrant plugin install vagrant-libvirt`
 3. Set the libvirt environment variables in your `.bashrc` or for your current session - `export VAGRANT_DEFAULT_PROVIDER=libvirt`
 
@@ -92,7 +92,7 @@ mount.nfs: an incorrect mount option was specified
 Make sure nfs is installed and running:
 
 ```
-sudo yum install nfs-util
+sudo yum install nfs-utils
 sudo service start nfs-server
 ```
 
