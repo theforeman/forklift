@@ -17,6 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     centos.vm.provider :libvirt do |v, virt|
       virt.vm.box_url = 'http://m0dlx.com/files/foreman/boxes/centos64.box'
+      virt.vm.synced_folder ".", "/vagrant", type: "rsync"
     end
   end
 
@@ -35,6 +36,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     centos.vm.provider :libvirt do |v, virt|
       virt.vm.box_url = 'http://m0dlx.com/files/foreman/boxes/centos64.box'
+      virt.vm.synced_folder ".", "/vagrant", type: "rsync"
     end
   end
 
@@ -53,6 +55,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     centos.vm.provider :libvirt do |v, virt|
       virt.vm.box_url = 'http://m0dlx.com/files/foreman/boxes/fedora19.box'
+      virt.vm.synced_folder ".", "/vagrant", type: "rsync"
     end
   end
 
