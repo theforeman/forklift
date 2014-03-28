@@ -1,40 +1,21 @@
 #!/bin/bash
 
-usage(){
-  echo "Usage: <RH Portal Username> <RH Portal Password> <poolid>"
-}
-
-USERNAME=$1
-PASSWORD=$2
-POOLID=$3
-
-if [ -z $USERNAME ]
-then
-  usage
-  exit 1
-fi
-
-if [ -z $PASSWORD ]
-then
-  usage
-  exit 2
-fi
-
-if [ -z $POOLID ]
-then
-  usage
-  exit 3
-fi
-
-
 # Clean out any previous runs
 rpm -e epel-release
 rpm -e foreman-release
 rpm -e katello-repos
 rm -f /etc/yum.repos.d/scl.repo
 
-subscription-manager register --force --username=$USERNAME --password=$PASSWORD --autosubscribe
-subscription-manager subscribe --pool=$POOLID
+if [ -f /etc/pki/consumer/cert.pem ]
+then
+  echo "Already registered to customer portal."
+  # Try to grab required entitlements in case anything is missing:
+  subscription-manager attach --auto
+else
+  echo "Registering to customer portal..."
+  # User will be prompted for username/password:
+  subscription-manager register --force --autosubscribe
+fi
 
 # Setup RHEL specific repos
 yum -y  --disablerepo="*" --enablerepo=rhel-6-server-rpms install yum-utils wget
