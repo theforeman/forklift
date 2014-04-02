@@ -24,7 +24,9 @@ install using the nightly RPMs.
 
 The first step in using Vagrant to deploy a Katello environment is to ensure that Vagrant and this repository are installed and setup. To do so:
 
-1. Ensure you have Vagrant installed ([1.3.5](http://downloads.vagrantup.com/tags/v1.3.5) for libvirt, 1.5+ for VirtualBox)
+1. Ensure you have Vagrant installed
+   * For **libvirt**, download the approprite distribution package and install from [Vagrant 1.3.5 Download](http://downloads.vagrantup.com/tags/v1.3.5)
+   * For **Virtualbox**, Vagrant 1.5+ can be downloaded and installed from [Vagrant 1.5 Download](http://www.vagrantup.com/downloads.html)
 2. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
 3. Enter the repository - `cd katello-deploy`
 
@@ -39,8 +41,8 @@ page](https://www.virtualbox.org/wiki/Download_Old_Builds_4_2)
 The Vagrantfile provides default setup and boxes for use with the `vagrant-libvirt` provider. You need to use 0.0.13 of the vagrant-libvirt plugin. To set this up:
 
 1. Install libvirt. On CentOS/Fedora/RHEL, run `sudo yum install @virtualization libvirt-devel`
-2. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) - `vagrant plugin install vagrant-libvirt --plugin-version 0.0.13`
-3. Set the libvirt environment variables in your `.bashrc` or for your current session - `export VAGRANT_DEFAULT_PROVIDER=libvirt`
+1. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) `vagrant plugin install vagrant-libvirt --plugin-version 0.0.13`
+1. Set the libvirt environment variable in your `.bashrc` or for your current session - `export VAGRANT_DEFAULT_PROVIDER=libvirt`
 
 ### Nightly Production Install
 
