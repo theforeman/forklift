@@ -5,6 +5,28 @@
 # TODO: devel user, sudo setup?
 # TODO: if run for devel user, make sure we run from correct directory
 
+
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: ./setup.rb [options] rhel|centos|fedora19"
+
+  opts.on("--devel", "Setup a development environment") do |devel|
+    options[:devel] = true
+  end
+
+  opts.on("--devel-user [USERNAME]", "User to setup development environment for") do |devuser|
+    options[:devel_user] = devuser
+  end
+
+end.parse!
+
+# If /vagrant exists, cd to it:
+if File.directory?('/vagrant/')
+  Dir.chdir('/vagrant/')
+end
+
 # TODO: Would be nice to not require this:
 system('setenforce 0')
 
@@ -45,7 +67,7 @@ elsif ARGV.include?('centos') || ARGV.include?('rhel')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
 end
 
-if ARGV.include?('--devel')
+if options.has_key?(:devel)
   system('yum -y install rubygems')
   system('yum -y install rubygem-kafo')
   system('yum -y install katello-installer')
@@ -53,13 +75,24 @@ else
   system('yum -y install katello')
 end
 
-install_command = ARGV.include?('--devel') ? 'katello-devel-installer' : 'katello-installer'
+install_command = 'katello-installer -v -d'
+if options.has_key?(:devel)
+
+  # Plain devel install, really only useful for the default vagrant setup:
+  install_command = "katello-devel-installer -v -d"
+
+  # If a devel user was specified we assume a logical setup where the group and home dir are known:
+  if options.has_key(:devel_user)
+    install_command = "#{install_command} --user=#{options[:devel_user]} --group=#{options[:devel_user]} --deployment-dir=/home/#{options[:devel_user]}"
+  end
+end
+
+puts "Launching installer with command: #{install_command}"
 
 if File.directory?('/vagrant/katello-installer')
   Dir.chdir('/vagrant/katello-installer') do
-    system("./bin/#{install_command} -v -d")
+    system("./bin/#{install_command}")
   end
 else
-  # TODO: get devel user options in here somehow:
-  system("#{install_command} -v -d")
+  system("#{install_command}")
 end
