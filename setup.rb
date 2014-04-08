@@ -20,6 +20,10 @@ OptionParser.new do |opts|
     options[:devel_user] = devuser
   end
 
+  opts.on("--skip-installer", "Skip the final installer command and print instead") do |devel|
+    options[:skip_installer] = true
+  end
+
 end.parse!
 
 # If /vagrant exists, cd to it:
@@ -82,9 +86,14 @@ if options.has_key?(:devel)
   install_command = "katello-devel-installer -v -d"
 
   # If a devel user was specified we assume a logical setup where the group and home dir are known:
-  if options.has_key(:devel_user)
+  if options.has_key?(:devel_user)
     install_command = "#{install_command} --user=#{options[:devel_user]} --group=#{options[:devel_user]} --deployment-dir=/home/#{options[:devel_user]}"
   end
+end
+
+if options.has_key?(:skip_installer)
+  puts "WARNING: Skipping installer command: #{install_command}"
+  exit 0
 end
 
 puts "Launching installer with command: #{install_command}"
