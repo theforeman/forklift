@@ -97,11 +97,17 @@ if options.has_key?(:skip_installer)
 end
 
 puts "Launching installer with command: #{install_command}"
-
 if File.directory?('/vagrant/katello-installer')
   Dir.chdir('/vagrant/katello-installer') do
     system("./bin/#{install_command}")
   end
 else
+
+  # Prevent a git clone failure when the devel user cannot chdir back to the
+  # starting directory. (/root often)
+  if options.has_key?(:devel_user)
+    Dir.chdir("/home/#{options[:devel_user]}")
+  end
+
   system("#{install_command}")
 end
