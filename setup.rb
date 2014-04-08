@@ -3,8 +3,6 @@
 # TODO: automatically figure out the OS
 
 # TODO: devel user, sudo setup?
-# TODO: if run for devel user, make sure we run from correct directory
-
 
 require 'optparse'
 
