@@ -2,13 +2,11 @@
 
 # TODO: automatically figure out the OS
 
-# TODO: devel user, sudo setup?
-
 require 'optparse'
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: ./setup.rb [options] rhel|centos|fedora19"
+  opts.banner = "Usage: ./setup.rb [options] rhel6|centos6|fedora19"
 
   opts.on("--devel", "Setup a development environment") do |devel|
     options[:devel] = true
@@ -40,7 +38,7 @@ if ARGV.include?('fedora19')
   # Facter parses the F19 fedora-release improperly due to the umlaut and apstrophe in the code name
   system('cp ./fedora-release /etc')
 
-elsif ARGV.include?('centos') || ARGV.include?('rhel')
+elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
 
   # Clean out past runs if necessary:
   system('rpm -e epel-release')
@@ -48,7 +46,7 @@ elsif ARGV.include?('centos') || ARGV.include?('rhel')
   system('rpm -e katello-repos')
   system('rm -f /etc/yum.repos.d/scl.repo')
 
-  if ARGV.include?('rhel')
+  if ARGV.include?('rhel6')
     # Setup RHEL specific repos
     system('yum -y  --disablerepo="*" --enablerepo=rhel-6-server-rpms install yum-utils wget')
     system('yum repolist') # TODO: necessary?
