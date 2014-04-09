@@ -109,7 +109,7 @@ already have a VM setup and are logged into that VM.
 If on RHEL, it is assumed you have already registered and subscribed your system.
 
 ```
-# subscription-manager register --username USER --password PASSWORD --auto-attach
+subscription-manager register --username USER --password PASSWORD --auto-attach
 ```
 
 ### Deployment
