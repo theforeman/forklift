@@ -8,8 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     centos.vm.hostname = "centos.installer"
 
     centos.vm.provision :shell do |shell|
-      shell.path = 'bootstrap.sh'
-      shell.args = "'/vagrant' centos"
+      shell.inline = 'yum -y install ruby && cd /vagrant && ./setup.rb centos6'
     end
 
     centos.vm.provider :libvirt do |v, virt|
@@ -29,8 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     centos.vm.hostname = "centos.dev"
 
     centos.vm.provision :shell do |shell|
-      shell.path = 'bootstrap.sh'
-      shell.args = "'/vagrant' centos --devel"
+      shell.inline = 'yum -y install ruby && cd /vagrant && ./setup.rb --devel centos6'
     end
 
     centos.vm.provider :libvirt do |v, virt|
@@ -51,8 +49,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 
     centos.vm.provision :shell do |shell|
-      shell.path = 'bootstrap.sh'
-      shell.args = "'/vagrant' fedora19 --devel"
+      shell.inline = 'yum -y install ruby && cd /vagrant && ./setup.rb --devel fedora19'
     end
 
     centos.vm.provider :libvirt do |v, virt|
