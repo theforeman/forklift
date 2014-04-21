@@ -44,6 +44,7 @@ elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
   system('rpm -e epel-release')
   system('rpm -e foreman-release')
   system('rpm -e katello-repos')
+  system('rpm -e puppetlabs-release')
   system('rm -f /etc/yum.repos.d/scl.repo')
 
   if ARGV.include?('rhel6')
