@@ -94,8 +94,8 @@ if options.has_key?(:skip_installer)
 end
 
 puts "Launching installer with command: #{install_command}"
-if File.directory?('/vagrant/katello-installer')
-  Dir.chdir('/vagrant/katello-installer') do
+if File.directory?('./katello-installer')
+  Dir.chdir('./katello-installer') do
     system("./bin/#{install_command}")
   end
 else
