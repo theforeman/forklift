@@ -76,6 +76,16 @@ else
   system('yum -y install katello')
 end
 
+if system('gem list | grep puppet > /dev/null')
+  # Remove puppet gem to allow installing the package
+  puts 'Uninstalling puppet gem'
+  system('gem uninstall puppet')
+else
+  # Will update puppet package if it is already installed
+  puts 'Updating puppet package'
+  system('yum -y update puppet')
+end
+
 install_command = 'katello-installer -v -d'
 if options.has_key?(:devel)
 
