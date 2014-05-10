@@ -20,6 +20,10 @@ OptionParser.new do |opts|
     options[:skip_installer] = true
   end
 
+  opts.on("--deployment-dir [DIRECTORY]", "Set a custom path for installing to (defaults to /home/USERNAME)") do |dir|
+    options[:deployment_dir] = dir
+  end
+
 end.parse!
 
 # If /vagrant exists, cd to it:
@@ -94,7 +98,8 @@ if options.has_key?(:devel)
 
   # If a devel user was specified we assume a logical setup where the group and home dir are known:
   if options.has_key?(:devel_user)
-    install_command = "#{install_command} --user=#{options[:devel_user]} --group=#{options[:devel_user]} --deployment-dir=/home/#{options[:devel_user]}"
+    directory =  options[:deployment_dir] || "/home/#{options[:devel_user]}"
+    install_command = "#{install_command} --user=#{options[:devel_user]} --group=#{options[:devel_user]} --deployment-dir=#{directory}"
   end
 end
 
