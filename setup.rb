@@ -72,22 +72,19 @@ elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
 end
 
+if system('gem list | grep puppet > /dev/null')
+  # Remove puppet gem to allow installing the package
+  puts 'Uninstalling puppet gem'
+  system('gem uninstall puppet')
+  system('yum -y remove puppet')
+end
+
 if options.has_key?(:devel)
   system('yum -y install rubygems')
   system('yum -y install rubygem-kafo')
   system('yum -y install katello-installer')
 else
   system('yum -y install katello')
-end
-
-if system('gem list | grep puppet > /dev/null')
-  # Remove puppet gem to allow installing the package
-  puts 'Uninstalling puppet gem'
-  system('gem uninstall puppet')
-else
-  # Will update puppet package if it is already installed
-  puts 'Updating puppet package'
-  system('yum -y update puppet')
 end
 
 install_command = 'katello-installer -v -d'
