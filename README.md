@@ -25,7 +25,9 @@ install using the nightly RPMs.
 The first step in using Vagrant to deploy a Katello environment is to ensure that Vagrant and this repository are installed and setup. To do so:
 
 1. Ensure you have Vagrant installed
-   * For **libvirt**, download the approprite distribution package and install from [Vagrant 1.3.5 Download](http://downloads.vagrantup.com/tags/v1.3.5)
+   * For **libvirt**:
+     1. Ensure you have the prerequisites installed `sudo yum install ruby rubygems gcc`
+     2. Download the appropriate distribution package and install from [Vagrant 1.3.5 Download](http://downloads.vagrantup.com/tags/v1.3.5)
    * For **Virtualbox**, Vagrant 1.5+ can be downloaded and installed from [Vagrant 1.5 Download](http://www.vagrantup.com/downloads.html)
 2. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
 3. Enter the repository - `cd katello-deploy`
@@ -80,6 +82,19 @@ The box can now be accessed via ssh and the Rails server started directly:
 #### vagrant-libvirt
 
 If you have problems installing the libvirt plugin, be sure to checkout the [troubleshooting section](https://github.com/pradels/vagrant-libvirt#possible-problems-with-plugin-installation-on-linux) of their README.
+
+#### selinux
+
+If you get this error:
+
+```
+There was an error talking to Libvirt. The error message is shown
+below:
+ 
+Call to virDomainCreateWithFlags failed: Input/output error
+```
+
+The easiest thing to do is disable selinux using: `sudo setenforce 0`.  Alternatively you can configure libvirt for selinux, see http://libvirt.org/drvqemu.html#securitysvirt
 
 #### nfs
 
