@@ -129,7 +129,7 @@ subscription-manager register --username USER --password PASSWORD --auto-attach
 
 ### Deployment
 
-1. ssh to target machine as root
+1. ssh to target machine **as root**
 2. Install git and ruby - `yum install -y git ruby`
 3. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
 4. Enter the repository - `cd katello-deploy`
