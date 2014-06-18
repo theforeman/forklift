@@ -159,11 +159,11 @@ subscription-manager register --username USER --password PASSWORD --auto-attach
 
 For a release version in production:
 
-    ./setup.rb [rhel6|centos6|centos7|rhel7] --version=2.X
+    ./setup.rb --version=2.X
 
 For nightly production:
 
-    ./setup.rb [rhel6|centos6|centos7|rhel7]
+    ./setup.rb
 
 For development:
 

@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 
-# TODO: automatically figure out the OS
-
 require 'optparse'
+require './helper'
 
 # Hash of katello_version => foreman_version
 foreman_version = {
@@ -11,8 +10,15 @@ foreman_version = {
 }
 
 options = {}
+
+supported_os = ['rhel6', 'centos6', 'fedora19', 'rhel7', 'centos7']
+
 OptionParser.new do |opts|
-  opts.banner = "Usage: ./setup.rb [options] rhel6|centos6|fedora19|rhel7|centos7"
+  opts.banner = "Usage: ./setup.rb [options]"
+
+  opts.on("--os [OS]", "Set OS manually") do |os|
+    options[:os] = os.downcase
+  end
 
   opts.on("--devel", "Setup a development environment") do |devel|
     options[:devel] = true
@@ -55,7 +61,9 @@ system('yum clean all')
 
 system('yum -y update nss')
 
-if ARGV.include?('fedora19')
+options[:os] ||= detect_os
+
+if options[:os] == 'fedora19'
 
   system('yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/nightly/katello/Fedora/19/x86_64/katello-repos-latest.rpm')
   system('yum -y localinstall http://yum.theforeman.org/nightly/f19/x86_64/foreman-release.rpm')
@@ -63,7 +71,7 @@ if ARGV.include?('fedora19')
   # Facter parses the F19 fedora-release improperly due to the umlaut and apstrophe in the code name
   system('cp ./fedora-release /etc')
 
-elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
+elsif ['centos6', 'rhel6'].include? options[:os]
 
   # Clean out past runs if necessary:
   system('rpm -e epel-release')
@@ -72,7 +80,7 @@ elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
   system('rpm -e puppetlabs-release')
   system('rm -f /etc/yum.repos.d/scl.repo')
 
-  if ARGV.include?('rhel6')
+  if options[:os] == 'rhel6'
     # Setup RHEL specific repos
     system('yum -y  --disablerepo="*" --enablerepo=rhel-6-server-rpms install yum-utils wget')
     system('yum repolist') # TODO: necessary?
@@ -92,7 +100,7 @@ elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
   system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm")
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
 
-elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
+elsif ['rhel7', 'centos7'].include? options[:os]
 
   # Clean out past runs if necessary:
   system('rpm -e epel-release')
@@ -102,7 +110,7 @@ elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
   #system('cp ./rhscl-ruby193-el7-epel-7.repo /etc/yum.repos.d/')
   #system('cp ./rhscl-v8314-el7-epel-7.repo /etc/yum.repos.d/')
 
-  if ARGV.include?('rhel7')
+  if options[:os] == 'rhel7'
     # Setup RHEL specific repos
     system('yum -y  --disablerepo="*" --enablerepo=rhel-7-server-rpms install yum-utils wget')
     system('yum repolist') # TODO: necessary?
@@ -120,6 +128,9 @@ elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
   system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm")
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
 
+else
+  $stderr.puts "OS #{os} is not supported"
+  exit(1)
 end
 
 if system('gem list | grep puppet > /dev/null')
