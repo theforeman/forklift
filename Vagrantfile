@@ -64,12 +64,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provider :libvirt do |domain|
-    domain.memory = 2560
+    domain.memory = 3560
     domain.cpus = 2
   end
 
   config.vm.provider :virtualbox do |domain|
-    domain.memory = 2560
+    domain.memory = 3560
     domain.cpus = 2
     domain.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
     domain.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
