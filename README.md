@@ -142,4 +142,19 @@ For development:
 
     ./setup.rb --devel --devel-user=username [rhel6|centos6|fedora19]
 
+## Bats Testing
+
+Included with katello-deploy is a small live test suite.  The current tests are:
+
+  * fb-install-katello.bats - Installs katello and runs a few simple tests
+
+To execute the bats framework:
+
+ * Using vagrant (after configuring vagrant according to this document):
+  1.  vagrant up centos-bats
+  2.  vagrant ssh centos-bats -c 'sudo fb-install-katello.bats'
+
+ * On a fresh system you've manually installed:
+  1.  ./bats/bootstrap.sh
+  2.  fb-install-katello.bats
 
