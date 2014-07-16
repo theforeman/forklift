@@ -87,11 +87,11 @@ else
   system('yum -y install katello')
 end
 
-install_command = 'katello-installer -v -d'
+install_command = 'katello-installer'
 if options.has_key?(:devel)
 
   # Plain devel install, really only useful for the default vagrant setup:
-  install_command = "katello-devel-installer -v -d"
+  install_command = "katello-devel-installer"
 
   # If a devel user was specified we assume a logical setup where the group and home dir are known:
   if options.has_key?(:devel_user)
