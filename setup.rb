@@ -16,6 +16,10 @@ OptionParser.new do |opts|
     options[:devel_user] = devuser
   end
 
+  opts.on("--installer-options [OPTIONS]", "Options to pass to katello-installer") do |installer_opts|
+    options[:installer_options] = installer_opts
+  end
+
   opts.on("--skip-installer", "Skip the final installer command and print instead") do |devel|
     options[:skip_installer] = true
   end
@@ -87,16 +91,17 @@ else
   system('yum -y install katello')
 end
 
-install_command = 'katello-installer'
+installer_options = options[:installer_options] || ""
+install_command = "katello-installer #{installer_options}"
 if options.has_key?(:devel)
 
   # Plain devel install, really only useful for the default vagrant setup:
-  install_command = "katello-devel-installer"
+  install_command = "katello-devel-installer #{installer_options}"
 
   # If a devel user was specified we assume a logical setup where the group and home dir are known:
   if options.has_key?(:devel_user)
     directory =  options[:deployment_dir] || "/home/#{options[:devel_user]}"
-    install_command = "#{install_command} --user=#{options[:devel_user]} --group=#{options[:devel_user]} --deployment-dir=#{directory}"
+    install_command = "#{install_command} --user=#{options[:devel_user]} --group=#{options[:devel_user]} --deployment-dir=#{directory} #{installer_options}"
   end
 end
 
