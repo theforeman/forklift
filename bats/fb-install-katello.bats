@@ -117,7 +117,7 @@ EOF
 }
 
 @test "check content host is registered" {
-  hammer -u admin -p changeme content-host info --name $(hostname -f) --organization=Default_Organization
+  hammer -u admin -p changeme content-host info --name $(hostname -f) --organization="Default Organization"
 }
 
 @test "collect important logs" {
