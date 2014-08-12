@@ -70,6 +70,9 @@ elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
     system('cp ./scl.repo /etc/yum.repos.d/')
   end
 
+  # FIXME: Remove when Mongo is available again in EPEL
+  system('cp ./mongodb.repo /etc/yum.repos.d/')
+
   system('yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/RHEL/6Server/x86_64/katello-repos-latest.rpm')
   system('yum -y localinstall http://yum.theforeman.org/nightly/el6/x86_64/foreman-release.rpm')
   system('yum -y localinstall http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm')
