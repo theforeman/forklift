@@ -1,0 +1,5 @@
+[mongodb]
+name=MongoDB
+baseurl=https://fedorapeople.org/~stbenjam/mongodb/
+enabled=1
+gpgcheck=true
