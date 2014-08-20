@@ -110,10 +110,12 @@ if options.has_key?(:skip_installer)
   exit 0
 end
 
+exit_code = 0
 puts "Launching installer with command: #{install_command}"
 if File.directory?('./katello-installer')
   Dir.chdir('./katello-installer') do
     system("./bin/#{install_command}")
+    exit_code = $?.exitstatus
   end
 else
 
@@ -124,4 +126,7 @@ else
   end
 
   system("#{install_command}")
+  exit_code = $?.exitstatus
 end
+
+exit(exit_code)
