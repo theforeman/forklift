@@ -30,7 +30,14 @@ fi
 BATS_ROOT="$(abs_dirname "$0")"
 echo $BATS_ROOT
 mkdir -p "$PREFIX"/bin
-cp -f "$BATS_ROOT"/*.bats "$PREFIX"/bin
-cp -f "$BATS_ROOT"/*.bash "$PREFIX"/bin
+cp -f "$BATS_ROOT"/katello-bats "$PREFIX"/bin
 
-echo "Installed Foreman BATS into $PREFIX/bin"
+BATS_INSTALL_ROOT="/opt/bats"
+mkdir -p $BATS_INSTALL_ROOT
+cp -f "$BATS_ROOT"/*.bats $BATS_INSTALL_ROOT
+cp -f "$BATS_ROOT"/*.bash $BATS_INSTALL_ROOT
+
+export PATH=$PATH:/opt/bats
+
+echo "Installed katello-bats into $PREFIX/bin. Run katello-bats without options for help."
+

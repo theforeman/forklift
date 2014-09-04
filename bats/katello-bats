@@ -1,0 +1,66 @@
+#!/bin/bash
+
+usage() {
+cat <<EOF
+Usage: $0 [options]
+
+    Options:
+      nightly     Run bats against nightly
+      devel       Run bats against development
+      content     Run content tests (yum + puppet)
+      virt-whom   Run virt-whom candlepin tests
+EOF
+}
+
+[ $# -eq 0 ] && usage && exit 1
+
+for arg do
+  case $arg in
+      help)
+        usage
+        exit 1
+        ;;
+      nightly)
+        katello_nightly_install=true
+        ;;
+      devel)
+        katello_devel_install=true
+        ;;
+      content)
+        katello_content_tests=true
+        ;;
+      virt-whom)
+        katello_virt_whom=true
+        ;;
+   esac
+done
+
+if [ "$katello_devel_install" == true ] && [ "$katello_nightly_install" == true ];
+then
+    echo "You may only run the nightly or devel installer, not both"
+    exit 1
+fi
+
+if [ "$katello_devel_install" == true ];
+then
+    BATS_ARGS=fb-install-katello-devel.bats
+fi
+
+if [ "$katello_nightly_install" == true ];
+then
+    BATS_ARGS=fb-install-katello.bats
+fi
+
+if [ "$katello_content_tests" == true ];
+then
+    BATS_ARGS="$BATS_ARGS fb-content-katello.bats"
+fi
+
+if [ "$katello_virt_whom" == true ];
+then
+    BATS_ARGS="$BATS_ARGS fb-virt-whom.bats"
+fi
+
+cd /opt/bats
+
+bats $BATS_ARGS fb-finish-katello.bats
