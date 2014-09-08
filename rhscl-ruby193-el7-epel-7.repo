@@ -1,0 +1,6 @@
+[rhscl-ruby193-el7]
+name=Copr repo for ruby193-el7 owned by rhscl
+baseurl=http://copr-be.cloud.fedoraproject.org/results/rhscl/ruby193-el7/epel-7-$basearch/
+skip_if_unavailable=True
+gpgcheck=0
+enabled=1

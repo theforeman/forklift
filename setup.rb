@@ -6,7 +6,7 @@ require 'optparse'
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: ./setup.rb [options] rhel6|centos6|fedora19"
+  opts.banner = "Usage: ./setup.rb [options] rhel6|centos6|fedora19|rhel7|centos7"
 
   opts.on("--devel", "Setup a development environment") do |devel|
     options[:devel] = true
@@ -74,6 +74,31 @@ elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
   system('yum -y localinstall http://yum.theforeman.org/nightly/el6/x86_64/foreman-release.rpm')
   system('yum -y localinstall http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
+
+elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
+
+  # Clean out past runs if necessary:
+  system('rpm -e epel-release')
+  system('rpm -e foreman-release')
+  system('rpm -e katello-repos')
+  system('rpm -e puppetlabs-release')
+  system('cp ./rhscl-ruby193-el7-epel-7.repo /etc/yum.repos.d/')
+  system('cp ./rhscl-v8314-el7-epel-7.repo /etc/yum.repos.d/')
+
+  if ARGV.include?('rhel7')
+    # Setup RHEL specific repos
+    system('yum -y  --disablerepo="*" --enablerepo=rhel-7-server-rpms install yum-utils wget')
+    system('yum repolist') # TODO: necessary?
+    system('yum-config-manager --disable "*"')
+    system('yum-config-manager --enable rhel-7-server-rpms epel')
+    system('yum-config-manager --enable rhel-7-server-optional-rpms')
+    system('yum-config-manager --enable rhel-server-rhscl-7-rpms')
+  end
+
+  system('yum -y localinstall http://download-i2.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm')
+  system('yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/katello/RHEL/7/x86_64/katello-repos-latest.rpm')
+  system('yum -y localinstall http://yum.theforeman.org/nightly/el7/x86_64/foreman-release.rpm')
+  system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm')
 end
 
 if system('gem list | grep puppet > /dev/null')
@@ -92,7 +117,7 @@ else
 end
 
 installer_options = options[:installer_options] || ""
-install_command = "katello-installer #{installer_options}"
+install_command = "katello-installer #{installer_options} --reset"
 if options.has_key?(:devel)
 
   # Plain devel install, really only useful for the default vagrant setup:

@@ -14,7 +14,7 @@ system you can use for which type of deployment.
 |-----------|:--------|:------------|:-------|:--------|
 | CentOS 6  | X       | X           | X      | X       |
 | RHEL 6    | X       | X           | X      |         |
-| Fedora 19 |         | X           | X      | X       |
+| CentOS 7  | X       | X           | X      | X       |
 
 
 ## Vagrant Deployment
@@ -48,27 +48,31 @@ The Vagrantfile provides default setup and boxes for use with the `vagrant-libvi
 
 ### Nightly Production Install
 
-Currently Katello is only supported on EL6 and available in the Katello nightly repositories. Provided
+Currently Katello is only available in the Katello nightly repositories. Provided
 is a Vagrant setup that will setup and install Katello on a CentOS box. Any base CentOS box and Vagrant
 setup should work but we have been testing and using Vagrant with libvirt.
 
-Start the installation:
+Start the installation for CentOS 6:
 
-    vagrant up centos
+    vagrant up centos6
+
+Start the installation for CentOS 7:
+
+    vagrant up centos7
 
 This will create a libvirt based virtual machine running the Katello server on CentOS.
 
 ### Development Deployment
 
-A Katello development environment can be deployed on Centos or Fedora 19. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin.
+A Katello development environment can be deployed on CentOS 6 or 7. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin.
 
-To deploy to Fedora 19:
+To deploy to CentOS 6:
 
-    vagrant up f19-devel
+    vagrant up centos6-devel
 
-To deploy to Centos:
+To deploy to CentOS 7:
 
-    vagrant up centos-devel
+    vagrant up centos7-devel
 
 The box can now be accessed via ssh and the Rails server started directly:
 
@@ -136,11 +140,11 @@ subscription-manager register --username USER --password PASSWORD --auto-attach
 
 For nightly production:
 
-    ./setup.rb [rhel6|centos6|fedora19]
+    ./setup.rb [rhel6|centos6|centos7]
 
 For development:
 
-    ./setup.rb --devel --devel-user=username [rhel6|centos6|fedora19]
+    ./setup.rb --devel --devel-user=username [rhel6|centos6|centos7]
 
 ## Bats Testing
 
@@ -151,8 +155,8 @@ Included with katello-deploy is a small live test suite.  The current tests are:
 To execute the bats framework:
 
  * Using vagrant (after configuring vagrant according to this document):
-  1.  vagrant up centos-bats
-  2.  vagrant ssh centos-bats -c 'sudo fb-install-katello.bats'
+  1.  vagrant up centos6-bats
+  2.  vagrant ssh centos6-bats -c 'sudo fb-install-katello.bats'
 
  * On a fresh system you've manually installed:
   1.  ./bats/bootstrap.sh

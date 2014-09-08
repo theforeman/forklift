@@ -1,96 +1,68 @@
 VAGRANTFILE_API_VERSION = "2"
 
+base_boxes = {
+  :centos6 => {
+    :box_name => 'centos6',
+    :image_name => /CentOS 6\.5/,
+    :default => true,
+    :pty => true,
+    :virtualbox => 'http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box',
+    :libvirt => 'http://m0dlx.com/files/foreman/boxes/centos64.box'
+  },
+  :centos7 => {
+    :box_name => 'centos7',
+    :image_name => /CentOS 7/,
+    :default => true,
+    :pty => true,
+    :libvirt => 'https://download.gluster.org/pub/gluster/purpleidea/vagrant/centos-7.0/centos-7.0.box'
+  },
+}
+
 boxes = [
-  {:name => 'el6', :libvirt => 'fm-centos64', :image_name => /CentOS 6\.5/, :default => true, :pty => true},
+  {:name => 'centos6', :shell_args => 'centos6'}.merge(base_boxes[:centos6]),
+  {:name => 'centos6-bats', :shell_args => './bats/bootstrap_vagrant.sh'}.merge(base_boxes[:centos6]),
+  {:name => 'centos6-devel', :shell_args => 'centos6 --devel'}.merge(base_boxes[:centos6]),
+  {:name => 'centos7', :shell_args => 'centos7'}.merge(base_boxes[:centos7]),
+  {:name => 'centos7-bats', :shell_args => './bats/bootstrap_vagrant.sh'}.merge(base_boxes[:centos7]),
+  {:name => 'centos7-devel', :shell_args => 'centos7 --devel'}.merge(base_boxes[:centos7]),
 ]
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.define "centos" do |centos|
-    centos.vm.box = "centos64"
-    centos.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box"
-    centos.vm.hostname = "centos.installer"
+  boxes.each do |box|
+    config.vm.define box[:name], primary: box[:default] do |machine|
+      machine.vm.box = box[:box_name]
+      machine.vm.hostname = "katello-#{box[:name]}.example.com"
 
-    centos.vm.provision :shell do |shell|
-      shell.inline = 'yum -y install ruby && cd /vagrant && ./setup.rb centos6'
-    end
+      machine.vm.provision :shell do |shell|
+        shell.inline = "yum -y install ruby && cd /vagrant && ./setup.rb #{box[:shell_args]}"
+      end
 
-    centos.vm.provider :libvirt do |v, virt|
-      virt.vm.box_url = 'http://m0dlx.com/files/foreman/boxes/centos64.box'
-      virt.vm.synced_folder ".", "/vagrant", type: "rsync"
-    end
+      machine.vm.provider :libvirt do |p, override|
+        override.vm.box_url = box[:libvirt]
+        override.vm.synced_folder ".", "/vagrant", type: "rsync"
+      end
 
-    centos.vm.provider :virtualbox do |prov, config|
-      config.vm.network :forwarded_port, guest: 80, host: 8080
-      config.vm.network :forwarded_port, guest: 443, host: 4433
-    end
-  end
+      machine.vm.provider :virtualbox do |p, override|
+        override.vm.box_url = box[:virtualbox]
 
-  config.vm.define "centos-bats" do |centos|
-    centos.vm.box = "centos64"
-    centos.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box"
-    centos.vm.hostname = "centos.installer"
+        if box[:name].include?('devel')
+          config.vm.network :forwarded_port, guest: 3000, host: 3330
+          config.vm.network :forwarded_port, guest: 443, host: 4430
+        else
+          override.vm.network :forwarded_port, guest: 80, host: 8080
+          override.vm.network :forwarded_port, guest: 443, host: 4433
+        end
+      end
 
-    centos.vm.provision :shell, :path => './bats/bootstrap_vagrant.sh'
+      machine.vm.provider :rackspace do |p, override|
+        override.vm.box = 'dummy'
+        p.server_name = machine.vm.hostname
+        p.flavor = /4GB/
+        p.image = box[:image_name]
+        override.ssh.pty = true if box[:pty]
+      end
 
-    centos.vm.provider :libvirt do |v, virt|
-      virt.vm.box_url = 'http://m0dlx.com/files/foreman/boxes/centos64.box'
-      virt.vm.synced_folder ".", "/vagrant", type: "rsync"
-    end
-
-    centos.vm.provider :rackspace do |p, override|
-      box = boxes.first
-      override.vm.box = 'dummy'
-      p.server_name = centos.vm.hostname
-      p.flavor = /8GB/
-      p.image = box[:image_name]
-      override.ssh.pty = true if box[:pty]
-    end
-
-    centos.vm.provider :virtualbox do |prov, config|
-      config.vm.network :forwarded_port, guest: 80, host: 8080
-      config.vm.network :forwarded_port, guest: 443, host: 4433
-    end
-  end
-
-  config.vm.define "centos-devel" do |centos|
-    centos.vm.box = "centos64"
-    centos.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box"
-    centos.vm.hostname = "centos.dev"
-
-    centos.vm.provision :shell do |shell|
-      shell.inline = 'yum -y install ruby && cd /vagrant && ./setup.rb --devel centos6'
-    end
-
-    centos.vm.provider :libvirt do |v, virt|
-      virt.vm.box_url = 'http://m0dlx.com/files/foreman/boxes/centos64.box'
-      virt.vm.synced_folder ".", "/vagrant", type: "rsync"
-    end
-
-    centos.vm.provider :virtualbox do |prov, config|
-      config.vm.network :forwarded_port, guest: 3000, host: 3330
-      config.vm.network :forwarded_port, guest: 443, host: 4430
-    end
-  end
-
-  config.vm.define "f19-devel" do |centos|
-    centos.vm.box = "fedora19"
-    centos.vm.box_url = "https://dl.dropboxusercontent.com/u/86066173/fedora-19.box"
-    centos.vm.hostname = "fedora.dev"
-
-
-    centos.vm.provision :shell do |shell|
-      shell.inline = 'yum -y install ruby && cd /vagrant && ./setup.rb --devel fedora19'
-    end
-
-    centos.vm.provider :libvirt do |v, virt|
-      virt.vm.box_url = 'http://m0dlx.com/files/foreman/boxes/fedora19.box'
-      virt.vm.synced_folder ".", "/vagrant", type: "rsync"
-    end
-
-    centos.vm.provider :virtualbox do |prov, config|
-      config.vm.network :forwarded_port, guest: 3000, host: 3333
-      config.vm.network :forwarded_port, guest: 443, host: 4443
     end
   end
 
