@@ -18,6 +18,10 @@ OptionParser.new do |opts|
     options[:devel] = true
   end
 
+  opts.on("--capsule", "Deploy a capsule") do |capsule|
+    options[:capsule] = true
+  end
+
   opts.on("--devel-user [USERNAME]", "User to setup development environment for") do |devuser|
     options[:devel_user] = devuser
   end
@@ -99,8 +103,6 @@ elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
   system('rpm -e foreman-release')
   system('rpm -e katello-repos')
   system('rpm -e puppetlabs-release')
-  #system('cp ./rhscl-ruby193-el7-epel-7.repo /etc/yum.repos.d/')
-  #system('cp ./rhscl-v8314-el7-epel-7.repo /etc/yum.repos.d/')
 
   if ARGV.include?('rhel7')
     # Setup RHEL specific repos
@@ -136,12 +138,20 @@ if options.has_key?(:devel)
   system('yum -y install rubygems')
   system('yum -y install rubygem-kafo')
   system('yum -y install katello-installer')
+elsif options.has_key?(:capsule)
+  system('yum -y install katello-installer')
 else
   system('yum -y install katello')
 end
 
 installer_options = options[:installer_options] || ""
-install_command = "katello-installer #{installer_options}"
+
+if options.has_key?(:capsule)
+  install_command = "capsule-installer #{installer_options}"
+else
+  install_command = "katello-installer #{installer_options}"
+end
+
 if options.has_key?(:devel)
 
   # Plain devel install, really only useful for the default vagrant setup:

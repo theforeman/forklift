@@ -1,6 +1,0 @@
-[rhscl-v8314-el7]
-name=Copr repo for v8314-el7 owned by rhscl
-baseurl=http://copr-be.cloud.fedoraproject.org/results/rhscl/v8314-el7/epel-7-$basearch/
-skip_if_unavailable=True
-gpgcheck=0
-enabled=1
