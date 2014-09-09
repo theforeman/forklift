@@ -62,7 +62,7 @@ setup() {
 }
 
 @test "run the installer once again" {
-  if [ -e "/vagrant/setup.rb" ]; then
+  if [ -e "/vagrant/katello-installer" ]; then
     cd /vagrant/katello-installer
     ./bin/katello-installer --no-colors -v
   else
