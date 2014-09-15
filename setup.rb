@@ -40,7 +40,7 @@ system('setenforce 0')
 
 if ARGV.include?('fedora19')
 
-  system('yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/Fedora/19/x86_64/katello-repos-latest.rpm')
+  system('yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/katello/Fedora/19/x86_64/katello-repos-latest.rpm')
   system('yum -y localinstall http://yum.theforeman.org/nightly/f19/x86_64/foreman-release.rpm')
 
   # Facter parses the F19 fedora-release improperly due to the umlaut and apstrophe in the code name
@@ -70,7 +70,7 @@ elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
     system('cp ./scl.repo /etc/yum.repos.d/')
   end
 
-  system('yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/RHEL/6Server/x86_64/katello-repos-latest.rpm')
+  system('yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm')
   system('yum -y localinstall http://yum.theforeman.org/nightly/el6/x86_64/foreman-release.rpm')
   system('yum -y localinstall http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
