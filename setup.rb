@@ -4,6 +4,12 @@
 
 require 'optparse'
 
+# Hash of katello_version => foreman_version
+foreman_version = {
+  "nightly" => "nightly",
+  "2.0" => "releases/1.6"
+}
+
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: ./setup.rb [options] rhel6|centos6|fedora19|rhel7|centos7"
@@ -28,7 +34,13 @@ OptionParser.new do |opts|
     options[:deployment_dir] = dir
   end
 
+  opts.on("--version [VERSION]", [:nightly, '2.0'], "Set the version of Katello to install nightly|2.0") do |version|
+    options[:version] = version
+  end
+
 end.parse!
+
+options[:version] = 'nightly' if options[:version].nil?
 
 # If /vagrant exists, cd to it:
 if File.directory?('/vagrant/')
@@ -70,10 +82,10 @@ elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
     system('cp ./scl.repo /etc/yum.repos.d/')
   end
 
-  system('yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm')
-  system('yum -y localinstall http://yum.theforeman.org/nightly/el6/x86_64/foreman-release.rpm')
   system('yum -y localinstall http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
+  system("yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm")
+  system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
 
 elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
 
@@ -82,8 +94,8 @@ elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
   system('rpm -e foreman-release')
   system('rpm -e katello-repos')
   system('rpm -e puppetlabs-release')
-  system('cp ./rhscl-ruby193-el7-epel-7.repo /etc/yum.repos.d/')
-  system('cp ./rhscl-v8314-el7-epel-7.repo /etc/yum.repos.d/')
+  #system('cp ./rhscl-ruby193-el7-epel-7.repo /etc/yum.repos.d/')
+  #system('cp ./rhscl-v8314-el7-epel-7.repo /etc/yum.repos.d/')
 
   if ARGV.include?('rhel7')
     # Setup RHEL specific repos
@@ -95,10 +107,13 @@ elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
     system('yum-config-manager --enable rhel-server-rhscl-7-rpms')
   end
 
+  system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/v8314/epel-7-x86_64/download/rhscl-v8314-epel-7-x86_64.noarch.rpm')
+  system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/ruby193/epel-7-x86_64/download/rhscl-ruby193-epel-7-x86_64.noarch.rpm')
   system('yum -y localinstall http://download-i2.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm')
-  system('yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/katello/RHEL/7/x86_64/katello-repos-latest.rpm')
-  system('yum -y localinstall http://yum.theforeman.org/nightly/el7/x86_64/foreman-release.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm')
+  system("yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm")
+  system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
+
 end
 
 if system('gem list | grep puppet > /dev/null')
@@ -140,7 +155,7 @@ end
 
 exit_code = 0
 puts "Launching installer with command: #{install_command}"
-if File.directory?('./katello-installer')
+if File.directory?('./katello-installer') && options[:version] == 'nightly'
   Dir.chdir('./katello-installer') do
     system("./bin/#{install_command}")
     exit_code = $?.exitstatus
