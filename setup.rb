@@ -108,6 +108,9 @@ if system('gem list | grep puppet > /dev/null')
   system('yum -y remove puppet')
 end
 
+#ensure puppet is installed
+system('yum -y update puppet')
+
 if options.has_key?(:devel)
   system('yum -y install rubygems')
   system('yum -y install rubygem-kafo')
@@ -117,7 +120,7 @@ else
 end
 
 installer_options = options[:installer_options] || ""
-install_command = "katello-installer #{installer_options} --reset"
+install_command = "katello-installer #{installer_options}"
 if options.has_key?(:devel)
 
   # Plain devel install, really only useful for the default vagrant setup:
