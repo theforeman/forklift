@@ -1,6 +1,6 @@
 VAGRANTFILE_API_VERSION = "2"
 
-bats_shell = "cd /vagrant && ./bats/bootstrap_vagrant.sh"
+bats_shell = "/vagrant/bats/bootstrap_vagrant.sh"
 install_shell = "yum -y install ruby && cd /vagrant && ./setup.rb "
 
 base_boxes = {
