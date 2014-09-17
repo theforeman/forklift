@@ -1,5 +1,8 @@
 VAGRANTFILE_API_VERSION = "2"
 
+bats_shell = "cd /vagrant && ./bats/bootstrap_vagrant.sh"
+install_shell = "yum -y install ruby && cd /vagrant && ./setup.rb "
+
 base_boxes = {
   :centos6 => {
     :box_name => 'centos6',
@@ -19,12 +22,12 @@ base_boxes = {
 }
 
 boxes = [
-  {:name => 'centos6', :shell_args => 'centos6'}.merge(base_boxes[:centos6]),
-  {:name => 'centos6-bats', :shell_args => './bats/bootstrap_vagrant.sh'}.merge(base_boxes[:centos6]),
-  {:name => 'centos6-devel', :shell_args => 'centos6 --devel'}.merge(base_boxes[:centos6]),
-  {:name => 'centos7', :shell_args => 'centos7'}.merge(base_boxes[:centos7]),
-  {:name => 'centos7-bats', :shell_args => './bats/bootstrap_vagrant.sh'}.merge(base_boxes[:centos7]),
-  {:name => 'centos7-devel', :shell_args => 'centos7 --devel'}.merge(base_boxes[:centos7]),
+  {:name => 'centos6', :shell_args => "#{install_shell} centos6"}.merge(base_boxes[:centos6]),
+  {:name => 'centos6-bats', :shell_args => bats_shell}.merge(base_boxes[:centos6]),
+  {:name => 'centos6-devel', :shell_args => "#{install_shell} centos6 --devel"}.merge(base_boxes[:centos6]),
+  {:name => 'centos7', :shell_args => "#{install_shell} centos7"}.merge(base_boxes[:centos7]),
+  {:name => 'centos7-bats', :shell_args => bats_shell}.merge(base_boxes[:centos7]),
+  {:name => 'centos7-devel', :shell_args => "#{install_shell} centos7 --devel"}.merge(base_boxes[:centos7]),
 ]
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -35,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       machine.vm.hostname = "katello-#{box[:name]}.example.com"
 
       machine.vm.provision :shell do |shell|
-        shell.inline = "yum -y install ruby && cd /vagrant && ./setup.rb #{box[:shell_args]}"
+        shell.inline = box[:shell_args]
       end
 
       machine.vm.provider :libvirt do |p, override|
