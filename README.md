@@ -10,11 +10,12 @@ automatically provision the VM with VirtualBox or libvirt while a direct deploym
 not using a VM or you already have the VM created. Check the table below to verify which operating
 system you can use for which type of deployment.
 
-| OS        | Nightly | Development | Direct | Vagrant |
-|-----------|:--------|:------------|:-------|:--------|
-| CentOS 6  | X       | X           | X      | X       |
-| RHEL 6    | X       | X           | X      |         |
-| CentOS 7  | X       | X           | X      | X       |
+| OS        | 2.0 |Nightly | Development | Direct | Vagrant |
+|-----------|:----|:-------|:------------|:-------|:--------|
+| CentOS 6  | X   | X      | X           | X      | X       |
+| CentOS 7  | X   | X      | X           | X      | X       |
+| RHEL 6    | X   | X      | X           | X      |         |
+| RHEL 7    | X   | X      | X           | X      |         |
 
 
 ## Vagrant Deployment
@@ -139,13 +140,17 @@ subscription-manager register --username USER --password PASSWORD --auto-attach
 3. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
 4. Enter the repository - `cd katello-deploy`
 
+For a release version in production:
+
+    ./setup.rb [rhel6|centos6|centos7|rhel7] --version=2.X
+
 For nightly production:
 
-    ./setup.rb [rhel6|centos6|centos7]
+    ./setup.rb [rhel6|centos6|centos7|rhel7]
 
 For development:
 
-    ./setup.rb --devel --devel-user=username [rhel6|centos6|centos7]
+    ./setup.rb --devel --devel-user=username [rhel6|centos6|centos7|rhel7]
 
 ## Bats Testing
 
