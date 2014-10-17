@@ -103,6 +103,7 @@ elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
     system('yum repolist') # TODO: necessary?
     system('yum-config-manager --disable "*"')
     system('yum-config-manager --enable rhel-7-server-rpms epel')
+    system('yum-config-manager --enable rhel-7-server-extras-rpms')
     system('yum-config-manager --enable rhel-7-server-optional-rpms')
     system('yum-config-manager --enable rhel-server-rhscl-7-rpms')
   end
