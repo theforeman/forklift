@@ -42,6 +42,16 @@ end.parse!
 
 options[:version] = 'nightly' if options[:version].nil?
 
+def plugins_repo(version, os_version)
+ repo = "[foreman-plugins]\n" \
+  "name=Foreman plugins\n" \
+  "baseurl=http://yum.theforeman.org/plugins/#{version}/#{os_version}/x86_64/\n" \
+  "enabled=1\n" \
+  "gpgcheck=0\n"
+
+  File.open('/etc/yum.repos.d/foreman-plugins.repo', 'w') { |file| file.write(repo) }
+end
+
 # If /vagrant exists, cd to it:
 if File.directory?('/vagrant/')
   Dir.chdir('/vagrant/')
@@ -54,6 +64,7 @@ if ARGV.include?('fedora19')
 
   system('yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/katello/Fedora/19/x86_64/katello-repos-latest.rpm')
   system('yum -y localinstall http://yum.theforeman.org/nightly/f19/x86_64/foreman-release.rpm')
+  plugins_repo(options[:version], 'f19')
 
   # Facter parses the F19 fedora-release improperly due to the umlaut and apstrophe in the code name
   system('cp ./fedora-release /etc')
@@ -86,6 +97,7 @@ elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
   system("yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm")
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
+  plugins_repo(options[:version], 'el6')
 
 elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
 
@@ -113,6 +125,7 @@ elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm')
   system("yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm")
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
+  plugins_repo(options[:version], 'el7')
 
 end
 
@@ -131,6 +144,8 @@ if options.has_key?(:devel)
   system('yum -y install rubygem-kafo')
   system('yum -y install katello-installer')
 else
+  system('yum -y install ruby193-rubygem-bastion')
+  system('yum -y localinstall ruby193-rubygem-katello-2.1.0-1.el7.git.174.18a1ceb.noarch.rpm')
   system('yum -y install katello')
 end
 
