@@ -83,7 +83,7 @@ setup() {
   cat > /etc/yum.repos.d/candlepin.repo << EOF
 [subman]
 name=An open source entitlement management system.
-baseurl=http://repos.fedorapeople.org/repos/candlepin/subscription-manager/epel-6/x86_64/
+baseurl=https://repos.fedorapeople.org/repos/candlepin/subscription-manager/epel-6/x86_64/
 enabled=1
 gpgcheck=0
 EOF

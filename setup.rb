@@ -50,9 +50,11 @@ end
 # TODO: Would be nice to not require this:
 system('setenforce 0')
 
+system('yum -y update nss')
+
 if ARGV.include?('fedora19')
 
-  system('yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/nightly/katello/Fedora/19/x86_64/katello-repos-latest.rpm')
+  system('yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/nightly/katello/Fedora/19/x86_64/katello-repos-latest.rpm')
   system('yum -y localinstall http://yum.theforeman.org/nightly/f19/x86_64/foreman-release.rpm')
 
   # Facter parses the F19 fedora-release improperly due to the umlaut and apstrophe in the code name
@@ -84,7 +86,7 @@ elsif ARGV.include?('centos6') || ARGV.include?('rhel6')
 
   system('yum -y localinstall http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
-  system("yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm")
+  system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm")
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
 
 elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
@@ -112,7 +114,7 @@ elsif ARGV.include?('centos7') || ARGV.include?('rhel7')
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/ruby193/epel-7-x86_64/download/rhscl-ruby193-epel-7-x86_64.noarch.rpm')
   system('yum -y localinstall http://download-i2.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm')
-  system("yum -y localinstall http://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm")
+  system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm")
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
 
 end
