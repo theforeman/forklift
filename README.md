@@ -83,6 +83,23 @@ The box can now be accessed via ssh and the Rails server started directly:
     sudo service iptables stop
     rails s
 
+### Adding Custom Boxes
+
+Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the katello-deploy directory. While this can be added to the Vagrantfile directly, updates to the katello-deploy repository could wipe our your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `boxes.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
+
+```
+my-nightly-test:
+  box: centos7
+  installer: '--reset'
+```
+
+Options:
+
+```
+box -- the ':name' one of the defined boxes in the Vagrantfile
+installer -- options that you would like passed to the katello-installer
+```
+
 ### Troubleshooting
 
 #### vagrant-libvirt

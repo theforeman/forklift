@@ -1,3 +1,5 @@
+require "yaml"
+
 VAGRANTFILE_API_VERSION = "2"
 
 bats_shell = "/vagrant/bats/bootstrap_vagrant.sh"
@@ -31,6 +33,18 @@ boxes = [
   {:name => 'centos7-bats', :shell_args => bats_shell}.merge(base_boxes[:centos7]),
   {:name => 'centos7-devel', :shell_args => "#{install_shell} centos7 --devel"}.merge(base_boxes[:centos7]),
 ]
+
+custom_boxes = YAML::load(File.open('boxes.yaml'))
+
+custom_boxes.each do |name, args|
+  if (box = boxes.find { |box| box[:name] == args['box'] })
+    definition = box.merge(:name => name)
+
+    definition[:shell_args] += " --installer-options='#{args['installer']}'" if args['installer']
+
+    boxes << definition
+  end
+end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
