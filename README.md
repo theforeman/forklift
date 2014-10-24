@@ -28,8 +28,8 @@ The first step in using Vagrant to deploy a Katello environment is to ensure tha
 1. Ensure you have Vagrant installed
    * For **libvirt**:
      1. Ensure you have the prerequisites installed `sudo yum install ruby rubygems gcc`
-     2. Download the appropriate distribution package and install from [Vagrant 1.3.5 Download](http://downloads.vagrantup.com/tags/v1.3.5)
-   * For **Virtualbox**, Vagrant 1.5+ can be downloaded and installed from [Vagrant 1.5 Download](http://www.vagrantup.com/downloads.html)
+     2. Vagrant 1.6.5+ can be downloaded and installed from [Vagrant Downloads](http://www.vagrantup.com/downloads.html)
+   * For **Virtualbox**, Vagrant 1.6.5+ can be downloaded and installed from [Vagrant Downloads](http://www.vagrantup.com/downloads.html)
 1. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
 1. Enter the repository - `cd katello-deploy`
 
@@ -41,10 +41,10 @@ page](https://www.virtualbox.org/wiki/Download_Old_Builds_4_2)
 
 ### Using Libvirt (Linux)
 
-The Vagrantfile provides default setup and boxes for use with the `vagrant-libvirt` provider. You need to use 0.0.13 of the vagrant-libvirt plugin. To set this up:
+The Vagrantfile provides default setup and boxes for use with the `vagrant-libvirt` provider. You need to use 0.0.20 of the vagrant-libvirt plugin. To set this up:
 
 1. Install libvirt. On CentOS/Fedora/RHEL, run `sudo yum install @virtualization libvirt-devel`
-1. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) `vagrant plugin install vagrant-libvirt --plugin-version 0.0.13`
+1. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) `vagrant plugin install vagrant-libvirt --plugin-version 0.0.20`
 1. Make sure your user is in the `qemu` group. (e.g. `[[ ! "$(groups $(whoami))" =~ "qemu" ]] && sudo usermod -aG qemu $(whoami)`)
 1. Set the libvirt environment variable in your `.bashrc` or for your current session - `export VAGRANT_DEFAULT_PROVIDER=libvirt`
 
