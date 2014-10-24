@@ -6,3 +6,4 @@ katello-installer
 puppet-*
 katello
 foreman
+boxes.yaml
