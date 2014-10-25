@@ -34,7 +34,7 @@ boxes = [
   {:name => 'centos7-devel', :shell_args => "#{install_shell} centos7 --devel"}.merge(base_boxes[:centos7]),
 ]
 
-custom_boxes = YAML::load(File.open('boxes.yaml'))
+custom_boxes = File.exists?('boxes.yaml') ? YAML::load(File.open('boxes.yaml')) : {}
 
 custom_boxes.each do |name, args|
   if (box = boxes.find { |box| box[:name] == args['box'] })
