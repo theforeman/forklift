@@ -185,3 +185,12 @@ To execute the bats framework:
   1.  ./bats/bootstrap.sh
   2.  fb-install-katello.bats
 
+## Run Scripts Post Install
+
+User defined scripts can be run after a successful installation to facilitate common per user actions. For example, if there are common setup tasks run on every devel box for a user these can be setup to run for every run of `setup.rb`. This also translates to running on every up/provision when using Vagrant. To define a script to be run, create a `scripts/` directory and then place the script inside. For example, if you wanted to have `vim` installed on every box, make a file `scripts/vim.sh`:
+
+```
+#!/bin/bash
+
+yum -y install vim
+```
