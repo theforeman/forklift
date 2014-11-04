@@ -50,6 +50,9 @@ end
 # TODO: Would be nice to not require this:
 system('setenforce 0')
 
+# Make sure to clean packages metadata
+system('yum clean all')
+
 system('yum -y update nss')
 
 if ARGV.include?('fedora19')
