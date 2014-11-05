@@ -129,7 +129,7 @@ elsif ['rhel7', 'centos7'].include? options[:os]
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
 
 else
-  $stderr.puts "OS #{os} is not supported"
+  $stderr.puts "OS #{options[:os]} is not supported. Must be one of #{supported_os.join(", ")}."
   exit(1)
 end
 
