@@ -98,6 +98,7 @@ Options:
 ```
 box -- the ':name' one of the defined boxes in the Vagrantfile
 installer -- options that you would like passed to the katello-installer
+options -- options that setup.rb accepts, e.g. --skip-installer
 ```
 
 ### Troubleshooting

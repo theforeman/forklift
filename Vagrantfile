@@ -40,7 +40,8 @@ custom_boxes.each do |name, args|
   if (box = boxes.find { |box| box[:name] == args['box'] })
     definition = box.merge(:name => name)
 
-    definition[:shell_args] += " --installer-options='#{args['installer']}'" if args['installer']
+    definition[:shell_args] += " #{args['options']} " if args['options']
+    definition[:shell_args] += " --installer-options='#{args['installer']}' " if args['installer']
 
     boxes << definition
   end
