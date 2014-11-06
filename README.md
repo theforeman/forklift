@@ -167,7 +167,7 @@ For nightly production:
 
 For development:
 
-    ./setup.rb --devel --devel-user=username [rhel6|centos6|centos7|rhel7]
+    ./setup.rb --devel --devel-user=username
 
 ## Bats Testing
 
