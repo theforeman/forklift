@@ -44,7 +44,10 @@ OptionParser.new do |opts|
     options[:version] = version
   end
 
-end.parse!
+  # Check for unsupported arguments. (parse! removes elements from ARGV.)
+  opts.parse!
+  opts.abort("Received unsupported arguments: #{ARGV}") if ARGV.length > 0
+end
 
 options[:version] = 'nightly' if options[:version].nil?
 
