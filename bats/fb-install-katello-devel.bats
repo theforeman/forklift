@@ -110,6 +110,7 @@ EOF
 
 @test "collect important logs" {
   tail -n100 /home/vagrant/foreman/logs/development.log /var/log/{apache2,httpd}/*_log /var/log/foreman{-proxy,}/*log /var/log/messages /var/log/rhsm/rhsm.log > /root/last_logs || true
+  tar -czf /root/installer_logs.tar.gz /var/log/katello-installer/* || true
   foreman-debug -q -d /root/foreman-debug || true
   if tIsRedHatCompatible; then
     tPackageExists sos || tPackageInstall sos
