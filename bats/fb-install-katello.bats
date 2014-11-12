@@ -8,6 +8,7 @@ load foreman_helper
 
 setup() {
   tForemanSetLang
+  tSetOSVersion
   FOREMAN_VERSION=$(tForemanVersion)
 
   tPackageExists 'wget' || tPackageInstall 'wget'
@@ -58,7 +59,7 @@ setup() {
   else
     wget https://raw.githubusercontent.com/Katello/katello-deploy/master/setup.rb
   fi
-  ruby setup.rb centos6 --install-options="--foreman-admin-password=changeme"
+  ruby setup.rb --install-options="--foreman-admin-password=changeme"
 }
 
 @test "run the installer once again" {
@@ -104,7 +105,7 @@ setup() {
   cat > /etc/yum.repos.d/candlepin.repo << EOF
 [subman]
 name=An open source entitlement management system.
-baseurl=https://repos.fedorapeople.org/repos/candlepin/subscription-manager/epel-6/x86_64/
+baseurl=https://repos.fedorapeople.org/repos/candlepin/subscription-manager/epel-${OS_VERSION}/x86_64/
 enabled=1
 gpgcheck=0
 EOF
