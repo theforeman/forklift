@@ -66,7 +66,11 @@ setup() {
   su - vagrant -c '/bin/bash --login  -c "cd /home/vagrant/foreman && screen -m -d rails s"'
 }
 
-@test "wait 60 seconds" {
+@test "generate apipie cache" {
+  foreman-rake apipie:cache
+}
+
+@test "wait 160 seconds" {
   sleep 160
 }
 
