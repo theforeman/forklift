@@ -101,6 +101,16 @@ installer -- options that you would like passed to the katello-installer
 options -- options that setup.rb accepts, e.g. --skip-installer
 ```
 
+Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
+
+```
+rhel7:
+  box_name: rhel7
+  shell: 'echo TEST'
+  pty: true
+  libvirt: http://example.org/vagrant/rhel-7.box
+```
+
 ### Plugins
 
 Any file on path `./plugins/*/Vagrantfile` will be loaded on `./Vagrantfile` evaluation. `plugins` directory is ignored by git therefore other git repositories can be cloned into `plugins` to add custom machines.
@@ -139,7 +149,6 @@ module APlugin
     end
   end
 end
-```
 
 ### Troubleshooting
 
