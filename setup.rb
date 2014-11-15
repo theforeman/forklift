@@ -192,7 +192,7 @@ else
   exit_code = $?.exitstatus
 end
 
-if exit_code == 0 && Dir.exist?('scripts')
+if exit_code == 0 && File.directory?('scripts')
   Dir.chdir('scripts')
   scripts = Dir.glob('*').select{ |e| File.file? e }
 
