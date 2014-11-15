@@ -24,14 +24,14 @@ base_boxes = {
 }
 
 boxes = [
-  {:name => 'centos6', :shell_args => "#{install_shell} centos6"}.merge(base_boxes[:centos6]),
-  {:name => 'centos6-2.0', :shell_args => "#{install_shell} centos6 --version=2.0"}.merge(base_boxes[:centos6]),
+  {:name => 'centos6', :shell_args => "#{install_shell}"}.merge(base_boxes[:centos6]),
+  {:name => 'centos6-2.0', :shell_args => "#{install_shell} --version=2.0"}.merge(base_boxes[:centos6]),
   {:name => 'centos6-bats', :shell_args => bats_shell}.merge(base_boxes[:centos6]),
-  {:name => 'centos6-devel', :shell_args => "#{install_shell} centos6 --devel"}.merge(base_boxes[:centos6]),
-  {:name => 'centos7', :shell_args => "#{install_shell} centos7"}.merge(base_boxes[:centos7]),
-  {:name => 'centos7-2.0', :shell_args => "#{install_shell} centos7 --version=2.0"}.merge(base_boxes[:centos7]),
+  {:name => 'centos6-devel', :shell_args => "#{install_shell} --devel"}.merge(base_boxes[:centos6]),
+  {:name => 'centos7', :shell_args => "#{install_shell} "}.merge(base_boxes[:centos7]),
+  {:name => 'centos7-2.0', :shell_args => "#{install_shell} --version=2.0"}.merge(base_boxes[:centos7]),
   {:name => 'centos7-bats', :shell_args => bats_shell}.merge(base_boxes[:centos7]),
-  {:name => 'centos7-devel', :shell_args => "#{install_shell} centos7 --devel"}.merge(base_boxes[:centos7]),
+  {:name => 'centos7-devel', :shell_args => "#{install_shell} --devel"}.merge(base_boxes[:centos7]),
 ]
 
 custom_boxes = File.exists?('boxes.yaml') ? YAML::load(File.open('boxes.yaml')) : {}

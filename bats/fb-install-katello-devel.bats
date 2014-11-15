@@ -59,7 +59,7 @@ setup() {
   else
     wget https://raw.githubusercontent.com/Katello/katello-deploy/master/setup.rb
   fi
-  ruby setup.rb centos6 --devel
+  ruby setup.rb --devel
 }
 
 @test "start the web-app" {
