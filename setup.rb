@@ -89,7 +89,7 @@ elsif ['centos6', 'rhel6'].include? options[:os]
     system('yum repolist') # TODO: necessary?
     system('yum-config-manager --disable "*"')
     system('yum-config-manager --enable epel')
-    system('subscription-manager repos --enable rhel-6-server-rpms rhel-6-server-optional-rpms rhel-server-rhscl-6-rpms')
+    system('subscription-manager repos --enable rhel-6-server-rpms --enable rhel-6-server-optional-rpms --enable rhel-server-rhscl-6-rpms')
   end
 
   # NOTE: Using CentOS SCL even on RHEL to simplify subscription usage.
@@ -118,7 +118,7 @@ elsif ['rhel7', 'centos7'].include? options[:os]
     system('yum repolist') # TODO: necessary?
     system('yum-config-manager --disable "*"')
     system('yum-config-manager --enable epel')
-    system('subscription-manager repos --enable rhel-7-server-rpms rhel-7-server-extras-rpms rhel-7-server-optional-rpms rhel-server-rhscl-7-rpms')
+    system('subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-optional-rpms --enable rhel-server-rhscl-7-rpms')
   end
 
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/v8314/epel-7-x86_64/download/rhscl-v8314-epel-7-x86_64.noarch.rpm')
