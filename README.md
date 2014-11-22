@@ -160,7 +160,7 @@ subscription-manager register --username USER --password PASSWORD --auto-attach
 
 For a release version in production:
 
-    ./setup.rb --version=2.X
+    ./setup.rb --version 2.0
 
 For nightly production:
 
