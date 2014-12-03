@@ -59,7 +59,12 @@ setup() {
   else
     wget https://raw.githubusercontent.com/Katello/katello-deploy/master/setup.rb
   fi
-  ruby setup.rb --install-options="--foreman-admin-password=changeme"
+
+  if [ $USE_KOJI_REPOS ]; then
+    ruby setup.rb --install-options="--foreman-admin-password=changeme" --koji-repos
+  else
+    ruby setup.rb --install-options="--foreman-admin-password=changeme"
+  fi
 }
 
 @test "run the installer once again" {
