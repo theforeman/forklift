@@ -44,6 +44,10 @@ OptionParser.new do |opts|
     options[:version] = version
   end
 
+  opts.on("--koji-repos", "Use the repos on Koji instead of the release repos") do |koji|
+    options[:koji_repos] = true
+  end
+
   # Check for unsupported arguments. (parse! removes elements from ARGV.)
   opts.parse!
   opts.abort("Received unsupported arguments: #{ARGV}") if ARGV.length > 0
@@ -65,6 +69,30 @@ system('yum clean all')
 system('yum -y update nss')
 
 options[:os] ||= detect_os
+
+def setup_koji_repos(os)
+  katello = "[katello-koji]\n" \
+             "name=katello-koji\n" \
+             "enabled=1\n" \
+             "gpgcheck=0\n" \
+             "baseurl=http://koji.katello.org/releases/yum/katello-nightly/katello/RHEL/#{os}/x86_64/"
+
+  pulp = "[pulp-koji]\n" \
+         "name=pulp-koji\n" \
+         "enabled=1\n" \
+         "gpgcheck=0\n" \
+         "baseurl=http://koji.katello.org/releases/yum/katello-nightly/pulp/RHEL/#{os}/x86_64/"
+
+  candlepin = "[candlepin-koji]\n" \
+              "name=candlepin-koji\n" \
+              "enabled=1\n" \
+              "gpgcheck=0\n" \
+              "baseurl=http://koji.katello.org/releases/yum/katello-nightly/candlepin/RHEL/#{os}/x86_64/"
+
+  File.open("/etc/yum.repos.d/katello-koji.repo", 'w') { |file| file.write(katello) }
+  File.open("/etc/yum.repos.d/pulp-koji.repo", 'w') { |file| file.write(pulp) }
+  File.open("/etc/yum.repos.d/candlepin-koji.repo", 'w') { |file| file.write(candlepin) }
+end
 
 if options[:os] == 'fedora19'
 
@@ -99,8 +127,13 @@ elsif ['centos6', 'rhel6'].include? options[:os]
 
   system('yum -y localinstall http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
-  system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm")
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
+
+  if options[:koji_repos]
+    setup_koji_repos(6)
+  else
+    system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm")
+  end
 
 elsif ['rhel7', 'centos7'].include? options[:os]
 
@@ -125,8 +158,13 @@ elsif ['rhel7', 'centos7'].include? options[:os]
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/ruby193/epel-7-x86_64/download/rhscl-ruby193-epel-7-x86_64.noarch.rpm')
   system('yum -y localinstall http://download-i2.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm')
-  system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm")
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
+
+  if options[:koji_repos]
+    setup_koji_repos(7)
+  else
+    system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm")
+  end
 
 else
   $stderr.puts "OS #{options[:os]} is not supported. Must be one of #{supported_os.join(", ")}."
@@ -153,6 +191,7 @@ end
 
 installer_options = options[:installer_options] || ""
 install_command = "katello-installer #{installer_options}"
+
 if options.has_key?(:devel)
 
   # Plain devel install, really only useful for the default vagrant setup:
