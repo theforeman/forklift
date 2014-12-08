@@ -105,37 +105,3 @@ setup() {
   [ x$FOREMAN_VERSION = "x1.3" ] && skip "Only supported on 1.4+"
   hammer -u admin -p changeme host info --name $(hostname -f) | egrep "Last report.*$(date +%Y/%m/%d)"
 }
-
-@test "install subscription manager" {
-  cat > /etc/yum.repos.d/candlepin.repo << EOF
-[subman]
-name=An open source entitlement management system.
-baseurl=https://repos.fedorapeople.org/repos/candlepin/subscription-manager/epel-${OS_VERSION}/x86_64/
-enabled=1
-gpgcheck=0
-EOF
-  tPackageExists subscription-manager || tPackageInstall subscription-manager
-  yum install -y subscription-manager
-}
-
-@test "register subscription manager" {
-  if [ -e "/etc/rhsm/ca/candlepin-local.pem" ]; then
-    rpm -e `rpm -qf /etc/rhsm/ca/candlepin-local.pem`
-  fi
-
-  rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm || 0
-  subscription-manager register --force --org=Default_Organization --environment=Library --username=admin --password=changeme
-}
-
-@test "check content host is registered" {
-  hammer -u admin -p changeme content-host info --name $(hostname -f) --organization="Default Organization"
-}
-
-@test "collect important logs" {
-  tail -n100 /var/log/{apache2,httpd}/*_log /var/log/foreman{-proxy,}/*log /var/log/messages > /root/last_logs || true
-  foreman-debug -q -d /root/foreman-debug || true
-  if tIsRedHatCompatible; then
-    tPackageExists sos || tPackageInstall sos
-    sosreport --batch --tmp-dir=/root || true
-  fi
-}
