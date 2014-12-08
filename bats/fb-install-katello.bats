@@ -103,5 +103,5 @@ setup() {
 
 @test "check host is registered" {
   [ x$FOREMAN_VERSION = "x1.3" ] && skip "Only supported on 1.4+"
-  hammer -u admin -p changeme host info --name $(hostname -f) | egrep "Last report.*$(date +%Y/%m/%d)"
+  hammer -u admin -p changeme host info --name $(hostname -f)
 }

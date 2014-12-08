@@ -67,7 +67,7 @@ setup() {
 }
 
 @test "generate apipie cache" {
-  foreman-rake apipie:cache
+  su - vagrant -c '/bin/bash --login  -c "cd /home/vagrant/foreman; rake apipie:cache"'
 }
 
 @test "wait 160 seconds" {
