@@ -156,7 +156,7 @@ elsif ['rhel7', 'centos7'].include? options[:os]
 
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/v8314/epel-7-x86_64/download/rhscl-v8314-epel-7-x86_64.noarch.rpm')
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/ruby193/epel-7-x86_64/download/rhscl-ruby193-epel-7-x86_64.noarch.rpm')
-  system('yum -y localinstall http://download-i2.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm')
+  system('yum -y localinstall http://download-i2.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm')
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
 
