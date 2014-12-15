@@ -101,6 +101,46 @@ installer -- options that you would like passed to the katello-installer
 options -- options that setup.rb accepts, e.g. --skip-installer
 ```
 
+### Plugins
+
+Any file on path `./plugins/*/Vagrantfile` will be loaded on `./Vagrantfile` evaluation. `plugins` directory is ignored by git therefore other git repositories can be cloned into `plugins` to add custom machines.
+
+Example of a plugin's `Vagrantfile`:
+
+```ruby
+module APlugin
+
+  Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    DB           = 'db'
+    WEB          = 'web'
+    PARENT_NAME  = 'centos6-devel'
+    PROJECT_PATH = "#{KatelloDeploy::ROOT}/../a_repo"
+
+    KatelloDeploy.define_vm config, KatelloDeploy.new_box(PARENT_NAME, DB) do |machine|
+      machine.vm.provision :shell do |shell|
+        shell.inline = 'echo doing DB box provisioning'
+        config.vm.synced_folder PROJECT_PATH, "/home/vagrant/a_repo"
+        config.vm.provider :virtualbox do |domain|
+          domain.memory = 1024
+        end
+      end
+    end
+
+    KatelloDeploy.define_vm config, KatelloDeploy.new_box(PARENT_NAME, WEB) do |machine|
+      machine.vm.provision :shell do |shell|
+        shell.inline = 'echo doing WEB box provisioning'
+        shell.inline = 'echo doing another WEB box provisioning'
+        config.vm.synced_folder PROJECT_PATH, "/home/vagrant/a_repo"
+        config.vm.provider :virtualbox do |domain|
+          domain.memory = 512
+        end
+      end
+    end
+  end
+end
+```
+
 ### Troubleshooting
 
 #### vagrant-libvirt
