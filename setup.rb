@@ -131,6 +131,8 @@ elsif ['centos6', 'rhel6'].include? options[:os]
     system('cp ./scl.repo /etc/yum.repos.d/')
   end
 
+  # As below epel repo uses mirrorlist
+  system('yum -y install yum-plugin-fastestmirror')
   bootstrap_epel
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
@@ -160,6 +162,8 @@ elsif ['rhel7', 'centos7'].include? options[:os]
     system('subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-optional-rpms --enable rhel-server-rhscl-7-rpms')
   end
 
+  # As below epel repo uses mirrorlist
+  system('yum -y install yum-plugin-fastestmirror')
   bootstrap_epel
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/v8314/epel-7-x86_64/download/rhscl-v8314-epel-7-x86_64.noarch.rpm')
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/ruby193/epel-7-x86_64/download/rhscl-ruby193-epel-7-x86_64.noarch.rpm')
