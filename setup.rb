@@ -70,8 +70,15 @@ system('yum -y update nss')
 
 options[:os] ||= detect_os
 
-def bootstrap_epel
-  system('cp ./bootstrap-epel.repo /etc/yum.repos.d')
+def bootstrap_epel(release)
+  epel = "[bootstrap-epel]\n" \
+          "name=Bootstrap EPEL\n" \
+          "failovermethod=priority\n" \
+          "enabled=0\n" \
+          "gpgcheck=0\n" \
+          "mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=epel-#{release}&arch=$basearch"
+
+  File.open("/etc/yum.repos.d/bootstrap-epel.repo", 'w') { |file| file.write(epel) }
   system('yum --enablerepo=bootstrap-epel -y install epel-release')
   system('rm -f /etc/yum.repos.d/bootstrap-epel.repo')
 end
@@ -124,6 +131,8 @@ elsif ['centos6', 'rhel6'].include? options[:os]
     system('yum-config-manager --disable "*"')
     system('yum-config-manager --enable epel')
     system('subscription-manager repos --enable rhel-6-server-rpms --enable rhel-6-server-optional-rpms --enable rhel-server-rhscl-6-rpms')
+    # As epel repo uses mirrorlist.
+    system('yum -y install yum-plugin-fastestmirror')
   end
 
   # NOTE: Using CentOS SCL even on RHEL to simplify subscription usage.
@@ -131,9 +140,7 @@ elsif ['centos6', 'rhel6'].include? options[:os]
     system('cp ./scl.repo /etc/yum.repos.d/')
   end
 
-  # As below epel repo uses mirrorlist
-  system('yum -y install yum-plugin-fastestmirror')
-  bootstrap_epel
+  bootstrap_epel(6)
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
   system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
 
@@ -160,11 +167,11 @@ elsif ['rhel7', 'centos7'].include? options[:os]
     system('yum-config-manager --disable "*"')
     system('yum-config-manager --enable epel')
     system('subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-optional-rpms --enable rhel-server-rhscl-7-rpms')
+    # As epel repo uses mirrorlist and yum vars.
+    system('yum -y install yum-plugin-fastestmirror')
   end
 
-  # As below epel repo uses mirrorlist
-  system('yum -y install yum-plugin-fastestmirror')
-  bootstrap_epel
+  bootstrap_epel(7)
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/v8314/epel-7-x86_64/download/rhscl-v8314-epel-7-x86_64.noarch.rpm')
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/ruby193/epel-7-x86_64/download/rhscl-ruby193-epel-7-x86_64.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm')
