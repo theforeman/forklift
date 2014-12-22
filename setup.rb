@@ -6,7 +6,8 @@ require './helper'
 # Hash of katello_version => foreman_version
 foreman_version = {
   "nightly" => "nightly",
-  "2.0" => "releases/1.6"
+  "2.0" => "releases/1.6",
+  "2.1" => "releases/1.7"
 }
 
 options = {}
@@ -40,7 +41,7 @@ OptionParser.new do |opts|
     options[:deployment_dir] = dir
   end
 
-  opts.on("--version [VERSION]", [:nightly, '2.0'], "Set the version of Katello to install nightly|2.0") do |version|
+  opts.on("--version [VERSION]", [:nightly, '2.0', '2.1'], "Set the version of Katello to install nightly|2.0|2.1") do |version|
     options[:version] = version
   end
 
