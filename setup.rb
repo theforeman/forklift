@@ -202,7 +202,7 @@ system('yum -y update puppet')
 if options.has_key?(:devel)
   system('yum -y install rubygems')
   system('yum -y install rubygem-kafo')
-  system('yum -y install katello-installer')
+  system('yum -y install katello-devel-installer')
 else
   system('yum -y install katello')
 end
