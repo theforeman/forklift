@@ -10,7 +10,7 @@ module KatelloDeploy
   BASE_BOXES = {
     :centos6 => {
       :box_name   => 'centos6',
-      :image_name => /CentOS 6 (PVHVM)/,
+      :image_name => /CentOS 6/,
       :default    => true,
       :pty        => true,
       :virtualbox => 'http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box',
