@@ -26,16 +26,16 @@ module KatelloDeploy
   }
 
   BOXES = [
-    { :name => 'centos6', :shell_args => "#{INSTALL_SHELL}" }.merge(BASE_BOXES[:centos6]),
-    { :name => 'centos6-2.0', :shell_args => "#{INSTALL_SHELL} --version=2.0" }.merge(BASE_BOXES.fetch(:centos6)),
-    { :name => 'centos6-2.1', :shell_args => "#{INSTALL_SHELL} --version=2.1" }.merge(BASE_BOXES.fetch(:centos6)),
-    { :name => 'centos6-bats', :shell_args => BATS_SHELL }.merge(BASE_BOXES.fetch(:centos6)),
-    { :name => 'centos6-devel', :shell_args => "#{INSTALL_SHELL} --devel" }.merge(BASE_BOXES.fetch(:centos6)),
-    { :name => 'centos7', :shell_args => "#{INSTALL_SHELL}" }.merge(BASE_BOXES.fetch(:centos7)),
-    { :name => 'centos7-2.0', :shell_args => "#{INSTALL_SHELL} --version=2.0" }.merge(BASE_BOXES.fetch(:centos7)),
-    { :name => 'centos7-2.1', :shell_args => "#{INSTALL_SHELL} --version=2.1" }.merge(BASE_BOXES.fetch(:centos7)),
-    { :name => 'centos7-bats', :shell_args => BATS_SHELL }.merge(BASE_BOXES.fetch(:centos7)),
-    { :name => 'centos7-devel', :shell_args => "#{INSTALL_SHELL} --devel" }.merge(BASE_BOXES[:centos7]),
+    { :name => 'centos6', :shell => "#{INSTALL_SHELL}" }.merge(BASE_BOXES[:centos6]),
+    { :name => 'centos6-2.0', :shell => "#{INSTALL_SHELL} --version=2.0" }.merge(BASE_BOXES.fetch(:centos6)),
+    { :name => 'centos6-2.1', :shell => "#{INSTALL_SHELL} --version=2.1" }.merge(BASE_BOXES.fetch(:centos6)),
+    { :name => 'centos6-bats', :shell => BATS_SHELL }.merge(BASE_BOXES.fetch(:centos6)),
+    { :name => 'centos6-devel', :shell => "#{INSTALL_SHELL} --devel" }.merge(BASE_BOXES.fetch(:centos6)),
+    { :name => 'centos7', :shell => "#{INSTALL_SHELL}" }.merge(BASE_BOXES.fetch(:centos7)),
+    { :name => 'centos7-2.0', :shell => "#{INSTALL_SHELL} --version=2.0" }.merge(BASE_BOXES.fetch(:centos7)),
+    { :name => 'centos7-2.1', :shell => "#{INSTALL_SHELL} --version=2.1" }.merge(BASE_BOXES.fetch(:centos7)),
+    { :name => 'centos7-bats', :shell => BATS_SHELL }.merge(BASE_BOXES.fetch(:centos7)),
+    { :name => 'centos7-devel', :shell => "#{INSTALL_SHELL} --devel" }.merge(BASE_BOXES[:centos7]),
   ]
 
   CUSTOM_BOXES = (File.exists?('boxes.yaml') && YAML::load(File.open('boxes.yaml'))) || {}
@@ -47,13 +47,13 @@ module KatelloDeploy
   end
 
   def self.define_vm(config, box = {})
-    config.vm.define box.fetch(:name), primary: box.fetch(:default) do |machine|
+    config.vm.define box.fetch(:name), primary: box.fetch(:default, false) do |machine|
       machine.vm.box      = box.fetch(:box_name)
       machine.vm.hostname = "katello-#{box.fetch(:name)}.example.com"
 
-      if box[:shell_args]
+      if box[:shell]
         machine.vm.provision :shell do |shell|
-          shell.inline = box.fetch(:shell_args)
+          shell.inline = box.fetch(:shell)
         end
       end
 
@@ -77,12 +77,14 @@ module KatelloDeploy
 
       end
 
-      machine.vm.provider :rackspace do |p, override|
-        override.vm.box  = 'dummy'
-        p.server_name    = machine.vm.hostname
-        p.flavor         = /4GB/
-        p.image          = box.fetch(:image_name)
-        override.ssh.pty = true if box.fetch(:pty)
+      if box.fetch(:image_name, false)
+        machine.vm.provider :rackspace do |p, override|
+          override.vm.box  = 'dummy'
+          p.server_name    = machine.vm.hostname
+          p.flavor         = /4GB/
+          p.image          = box.fetch(:image_name)
+          override.ssh.pty = true if box.fetch(:pty)
+        end
       end
 
       yield machine if block_given?
@@ -91,11 +93,14 @@ module KatelloDeploy
 
   CUSTOM_BOXES.each do |name, args|
     if (box = new_box(args['box'], name))
-      box[:shell_args] += " #{args['options']} " if args['options']
-      box[:shell_args] += " --installer-options='#{args['installer']}' " if args['installer']
-
-      BOXES << box
+      box[:shell] += " #{args['options']} " if args['options']
+      box[:shell] += " --installer-options='#{args['installer']}' " if args['installer']
+    else
+      box = {:name => name, :shell => INSTALL_SHELL}
+      box = box.merge(args)
     end
+      
+    BOXES << Hash[box.map { |(k,v)| [k.to_sym,v] }]
   end
 
   Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
