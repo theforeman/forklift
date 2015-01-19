@@ -10,7 +10,7 @@ module KatelloDeploy
   BASE_BOXES = {
     :centos6 => {
       :box_name   => 'centos6',
-      :image_name => /CentOS 6/,
+      :image_name => /CentOS 6.*PV/,
       :default    => true,
       :pty        => true,
       :virtualbox => 'http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box',
@@ -18,7 +18,7 @@ module KatelloDeploy
     },
     :centos7 => {
       :box_name   => 'centos7',
-      :image_name => /CentOS 7/,
+      :image_name => /CentOS 7.*PV/,
       :default    => true,
       :pty        => true,
       :libvirt    => 'https://download.gluster.org/pub/gluster/purpleidea/vagrant/centos-7.0/centos-7.0.box'
