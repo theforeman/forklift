@@ -2,6 +2,8 @@
 
 require 'optparse'
 require './helper'
+require './lib/koji-downloader'
+require './lib/repo-maker'
 
 # Hash of katello_version => foreman_version
 foreman_version = {
@@ -49,6 +51,10 @@ OptionParser.new do |opts|
     options[:koji_repos] = true
   end
 
+  opts.on("--koji-task [TASK ID]", "ID of a Koji build task to download RPMs from") do |task|
+    options[:koji_task] = task
+  end
+
   # Check for unsupported arguments. (parse! removes elements from ARGV.)
   opts.parse!
   opts.abort("Received unsupported arguments: #{ARGV}") if ARGV.length > 0
@@ -60,6 +66,15 @@ options[:version] = 'nightly' if options[:version].nil?
 if File.directory?('/vagrant/')
   Dir.chdir('/vagrant/')
 end
+
+if options[:koji_task]
+  downloader = KojiDownloader.new(:task_id => options[:koji_task], :directory => './repo')
+  downloader.download
+
+  repo_maker = RepoMaker.new(:name => "Koji Scratch Repo for #{options[:koji_task]}", :directory => './repo')
+  repo_maker.create
+end
+
 
 # TODO: Would be nice to not require this:
 system('setenforce 0')
