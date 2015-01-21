@@ -91,11 +91,12 @@ setup() {
 
 @test "install subscription manager" {
   cat > /etc/yum.repos.d/candlepin.repo << EOF
-[subman]
-name=An open source entitlement management system.
-baseurl=https://repos.fedorapeople.org/repos/candlepin/subscription-manager/epel-${OS_VERSION}/x86_64/
-enabled=1
+[dgoodwin-candlepin]
+name=Copr repo for candlepin owned by dgoodwin
+baseurl=https://copr-be.cloud.fedoraproject.org/results/dgoodwin/candlepin/epel-${OS_VERSION}-$basearch/
+skip_if_unavailable=True
 gpgcheck=0
+enabled=1
 EOF
   tPackageExists subscription-manager || tPackageInstall subscription-manager
   yum install -y subscription-manager
