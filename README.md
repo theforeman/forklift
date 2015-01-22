@@ -245,3 +245,26 @@ User defined scripts can be run after a successful installation to facilitate co
 
 yum -y install vim
 ```
+
+## Koji Scratch Builds
+
+The setup.rb script supports using Koji scratch builds to make RPMs available for testing purposes. For example, if you want to test a change to nightly, with a scratch build of rubygem-katello. This is done by fetching the scratch builds, and deploying a local yum repo to the box you are deploying on. Multiple scratch builds are also supported for testing changes to multiple components at once (e.g. the installer and the rubygem), see examples below. Also, this option may be specified from within boxes.yaml via the `options:` option.
+
+Single Scratch Build
+
+```
+./setup.rb --koji-task 214567
+```
+
+Multiple Scratch Builds
+
+```
+./setup.rb --koji-task 214567,879567,2747127
+```
+
+Custom Box
+```
+koji:
+  box: centos6
+  options: --koji-task 214567,879567
+```
