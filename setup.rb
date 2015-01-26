@@ -51,7 +51,7 @@ OptionParser.new do |opts|
     options[:koji_repos] = true
   end
 
-  opts.on("--koji-task [TASK ID]", "ID of a Koji build task to download RPMs from") do |task|
+  opts.on("--koji-task [TASK ID]", Array, "ID of a Koji build task to download RPMs from") do |task|
     options[:koji_task] = task
   end
 
@@ -68,10 +68,14 @@ if File.directory?('/vagrant/')
 end
 
 if options[:koji_task]
-  downloader = KojiDownloader.new(:task_id => options[:koji_task], :directory => './repo')
-  downloader.download
+  tasks = options[:koji_task].is_a?(Array) ? options[:koji_task] : [options[:koji_task]]
 
-  repo_maker = RepoMaker.new(:name => "Koji Scratch Repo for #{options[:koji_task]}", :directory => './repo')
+  tasks.each do |task|
+    downloader = KojiDownloader.new(:task_id => task, :directory => './repo')
+    downloader.download
+  end
+
+  repo_maker = RepoMaker.new(:name => "Koji Scratch Repo for #{tasks.join(' ')}", :directory => './repo')
   repo_maker.create
 end
 
