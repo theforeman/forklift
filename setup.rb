@@ -25,7 +25,11 @@ module Kernel
   alias_method :system, :system_with_debug
 end
 
-options = {}
+# default options
+options = {
+  :metapackage => 'katello',
+  :installer => 'katello-installer'
+}
 
 supported_os = ['rhel6', 'centos6', 'fedora19', 'rhel7', 'centos7']
 
@@ -76,6 +80,11 @@ OptionParser.new do |opts|
     end
 
     options[:module_prs] = module_prs
+  end
+
+  opts.on("--sam", "Install SAM instead of Katello") do
+    options[:metapackage] = 'katello-sam'
+    options[:installer] = 'sam-installer'
   end
 
   # Check for unsupported arguments. (parse! removes elements from ARGV.)
@@ -207,8 +216,8 @@ elsif ['rhel7', 'centos7'].include? options[:os]
   system('rpm -e foreman-release')
   system('rpm -e katello-repos')
   system('rpm -e puppetlabs-release')
-  #system('cp ./rhscl-ruby193-el7-epel-7.repo /etc/yum.repos.d/')
-  #system('cp ./rhscl-v8314-el7-epel-7.repo /etc/yum.repos.d/')
+  # system('cp ./rhscl-ruby193-el7-epel-7.repo /etc/yum.repos.d/')
+  # system('cp ./rhscl-v8314-el7-epel-7.repo /etc/yum.repos.d/')
 
   if options[:os] == 'rhel7'
     # Setup RHEL specific repos
@@ -245,7 +254,7 @@ if system('gem list | grep puppet > /dev/null')
   system('yum -y remove puppet')
 end
 
-#ensure puppet is installed
+# ensure puppet is installed
 system('yum -y update puppet')
 
 if options.has_key?(:devel)
@@ -253,11 +262,11 @@ if options.has_key?(:devel)
   system('yum -y install rubygem-kafo')
   system('yum -y install katello-devel-installer')
 else
-  system('yum -y install katello')
+  system("yum -y install #{options[:metapackage]}") # "katello" or "katello-sam"
 end
 
 installer_options = options[:installer_options] || ""
-install_command = "katello-installer #{installer_options}"
+install_command = "#{options[:installer]} #{installer_options}" # "katello-installer" or "sam-installer"
 
 if options.has_key?(:devel)
 

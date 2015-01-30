@@ -99,7 +99,7 @@ module KatelloDeploy
       box = {:name => name, :shell => INSTALL_SHELL}
       box = box.merge(args)
     end
-      
+
     BOXES << Hash[box.map { |(k,v)| [k.to_sym,v] }]
   end
 
