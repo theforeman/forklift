@@ -4,6 +4,7 @@ require 'optparse'
 require './helper'
 require './lib/koji-downloader'
 require './lib/repo-maker'
+require './lib/module-pull-request'
 
 # Hash of katello_version => foreman_version
 foreman_version = {
@@ -55,6 +56,16 @@ OptionParser.new do |opts|
     options[:koji_task] = task
   end
 
+  opts.on("--module-prs [MODULE/PR]", Array, "Array of module and PR combinations (e.g. qpid/12)") do |module_prs|
+    check = module_prs.select { |module_pr| module_pr.split('/').length != 2 }
+
+    if !check.empty?
+      opts.abort("The following module PRs are improperly formatted: #{check}")
+    end
+
+    options[:module_prs] = module_prs
+  end
+
   # Check for unsupported arguments. (parse! removes elements from ARGV.)
   opts.parse!
   opts.abort("Received unsupported arguments: #{ARGV}") if ARGV.length > 0
@@ -79,6 +90,13 @@ if options[:koji_task]
   repo_maker.create
 end
 
+if options[:module_prs]
+  mpr = ModulePullRequest.new
+
+  options[:module_prs].each do |module_pr|
+    mpr.setup_pull_request(module_pr.split('/')[0], module_pr.split('/')[1])
+  end
+end
 
 # TODO: Would be nice to not require this:
 system('setenforce 0')

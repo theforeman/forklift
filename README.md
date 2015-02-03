@@ -268,3 +268,24 @@ koji:
   box: centos6
   options: --koji-task 214567,879567
 ```
+
+## Testing Module Pull Requests
+
+The setup.rb script supports specifying any number of modules and associated pull requests for testing. For example, if a module under goes a refactoring, and you want to test that it continues to work with the installer. You'll need the name of the module and the pull request number you want to test. Note that the name in this situation is the name as laid down in the module directory as opposed to the github repository name. In other words, use 'qpid' not 'puppet-qpid'. Formatting requires the module name followed by a '/' and then the pull request number. See examples below.
+
+Single module PR:
+```
+./setup.rb --module-prs qpid/12
+```
+
+Multiple modules:
+```
+./setup.rb --module-prs qpid/12,katello/11
+```
+
+Custom Box:
+```
+module_test:
+  box: centos6
+  options: --module-prs qpid/12
+```
