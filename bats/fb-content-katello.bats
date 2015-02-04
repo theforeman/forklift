@@ -79,6 +79,11 @@ setup() {
     --unlimited-content-hosts=true | grep -q "Activation key created"
 }
 
+@test "disable auto-attach" {
+  hammer -u admin -p changeme activation-key update --organization="Default Organization" \
+    --name="Test AK" --auto-attach=false
+}
+
 @test "add subscription to activation key" {
   sleep 10
   activation_key_id=$(hammer -u admin -p changeme activation-key info --organization="Default Organization" \
