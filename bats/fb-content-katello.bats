@@ -132,8 +132,22 @@ EOF
   subscription-manager repos --enable="Default_Organization_Test_Product_Zoo" | grep -q "is enabled for this system"
 }
 
-@test "install package from content view" {
-  tPackageInstall walrus && tPackageExists walrus
+@test "install katello-agent" {
+  tPackageInstall katello-agent && tPackageExists katello-agent
+}
+
+@test "start katello-agent" {
+  service goferd status || service goferd start
+}
+
+@test "install package remotely (katello-agent)" {
+  timeout 30 hammer -u admin -p changeme content-host package install --content-host $(hostname -f) \
+    --organization="Default Organization" --packages walrus
+  tPackageExists walrus
+}
+
+@test "install package locally" {
+  tPackageInstall zebra && tPackageExists zebra
 }
 
 @test "add puppetclass to host" {
