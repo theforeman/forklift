@@ -93,6 +93,7 @@ setup() {
 }
 
 @test "install CLI (hammer)" {
+  yum clean all
   tPackageInstall foreman-cli
 }
 
