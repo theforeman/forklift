@@ -11,4 +11,4 @@ if [ -d "katello-deploy" ]; then
   rm -rf katello-deploy
 fi
 
-git clone https://github.com/katello/katello-deploy.git -b bats && katello-deploy/bats/install.sh /usr/local
+git clone https://github.com/katello/katello-deploy.git && katello-deploy/bats/install.sh /usr/local
