@@ -96,9 +96,9 @@ setup() {
 
 @test "install subscription manager" {
   cat > /etc/yum.repos.d/candlepin.repo << EOF
-[dgoodwin-candlepin]
-name=Copr repo for candlepin owned by dgoodwin
-baseurl=https://copr-be.cloud.fedoraproject.org/results/dgoodwin/candlepin/epel-${OS_VERSION}-x86_64/
+[dgoodwin-subscription-manager]
+name=Copr repo for subscription-manager owned by dgoodwin
+baseurl=https://copr-be.cloud.fedoraproject.org/results/dgoodwin/subscription-manager/epel-${OS_VERSION}-x86_64/
 skip_if_unavailable=True
 gpgcheck=0
 enabled=1
