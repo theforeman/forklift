@@ -72,6 +72,10 @@ OptionParser.new do |opts|
     options[:koji_task] = task
   end
 
+  opts.on("--disable-selinux", "Disable selinux prior to install") do
+    options[:disable_selinux] = true
+  end
+
   opts.on("--module-prs [MODULE/PR]", Array, "Array of module and PR combinations (e.g. qpid/12)") do |module_prs|
     check = module_prs.select { |module_pr| module_pr.split('/').length != 2 }
 
@@ -119,8 +123,9 @@ if options[:module_prs]
   end
 end
 
-# TODO: Would be nice to not require this:
-system('setenforce 0')
+if options[:version] == "2.1" || options[:devel] || options[:disable_selinux]
+  system('setenforce 0')
+end
 
 # Make sure to clean packages metadata
 system('yum clean all')
