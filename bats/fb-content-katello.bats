@@ -23,7 +23,7 @@ setup() {
 
 @test "sync repository" {
   hammer -u admin -p changeme repository synchronize --organization="Default Organization" \
-    --product="Test Product" --name="Zoo" | grep -q success
+    --product="Test Product" --name="Zoo"
 }
 
 @test "create puppet repository" {
@@ -65,12 +65,12 @@ setup() {
 
 @test "publish content view" {
   hammer -u admin -p changeme content-view publish --organization="Default Organization" \
-    --name="Test CV" | grep -q success
+    --name="Test CV"
 }
 
 @test "promote content view" {
   hammer -u admin -p changeme content-view version promote  --organization="Default Organization" \
-    --content-view="Test CV" --to-lifecycle-environment="Test" --version 1 | grep -q success
+    --content-view="Test CV" --to-lifecycle-environment="Test" --version 1
 }
 
 @test "create activation key" {
