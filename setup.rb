@@ -10,7 +10,8 @@ require './lib/module-pull-request'
 foreman_version = {
   "nightly" => "nightly",
   "2.0" => "releases/1.6",
-  "2.1" => "releases/1.7"
+  "2.1" => "releases/1.7",
+  "2.2" => "releases/1.8"
 }
 
 module Kernel
@@ -60,7 +61,7 @@ OptionParser.new do |opts|
     options[:deployment_dir] = dir
   end
 
-  opts.on("--version [VERSION]", [:nightly, '2.0', '2.1'], "Set the version of Katello to install nightly|2.0|2.1") do |version|
+  opts.on("--version [VERSION]", [:nightly, '2.0', '2.1', '2.2'], "Set the version of Katello to install nightly|2.0|2.1|2.2") do |version|
     options[:version] = version
   end
 
@@ -147,28 +148,44 @@ def bootstrap_epel(release)
   system('rm -f /etc/yum.repos.d/bootstrap-epel.repo')
 end
 
-def setup_koji_repos(os)
+def setup_koji_repos(os, version='nightly', foreman_version='nightly')
+  foreman_version = foreman_version.gsub('releases/', '')
+
   katello = "[katello-koji]\n" \
              "name=katello-koji\n" \
              "enabled=1\n" \
              "gpgcheck=0\n" \
-             "baseurl=http://koji.katello.org/releases/yum/katello-nightly/katello/RHEL/#{os}/x86_64/"
+             "baseurl=http://koji.katello.org/releases/yum/katello-#{version}/katello/RHEL/#{os}/x86_64/"
 
   pulp = "[pulp-koji]\n" \
          "name=pulp-koji\n" \
          "enabled=1\n" \
          "gpgcheck=0\n" \
-         "baseurl=http://koji.katello.org/releases/yum/katello-nightly/pulp/RHEL/#{os}/x86_64/"
+         "baseurl=http://koji.katello.org/releases/yum/katello-#{version}/pulp/RHEL/#{os}/x86_64/"
 
   candlepin = "[candlepin-koji]\n" \
               "name=candlepin-koji\n" \
               "enabled=1\n" \
               "gpgcheck=0\n" \
-              "baseurl=http://koji.katello.org/releases/yum/katello-nightly/candlepin/RHEL/#{os}/x86_64/"
+              "baseurl=http://koji.katello.org/releases/yum/katello-#{version}/candlepin/RHEL/#{os}/x86_64/"
+
+  foreman = "[foreman-koji]\n" \
+              "name=foreman-koji\n" \
+              "enabled=1\n" \
+              "gpgcheck=0\n" \
+              "baseurl=http://koji.katello.org/releases/yum/foreman-#{foreman_version}/RHEL/#{os}/x86_64/"
+
+  plugins = "[plugins-koji]\n" \
+              "name=plugins-koji\n" \
+              "enabled=1\n" \
+              "gpgcheck=0\n" \
+              "baseurl=http://koji.katello.org/releases/yum/foreman-plugins-#{foreman_version}/RHEL/#{os}/x86_64/"
 
   File.open("/etc/yum.repos.d/katello-koji.repo", 'w') { |file| file.write(katello) }
   File.open("/etc/yum.repos.d/pulp-koji.repo", 'w') { |file| file.write(pulp) }
   File.open("/etc/yum.repos.d/candlepin-koji.repo", 'w') { |file| file.write(candlepin) }
+  File.open("/etc/yum.repos.d/foreman-koji.repo", 'w') { |file| file.write(foreman) }
+  File.open("/etc/yum.repos.d/plugins-koji.repo", 'w') { |file| file.write(plugins) }
 end
 
 if options[:os] == 'fedora19'
@@ -206,12 +223,12 @@ elsif ['centos6', 'rhel6'].include? options[:os]
 
   bootstrap_epel(6)
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
-  system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
 
   if options[:koji_repos]
-    setup_koji_repos(6)
+    setup_koji_repos(6, options[:version], foreman_version[options[:version]])
   else
     system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm")
+    system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
   end
 
 elsif ['rhel7', 'centos7'].include? options[:os]
@@ -239,12 +256,12 @@ elsif ['rhel7', 'centos7'].include? options[:os]
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/v8314/epel-7-x86_64/download/rhscl-v8314-epel-7-x86_64.noarch.rpm')
   system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/ruby193/epel-7-x86_64/download/rhscl-ruby193-epel-7-x86_64.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm')
-  system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
 
   if options[:koji_repos]
-    setup_koji_repos(7)
+    setup_koji_repos(7, options[:version], foreman_version[options[:version]])
   else
     system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm")
+    system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
   end
 
 else
