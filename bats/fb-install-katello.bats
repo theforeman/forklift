@@ -57,7 +57,9 @@ setup() {
   if [ -e "/vagrant/setup.rb" ]; then
     cd /vagrant
   else
-    wget https://raw.githubusercontent.com/Katello/katello-deploy/master/setup.rb
+    wget https://github.com/Katello/katello-deploy/archive/master.zip
+    unzip master.zip
+    cd katello-deploy-master
   fi
 
   if [ $USE_KOJI_REPOS ]; then
