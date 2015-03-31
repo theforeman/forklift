@@ -136,16 +136,7 @@ system('yum -y update nss')
 options[:os] ||= detect_os
 
 def bootstrap_epel(release)
-  epel = "[bootstrap-epel]\n" \
-          "name=Bootstrap EPEL\n" \
-          "failovermethod=priority\n" \
-          "enabled=0\n" \
-          "gpgcheck=0\n" \
-          "mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=epel-#{release}&arch=$basearch"
-
-  File.open("/etc/yum.repos.d/bootstrap-epel.repo", 'w') { |file| file.write(epel) }
-  system('yum --enablerepo=bootstrap-epel -y install epel-release')
-  system('rm -f /etc/yum.repos.d/bootstrap-epel.repo')
+  system("yum -y localinstall http://dl.fedoraproject.org/pub/epel/epel-release-latest-#{release}.noarch.rpm")
 end
 
 def setup_koji_repos(os, version='nightly', foreman_version='nightly')
