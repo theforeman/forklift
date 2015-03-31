@@ -99,8 +99,8 @@ module KatelloDeploy
       box[:shell] += " --installer-options='#{args['installer']}' " if args['installer']
     else
       box = {:name => name, :shell => INSTALL_SHELL}
-      box = box.merge(args)
     end
+    box.merge!(args)
 
     BOXES << Hash[box.map { |(k,v)| [k.to_sym,v] }]
   end
