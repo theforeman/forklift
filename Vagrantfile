@@ -52,6 +52,7 @@ module KatelloDeploy
     config.vm.define box.fetch(:name), primary: box.fetch(:default, false) do |machine|
       machine.vm.box      = box.fetch(:box_name)
       machine.vm.hostname = "katello-#{box.fetch(:name)}.example.com"
+      config.ssh.insert_key = false
 
       if box[:shell]
         machine.vm.provision :shell do |shell|
