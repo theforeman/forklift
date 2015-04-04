@@ -1,6 +1,7 @@
 require "yaml"
 
 VAGRANTFILE_API_VERSION = "2"
+SUPPORT_SSH_INSERT_KEY = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
 
 module KatelloDeploy
   BATS_SHELL    = "/vagrant/bats/bootstrap_vagrant.sh"
@@ -52,7 +53,7 @@ module KatelloDeploy
     config.vm.define box.fetch(:name), primary: box.fetch(:default, false) do |machine|
       machine.vm.box      = box.fetch(:box_name)
       machine.vm.hostname = "katello-#{box.fetch(:name)}.example.com"
-      config.ssh.insert_key = false
+      config.ssh.insert_key = false if SUPPORT_SSH_INSERT_KEY
 
       if box[:shell]
         machine.vm.provision :shell do |shell|
