@@ -9,7 +9,6 @@ require './lib/module-pull-request'
 # Hash of katello_version => foreman_version
 foreman_version = {
   "nightly" => "nightly",
-  "2.0" => "releases/1.6",
   "2.1" => "releases/1.7",
   "2.2" => "releases/1.8"
 }
@@ -61,7 +60,7 @@ OptionParser.new do |opts|
     options[:deployment_dir] = dir
   end
 
-  opts.on("--version [VERSION]", [:nightly, '2.0', '2.1', '2.2'], "Set the version of Katello to install nightly|2.0|2.1|2.2") do |version|
+  opts.on("--version [VERSION]", [:nightly, '2.1', '2.2'], "Set the version of Katello to install nightly|2.1|2.2") do |version|
     options[:version] = version
   end
 
@@ -148,6 +147,10 @@ def bootstrap_epel(release)
   system('rm -f /etc/yum.repos.d/bootstrap-epel.repo')
 end
 
+def bootstrap_scl
+  system('yum -y install foreman-release-scl')
+end
+
 def setup_koji_repos(os, version='nightly', foreman_version='nightly')
   foreman_version = foreman_version.gsub('releases/', '')
 
@@ -211,14 +214,9 @@ elsif ['centos6', 'rhel6'].include? options[:os]
     system('yum repolist') # TODO: necessary?
     system('yum-config-manager --disable "*"')
     system('yum-config-manager --enable epel')
-    system('subscription-manager repos --enable rhel-6-server-rpms --enable rhel-6-server-optional-rpms --enable rhel-server-rhscl-6-rpms')
+    system('subscription-manager repos --enable rhel-6-server-rpms --enable rhel-6-server-optional-rpms')
     # As epel repo uses mirrorlist.
     system('yum -y install yum-plugin-fastestmirror')
-  end
-
-  # NOTE: Using CentOS SCL even on RHEL to simplify subscription usage.
-  if !File.directory?('/etc/yum.repos.d/scl.repo')
-    system('cp ./scl.repo /etc/yum.repos.d/')
   end
 
   bootstrap_epel(6)
@@ -230,7 +228,7 @@ elsif ['centos6', 'rhel6'].include? options[:os]
     system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm")
     system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
   end
-
+  bootstrap_scl
 elsif ['rhel7', 'centos7'].include? options[:os]
 
   # Clean out past runs if necessary:
@@ -238,8 +236,6 @@ elsif ['rhel7', 'centos7'].include? options[:os]
   system('rpm -e foreman-release')
   system('rpm -e katello-repos')
   system('rpm -e puppetlabs-release')
-  # system('cp ./rhscl-ruby193-el7-epel-7.repo /etc/yum.repos.d/')
-  # system('cp ./rhscl-v8314-el7-epel-7.repo /etc/yum.repos.d/')
 
   if options[:os] == 'rhel7'
     # Setup RHEL specific repos
@@ -247,14 +243,12 @@ elsif ['rhel7', 'centos7'].include? options[:os]
     system('yum repolist') # TODO: necessary?
     system('yum-config-manager --disable "*"')
     system('yum-config-manager --enable epel')
-    system('subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-optional-rpms --enable rhel-server-rhscl-7-rpms')
+    system('subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-optional-rpms')
     # As epel repo uses mirrorlist and yum vars.
     system('yum -y install yum-plugin-fastestmirror')
   end
 
   bootstrap_epel(7)
-  system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/v8314/epel-7-x86_64/download/rhscl-v8314-epel-7-x86_64.noarch.rpm')
-  system('yum -y localinstall https://www.softwarecollections.org/en/scls/rhscl/ruby193/epel-7-x86_64/download/rhscl-ruby193-epel-7-x86_64.noarch.rpm')
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm')
 
   if options[:koji_repos]
@@ -263,7 +257,7 @@ elsif ['rhel7', 'centos7'].include? options[:os]
     system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm")
     system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
   end
-
+  bootstrap_scl
 else
   $stderr.puts "OS #{options[:os]} is not supported. Must be one of #{supported_os.join(", ")}."
   exit(1)
