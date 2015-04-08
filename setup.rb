@@ -7,7 +7,7 @@ require './lib/repo-maker'
 require './lib/module-pull-request'
 
 # Hash of katello_version => foreman_version
-foreman_version = {
+foreman_versions = {
   "nightly" => "nightly",
   "2.0" => "releases/1.6",
   "2.1" => "releases/1.7",
@@ -27,9 +27,12 @@ module Kernel
 end
 
 # default options
+katello = true
 options = {
-  :metapackage => 'katello',
-  :installer => 'katello-installer'
+  :metapackage     => 'katello',
+  :installer       => 'katello-installer',
+  :version         => 'nightly',
+  :foreman_version => 'nightly'
 }
 
 supported_os = ['rhel6', 'centos6', 'fedora19', 'rhel7', 'centos7']
@@ -43,6 +46,13 @@ OptionParser.new do |opts|
 
   opts.on("--devel", "Setup a development environment") do |devel|
     options[:devel] = true
+  end
+
+  opts.on("--foreman [VERSION]", "Deploy Foreman version only") do |version|
+    katello = false
+    options[:foreman_version] = version == 'nightly' ? 'nightly' : "releases/#{version}"
+    options[:metapackage] = "foreman-installer"
+    options[:installer] = "foreman-installer"
   end
 
   opts.on("--devel-user [USERNAME]", "User to setup development environment for") do |devuser|
@@ -63,6 +73,7 @@ OptionParser.new do |opts|
 
   opts.on("--version [VERSION]", [:nightly, '2.0', '2.1', '2.2'], "Set the version of Katello to install nightly|2.0|2.1|2.2") do |version|
     options[:version] = version
+    options[:foreman_version] = foreman_versions[version]
   end
 
   opts.on("--koji-repos", "Use the repos on Koji instead of the release repos") do |koji|
@@ -96,8 +107,6 @@ OptionParser.new do |opts|
   opts.parse!
   opts.abort("Received unsupported arguments: #{ARGV}") if ARGV.length > 0
 end
-
-options[:version] = 'nightly' if options[:version].nil?
 
 # If /vagrant exists, cd to it:
 if File.directory?('/vagrant/')
@@ -181,9 +190,11 @@ def setup_koji_repos(os, version='nightly', foreman_version='nightly')
               "gpgcheck=0\n" \
               "baseurl=http://koji.katello.org/releases/yum/foreman-plugins-#{foreman_version}/RHEL/#{os}/x86_64/"
 
-  File.open("/etc/yum.repos.d/katello-koji.repo", 'w') { |file| file.write(katello) }
-  File.open("/etc/yum.repos.d/pulp-koji.repo", 'w') { |file| file.write(pulp) }
-  File.open("/etc/yum.repos.d/candlepin-koji.repo", 'w') { |file| file.write(candlepin) }
+  if katello
+    File.open("/etc/yum.repos.d/katello-koji.repo", 'w') { |file| file.write(katello) }
+    File.open("/etc/yum.repos.d/pulp-koji.repo", 'w') { |file| file.write(pulp) }
+    File.open("/etc/yum.repos.d/candlepin-koji.repo", 'w') { |file| file.write(candlepin) }
+  end
   File.open("/etc/yum.repos.d/foreman-koji.repo", 'w') { |file| file.write(foreman) }
   File.open("/etc/yum.repos.d/plugins-koji.repo", 'w') { |file| file.write(plugins) }
 end
@@ -225,10 +236,10 @@ elsif ['centos6', 'rhel6'].include? options[:os]
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm')
 
   if options[:koji_repos]
-    setup_koji_repos(6, options[:version], foreman_version[options[:version]])
+    setup_koji_repos(6, options[:version], options[:foreman_version])
   else
-    system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm")
-    system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el6/x86_64/foreman-release.rpm")
+    system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/6Server/x86_64/katello-repos-latest.rpm") if katello
+    system("yum -y localinstall http://yum.theforeman.org/#{options[:foreman_version]}/el6/x86_64/foreman-release.rpm")
   end
 
 elsif ['rhel7', 'centos7'].include? options[:os]
@@ -258,10 +269,11 @@ elsif ['rhel7', 'centos7'].include? options[:os]
   system('yum -y localinstall http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm')
 
   if options[:koji_repos]
-    setup_koji_repos(7, options[:version], foreman_version[options[:version]])
+    setup_koji_repos(7, options[:version], options[:foreman_version])
   else
-    system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm")
-    system("yum -y localinstall http://yum.theforeman.org/#{foreman_version[options[:version]]}/el7/x86_64/foreman-release.rpm")
+    system("yum -y localinstall https://fedorapeople.org/groups/katello/releases/yum/#{options[:version]}/katello/RHEL/7/x86_64/katello-repos-latest.rpm") if katello
+    system("yum -y localinstall http://yum.theforeman.org/#{options[:foreman_version]}/el7/x86_64/foreman-release.rpm")
+
   end
 
 else
