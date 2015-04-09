@@ -99,6 +99,8 @@ Options:
 box -- the ':name' one of the defined boxes in the Vagrantfile
 installer -- options that you would like passed to the katello-installer
 options -- options that setup.rb accepts, e.g. --skip-installer
+shell -- customize the shell script run
+bridged -- deploy on Libvirt with a bridged networking configuration, value of this parameter should be the interface of the host (e.g. em1)
 ```
 
 Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:

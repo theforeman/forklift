@@ -62,6 +62,7 @@ module KatelloDeploy
       machine.vm.provider :libvirt do |p, override|
         override.vm.box_url = box.fetch(:libvirt)
         override.vm.synced_folder ".", "/vagrant", type: "rsync"
+        override.vm.network :public_network, :dev => box.fetch(:bridged), :mode => 'bridge' if box.fetch(:bridged, false)
       end
 
       if box.key? :virtualbox
