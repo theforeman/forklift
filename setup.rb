@@ -182,7 +182,7 @@ def setup_koji_repos(os, version='nightly', foreman_version='nightly')
               "name=foreman-plugins\n" \
               "enabled=1\n" \
               "gpgcheck=0\n" \
-              "baseurl=http://yum.theforeman.org/plugins/#{foreman_version}/#{os}/x86_64/"
+              "baseurl=http://yum.theforeman.org/plugins/#{foreman_version}/el#{os}/x86_64/"
 
 
   File.open("/etc/yum.repos.d/katello-koji.repo", 'w') { |file| file.write(katello) }
