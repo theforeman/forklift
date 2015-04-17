@@ -130,7 +130,7 @@ end
 # Make sure to clean packages metadata
 system('yum clean all')
 
-system('yum -y update nss')
+system('yum -y update nss ca-certificates')
 
 options[:os] ||= detect_os
 
