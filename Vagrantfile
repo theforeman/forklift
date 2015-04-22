@@ -18,12 +18,12 @@ module KatelloDeploy
       :libvirt    => 'http://m0dlx.com/files/foreman/boxes/centos64.box'
     },
     :centos7 => {
-      :box_name   => 'centos7',
+      :box_name   => 'centos7_1',
       :image_name => /CentOS 7.*PV/,
       :default    => true,
       :pty        => true,
-      :libvirt    => 'https://download.gluster.org/pub/gluster/purpleidea/vagrant/centos-7.0/centos-7.0.box'
-    },
+      :libvirt    => 'https://download.gluster.org/pub/gluster/purpleidea/vagrant/centos-7.1/centos-7.1.box'
+    }
   }
 
   BOXES = [
