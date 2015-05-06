@@ -27,7 +27,7 @@ The first step in using Vagrant to deploy a Katello environment is to ensure tha
 
 1. Ensure you have Vagrant installed
    * For **libvirt**:
-     1. Ensure you have the prerequisites installed `sudo yum install ruby rubygems gcc`
+     1. Ensure you have the prerequisites installed `sudo yum install ruby rubygems ruby-devel gcc`
      2. Vagrant 1.6.5+ can be downloaded and installed from [Vagrant Downloads](http://www.vagrantup.com/downloads.html)
    * For **Virtualbox**, Vagrant 1.6.5+ can be downloaded and installed from [Vagrant Downloads](http://www.vagrantup.com/downloads.html)
 1. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
