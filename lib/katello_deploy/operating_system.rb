@@ -1,6 +1,41 @@
 module KatelloDeploy
   class OperatingSystem
 
+    SUPPORTED_OS = %w(rhel6 centos6 fedora19 rhel7 centos7)
+
+    def versions
+      {
+        'rhel6' => '6',
+        'rhel7' => '7',
+        'centos6' => '6',
+        'centos7' => '7',
+        'fedora19' => '19'
+      }
+    end
+
+    def version(os)
+      versions[os]
+    end
+
+    def distros
+      {
+        'rhel6' => 'rhel',
+        'rhel7' => 'rhel',
+        'centos6' => 'centos',
+        'centos7' => 'centos',
+        'fedora19' => 'fedora'
+      }
+    end
+
+    def distro(os)
+      distros[os]
+    end
+
+    def supported?(os)
+      return true if SUPPORTED_OS.include?(os)
+      fail "OS #{os} is not supported. Must be one of #{SUPPORTED_OS.join(', ')}."
+    end
+
     def detect
       begin
         os_family = `uname -s`.chomp.downcase

@@ -7,8 +7,11 @@ AllCops:
     - !ruby/regexp /katello-installer/
     - '**/setup.rb'
 
-Style/LineLength:
+Metrics/LineLength:
   Max: 120
+
+Metrics/ClassLength:
+  Max: 300
 
 Documentation:
   Enabled: false # don't require documentation
@@ -22,3 +25,6 @@ HashSyntax:
 
 Style/EmptyLinesAroundClassBody:
   EnforcedStyle: empty_lines
+
+Metrics/AbcSize:
+  Max: 20

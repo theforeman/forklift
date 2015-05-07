@@ -5,8 +5,6 @@ module KatelloDeploy
 
     attr_reader :task_id, :directory
 
-    KOJI_URL = 'http://koji.katello.org'
-
     def initialize(args)
       @task_id = args.fetch(:task_id)
       @directory = args.fetch(:directory)
@@ -24,6 +22,10 @@ module KatelloDeploy
 
     private
 
+    def koji_url
+      'http://koji.katello.org'
+    end
+
     def packages_in_build
       puts "Finding packages for Task: #{@task_id}"
       info = build_info
@@ -31,13 +33,13 @@ module KatelloDeploy
     end
 
     def build_info
-      get("#{KOJI_URL}/koji/taskinfo?taskID=#{task_id}")
+      get("#{koji_url}/koji/taskinfo?taskID=#{task_id}")
     end
 
     def download_scratch_build(package, directory)
       puts "Downloading #{package} to #{directory}"
       File.open("#{directory}/#{package}", 'wb') do |file|
-        file << get("#{KOJI_URL}/koji/getfile?taskID=#{@task_id}&name=#{package}")
+        file << get("#{koji_url}/koji/getfile?taskID=#{@task_id}&name=#{package}")
       end
     end
 

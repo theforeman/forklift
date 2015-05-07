@@ -220,7 +220,7 @@ For nightly production:
 
 For development:
 
-    ./setup.rb --devel --devel-user=username
+    ./setup.rb --install-type=devel --devel-user=username
 
 ## Bats Testing
 
