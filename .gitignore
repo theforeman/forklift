@@ -2,7 +2,7 @@
 *.swo
 *.swp
 *.swn
-katello-installer
+katello-installer*
 puppet-*
 katello
 foreman
@@ -11,3 +11,4 @@ plugins
 .idea
 scripts
 repo
+Gemfile.lock

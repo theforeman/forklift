@@ -1,8 +1,0 @@
-[SCL]
-name=CentOS-$releasever - SCL
-baseurl=http://mirror.centos.org/centos/6/SCL/$basearch/
-gpgcheck=0
-Priority=1
-enabled=1
-gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-Testing-6
-

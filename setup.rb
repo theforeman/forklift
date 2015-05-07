@@ -1,10 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require './helper'
-require './lib/koji-downloader'
-require './lib/repo-maker'
-require './lib/module-pull-request'
+require './lib/katello_deploy'
 
 # Hash of katello_version => foreman_version
 foreman_version = {
@@ -107,19 +104,20 @@ if options[:koji_task]
   tasks = options[:koji_task].is_a?(Array) ? options[:koji_task] : [options[:koji_task]]
 
   tasks.each do |task|
-    downloader = KojiDownloader.new(:task_id => task, :directory => './repo')
+    downloader = KatelloDeploy::KojiDownloader.new(:task_id => task, :directory => './repo')
     downloader.download
   end
 
-  repo_maker = RepoMaker.new(:name => "Koji Scratch Repo for #{tasks.join(' ')}", :directory => './repo')
+  repo_maker = KatelloDeploy::RepoMaker.new(:name => "Koji Scratch Repo for #{tasks.join(' ')}", :directory => './repo')
   repo_maker.create
 end
 
 if options[:module_prs]
-  mpr = ModulePullRequest.new
+  module_pr = KatelloDeploy::ModulePullRequest.new(:base_path => Dir.pwd)
+  module_pr.prepare
 
-  options[:module_prs].each do |module_pr|
-    mpr.setup_pull_request(module_pr.split('/')[0], module_pr.split('/')[1])
+  options[:module_prs].each do |pr|
+    module_pr.setup_pull_request(pr.split('/')[0], pr.split('/')[1])
   end
 end
 
@@ -132,7 +130,7 @@ system('yum clean all')
 
 system('yum -y update nss ca-certificates')
 
-options[:os] ||= detect_os
+options[:os] ||= KatelloDeploy::OperatingSystem.new.detect
 
 def bootstrap_epel(release)
   epel = "[bootstrap-epel]\n" \
@@ -207,7 +205,6 @@ elsif ['centos6', 'rhel6'].include? options[:os]
   system('rpm -e foreman-release')
   system('rpm -e katello-repos')
   system('rpm -e puppetlabs-release')
-  system('rm -f /etc/yum.repos.d/scl.repo')
 
   if options[:os] == 'rhel6'
     # Setup RHEL specific repos
