@@ -32,11 +32,17 @@ module KatelloDeploy
     { :name => 'centos6-2.2', :shell => "#{INSTALL_SHELL} --version=2.2" }.merge(BASE_BOXES.fetch(:centos6)),
     { :name => 'centos6-bats', :shell => BATS_SHELL }.merge(BASE_BOXES.fetch(:centos6)),
     { :name => 'centos6-devel', :shell => "#{INSTALL_SHELL} --devel" }.merge(BASE_BOXES.fetch(:centos6)),
+    { :name => 'centos6-foreman', :shell => "#{INSTALL_SHELL} --foreman nightly" }.merge(BASE_BOXES.fetch(:centos6)),
+    { :name => 'centos6-foreman-1.7', :shell => "#{INSTALL_SHELL} --foreman 1.7" }.merge(BASE_BOXES.fetch(:centos6)),
+    { :name => 'centos6-foreman-1.8', :shell => "#{INSTALL_SHELL} --foreman 1.8" }.merge(BASE_BOXES.fetch(:centos6)),
     { :name => 'centos7', :shell => "#{INSTALL_SHELL}" }.merge(BASE_BOXES.fetch(:centos7)),
     { :name => 'centos7-2.1', :shell => "#{INSTALL_SHELL} --version=2.1" }.merge(BASE_BOXES.fetch(:centos7)),
     { :name => 'centos7-2.2', :shell => "#{INSTALL_SHELL} --version=2.2" }.merge(BASE_BOXES.fetch(:centos7)),
     { :name => 'centos7-bats', :shell => BATS_SHELL }.merge(BASE_BOXES.fetch(:centos7)),
     { :name => 'centos7-devel', :shell => "#{INSTALL_SHELL} --devel" }.merge(BASE_BOXES[:centos7]),
+    { :name => 'centos7-foreman', :shell => "#{INSTALL_SHELL} --foreman nightly" }.merge(BASE_BOXES.fetch(:centos7)),
+    { :name => 'centos7-foreman-1.7', :shell => "#{INSTALL_SHELL} --foreman 1.7" }.merge(BASE_BOXES.fetch(:centos7)),
+    { :name => 'centos7-foreman-1.8', :shell => "#{INSTALL_SHELL} --foreman 1.8" }.merge(BASE_BOXES.fetch(:centos7)),
   ]
 
   CUSTOM_BOXES = (File.exists?('boxes.yaml') && YAML::load(File.open('boxes.yaml'))) || {}
