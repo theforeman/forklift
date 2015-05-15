@@ -1,0 +1,68 @@
+shells:
+  install_shell: &install_shell
+    shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
+  bats_shell: &bats_shell
+    shell: '/vagrant/bats/bootstrap_vagrant.sh'
+
+boxes:
+  centos6:
+    box_name:   'centos6'
+    image_name: !ruby/regexp '/CentOS 6.*PV/'
+    default:    true
+    pty:        true
+    virtualbox: 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/vmware/opscode_centos-6.6_chef-provisionerless.box'
+    libvirt:    'http://m0dlx.com/files/foreman/boxes/centos64.box'
+
+  centos7:
+    box_name:   'centos7_1'
+    image_name: !ruby/regexp '/CentOS 7.*PV/'
+    default:    true
+    pty:        true
+    virtualbox: 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-7.1_chef-provisionerless.box'
+    libvirt:    'https://download.gluster.org/pub/gluster/purpleidea/vagrant/centos-7.1/centos-7.1.box'
+
+  centos6-nightly:
+    box:  centos6
+    <<: *install_shell
+
+  centos6-2.1:
+    box: centos6
+    <<: *install_shell
+    options: --version=2.1
+
+  centos6-2.2:
+    box: centos6
+    <<: *install_shell
+    options: --version=2.2
+
+  centos6-bats:
+    box: centos6
+    <<: *bats_shell
+
+  centos6-devel:
+    box: centos6
+    <<: *install_shell
+    options: --devel
+
+  centos7-nightly:
+    box:  centos7
+    <<: *install_shell
+
+  centos7-2.1:
+    box: centos7
+    <<: *install_shell
+    options: --version=2.1
+
+  centos7-2.2:
+    box: centos7
+    <<: *install_shell
+    options: --version=2.2
+
+  centos7-bats:
+    box: centos7
+    <<: *bats_shell
+
+  centos7-devel:
+    box: centos7
+    <<: *install_shell
+    options: --devel

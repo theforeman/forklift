@@ -1,114 +1,16 @@
-require "yaml"
+require 'yaml'
+require './lib/katello_deploy'
 
-VAGRANTFILE_API_VERSION = "2"
+VAGRANTFILE_API_VERSION = '2'
 SUPPORT_SSH_INSERT_KEY = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
 
 module KatelloDeploy
-  BATS_SHELL    = "/vagrant/bats/bootstrap_vagrant.sh"
-  INSTALL_SHELL = "yum -y install ruby && cd /vagrant && ./setup.rb "
-  ROOT          = File.dirname File.expand_path(__FILE__)
-
-  BASE_BOXES = {
-    :centos6 => {
-      :box_name   => 'centos6',
-      :image_name => /CentOS 6.*PV/,
-      :default    => true,
-      :pty        => true,
-      :virtualbox => 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/vmware/opscode_centos-6.6_chef-provisionerless.box',
-      :libvirt    => 'http://m0dlx.com/files/foreman/boxes/centos64.box'
-    },
-    :centos7 => {
-      :box_name   => 'centos7_1',
-      :image_name => /CentOS 7.*PV/,
-      :default    => true,
-      :pty        => true,
-      :virtualbox => 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-7.1_chef-provisionerless.box',
-      :libvirt    => 'https://download.gluster.org/pub/gluster/purpleidea/vagrant/centos-7.1/centos-7.1.box'
-    }
-  }
-
-  BOXES = [
-    { :name => 'centos6', :shell => "#{INSTALL_SHELL}" }.merge(BASE_BOXES[:centos6]),
-    { :name => 'centos6-2.1', :shell => "#{INSTALL_SHELL} --version=2.1" }.merge(BASE_BOXES.fetch(:centos6)),
-    { :name => 'centos6-2.2', :shell => "#{INSTALL_SHELL} --version=2.2" }.merge(BASE_BOXES.fetch(:centos6)),
-    { :name => 'centos6-bats', :shell => BATS_SHELL }.merge(BASE_BOXES.fetch(:centos6)),
-    { :name => 'centos6-devel', :shell => "#{INSTALL_SHELL} --install-type='devel'" }.merge(BASE_BOXES.fetch(:centos6)),
-    { :name => 'centos7', :shell => "#{INSTALL_SHELL}" }.merge(BASE_BOXES.fetch(:centos7)),
-    { :name => 'centos7-2.1', :shell => "#{INSTALL_SHELL} --version=2.1" }.merge(BASE_BOXES.fetch(:centos7)),
-    { :name => 'centos7-2.2', :shell => "#{INSTALL_SHELL} --version=2.2" }.merge(BASE_BOXES.fetch(:centos7)),
-    { :name => 'centos7-bats', :shell => BATS_SHELL }.merge(BASE_BOXES.fetch(:centos7)),
-    { :name => 'centos7-devel', :shell => "#{INSTALL_SHELL} --install-type='devel'" }.merge(BASE_BOXES[:centos7]),
-  ]
-
-  CUSTOM_BOXES = (File.exists?('boxes.yaml') && YAML::load(File.open('boxes.yaml'))) || {}
-
-  def self.new_box(base, name)
-    if box = BOXES.find { |b| b.fetch(:name) == base }
-      box.merge(:name => name)
-    end
-  end
-
-  def self.define_vm(config, box = {})
-    config.vm.define box.fetch(:name), primary: box.fetch(:default, false) do |machine|
-      machine.vm.box      = box.fetch(:box_name)
-      machine.vm.hostname = "katello-#{box.fetch(:name).gsub('.','-')}.example.com"
-      config.ssh.insert_key = false if SUPPORT_SSH_INSERT_KEY
-
-      if box[:shell]
-        machine.vm.provision :shell do |shell|
-          shell.inline = box.fetch(:shell)
-        end
-      end
-
-      machine.vm.provider :libvirt do |p, override|
-        override.vm.box_url = box.fetch(:libvirt)
-        override.vm.synced_folder ".", "/vagrant", type: "rsync"
-        override.vm.network :public_network, :dev => box.fetch(:bridged), :mode => 'bridge' if box.fetch(:bridged, false)
-      end
-
-      if box.key? :virtualbox
-        machine.vm.provider :virtualbox do |p, override|
-          override.vm.box_url = box.fetch(:virtualbox)
-
-          if box.fetch(:name).include?('devel')
-            config.vm.network :forwarded_port, guest: 3000, host: 3330
-            config.vm.network :forwarded_port, guest: 443, host: 4430
-          else
-            override.vm.network :forwarded_port, guest: 80, host: 8080
-            override.vm.network :forwarded_port, guest: 443, host: 4433
-          end
-        end
-
-      end
-
-      if box.fetch(:image_name, false)
-        machine.vm.provider :rackspace do |p, override|
-          override.vm.box  = 'dummy'
-          p.server_name    = machine.vm.hostname
-          p.flavor         = /4GB/
-          p.image          = box.fetch(:image_name)
-          override.ssh.pty = true if box.fetch(:pty)
-        end
-      end
-
-      yield machine if block_given?
-    end
-  end
-
-  CUSTOM_BOXES.each do |name, args|
-    if (box = new_box(args['box'], name))
-      box[:shell] += " #{args['options']} " if args['options']
-      box[:shell] += " --installer-options='#{args['installer']}' " if args['installer']
-    else
-      box = {:name => name, :shell => INSTALL_SHELL}
-    end
-    box.merge!(args)
-
-    BOXES << Hash[box.map { |(k,v)| [k.to_sym,v] }]
-  end
+  @box_loader = BoxLoader.new
+  @boxes = @box_loader.add_boxes('config/base_boxes.yaml')
+  @boxes = @box_loader.add_boxes('boxes.yaml') if File.exists?('boxes.yaml')
 
   Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-    BOXES.each do |box|
+    @boxes.each do |name, box|
       define_vm config, box
     end
 
@@ -131,6 +33,54 @@ module KatelloDeploy
   end
 
   plugin_vagrantfiles.each { |f| load f }
+
+  def self.define_vm(config, box = {})
+    config.vm.define box.fetch('name'), primary: box.fetch('default', false) do |machine|
+      machine.vm.box      = box.fetch('box_name')
+      machine.vm.hostname = "katello-#{box.fetch('name').to_s.gsub('.','-')}.example.com"
+      config.ssh.insert_key = false if SUPPORT_SSH_INSERT_KEY
+
+      if box['shell']
+        machine.vm.provision :shell do |shell|
+          shell.inline = box.fetch('shell')
+        end
+      end
+
+      machine.vm.provider :libvirt do |p, override|
+        override.vm.box_url = box.fetch('libvirt')
+        override.vm.synced_folder ".", "/vagrant", type: "rsync"
+        override.vm.network :public_network, :dev => box.fetch('bridged'), :mode => 'bridge' if box.fetch('bridged', false)
+      end
+
+      if box.key?('virtualbox')
+        machine.vm.provider :virtualbox do |p, override|
+          override.vm.box_url = box.fetch('virtualbox')
+
+          if box.fetch('name').to_s.include?('devel')
+            config.vm.network :forwarded_port, guest: 3000, host: 3330
+            config.vm.network :forwarded_port, guest: 443, host: 4430
+          else
+            override.vm.network :forwarded_port, guest: 80, host: 8080
+            override.vm.network :forwarded_port, guest: 443, host: 4433
+          end
+        end
+
+      end
+
+      if box.fetch('image_name', false)
+        machine.vm.provider :rackspace do |p, override|
+          override.vm.box  = 'dummy'
+          p.server_name    = machine.vm.hostname
+          p.flavor         = /4GB/
+          p.image          = box.fetch('image_name')
+          override.ssh.pty = true if box.fetch('pty')
+        end
+      end
+
+      yield machine if block_given?
+    end
+  end
+
 
 end
 

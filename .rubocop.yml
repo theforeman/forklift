@@ -23,6 +23,9 @@ MethodLength:
 HashSyntax:
   Enabled: false # don't force 1.9 hash syntax
 
+Metrics/AbcSize:
+  Max: 20
+
 Style/EmptyLinesAroundClassBody:
   EnforcedStyle: empty_lines
 
