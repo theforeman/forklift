@@ -14,7 +14,7 @@ module KatelloDeploy
       :image_name => /CentOS 6.*PV/,
       :default    => true,
       :pty        => true,
-      :virtualbox => 'http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box',
+      :virtualbox => 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/vmware/opscode_centos-6.6_chef-provisionerless.box',
       :libvirt    => 'http://m0dlx.com/files/foreman/boxes/centos64.box'
     },
     :centos7 => {
@@ -22,6 +22,7 @@ module KatelloDeploy
       :image_name => /CentOS 7.*PV/,
       :default    => true,
       :pty        => true,
+      :virtualbox => 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-7.1_chef-provisionerless.box',
       :libvirt    => 'https://download.gluster.org/pub/gluster/purpleidea/vagrant/centos-7.1/centos-7.1.box'
     }
   }
