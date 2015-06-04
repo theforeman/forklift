@@ -147,18 +147,21 @@ def setup_koji_repos(os, version='nightly', foreman_version='nightly')
              "name=katello-koji\n" \
              "enabled=1\n" \
              "gpgcheck=0\n" \
+             "priority=1\n" \
              "baseurl=http://koji.katello.org/releases/yum/katello-#{version}/katello/RHEL/#{os}/x86_64/"
 
   pulp = "[pulp-koji]\n" \
          "name=pulp-koji\n" \
          "enabled=1\n" \
          "gpgcheck=0\n" \
+         "priority=1\n" \
          "baseurl=http://koji.katello.org/releases/yum/katello-#{version}/pulp/RHEL/#{os}/x86_64/"
 
   candlepin = "[candlepin-koji]\n" \
               "name=candlepin-koji\n" \
               "enabled=1\n" \
               "gpgcheck=0\n" \
+              "priority=1\n" \
               "baseurl=http://koji.katello.org/releases/yum/katello-#{version}/candlepin/RHEL/#{os}/x86_64/"
 
   foreman = "[foreman-koji]\n" \
@@ -179,6 +182,8 @@ def setup_koji_repos(os, version='nightly', foreman_version='nightly')
   File.open("/etc/yum.repos.d/candlepin-koji.repo", 'w') { |file| file.write(candlepin) }
   File.open("/etc/yum.repos.d/foreman-koji.repo", 'w') { |file| file.write(foreman) }
   File.open("/etc/yum.repos.d/foreman-plugins.repo", 'w') { |file| file.write(plugins) }
+
+  system('yum -y install yum-plugin-priorities')
 end
 
 if options[:os] == 'fedora19'
