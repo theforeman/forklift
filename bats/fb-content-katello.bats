@@ -101,6 +101,7 @@ name=Copr repo for subscription-manager owned by dgoodwin
 baseurl=https://copr-be.cloud.fedoraproject.org/results/dgoodwin/subscription-manager/epel-${OS_VERSION}-x86_64/
 skip_if_unavailable=True
 gpgcheck=0
+priority=1
 enabled=1
 EOF
   tPackageExists subscription-manager || tPackageInstall subscription-manager
