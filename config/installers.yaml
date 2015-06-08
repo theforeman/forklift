@@ -1,0 +1,14 @@
+katello:
+  installer: 'katello-installer'
+  packages:
+    - katello
+
+devel:
+  installer: 'katello-devel-installer'
+  packages:
+    - katello-devel-installer
+
+sam:
+  installer: 'sam-installer'
+  packages:
+    - katello-sam
