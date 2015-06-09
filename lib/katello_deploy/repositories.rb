@@ -23,7 +23,7 @@ module KatelloDeploy
         setup_koji_repos(@os_version, @katello_version, foreman_version)
       else
         bootstrap_katello(@katello_version, @os_version)
-        bootstrap_katello(foreman_version, @os_version)
+        bootstrap_foreman(foreman_version, @os_version)
       end
       bootstrap_scl
       true
