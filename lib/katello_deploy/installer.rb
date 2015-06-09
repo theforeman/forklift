@@ -37,6 +37,7 @@ module KatelloDeploy
 
     def run_installer(command)
       fail "WARNING: Skipping installer command: #{command}" if @skip_installer
+      command = "./bin/#{command}" if @local_path
       puts "Launching installer with command: #{command} #{@installer_options}"
 
       if @local_path

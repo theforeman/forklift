@@ -101,7 +101,7 @@ installer = KatelloDeploy::Installer.new(
   :installer_options => installer_options,
   :skip => options.has_key?(:skip_installer),
   :type => options[:install_type],
-  :local => (File.directory?('./katello-installer') && options[:version] == 'nightly') ? './katello-installer' : ''
+  :local_path => (File.directory?('./katello-installer') && options[:version] == 'nightly') ? './katello-installer' : nil
 )
 installer.install
 
