@@ -46,10 +46,10 @@ module KatelloDeploy
       # Setup RHEL specific repos
       system("yum -y  --disablerepo=\"*\" --enablerepo=rhel-#{os_version}-server-rpms install yum-utils wget")
       system('yum repolist') # TODO: necessary?
-      system('yum-CONFIG-manager --disable "*"')
-      system('yum-CONFIG-manager --enable epel')
+      system('yum-config-manager --disable "*"')
+      system('yum-config-manager --enable epel')
       system(
-        "subscription-manager repos --enable rhel-#{os_version}-server-rpms" \
+        "subscription-manager repos --enable rhel-#{os_version}-server-rpms " \
         "--enable rhel-#{os_version}-server-extras-rpms --enable rhel-#{os_version}-server-optional-rpms"
       )
       # As epel repo uses mirrorlist and yum vars.
