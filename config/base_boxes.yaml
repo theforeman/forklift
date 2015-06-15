@@ -42,7 +42,7 @@ boxes:
   centos6-devel:
     box: centos6
     <<: *install_shell
-    options: --devel
+    options: --install-type=devel
 
   centos7-nightly:
     box:  centos7
@@ -65,4 +65,4 @@ boxes:
   centos7-devel:
     box: centos7
     <<: *install_shell
-    options: --devel
+    options: --install-type=devel
