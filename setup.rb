@@ -99,7 +99,7 @@ installer_options = KatelloDeploy::Processors::InstallerOptionsProcessor.process
 )
 installer = KatelloDeploy::Installer.new(
   :installer_options => installer_options,
-  :skip => options.has_key?(:skip_installer),
+  :skip_installer => options[:skip_installer],
   :type => options[:install_type],
   :local_path => (File.directory?('./katello-installer') && options[:version] == 'nightly') ? './katello-installer' : nil
 )

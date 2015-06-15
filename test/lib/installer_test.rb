@@ -14,10 +14,7 @@ class TestInstaller < Minitest::Test
 
   def test_skip_installer
     @installer = KatelloDeploy::Installer.new(:skip_installer => true)
-
-    assert_raises RuntimeError do
-      @installer.run_installer('katello-installer')
-    end
+    refute @installer.run_installer('katello-installer')
   end
 
   def test_install
