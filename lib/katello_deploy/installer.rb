@@ -1,4 +1,5 @@
 require 'yaml'
+require 'English'
 
 module KatelloDeploy
   class Installer
@@ -38,27 +39,29 @@ module KatelloDeploy
     def run_installer(command)
       if @skip_installer
         warn "WARNING: Skipping installer command: #{command}"
-        return
+        return true
       end
 
+      success = false
       command = "./bin/#{command}" if @local_path
       puts "Launching installer with command: #{command} #{@installer_options}"
 
       if @local_path
         Dir.chdir(@local_path) do
-          syscall("#{command} #{@installer_options}")
+          success = syscall("#{command} #{@installer_options}")
         end
       else
-        syscall("#{command} #{@installer_options}")
+        success = syscall("#{command} #{@installer_options}")
       end
 
-      true
+      success
     end
 
     private
 
     def syscall(command)
       system(command)
+      $CHILD_STATUS == 0
     end
 
   end
