@@ -103,6 +103,8 @@ installer = KatelloDeploy::Installer.new(
   :type => options[:install_type],
   :local_path => (File.directory?('./katello-installer') && options[:version] == 'nightly') ? './katello-installer' : nil
 )
-installer.install
+success = installer.install
 
 KatelloDeploy::Processors::ScriptsProcessor.process
+
+exit(1) unless success

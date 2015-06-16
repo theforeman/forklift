@@ -14,7 +14,8 @@ class TestInstaller < Minitest::Test
 
   def test_skip_installer
     @installer = KatelloDeploy::Installer.new(:skip_installer => true)
-    refute @installer.run_installer('katello-installer')
+    @installer.expects(:syscall).with('katello-installer').never
+    assert @installer.run_installer('katello-installer')
   end
 
   def test_install
