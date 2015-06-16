@@ -116,7 +116,7 @@ module KatelloDeploy
       foreman.deploy
       plugins.deploy
 
-      install('yum-plugin-repositories')
+      install('yum-plugin-priorities')
     end
 
     private
