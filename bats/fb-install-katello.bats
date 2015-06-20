@@ -63,9 +63,9 @@ setup() {
   fi
 
   if [ $USE_KOJI_REPOS ]; then
-    ruby setup.rb --install-options="--foreman-admin-password=changeme" --koji-repos
+    ruby setup.rb --install-options="-v --foreman-admin-password=changeme" --koji-repos
   else
-    ruby setup.rb --install-options="--foreman-admin-password=changeme"
+    ruby setup.rb --install-options="-v --foreman-admin-password=changeme"
   fi
 }
 
