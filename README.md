@@ -44,7 +44,7 @@ page](https://www.virtualbox.org/wiki/Download_Old_Builds_4_2)
 The Vagrantfile provides default setup and boxes for use with the `vagrant-libvirt` provider. You need to use 0.0.20 of the vagrant-libvirt plugin. To set this up:
 
 1. Install libvirt. On CentOS/Fedora/RHEL, run `sudo yum install @virtualization libvirt-devel`
-1. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) `vagrant plugin install vagrant-libvirt --plugin-version 0.0.20`
+1. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) `vagrant plugin install vagrant-libvirt`
 1. Make sure your user is in the `qemu` group. (e.g. `[[ ! "$(groups $(whoami))" =~ "qemu" ]] && sudo usermod -aG qemu $(whoami)`)
 1. Set the libvirt environment variable in your `.bashrc` or for your current session - `export VAGRANT_DEFAULT_PROVIDER=libvirt`
 
