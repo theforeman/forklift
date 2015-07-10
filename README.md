@@ -236,7 +236,7 @@ To execute the bats framework:
 
  * On a fresh system you've manually installed:
   1.  ./bats/bootstrap.sh
-  2.  fb-install-katello.bats
+  2.  katello-bats
 
 ## Run Scripts Post Install
 
