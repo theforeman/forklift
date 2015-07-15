@@ -56,11 +56,11 @@ setup should work but we have been testing and using Vagrant with libvirt.
 
 Start the installation for CentOS 6:
 
-    vagrant up centos6
+    vagrant up centos6-nightly
 
 Start the installation for CentOS 7:
 
-    vagrant up centos7
+    vagrant up centos7-nightly
 
 This will create a libvirt based virtual machine running the Katello server on CentOS.
 
