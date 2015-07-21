@@ -42,7 +42,7 @@ OptionParser.new do |opts|
     options[:deployment_dir] = dir
   end
 
-  opts.on("--version [VERSION]", [:nightly, '2.1', '2.2'], "Set the version of Katello to install nightly|2.1|2.2") do |version|
+  opts.on("--version [VERSION]", [:nightly, '2.1', '2.2', '2.3'], "Set the version of Katello to install nightly|2.1|2.2|2.3") do |version|
     options[:version] = version
   end
 
