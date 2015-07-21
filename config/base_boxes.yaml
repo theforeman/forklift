@@ -35,6 +35,11 @@ boxes:
     <<: *install_shell
     options: --version=2.2
 
+  centos6-2.3:
+    box: centos6
+    <<: *install_shell
+    options: --version=2.3
+
   centos6-bats:
     box: centos6
     <<: *bats_shell
@@ -57,6 +62,11 @@ boxes:
     box: centos7
     <<: *install_shell
     options: --version=2.2
+
+  centos7-2.3:
+    box: centos7
+    <<: *install_shell
+    options: --version=2.3
 
   centos7-bats:
     box: centos7
