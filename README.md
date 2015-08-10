@@ -292,3 +292,42 @@ module_test:
   box: centos6
   options: --module-prs qpid/12
 ```
+
+## Client Testing With Docker
+
+The docker/clients directory contains setup and configuration to register clients via subscription-manager using an activation key and start katello-agent. Before using the client containers, Docker and docker-compose need to be installed and setup. On a Fedora based system (Fedora 20 or greater):
+
+```
+sudo yum install docker
+sudo service docker start
+sudo chkconfig docker on
+sudo usermod -aG docker your_username
+
+curl -L https://github.com/docker/compose/releases/download/VERSION_NUM/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+```
+
+For other platforms see the official instructions at:
+
+ * (docker)[https://docs.docker.com/installation/]
+ * (docker-compose)[https://docs.docker.com/compose/install/]
+
+In order to use the client containers you will also need the following:
+
+ * Foreman/Katello server IP address
+ * Foreman/Katello server hostname
+ * Foreman Organization
+ * Activation Key
+ * Katello version you have deployed (e.g. nightly, 2.2)
+
+Begin by changing into the docker/clients directory and copying the `docker-compose.yml.example` file to `docker-compose.yml` and filling in the necessary information gathered above. At this point, you can now spin-up one or more clients of varying types. For example, if you wanted to spin up a centos6 based client:
+
+```
+docker-compose up el6
+```
+
+If you want to spin up more than one client, let's say 10 for this example, the docker-compose scale command can be used:
+
+```
+docker-compose scale el6=10
+```
