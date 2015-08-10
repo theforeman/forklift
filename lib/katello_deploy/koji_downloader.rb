@@ -29,7 +29,7 @@ module KatelloDeploy
     def packages_in_build
       puts "Finding packages for Task: #{@task_id}"
       info = build_info
-      info.scan(/href=".*.rpm"/).collect { |link| link.split('name=')[1].gsub('"', '') }
+      info.scan(/href=".*.rpm"/).collect { |link| link.split('name=')[1].delete('"') }
     end
 
     def build_info
