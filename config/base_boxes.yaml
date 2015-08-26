@@ -28,17 +28,17 @@ boxes:
   centos6-2.1:
     box: centos6
     <<: *install_shell
-    options: --version=2.1
+    options: --katello-version=2.1
 
   centos6-2.2:
     box: centos6
     <<: *install_shell
-    options: --version=2.2
+    options: --katello-version=2.2
 
   centos6-2.3:
     box: centos6
     <<: *install_shell
-    options: --version=2.3
+    options: --katello-version=2.3
 
   centos6-bats:
     box: centos6
@@ -56,17 +56,17 @@ boxes:
   centos7-2.1:
     box: centos7
     <<: *install_shell
-    options: --version=2.1
+    options: --katello-version=2.1
 
   centos7-2.2:
     box: centos7
     <<: *install_shell
-    options: --version=2.2
+    options: --katello-version=2.2
 
   centos7-2.3:
     box: centos7
     <<: *install_shell
-    options: --version=2.3
+    options: --katello-version=2.3
 
   centos7-bats:
     box: centos7
@@ -76,3 +76,13 @@ boxes:
     box: centos7
     <<: *install_shell
     options: --install-type=devel
+
+  centos6-foreman:
+    box: centos6
+    <<: *install_shell
+    options: --install-type=foreman
+
+  centos7-foreman:
+    box: centos7
+    <<: *install_shell
+    options: --install-type=foreman

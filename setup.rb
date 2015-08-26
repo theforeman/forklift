@@ -8,7 +8,8 @@ require './lib/katello_deploy'
 options = {
   :metapackage => 'katello',
   :installer => 'katello-installer',
-  :version => 'nightly',
+  :katello_version => 'nightly',
+  :foreman_version => 'nightly',
   :install_type => 'katello',
   :skip_installer => false,
   :koji_task => [],
@@ -22,7 +23,7 @@ OptionParser.new do |opts|
     options[:os] = os.downcase
   end
 
-  opts.on("--install-type [INSTALL_TYPE]", [:katello, :devel, :sam], "Installation type") do |type|
+  opts.on("--install-type [INSTALL_TYPE]", [:katello, :devel, :sam, :foreman], "Installation type") do |type|
     options[:install_type] = type
   end
 
@@ -42,8 +43,12 @@ OptionParser.new do |opts|
     options[:deployment_dir] = dir
   end
 
-  opts.on("--version [VERSION]", [:nightly, '2.1', '2.2', '2.3'], "Set the version of Katello to install nightly|2.1|2.2|2.3") do |version|
-    options[:version] = version
+  opts.on("--katello-version [KATELLO_VERSION]", [:nightly, '2.1', '2.2', '2.3'], "Set the version of Katello to install nightly|2.1|2.2|2.3") do |version|
+    options[:katello_version] = version
+  end
+
+  opts.on("--foreman-version [FOREMAN_VERSION]", [:nightly, '1.7', '1.8', '1.9'], "Set the version of Foreman to install nightly|1.7|1.8|1.9") do |version|
+    options[:foreman_version] = version
   end
 
   opts.on("--koji-repos", "Use the repos on Koji instead of the release repos") do |koji|
@@ -75,7 +80,7 @@ OptionParser.new do |opts|
   opts.abort("Received unsupported arguments: #{ARGV}") if ARGV.length > 0
 end
 
-system('setenforce 0') if options[:version] == "2.1" || options[:devel] || options[:disable_selinux]
+system('setenforce 0') if options[:katello_version] == "2.1" || options[:devel] || options[:disable_selinux]
 
 operating_system = KatelloDeploy::OperatingSystem.new
 options[:os] ||= operating_system.detect
@@ -85,7 +90,8 @@ KatelloDeploy::Processors::KojiTaskProcessor.process(options[:koji_task])
 KatelloDeploy::Processors::ModulePullRequestProcessor.process(options[:module_prs], File.expand_path(File.dirname(__FILE__)))
 
 repositories = KatelloDeploy::Repositories.new(
-  :katello_version => options[:version],
+  :katello_version => options[:install_type] == :katello ? options[:katello_version] : nil,
+  :foreman_version => options[:install_type] == :foreman ? options[:foreman_version] : nil,
   :os_version => operating_system.version(options[:os]),
   :distro => operating_system.distro(options[:os])
 )
@@ -101,7 +107,7 @@ installer = KatelloDeploy::Installer.new(
   :installer_options => installer_options,
   :skip_installer => options[:skip_installer],
   :type => options[:install_type],
-  :local_path => (File.directory?('./katello-installer') && options[:version] == 'nightly') ? './katello-installer' : nil
+  :local_path => (File.directory?('./katello-installer') && options[:katello_version] == 'nightly') ? './katello-installer' : nil
 )
 success = installer.install
 
