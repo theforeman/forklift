@@ -23,61 +23,43 @@ boxes:
     virtualbox: 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-7.1_chef-provisionerless.box'
     libvirt:    'https://download.gluster.org/pub/gluster/purpleidea/vagrant/centos-7.1/centos-7.1.box'
 
-  centos6-nightly:
-    box:  centos6
-    <<: *install_shell
-
-  centos6-2.2:
+  centos6-foreman-nightly:
     box: centos6
     <<: *install_shell
-    options: --version=2.2
+    options: --scenario=foreman
 
-  centos6-2.3:
+  centos7-foreman-nightly:
+    box: centos7
+    <<: *install_shell
+    options: --scenario=foreman
+
+  centos6-katello-nightly:
     box: centos6
     <<: *install_shell
-    options: --version=2.3
+    options: --scenario=katello
 
-  centos6-2.4:
-    box: centos6
+  centos7-katello-nightly:
+    box: centos7
     <<: *install_shell
-    options: --version=2.4
+    options: --scenario=katello
 
   centos6-bats:
     box: centos6
     <<: *bats_shell
 
-  centos6-devel:
-    box: centos6
-    <<: *install_shell
-    options: --install-type=devel
-
-  centos7-nightly:
-    box:  centos7
-    <<: *install_shell
-
-  centos7-2.2:
-    box: centos7
-    <<: *install_shell
-    options: --version=2.2
-
-  centos7-2.3:
-    box: centos7
-    <<: *install_shell
-    options: --version=2.3
-
-  centos7-2.4:
-    box: centos7
-    <<: *install_shell
-    options: --version=2.4
-
   centos7-bats:
     box: centos7
     <<: *bats_shell
+  
+  centos6-devel:
+    box: centos6
+    <<: *install_shell
+    options: --scenario=katello-devel
 
   centos7-devel:
     box: centos7
     <<: *install_shell
-    options: --install-type=devel
+    options: --scenario=katello-devel
 
   runcible:
     box: centos7

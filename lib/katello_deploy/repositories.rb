@@ -4,13 +4,14 @@ require 'katello_deploy/repo_file'
 module KatelloDeploy
   class Repositories
 
-    attr_reader :os_version, :distro
+    attr_reader :os_version, :distro, :version, :scenario
 
     def initialize(args)
-      @katello_version = args.fetch(:katello_version)
+      @versions = YAML.load_file('config/versions.yaml')
+      @version = args.fetch(:version, 'nightly').to_s
       @os_version = args.fetch(:os_version)
       @distro = args.fetch(:distro)
-      @versions = YAML.load_file('config/versions.yaml')
+      @scenario = args.fetch(:scenario, 'foreman')
     end
 
     def configure(koji_repos = false)
@@ -20,17 +21,19 @@ module KatelloDeploy
       bootstrap_puppet(@os_version)
 
       if koji_repos
-        setup_koji_repos(@os_version, @katello_version, foreman_version)
+        setup_foreman_koji_repos(@os_version, @version)
+        setup_katello_koji_repos(@os_version, katello_version) if @scenario == 'katello' || @scenario == 'katello-devel'
       else
-        bootstrap_katello(@katello_version, @os_version)
-        bootstrap_foreman(foreman_version, @os_version)
+        bootstrap_foreman(@version, @os_version)
+        bootstrap_katello(katello_version, @os_version) if @scenario == 'katello' || @scenario == 'katello-devel'
       end
+
       bootstrap_scl
       true
     end
 
-    def foreman_version
-      @versions[@katello_version]
+    def katello_version
+      @versions['mapping'][@version]
     end
 
     def cleanup
@@ -72,6 +75,7 @@ module KatelloDeploy
     end
 
     def bootstrap_foreman(version, os_version)
+      version = (version == 'nightly') ? 'nightly' : "releases/#{version}"
       local_install("http://yum.theforeman.org/#{version}/el#{os_version}/x86_64/foreman-release.rpm")
     end
 
@@ -79,10 +83,24 @@ module KatelloDeploy
       local_install("http://yum.puppetlabs.com/puppetlabs-release-el-#{os_version}.noarch.rpm")
     end
 
-    # rubocop:disable Metrics/MethodLength
-    def setup_koji_repos(os, version = 'nightly', foreman_version = 'nightly')
-      foreman_version = foreman_version.gsub('releases/', '')
+    def setup_foreman_koji_repos(os, version = 'nightly')
+      version = version.gsub('releases/', '')
 
+      foreman = KatelloDeploy::RepoFile.new(
+        :name => 'foreman_koji',
+        :baseurl => "http://koji.katello.org/releases/yum/foreman-#{version}/RHEL/#{os}/x86_64/"
+      )
+
+      plugins = KatelloDeploy::RepoFile.new(
+        :name => 'foreman_plugins',
+        :baseurl => "http://koji.katello.org/releases/yum/foreman-plugins-#{version}/RHEL/#{os}/x86_64/"
+      )
+
+      foreman.deploy
+      plugins.deploy
+    end
+
+    def setup_katello_koji_repos(os, version = 'nightly')
       katello = KatelloDeploy::RepoFile.new(
         :name => 'katello_koji',
         :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/katello/RHEL/#{os}/x86_64/",
@@ -107,22 +125,10 @@ module KatelloDeploy
         :priority => 1
       )
 
-      foreman = KatelloDeploy::RepoFile.new(
-        :name => 'foreman_koji',
-        :baseurl => "http://koji.katello.org/releases/yum/foreman-#{foreman_version}/RHEL/#{os}/x86_64/"
-      )
-
-      plugins = KatelloDeploy::RepoFile.new(
-        :name => 'foreman_plugins',
-        :baseurl => "http://yum.theforeman.org/plugins/#{foreman_version}/el#{os}/x86_64/"
-      )
-
       katello.deploy
       client.deploy
       pulp.deploy
       candlepin.deploy
-      foreman.deploy
-      plugins.deploy
 
       install('yum-plugin-priorities')
     end

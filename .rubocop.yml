@@ -31,3 +31,12 @@ Style/EmptyLinesAroundClassBody:
 
 Metrics/AbcSize:
   Max: 20
+
+Metrics/AbcSize:
+  Max: 60
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Metrics/CyclomaticComplexity:
+  Max: 10

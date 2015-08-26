@@ -7,8 +7,8 @@ SUPPORT_BOX_CHECK_UPDATE = Gem.loaded_specs['vagrant'].version >= Gem::Version.c
 
 module KatelloDeploy
   @box_loader = BoxLoader.new
-  @boxes = @box_loader.add_boxes('config/base_boxes.yaml')
-  @boxes = @box_loader.add_boxes('boxes.yaml') if File.exists?('boxes.yaml')
+  @boxes = @box_loader.add_boxes('config/base_boxes.yaml', 'config/versions.yaml')
+  @boxes = @box_loader.add_boxes('boxes.yaml', 'config/versions.yaml') if File.exists?('boxes.yaml')
 
   Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     @boxes.each do |name, box|

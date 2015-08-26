@@ -1,24 +1,26 @@
 require 'yaml'
 require 'English'
+require 'fileutils'
 
 module KatelloDeploy
   class Installer
 
-    attr_accessor :installer_options, :skip_installer, :type, :local_path, :installers
+    attr_accessor :installer_options, :skip_installer, :scenario, :root_dir, :installers
 
     def initialize(args = {})
       self.installer_options = args.fetch(:installer_options, '')
       self.skip_installer = args.fetch(:skip_installer, false)
-      self.type = args.fetch(:type, 'katello')
-      self.local_path = args.fetch(:local_path, nil)
+      self.scenario = args.fetch(:scenario, 'foreman')
       self.installers = YAML.load_file('config/installers.yaml')
+      self.root_dir = args.fetch(:root_dir, '.')
     end
 
     def install
       install_puppet
       system('yum -y update')
-      install_packages(@installers[@type.to_s]['packages'])
-      run_installer(@installers[@type.to_s]['installer'])
+      install_packages(@installers[@scenario.to_s]['packages'])
+      setup_config
+      run_installer(@installers[@scenario.to_s]['installer'])
     end
 
     def install_puppet
@@ -37,14 +39,25 @@ module KatelloDeploy
       system("yum -y install #{packages.join(' ')}")
     end
 
+    def setup_config
+      return unless local_katello
+      curr_dir = Dir.pwd
+      Dir.chdir(foreman_config_root) do
+        symlink("#{curr_dir}/katello-installer/config/katello.yaml", 'katello.yaml')
+        symlink("#{curr_dir}/katello-installer/config/katello-answers.yaml", 'katello-answers.yaml')
+        symlink("#{curr_dir}/katello-installer/config/katello.migrations", 'katello.migrations')
+      end
+    end
+
     def run_installer(command)
+      command = "./bin/#{command}" if local_foreman
+
       if @skip_installer
         warn "WARNING: Skipping installer command: #{command}"
         return true
       end
 
       success = false
-      command = "./bin/#{command}" if @local_path
       puts "Launching installer with command: #{command} #{@installer_options}"
 
       if @local_path
@@ -52,7 +65,9 @@ module KatelloDeploy
           success = syscall("#{command} #{@installer_options}")
         end
       else
-        success = syscall("#{command} #{@installer_options}")
+        Dir.chdir('/') do
+          success = syscall("#{command} #{@installer_options}")
+        end
       end
 
       success
@@ -63,6 +78,28 @@ module KatelloDeploy
     def syscall(command)
       system(command)
       $CHILD_STATUS == 0
+    end
+
+    def foreman_root
+      return local_foreman if local_foreman
+      '/etc/foreman-installer'
+    end
+
+    def foreman_config_root
+      "#{foreman_root}/scenarios.d"
+    end
+
+    def local_katello
+      File.directory?("#{@root_dir}/katello-installer") ? './katello-installer' : nil
+    end
+
+    def local_foreman
+      File.directory?("#{@root_dir}/foreman-installer") ? './foreman-installer' : nil
+    end
+
+    def symlink(real, link)
+      return if File.symlink?(link)
+      File.symlink(real, link)
     end
 
   end
