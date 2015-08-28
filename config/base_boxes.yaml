@@ -3,6 +3,8 @@ shells:
     shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
   bats_shell: &bats_shell
     shell: '/vagrant/bats/bootstrap_vagrant.sh'
+  scenarios_shell: &scenarios_shell
+    shell: 'yum -y install ruby && cd /vagrant/shells && ./scenarios.sh'
 
 boxes:
   centos6:
@@ -86,3 +88,7 @@ boxes:
     box: centos7
     <<: *install_shell
     options: --install-type=foreman
+
+  centos7-scenarios:
+    box: centos7-foreman
+    <<: *scenarios_shell
