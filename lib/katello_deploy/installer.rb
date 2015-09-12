@@ -16,6 +16,7 @@ module KatelloDeploy
 
     def install
       install_puppet
+      system('yum -y update')
       install_packages(@installers[@type.to_s]['packages'])
       run_installer(@installers[@type.to_s]['installer'])
     end
