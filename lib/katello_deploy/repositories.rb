@@ -72,7 +72,8 @@ module KatelloDeploy
     end
 
     def bootstrap_foreman(version, os_version)
-      local_install("http://yum.theforeman.org/#{version}/el#{os_version}/x86_64/foreman-release.rpm")
+      prefix = version == 'nightly' ? '' : 'releases/'
+      local_install("http://yum.theforeman.org/#{prefix}#{version}/el#{os_version}/x86_64/foreman-release.rpm")
     end
 
     def bootstrap_puppet(os_version)
