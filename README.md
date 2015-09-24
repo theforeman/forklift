@@ -383,3 +383,20 @@ If you want to spin up more than one client, let's say 10 for this example, the 
 ```
 docker-compose scale el6=10
 ```
+
+## Jenkins Job Builder Development
+
+When modifying or creating new Jenkins jobs, it's helpful to generate the XML file to compare to the one Jenkins has. In order to do this, you need a properly configured Jenkins Job Builder environment. The dockerfile under docker/jjb can be used as a properly configured environment. To begin, copy `docker-compose.yml.example` to `docker-compose.yml`:
+
+```
+cd docker/jjb
+cp docker-compose.yml.example docker-compose.yml
+```
+
+Now edit the docker-compose configuration file to point at your local copy of the `foreman-infra` repository so that it will mount and record changes locally when working within the container. Ensure that either your docker has permissions to the repository being mounted or that the appropriate Docker SELinux context is set: (Docker SELinux with Volumes)[http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/]. Now we are ready to do any Jenkins Job Builder work. For example, if you wanted to generate all the XML files for all jobs:
+
+```
+docker-compose run jjb bash
+cd foreman-infra/puppet/modules/jenkins_job_builder/files/theforeman.org
+jenkins-jobs -l debug test -r . -o /tmp/jobs
+```
