@@ -21,6 +21,12 @@ setup() {
     --url https://repos.fedorapeople.org/repos/pulp/pulp/demo_repos/zoo/ | grep -q "Repository created"
 }
 
+@test "upload package" {
+  wget https://repos.fedorapeople.org/repos/pulp/pulp/demo_repos/test_errata_install/animaniacs-0.1-1.noarch.rpm -P /tmp
+  hammer -u admin -p changeme repository upload-content --organization="Default Organization"\
+    --product="Test Product" --name="Zoo" --path="/tmp/animaniacs-0.1-1.noarch.rpm" | grep -q "Successfully uploaded"
+}
+
 @test "sync repository" {
   hammer -u admin -p changeme repository synchronize --organization="Default Organization" \
     --product="Test Product" --name="Zoo"
