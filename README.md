@@ -47,7 +47,7 @@ The Vagrantfile provides default setup and boxes for use with the `vagrant-libvi
 1. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) `vagrant plugin install vagrant-libvirt`
 1. Make sure your user is in the `qemu` group. (e.g. `[[ ! "$(groups $(whoami))" =~ "qemu" ]] && sudo usermod -aG qemu $(whoami)`)
 1. Set the libvirt environment variable in your `.bashrc` or for your current session - `export VAGRANT_DEFAULT_PROVIDER=libvirt`
-1. If you are asked to provide your password for every command, follow (these policykit steps)[http://fedoramagazine.org/running-vagrant-fedora-22/]
+1. If you are asked to provide your password for every command, follow [these policykit steps](http://fedoramagazine.org/running-vagrant-fedora-22/).
 
 ### Nightly Production Install
 
