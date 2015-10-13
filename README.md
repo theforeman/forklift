@@ -77,7 +77,7 @@ To deploy to CentOS 7:
 
     vagrant up centos7-devel
 
-The box can now be accessed via ssh and the Rails server started directly:
+The box can now be accessed via ssh and the Rails server started directly (this assumes you are connecting as the default `vagrant` user):
 
     vagrant ssh <deployment>
     cd /home/vagrant/foreman
@@ -154,6 +154,46 @@ module APlugin
 end
 ```
 
+If you would like to inject hostname management and package caching without
+updating the base Vagrantfile,  you can install the `vagrant-hostname` and
+`vagrant-cachier` plugins and then create
+`./plugins/my-custom-plugins/Vagrantfile` with the following content:
+
+```ruby
+
+# this enables some customizations that should not be used until after you have a
+# working basic install.
+
+module MyCustomPlugins
+  Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    # set up some shared dirs
+    config.vm.synced_folder "/path/to/local/checkout/katello", "/home/vagrant/share/katello", type: "nfs"
+    config.vm.synced_folder "/path/to/local/checkout/foreman", "/home/vagrant/share/foreman", type: "nfs"
+    config.vm.synced_folder "/path/to/local/checkout/foreman-gutterball", "/home/vagrant/share/foreman-gutterball", type: "nfs"
+
+    if Vagrant.has_plugin?("vagrant-hostmanager")
+      config.hostmanager.enabled = true
+      config.hostmanager.manage_host = true
+    end
+
+    if Vagrant.has_plugin?("vagrant-cachier")
+      # Configure cached packages to be shared between instances of the same base box.
+      # More info on http://fgrehm.viewdocs.io/vagrant-cachier/usage
+      config.cache.scope = :box
+      # disable gem caching for now, due to permissions issue
+      config.cache.auto_detect = false
+      config.cache.enable :yum
+
+      config.cache.synced_folder_opts = {
+        type: :nfs,
+        mount_options: ['rw', 'vers=4', 'tcp', 'nolock']
+      }
+    end
+  end
+end
+```
+
 ### Troubleshooting
 
 #### vagrant-libvirt
@@ -189,6 +229,18 @@ Make sure nfs is installed and running:
 sudo yum install nfs-utils
 sudo service start nfs-server
 ```
+
+#### low disk space
+
+Your OS may be installed with a large root parition and smaller `/home`
+partition. Vagrant will populate `~/.vagrant.d/` with boxes by default; each of
+which can be over 2GB in size. This may cause disk space issues on your `/home`
+partition.
+
+To store your Vagrant files elsewhere, you can create a directory outside of
+`/home` and tell Vagrant about it by setting `VAGRANT_HOME=<path to vagrant
+dir>`. You may need to set this in your `.bash_profile` so it persists between
+logins.
 
 
 ## Direct Deployment
