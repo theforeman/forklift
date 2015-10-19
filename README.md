@@ -361,8 +361,8 @@ chmod +x /usr/local/bin/docker-compose
 
 For other platforms see the official instructions at:
 
- * (docker)[https://docs.docker.com/installation/]
- * (docker-compose)[https://docs.docker.com/compose/install/]
+ * [docker](https://docs.docker.com/installation/)
+ * [docker-compose](https://docs.docker.com/compose/install/)
 
 In order to use the client containers you will also need the following:
 
