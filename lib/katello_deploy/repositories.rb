@@ -79,12 +79,19 @@ module KatelloDeploy
       local_install("http://yum.puppetlabs.com/puppetlabs-release-el-#{os_version}.noarch.rpm")
     end
 
+    # rubocop:disable Metrics/MethodLength
     def setup_koji_repos(os, version = 'nightly', foreman_version = 'nightly')
       foreman_version = foreman_version.gsub('releases/', '')
 
       katello = KatelloDeploy::RepoFile.new(
         :name => 'katello_koji',
         :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/katello/RHEL/#{os}/x86_64/",
+        :priority => 1
+      )
+
+      client = KatelloDeploy::RepoFile.new(
+        :name => 'katello_client_koji',
+        :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/client/RHEL/#{os}/x86_64/",
         :priority => 1
       )
 
@@ -111,6 +118,7 @@ module KatelloDeploy
       )
 
       katello.deploy
+      client.deploy
       pulp.deploy
       candlepin.deploy
       foreman.deploy
