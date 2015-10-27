@@ -12,3 +12,8 @@ sam:
   installer: 'sam-installer'
   packages:
     - katello-sam
+
+foreman:
+  installer: foreman-installer
+  packages:
+    - foreman-installer

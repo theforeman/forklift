@@ -7,10 +7,11 @@ module KatelloDeploy
     attr_reader :os_version, :distro
 
     def initialize(args)
-      @katello_version = args.fetch(:katello_version)
+      @versions = YAML.load_file('config/versions.yaml')
+      @katello_version = args.fetch(:katello_version, nil)
+      @foreman_version = args.fetch(:foreman_version, foreman_version)
       @os_version = args.fetch(:os_version)
       @distro = args.fetch(:distro)
-      @versions = YAML.load_file('config/versions.yaml')
     end
 
     def configure(koji_repos = false)
@@ -22,8 +23,8 @@ module KatelloDeploy
       if koji_repos
         setup_koji_repos(@os_version, @katello_version, foreman_version)
       else
-        bootstrap_katello(@katello_version, @os_version)
-        bootstrap_foreman(foreman_version, @os_version)
+        bootstrap_katello(@katello_version, @os_version) if @katello_version
+        bootstrap_foreman(@foreman_version, @os_version) if @foreman_version
       end
       bootstrap_scl
       true
