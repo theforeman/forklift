@@ -43,6 +43,7 @@ module KatelloDeploy
       if box['shell']
         machine.vm.provision :shell do |shell|
           shell.inline = box.fetch('shell')
+          shell.privileged = false if box.key?('privileged')
         end
       end
 

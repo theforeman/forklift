@@ -3,6 +3,8 @@ shells:
     shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
   bats_shell: &bats_shell
     shell: '/vagrant/bats/bootstrap_vagrant.sh'
+  runcible_shell: &runcible_shell
+    shell: '/vagrant/shells/runcible.sh'
 
 boxes:
   centos6:
@@ -76,3 +78,8 @@ boxes:
     box: centos7
     <<: *install_shell
     options: --install-type=devel
+
+  runcible:
+    box: centos7
+    <<: *runcible_shell
+    privileged: false
