@@ -141,7 +141,7 @@ EOF
 }
 
 @test "install package remotely (katello-agent)" {
-  timeout 30 hammer -u admin -p changeme content-host package install --content-host $(hostname -f) \
+  timeout 120 hammer -u admin -p changeme content-host package install --content-host $(hostname -f) \
     --organization="Default Organization" --packages walrus
   tPackageExists walrus
 }
