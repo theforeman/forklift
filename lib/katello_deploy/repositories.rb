@@ -57,7 +57,7 @@ module KatelloDeploy
     end
 
     def bootstrap_epel(release)
-      local_install("http://dl.fedoraproject.org/pub/epel/epel-release-latest-#{release}.noarch.rpm")
+      local_install("http://dl.fedoraproject.org/pub/epel/epel-release-latest-#{release}.noarch.rpm", false)
     end
 
     def bootstrap_scl
@@ -133,8 +133,12 @@ module KatelloDeploy
       system("yum -y install #{rpm}")
     end
 
-    def local_install(rpm)
-      system("yum -y localinstall #{rpm}")
+    def local_install(rpm, use_yum = true)
+      if use_yum
+        system("yum -y localinstall #{rpm}")
+      else
+        system("rpm -Uvh #{rpm}")
+      end
     end
 
   end
