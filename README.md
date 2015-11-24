@@ -41,7 +41,7 @@ page](https://www.virtualbox.org/wiki/Download_Old_Builds_4_2)
 
 ### Using Libvirt (Linux)
 
-The Vagrantfile provides default setup and boxes for use with the `vagrant-libvirt` provider. You need to use 0.0.20 of the vagrant-libvirt plugin. To set this up:
+The Vagrantfile provides default setup and boxes for use with the `vagrant-libvirt` provider. To set this up:
 
 1. Install libvirt. On CentOS/Fedora/RHEL, run `sudo yum install @virtualization libvirt-devel`
 1. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/pradels/vagrant-libvirt#installation) for more information) `vagrant plugin install vagrant-libvirt`
