@@ -12,3 +12,5 @@ begin
 rescue
   puts 'Rubocop not loaded'
 end
+
+task :default => [:test, :rubocop]
