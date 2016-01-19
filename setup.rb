@@ -12,7 +12,8 @@ options = {
   :install_type => 'katello',
   :skip_installer => false,
   :koji_task => [],
-  :module_prs => []
+  :module_prs => [],
+  :process_scripts => true
 }
 
 OptionParser.new do |opts|
@@ -70,6 +71,10 @@ OptionParser.new do |opts|
     options[:module_prs] = module_prs
   end
 
+  opts.on("--[no-]scripts", "Run (or do not) any scripts located in the /scripts directory") do |scripts|
+    options[:process_scripts] = scripts
+  end
+
   # Check for unsupported arguments. (parse! removes elements from ARGV.)
   opts.parse!
   opts.abort("Received unsupported arguments: #{ARGV}") if ARGV.length > 0
@@ -105,6 +110,6 @@ installer = KatelloDeploy::Installer.new(
 )
 success = installer.install
 
-KatelloDeploy::Processors::ScriptsProcessor.process
+KatelloDeploy::Processors::ScriptsProcessor.process if options[:process_scripts]
 
 exit(1) unless success
