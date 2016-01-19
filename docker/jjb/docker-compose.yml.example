@@ -2,3 +2,4 @@ jjb:
   build: .
   volumes:
     - ~/workspace/foreman-infra:/foreman-infra
+    - ~/workspace/robottelo-ci:/robottelo-ci
