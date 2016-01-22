@@ -1,7 +1,7 @@
 module KatelloDeploy
   class OperatingSystem
 
-    SUPPORTED_OS = %w(rhel6 centos6 fedora19 rhel7 centos7)
+    SUPPORTED_OS = %w(rhel6 centos6 fedora19 rhel7 centos7).freeze
 
     def versions
       {
@@ -43,7 +43,7 @@ module KatelloDeploy
         raise 'OS Family could not be detected'
       end
 
-      case (os_family)
+      case os_family
       when 'linux'
         detect_linux
       when /(.*bsd$)|(sunos)/
