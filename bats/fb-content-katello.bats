@@ -82,7 +82,7 @@ setup() {
 @test "create activation key" {
   hammer -u admin -p changeme activation-key create --organization="Default Organization" \
     --name="Test AK" --content-view="Test CV" --lifecycle-environment="Test" \
-    --unlimited-content-hosts=true | grep -q "Activation key created"
+    --unlimited-content-hosts | grep -q "Activation key created"
 }
 
 @test "disable auto-attach" {
@@ -141,8 +141,8 @@ EOF
 }
 
 @test "install package remotely (katello-agent)" {
-  timeout 120 hammer -u admin -p changeme content-host package install --content-host $(hostname -f) \
-    --organization="Default Organization" --packages walrus
+  timeout 120 hammer -u admin -p changeme host package install --host $(hostname -f) \
+    --packages walrus
   tPackageExists walrus
 }
 
