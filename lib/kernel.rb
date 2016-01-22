@@ -5,6 +5,6 @@ module Kernel
   end
 
   # alias_method_chain :system, :debug
-  alias_method :system_without_debug, :system
-  alias_method :system, :system_with_debug
+  alias system_without_debug system
+  alias system system_with_debug
 end

@@ -16,9 +16,9 @@ class TestKojiDownloader < Minitest::Test
   def test_download
     @downloader.expects(:build_info).returns(koji_fixture)
     File.expects(:open)
-      .with('/tmp/fake_repo/ruby193-rubygem-katello-2.3.0-1.201505070058git30746ed.el7.noarch.rpm', 'wb')
+        .with('/tmp/fake_repo/ruby193-rubygem-katello-2.3.0-1.201505070058git30746ed.el7.noarch.rpm', 'wb')
     File.expects(:open)
-      .with('/tmp/fake_repo/ruby193-rubygem-katello-2.3.0-1.201505070058git30746ed.el7.src.rpm', 'wb')
+        .with('/tmp/fake_repo/ruby193-rubygem-katello-2.3.0-1.201505070058git30746ed.el7.src.rpm', 'wb')
 
     assert @downloader.download
   end
