@@ -147,7 +147,7 @@ EOF
 }
 
 @test "install package locally" {
-  tPackageInstall zebra && tPackageExists zebra
+  tPackageInstall lion && tPackageExists lion
 }
 
 @test "add puppetclass to host" {
