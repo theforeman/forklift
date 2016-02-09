@@ -14,7 +14,7 @@ module KatelloDeploy
       def self.run_scripts
         scripts = Dir.glob('*').select { |e| File.file? e }
 
-        scripts.each do |script|
+        scripts.sort.each do |script|
           system("./#{script}")
         end
       end
