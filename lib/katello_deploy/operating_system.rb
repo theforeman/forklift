@@ -33,7 +33,7 @@ module KatelloDeploy
 
     def supported?(os)
       return true if SUPPORTED_OS.include?(os)
-      fail "OS #{os} is not supported. Must be one of #{SUPPORTED_OS.join(', ')}."
+      raise "OS #{os} is not supported. Must be one of #{SUPPORTED_OS.join(', ')}."
     end
 
     def detect
