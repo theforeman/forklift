@@ -36,8 +36,10 @@ module KatelloDeploy
 
   def self.define_vm(config, box = {})
     config.vm.define box.fetch('name'), primary: box.fetch('default', false) do |machine|
-      machine.vm.box      = box.fetch('box_name')
-      machine.vm.hostname = "katello-#{box.fetch('name').to_s.gsub('.','-')}.example.com"
+      machine.vm.box = box.fetch('box_name')
+      machine.vm.box_check_update = true
+      machine.vm.box_url = box.fetch('box_url') if box.key?('box_url')
+      machine.vm.hostname = "#{box.fetch('name').to_s.gsub('.','-')}.example.com"
       config.ssh.insert_key = false if SUPPORT_SSH_INSERT_KEY
 
       if box['shell']
@@ -47,12 +49,14 @@ module KatelloDeploy
         end
       end
 
-      machine.vm.provider :libvirt do |p, override|
-        override.vm.box_url = box.fetch('libvirt')
-        override.vm.synced_folder ".", "/vagrant", type: "rsync"
-        override.vm.network :public_network, :dev => box.fetch('bridged'), :mode => 'bridge' if box.fetch('bridged', false)
-        p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
-        p.memory = box.fetch('memory') if box.fetch('memory', false)
+      if box.key?('libvirt')
+        machine.vm.provider :libvirt do |p, override|
+          override.vm.box_url = box.fetch('libvirt')
+          override.vm.synced_folder ".", "/vagrant", type: "rsync"
+          override.vm.network :public_network, :dev => box.fetch('bridged'), :mode => 'bridge' if box.fetch('bridged', false)
+          p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
+          p.memory = box.fetch('memory') if box.fetch('memory', false)
+        end
       end
 
       if box.key?('virtualbox')
