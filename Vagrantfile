@@ -3,6 +3,7 @@ require './lib/katello_deploy'
 
 VAGRANTFILE_API_VERSION = '2'
 SUPPORT_SSH_INSERT_KEY = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
+SUPPORT_BOX_CHECK_UPDATE = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.5')
 
 module KatelloDeploy
   @box_loader = BoxLoader.new
@@ -37,7 +38,7 @@ module KatelloDeploy
   def self.define_vm(config, box = {})
     config.vm.define box.fetch('name'), primary: box.fetch('default', false) do |machine|
       machine.vm.box = box.fetch('box_name')
-      machine.vm.box_check_update = true
+      machine.vm.box_check_update = true if SUPPORT_BOX_CHECK_UPDATE
       machine.vm.box_url = box.fetch('box_url') if box.key?('box_url')
       machine.vm.hostname = "#{box.fetch('name').to_s.gsub('.','-')}.example.com"
       config.ssh.insert_key = false if SUPPORT_SSH_INSERT_KEY
