@@ -39,11 +39,16 @@ module KatelloDeploy
         Dir.chdir(installer_path) do
           system('git fetch origin')
           system('git checkout origin/master')
+          system('rm -rf modules')
         end
       else
         Dir.chdir(@base_path) do
           system('git clone https://github.com/Katello/katello-installer.git')
         end
+      end
+
+      Dir.chdir(installer_path) do
+        system('librarian-puppet install --verbose')
       end
     end
 
@@ -59,7 +64,7 @@ module KatelloDeploy
 
     def find_git_url(puppet_module)
       split = @puppetfile.split("\n")
-      entry = split.select { |item| item.to_s =~ /#{puppet_module}/ }[0]
+      entry = split.select { |item| item.to_s =~ /\-#{puppet_module}/ }[0]
       entry.split(',')[1].split('git => ')[1]
     end
 
