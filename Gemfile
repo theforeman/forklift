@@ -6,3 +6,6 @@ group :test do
   gem 'mocha'
   gem 'rubocop'
 end
+
+gem 'librarian-puppet'
+gem 'puppet', '< 4.0.0'
