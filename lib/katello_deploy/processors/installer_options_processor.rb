@@ -9,7 +9,8 @@ module KatelloDeploy
         return installer_options if devel_user.nil?
 
         directory = deployment_dir || "/home/#{devel_user}"
-        "#{installer_options} --user=#{devel_user} --group=#{devel_user} --deployment-dir=#{directory}"
+        "#{installer_options} --katello-devel-user=#{devel_user}"\
+        " --certs-group=#{devel_user} --katello-deployment-dir=#{directory}"
       end
     end
   end
