@@ -3,6 +3,7 @@
 *.swp
 *.swn
 katello-installer*
+foreman-installer*
 puppet-*
 katello
 foreman

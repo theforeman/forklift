@@ -7,9 +7,9 @@ class TestInstaller < Minitest::Test
   end
 
   def test_run_installer
-    @installer.expects(:syscall).with('katello-installer ').returns(true)
+    @installer.expects(:syscall).with('foreman-installer --scenario foreman ').returns(true)
 
-    assert @installer.run_installer('katello-installer')
+    assert @installer.run_installer('foreman-installer --scenario foreman')
   end
 
   def test_skip_installer
@@ -20,29 +20,29 @@ class TestInstaller < Minitest::Test
 
   def test_install
     @installer.expects(:install_puppet)
+    @installer.expects(:system).with('yum -y install foreman-installer')
+    @installer.expects(:system).with('yum -y update')
+    @installer.expects(:run_installer).with('foreman-installer --scenario foreman').returns(true)
+
+    assert @installer.install
+  end
+
+  def test_install_katello
+    @installer = KatelloDeploy::Installer.new(:scenario => 'katello')
+    @installer.expects(:install_puppet)
     @installer.expects(:system).with('yum -y install katello')
     @installer.expects(:system).with('yum -y update')
-    @installer.expects(:run_installer).with('katello-installer').returns(true)
+    @installer.expects(:run_installer).with('foreman-installer --scenario katello').returns(true)
 
     assert @installer.install
   end
 
   def test_install_devel
-    @installer = KatelloDeploy::Installer.new(:type => 'devel')
+    @installer = KatelloDeploy::Installer.new(:scenario => 'katello-devel')
     @installer.expects(:install_puppet)
     @installer.expects(:system).with('yum -y update')
-    @installer.expects(:system).with('yum -y install katello-devel-installer')
-    @installer.expects(:run_installer).with('katello-devel-installer').returns(true)
-
-    assert @installer.install
-  end
-
-  def test_install_sam
-    @installer = KatelloDeploy::Installer.new(:type => 'sam')
-    @installer.expects(:install_puppet)
-    @installer.expects(:system).with('yum -y update')
-    @installer.expects(:system).with('yum -y install katello-sam')
-    @installer.expects(:run_installer).with('sam-installer').returns(true)
+    @installer.expects(:system).with('yum -y install foreman-installer-katello-devel')
+    @installer.expects(:run_installer).with('foreman-installer --scenario katello-devel').returns(true)
 
     assert @installer.install
   end

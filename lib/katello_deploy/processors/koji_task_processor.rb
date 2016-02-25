@@ -14,7 +14,8 @@ module KatelloDeploy
 
         repo_maker = KatelloDeploy::RepoMaker.new(
           :name => "Koji Scratch Repo for #{koji_tasks.join(' ')}",
-          :directory => './repo'
+          :directory => './repo',
+          :priority => 1
         )
 
         repo_maker.create

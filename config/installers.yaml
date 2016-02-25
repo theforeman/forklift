@@ -1,14 +1,14 @@
 katello:
-  installer: 'katello-installer'
+  installer: 'foreman-installer --scenario katello'
   packages:
     - katello
 
-devel:
-  installer: 'katello-devel-installer'
+katello-devel:
+  installer: 'foreman-installer --scenario katello-devel'
   packages:
-    - katello-devel-installer
+    - foreman-installer-katello-devel
 
-sam:
-  installer: 'sam-installer'
+foreman:
+  installer: 'foreman-installer --scenario foreman'
   packages:
-    - katello-sam
+    - foreman-installer

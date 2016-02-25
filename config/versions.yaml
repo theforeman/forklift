@@ -1,4 +1,8 @@
-'nightly': "nightly"
-'2.2': "releases/1.8"
-'2.3': "releases/1.9"
-'2.4': "releases/1.10"
+foreman:
+  - 'nightly'
+
+katello:
+  - 'nightly'
+
+mapping:
+  'nightly': 'nightly'

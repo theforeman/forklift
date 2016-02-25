@@ -3,14 +3,16 @@ require 'katello_deploy/repo_file'
 module KatelloDeploy
   class RepoMaker
 
-    attr_reader :name
+    attr_reader :name, :priority
 
     def initialize(args)
       @name = args.fetch(:name)
       @directory = args.fetch(:directory)
+      @priority = args.fetch(:priority, nil)
       @repo_file = RepoFile.new(
         :name     => @name,
-        :baseurl  => "file://#{File.expand_path(@directory)}"
+        :baseurl  => "file://#{File.expand_path(@directory)}",
+        :priority => @priority
       )
     end
 

@@ -8,12 +8,16 @@ module KatelloDeploy
       @shells = {}
     end
 
-    def add_boxes(box_file)
+    def add_boxes(box_file, version_file)
       config = YAML.load_file(box_file)
+      return @boxes unless config
+
+      versions = YAML.load_file(version_file)
 
       process_shells(config['shells']) if config.key?('shells')
 
       if config.key?('boxes')
+        process_versions(config, versions)
         process_boxes(config['boxes'])
       else
         process_boxes(config)
@@ -43,6 +47,36 @@ module KatelloDeploy
       end
 
       @boxes
+    end
+
+    def process_versions(config, versions)
+      versions['foreman'].each do |version|
+        config['boxes']["centos6-foreman-#{version}"] = Marshal.load(
+          Marshal.dump(config['boxes']['centos6-foreman-nightly'])
+        )
+        config['boxes']["centos6-foreman-#{version}"]['options'] << " --version #{version}"
+      end
+
+      versions['foreman'].each do |version|
+        config['boxes']["centos7-foreman-#{version}"] = Marshal.load(
+          Marshal.dump(config['boxes']['centos7-foreman-nightly'])
+        )
+        config['boxes']["centos7-foreman-#{version}"]['options'] << " --version #{version}"
+      end
+
+      versions['katello'].each do |version|
+        config['boxes']["centos6-katello-#{version}"] = Marshal.load(
+          Marshal.dump(config['boxes']['centos6-katello-nightly'])
+        )
+        config['boxes']["centos6-katello-#{version}"]['options'] << " --katello-version #{version}"
+      end
+
+      versions['katello'].each do |version|
+        config['boxes']["centos7-katello-#{version}"] = Marshal.load(
+          Marshal.dump(config['boxes']['centos7-katello-nightly'])
+        )
+        config['boxes']["centos7-katello-#{version}"]['options'] << " --katello-version #{version}"
+      end
     end
 
     def layer_base_box(box)
