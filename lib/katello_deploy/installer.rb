@@ -41,12 +41,31 @@ module KatelloDeploy
 
     def setup_config
       return unless local_katello
+
       curr_dir = Dir.pwd
-      Dir.chdir(foreman_config_root) do
-        symlink("#{curr_dir}/katello-installer/config/katello.yaml", 'katello.yaml')
-        symlink("#{curr_dir}/katello-installer/config/katello-answers.yaml", 'katello-answers.yaml')
-        symlink("#{curr_dir}/katello-installer/config/katello.migrations", 'katello.migrations')
-      end
+
+      symlink(
+        "#{curr_dir}/katello-installer/config/katello-answers.yaml",
+        "#{foreman_config_root}/katello-answers.yaml"
+      )
+      symlink(
+        "#{curr_dir}/katello-installer/config/katello.migrations",
+        "#{foreman_config_root}/katello.migrations"
+      )
+
+      symlink(
+        "#{curr_dir}/katello-installer/config/katello-devel-answers.yaml",
+        "#{foreman_config_root}/katello-devel-answers.yaml"
+      )
+      symlink(
+        "#{curr_dir}/katello-installer/config/katello-devel.migrations",
+        "#{foreman_config_root}/katello-devel.migrations"
+      )
+
+      symlink(
+        "#{curr_dir}/katello-installer/_build/modules",
+        '/usr/share/katello-installer-base/modules'
+      )
     end
 
     def run_installer(command)
@@ -60,14 +79,8 @@ module KatelloDeploy
       success = false
       puts "Launching installer with command: #{command} #{@installer_options}"
 
-      if @local_path
-        Dir.chdir(@local_path) do
-          success = syscall("#{command} #{@installer_options}")
-        end
-      else
-        Dir.chdir('/') do
-          success = syscall("#{command} #{@installer_options}")
-        end
+      Dir.chdir('/') do
+        success = syscall("#{command} #{@installer_options}")
       end
 
       success
@@ -99,6 +112,7 @@ module KatelloDeploy
 
     def symlink(real, link)
       return if File.symlink?(link)
+      `rm -rf #{link}` if File.exist?(link)
       File.symlink(real, link)
     end
 
