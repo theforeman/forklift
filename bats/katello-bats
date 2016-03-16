@@ -9,6 +9,7 @@ Usage: $0 [options]
       devel       Run bats against development
       content     Run content tests (yum + puppet)
       virt-whom   Run virt-whom candlepin tests
+      swapfile    Create a 2048MB swapfile
 EOF
 }
 
@@ -31,6 +32,9 @@ for arg do
         ;;
       virt-whom)
         katello_virt_whom=true
+        ;;
+      swapfile)
+        swapfile=true
         ;;
    esac
 done
@@ -59,6 +63,12 @@ fi
 if [ "$katello_virt_whom" == true ];
 then
     BATS_ARGS="$BATS_ARGS fb-virt-whom.bats"
+fi
+
+if [ "$swapfile" == true ];
+then
+    # add the swapfile command to the start of the args, so it runs before tests occur
+    BATS_ARGS="swapfile.bats $BATS_ARGS"
 fi
 
 cd /opt/bats
