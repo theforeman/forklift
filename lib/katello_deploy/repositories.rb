@@ -70,7 +70,7 @@ module KatelloDeploy
     def bootstrap_katello(version, os_version)
       local_install(
         'https://fedorapeople.org/groups/katello/releases/yum/' \
-        "#{version}/katello/RHEL/#{os_version}/x86_64/katello-repos-latest.rpm"
+        "#{version}/katello/el#{os_version}/x86_64/katello-repos-latest.rpm"
       )
     end
 
@@ -103,25 +103,25 @@ module KatelloDeploy
     def setup_katello_koji_repos(os, version = 'nightly')
       katello = KatelloDeploy::RepoFile.new(
         :name => 'katello_koji',
-        :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/katello/RHEL/#{os}/x86_64/",
+        :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/katello/el#{os}/x86_64/",
         :priority => 1
       )
 
       client = KatelloDeploy::RepoFile.new(
         :name => 'katello_client_koji',
-        :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/client/RHEL/#{os}/x86_64/",
+        :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/client/el#{os}/x86_64/",
         :priority => 1
       )
 
       pulp = KatelloDeploy::RepoFile.new(
         :name => 'pulp_koji',
-        :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/pulp/RHEL/#{os}/x86_64/",
+        :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/pulp/el#{os}/x86_64/",
         :priority => 1
       )
 
       candlepin = KatelloDeploy::RepoFile.new(
         :name => 'candlepin_koji',
-        :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/candlepin/RHEL/#{os}/x86_64/",
+        :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/candlepin/el#{os}/x86_64/",
         :priority => 1
       )
 

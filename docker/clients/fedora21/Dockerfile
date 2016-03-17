@@ -1,4 +1,4 @@
-FROM fedora:21
+FROM fedora:23
 MAINTAINER Katello Team <foreman-dev@googlegroups.com>
 
 RUN yum clean all

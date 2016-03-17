@@ -4,7 +4,7 @@ sudo yum install -y ruby-devel rubygem-bundler libxml2-devel ruby rake gcc wget 
 sudo yum install -y http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
 sudo yum install -y http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum install -y puppet
-sudo yum install -y https://fedorapeople.org/groups/katello/releases/yum/nightly/katello/RHEL/7/x86_64/katello-repos-latest.rpm
+sudo yum install -y https://fedorapeople.org/groups/katello/releases/yum/nightly/katello/el7/x86_64/katello-repos-latest.rpm
 
 cd /etc/yum.repos.d
 sudo wget https://repos.fedorapeople.org/repos/pulp/pulp/rhel-pulp.repo
