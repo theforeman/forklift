@@ -5,7 +5,7 @@ set -o pipefail
 
 @test "create swap file" {
   swapsize=2048 # in MB
-  fallocate -l ${swapsize}M /swapfile
+  dd if=/dev/zero of=/swapfile bs=1048576 count=$swapsize
   chmod 600 /swapfile
   mkswap /swapfile
   swapon /swapfile
