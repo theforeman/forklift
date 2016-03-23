@@ -9,6 +9,7 @@ module KatelloDeploy
 
     def prepare
       install_git
+      bundle_install
       setup_katello_installer
       read_puppetfile
       true
@@ -71,6 +72,11 @@ module KatelloDeploy
     def install_git
       return if system('rpm -q git')
       system('yum -y install git')
+    end
+
+    def bundle_install
+      system('yum -y install rubygem-bundler ruby-devel ruby')
+      system('bundle install')
     end
 
     def installer_path
