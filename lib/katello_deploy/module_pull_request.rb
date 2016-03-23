@@ -48,7 +48,7 @@ module KatelloDeploy
       end
 
       Dir.chdir(installer_path) do
-        system('librarian-puppet install --verbose')
+        system('rake setup_local')
       end
     end
 

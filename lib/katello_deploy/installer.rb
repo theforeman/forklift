@@ -62,10 +62,12 @@ module KatelloDeploy
         "#{foreman_config_root}/katello-devel.migrations"
       )
 
-      symlink(
-        "#{curr_dir}/katello-installer/_build/modules",
-        '/usr/share/katello-installer-base/modules'
-      )
+      if File.exist?("#{curr_dir}/katello-installer/modules")
+        symlink(
+          "#{curr_dir}/katello-installer/modules",
+          '/usr/share/katello-installer-base/modules'
+        )
+      end
     end
 
     def run_installer(command)
