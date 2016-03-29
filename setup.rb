@@ -88,9 +88,6 @@ operating_system = KatelloDeploy::OperatingSystem.new
 options[:os] ||= operating_system.detect
 operating_system.supported?(options[:os])
 
-KatelloDeploy::Processors::KojiTaskProcessor.process(options[:koji_task])
-KatelloDeploy::Processors::ModulePullRequestProcessor.process(options[:module_prs], File.expand_path(File.dirname(__FILE__)))
-
 repositories = KatelloDeploy::Repositories.new(
   :version => options[:version],
   :os_version => operating_system.version(options[:os]),
@@ -99,6 +96,8 @@ repositories = KatelloDeploy::Repositories.new(
 )
 configured = repositories.configure(options[:koji_repos])
 exit(1) unless configured
+
+KatelloDeploy::Processors::KojiTaskProcessor.process(options[:koji_task])
 
 installer_options = KatelloDeploy::Processors::InstallerOptionsProcessor.process(
   :installer_options => options[:installer_options],
@@ -112,6 +111,10 @@ installer = KatelloDeploy::Installer.new(
   :scenario => options[:scenario],
   :root_dir => Dir.pwd
 )
+success = installer.setup
+
+KatelloDeploy::Processors::ModulePullRequestProcessor.process(options[:module_prs], File.expand_path(File.dirname(__FILE__)))
+
 success = installer.install
 
 KatelloDeploy::Processors::ScriptsProcessor.process if options[:process_scripts]

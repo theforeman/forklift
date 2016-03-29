@@ -15,11 +15,15 @@ module KatelloDeploy
       self.root_dir = args.fetch(:root_dir, '.')
     end
 
-    def install
+    def setup
       install_puppet
       system('yum -y update')
       install_packages(@installers[@scenario.to_s]['packages'])
       setup_config
+      true
+    end
+
+    def install
       run_installer(@installers[@scenario.to_s]['installer'])
     end
 
