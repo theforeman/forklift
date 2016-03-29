@@ -82,7 +82,7 @@ setup() {
 @test "create activation key" {
   hammer -u admin -p changeme activation-key create --organization="Default Organization" \
     --name="Test AK" --content-view="Test CV" --lifecycle-environment="Test" \
-    --unlimited-content-hosts | grep -q "Activation key created"
+    --unlimited-hosts | grep -q "Activation key created"
 }
 
 @test "disable auto-attach" {
