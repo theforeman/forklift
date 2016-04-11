@@ -55,6 +55,13 @@ module KatelloDeploy
           Marshal.dump(config['boxes']['centos6-foreman-nightly'])
         )
         config['boxes']["centos6-foreman-#{version}"]['options'] << " --version #{version}"
+
+        next unless (katello_version = versions['mapping'][version])
+
+        config['boxes']["centos6-katello-#{katello_version}"] = Marshal.load(
+          Marshal.dump(config['boxes']['centos6-katello-nightly'])
+        )
+        config['boxes']["centos6-katello-#{katello_version}"]['options'] << " --version #{version}"
       end
 
       versions['foreman'].each do |version|
@@ -62,20 +69,13 @@ module KatelloDeploy
           Marshal.dump(config['boxes']['centos7-foreman-nightly'])
         )
         config['boxes']["centos7-foreman-#{version}"]['options'] << " --version #{version}"
-      end
 
-      versions['katello'].each do |version|
-        config['boxes']["centos6-katello-#{version}"] = Marshal.load(
-          Marshal.dump(config['boxes']['centos6-katello-nightly'])
-        )
-        config['boxes']["centos6-katello-#{version}"]['options'] << " --katello-version #{version}"
-      end
+        next unless (katello_version = versions['mapping'][version])
 
-      versions['katello'].each do |version|
-        config['boxes']["centos7-katello-#{version}"] = Marshal.load(
+        config['boxes']["centos7-katello-#{katello_version}"] = Marshal.load(
           Marshal.dump(config['boxes']['centos7-katello-nightly'])
         )
-        config['boxes']["centos7-katello-#{version}"]['options'] << " --katello-version #{version}"
+        config['boxes']["centos7-katello-#{katello_version}"]['options'] << " --version #{version}"
       end
     end
 

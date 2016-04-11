@@ -3,15 +3,20 @@ require 'test_helper'
 class TestScriptsProcessor < Minitest::Test
 
   def test_process
-    scripts_mock = mock
-
     File.expects(:directory?).with('scripts').returns(true)
-    Dir.expects(:chdir).yields(KatelloDeploy::Processors::ScriptsProcessor.run_scripts)
-    Dir.expects(:glob).with('*').returns(scripts_mock)
-    scripts_mock.expects(:select).returns(['test.sh'])
-    KatelloDeploy::Processors::ScriptsProcessor.expects(:system).with('./test.sh')
+    Dir.expects(:chdir)
 
     assert KatelloDeploy::Processors::ScriptsProcessor.process
+  end
+
+  def test_run_scripts
+    scripts_mock = mock
+    scripts_mock.expects(:select).returns(['test.sh'])
+
+    Dir.expects(:glob).with('*').returns(scripts_mock)
+    KatelloDeploy::Processors::ScriptsProcessor.expects(:system).with('./test.sh')
+
+    assert KatelloDeploy::Processors::ScriptsProcessor.run_scripts
   end
 
   def test_process_no_directory
