@@ -9,8 +9,7 @@ module KatelloDeploy
 
     def prepare
       install_git
-      bundle_install
-      setup_katello_installer
+      clone_installer
       read_puppetfile
       true
     end
@@ -35,30 +34,13 @@ module KatelloDeploy
       end
     end
 
-    def setup_katello_installer
-      if local_installer_exists?
-        Dir.chdir(installer_path) do
-          system('git fetch origin')
-          system('git checkout origin/master')
-          system('rm -rf modules')
-        end
-      else
-        Dir.chdir(@base_path) do
-          system('git clone https://github.com/Katello/katello-installer.git')
-        end
-      end
-
-      Dir.chdir(installer_path) do
-        system('rake setup_local')
-      end
-    end
-
-    def local_installer_exists?
-      File.exist?(installer_path)
+    def clone_installer
+      return true unless File.exist?('katello-installer')
+      `git clone https://github.com/katello/katello-installer.git`
     end
 
     def read_puppetfile
-      Dir.chdir(installer_path) do
+      Dir.chdir('katello-installer') do
         @puppetfile = File.read('Puppetfile')
       end
     end
@@ -70,7 +52,7 @@ module KatelloDeploy
     end
 
     def install_git
-      return if system('rpm -q git')
+      return true if system('rpm -q git')
       system('yum -y install git')
     end
 
@@ -80,7 +62,7 @@ module KatelloDeploy
     end
 
     def installer_path
-      "#{@base_path}/katello-installer"
+      '/usr/share/katello-installer-base'
     end
 
   end

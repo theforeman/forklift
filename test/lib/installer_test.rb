@@ -24,6 +24,7 @@ class TestInstaller < Minitest::Test
     @installer.expects(:system).with('yum -y update')
     @installer.expects(:run_installer).with('foreman-installer --scenario foreman').returns(true)
 
+    assert @installer.setup
     assert @installer.install
   end
 
@@ -34,6 +35,7 @@ class TestInstaller < Minitest::Test
     @installer.expects(:system).with('yum -y update')
     @installer.expects(:run_installer).with('foreman-installer --scenario katello').returns(true)
 
+    assert @installer.setup
     assert @installer.install
   end
 
@@ -44,6 +46,7 @@ class TestInstaller < Minitest::Test
     @installer.expects(:system).with('yum -y install foreman-installer-katello-devel')
     @installer.expects(:run_installer).with('foreman-installer --scenario katello-devel').returns(true)
 
+    assert @installer.setup
     assert @installer.install
   end
 

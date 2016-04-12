@@ -6,11 +6,15 @@ class TestModulePullRequest < Minitest::Test
     @module_pr = KatelloDeploy::ModulePullRequest.new(:base_path => '/tmp')
   end
 
+  def teardown
+    `rm -rf katello-installer`
+  end
+
   def test_prepare
     prep = sequence('prep')
 
     @module_pr.expects(:install_git).in_sequence(prep)
-    @module_pr.expects(:setup_katello_installer).in_sequence(prep)
+    @module_pr.expects(:clone_installer).in_sequence(prep)
     @module_pr.expects(:read_puppetfile).in_sequence(prep)
 
     assert @module_pr.prepare
@@ -18,7 +22,7 @@ class TestModulePullRequest < Minitest::Test
 
   def test_setup_pull_request
     @module_pr.expects(:find_git_url).returns('https://github.com/katello/puppet-katello')
-    Dir.expects(:chdir).with('/tmp/katello-installer/modules')
+    Dir.expects(:chdir).with('/usr/share/katello-installer-base/modules')
 
     assert @module_pr.setup_pull_request('katello', '1')
   end
