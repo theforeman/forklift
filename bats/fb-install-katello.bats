@@ -112,3 +112,7 @@ setup() {
   [ x$FOREMAN_VERSION = "x1.3" ] && skip "Only supported on 1.4+"
   hammer -u admin -p changeme host info --name $(hostname -f)
 }
+
+@test "Zzzz.... (120 sec)" {
+  sleep 120
+}
