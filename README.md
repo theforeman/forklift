@@ -402,3 +402,18 @@ docker-compose run jjb bash
 cd foreman-infra/puppet/modules/jenkins_job_builder/files/theforeman.org
 jenkins-jobs -l debug test -r . -o /tmp/jobs
 ```
+
+## Redmine Development
+
+The Foreman project uses Redmine to handle issue management via forked instance of Redmine that runs on Openshift. Testing upgrades, making plugins or patches is sometimes desired to achieve functionality which we need. The dockerfile under docker/redmine can be used as a properly configured Redmine environment for development. To begin, copy `docker-compose.yml.example` to `docker-compose.yml`:
+
+```
+cd docker/redmine
+cp docker-compose.yml.example docker-compose.yml
+```
+
+Assuming you have a clone of the Redmine repository somewhere locally, edit the `docker-compose.yml` configuration file to point at your local copy of the `redmine` repository so that it will mount and record changes locally when working within the container. Ensure that either your docker has permissions to the repository being mounted or that the appropriate Docker SELinux context is set: (Docker SELinux with Volumes)[http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/]. Now we are ready to start up Redmine and make changes:
+
+```
+docker-compose up redmine
+```
