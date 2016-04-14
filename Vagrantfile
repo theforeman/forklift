@@ -16,12 +16,12 @@ module KatelloDeploy
     end
 
     config.vm.provider :libvirt do |domain|
-      domain.memory = 3560
+      domain.memory = 4608
       domain.cpus   = 2
     end
 
     config.vm.provider :virtualbox do |domain|
-      domain.memory = 3560
+      domain.memory = 4608
       domain.cpus   = 2
       domain.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
       domain.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
