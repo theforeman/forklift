@@ -40,8 +40,13 @@ module KatelloDeploy
       machine.vm.box = box.fetch('box_name')
       machine.vm.box_check_update = true if SUPPORT_BOX_CHECK_UPDATE
       machine.vm.box_url = box.fetch('box_url') if box.key?('box_url')
-      machine.vm.hostname = "#{box.fetch('name').to_s.gsub('.','-')}.example.com"
       config.ssh.insert_key = false if SUPPORT_SSH_INSERT_KEY
+
+      if box.fetch('hostname', false)
+        machine.vm.hostname = box.fetch('hostname')
+      else
+        machine.vm.hostname = "#{box.fetch('name').to_s.gsub('.','-')}.example.com"
+      end
 
       if box['shell']
         machine.vm.provision :shell do |shell|
@@ -50,11 +55,19 @@ module KatelloDeploy
         end
       end
 
+      networks = box.fetch('networks', [])
+      networks = networks.map do |network|
+        network['options'] = network['options'].inject({}){ |memo,(k,v)| memo.update(k.to_sym => v) }
+      end
+
       if box.key?('libvirt')
         machine.vm.provider :libvirt do |p, override|
           override.vm.box_url = box.fetch('libvirt')
           override.vm.synced_folder ".", "/vagrant", type: "rsync"
           override.vm.network :public_network, :dev => box.fetch('bridged'), :mode => 'bridge' if box.fetch('bridged', false)
+          networks.each do |network|
+            override.vm.network network['type'], network['options']
+          end
           p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
           p.memory = box.fetch('memory') if box.fetch('memory', false)
         end
