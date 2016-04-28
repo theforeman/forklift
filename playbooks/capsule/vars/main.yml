@@ -1,0 +1,5 @@
+---
+certs_tar: "/root/{{ ansible_nodename }}.tar.gz"
+server_group: "server-{{ inventory_hostname }}"
+server: "{{ groups[server_group][0] }}"
+capsule_ip: "{{ ansible_eth0.ipv4.address }}"

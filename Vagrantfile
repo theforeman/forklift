@@ -10,6 +10,8 @@ module KatelloDeploy
   @boxes = @box_loader.add_boxes('config/base_boxes.yaml', 'config/versions.yaml')
   @boxes = @box_loader.add_boxes('boxes.yaml', 'config/versions.yaml') if File.exists?('boxes.yaml')
 
+  @ansible_groups = {}
+
   Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     @boxes.each do |name, box|
       define_vm config, box
@@ -48,7 +50,12 @@ module KatelloDeploy
         machine.vm.hostname = "#{box.fetch('name').to_s.gsub('.','-')}.example.com"
       end
 
-      if box['shell']
+      networks = box.fetch('networks', [])
+      networks = networks.map do |network|
+        network['options'] = network['options'].inject({}){ |memo,(k,v)| memo.update(k.to_sym => v) }
+      end
+
+      if box.key?('shell') && !box['shell'].nil? 
         machine.vm.provision :shell do |shell|
           shell.inline = box.fetch('shell')
           shell.privileged = false if box.key?('privileged')
@@ -59,6 +66,25 @@ module KatelloDeploy
       networks = networks.map do |network|
         symbolized_options = network['options'].inject({}){ |memo,(k,v)| memo.update(k.to_sym => v) }
         network.update('options' => symbolized_options)
+      end
+
+      if box.key?('ansible')
+        machine.vm.provision :ansible do |ansible|
+          ansible.playbook = box.fetch('ansible').fetch('playbook')
+
+          unless @ansible_groups["#{box['ansible']['group']}"]
+            @ansible_groups["#{box['ansible']['group']}"] = []
+          end
+
+          @ansible_groups["#{box['ansible']['group']}"] << box.fetch('name')
+
+          if box['ansible'].key?('server')
+            @ansible_groups["server-#{box.fetch('name')}"] = box['ansible']['server']
+          end
+
+          ansible.groups = @ansible_groups
+          ansible.sudo = true
+        end
       end
 
       if box.key?('libvirt')

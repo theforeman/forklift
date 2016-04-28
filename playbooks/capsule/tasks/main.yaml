@@ -1,0 +1,65 @@
+---
+- name: 'Set SELinux to Permissive'
+  selinux: policy=targeted state=permissive
+
+- name: 'Get Server Hostname'
+  shell: hostname -f
+  delegate_to: "{{ server }}"
+  register: server_fqdn
+- name: 'Get Server IP Address'
+  shell: ifconfig eth0 2>/dev/null|awk '/inet/ {print $2}'|sed 's/addr://'
+  delegate_to: "{{ server }}"
+  register: server_ip
+- set_fact: server_ip="{{ server_ip.stdout.split('\n')[0] }}"
+
+- name: 'Setup Communication to Capsule'
+  delegate_to: "{{ server }}"
+  shell: echo "{{ capsule_ip }} {{ ansible_nodename }}" >> /etc/hosts
+- name: 'Setup Communication to Server'
+  shell: echo "{{ server_ip }} {{ server_fqdn.stdout }}" >> /etc/hosts
+
+- name: 'Get oauth-consumer-key'
+  shell: grep oauth_consumer_key /etc/foreman/settings.yaml | cut -d ' ' -f 2
+  delegate_to: "{{ server }}"
+  register: oauth_consumer_key
+
+- name: 'Get oauth-consumer-secret'
+  shell: grep oauth_consumer_secret /etc/foreman/settings.yaml | cut -d ' ' -f 2
+  delegate_to: "{{ server }}"
+  register: oauth_consumer_secret
+
+- name: 'Get pulp-oauth-secret'
+  shell: grep oauth_secret /etc/pulp/server.conf | tail -1 | cut -d ' ' -f 2
+  delegate_to: "{{ server }}"
+  register: pulp_oauth_secret
+
+- name: 'Generate Certs'
+  command: capsule-certs-generate --capsule-fqdn {{ ansible_nodename }} --certs-tar {{ certs_tar }}
+  delegate_to: "{{ server }}"
+- name: 'Fetch Certs'
+  delegate_to: "{{ server }}"
+  fetch:
+    src: "{{ certs_tar }}"
+    dest: /tmp
+
+- name: 'Install Ruby'
+  yum: name=ruby state=latest
+- name: 'Copy Certs to Capsule'
+  copy:
+    src: "/tmp/{{ inventory_hostname }}{{ certs_tar }}"
+    dest: ~/
+
+- name: 'Install Capsule Installer RPM'
+  yum: name=foreman-installer-katello
+- name: 'Run Install'
+  shell: >
+    foreman-installer -v --scenario capsule
+    --foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
+    --foreman-proxy-trusted-hosts "{{ ansible_nodename }}"
+    --foreman-proxy-foreman-base-url "https://{{ server_fqdn.stdout }}"
+    --foreman-proxy-register-in-foreman true
+    --foreman-proxy-oauth-consumer-key "{{ oauth_consumer_key.stdout }}"
+    --foreman-proxy-oauth-consumer-secret "{{ oauth_consumer_secret.stdout }}"
+    --capsule-certs-tar "{{ certs_tar }}"
+    --capsule-parent-fqdn "{{ server_fqdn.stdout }}"
+    --capsule-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"

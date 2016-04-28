@@ -14,3 +14,5 @@ repo
 Gemfile.lock
 .ruby-version
 .ruby-gemset
+*.retry
+*.pyc
