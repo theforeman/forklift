@@ -12,12 +12,6 @@
   register: server_ip
 - set_fact: server_ip="{{ server_ip.stdout.split('\n')[0] }}"
 
-- name: 'Setup Communication to Capsule'
-  delegate_to: "{{ server }}"
-  shell: echo "{{ capsule_ip }} {{ ansible_nodename }}" >> /etc/hosts
-- name: 'Setup Communication to Server'
-  shell: echo "{{ server_ip }} {{ server_fqdn.stdout }}" >> /etc/hosts
-
 - name: 'Get oauth-consumer-key'
   shell: grep oauth_consumer_key /etc/foreman/settings.yaml | cut -d ' ' -f 2
   delegate_to: "{{ server }}"

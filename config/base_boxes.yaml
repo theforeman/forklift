@@ -50,7 +50,6 @@ boxes:
     <<: *install_shell
     options: --scenario=katello --disable-selinux
     ansible:
-      playbook: 'playbooks/dummy.yml'
       group: 'server'
 
   centos7-capsule-nightly:
@@ -67,7 +66,7 @@ boxes:
   centos7-bats:
     box: centos7
     <<: *bats_shell
-  
+
   centos6-devel:
     box: centos6
     <<: *install_shell
