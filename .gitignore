@@ -8,7 +8,6 @@ puppet-*
 katello
 foreman
 boxes.yaml
-plugins
 .idea
 scripts
 repo
