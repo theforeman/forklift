@@ -104,6 +104,8 @@ shell -- customize the shell script run
 bridged -- deploy on Libvirt with a bridged networking configuration, value of this parameter should be the interface of the host (e.g. em1)
 memory -- set the amount of memory (in megabytes) this box will consume
 cpus -- set the number of cpus this box will use
+hostname -- hostname to set on the box
+networks -- custom networks to use in addition to the management network
 ```
 
 Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
@@ -114,6 +116,20 @@ rhel7:
   shell: 'echo TEST'
   pty: true
   libvirt: http://example.org/vagrant/rhel-7.box
+```
+
+Example with custom networking, static IP on custom libvirt network:
+
+```
+static:
+  box: centos7
+  hostname: mystatic.box.com
+  networks:
+    - type: 'private_network'
+      options:
+        ip: 192.168.150.3
+        libvirt__network_name: lab-private
+        libvirt__iface_name: vnet2
 ```
 
 ### Plugins
