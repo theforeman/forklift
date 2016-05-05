@@ -57,7 +57,8 @@ module KatelloDeploy
 
       networks = box.fetch('networks', [])
       networks = networks.map do |network|
-        network['options'] = network['options'].inject({}){ |memo,(k,v)| memo.update(k.to_sym => v) }
+        symbolized_options = network['options'].inject({}){ |memo,(k,v)| memo.update(k.to_sym => v) }
+        network.update('options' => symbolized_options)
       end
 
       if box.key?('libvirt')
