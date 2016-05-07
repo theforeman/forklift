@@ -50,7 +50,7 @@ module KatelloDeploy
     end
 
     def process_versions(config, versions)
-      ['centos6', 'centos7'].each do |os|
+      %w(centos6 centos7).each do |os|
         versions['foreman'].each do |version|
           config['boxes']["#{os}-foreman-#{version}"] = Marshal.load(
             Marshal.dump(config['boxes']["#{os}-foreman-nightly"])
