@@ -1,0 +1,62 @@
+---
+- name: 'Get Katello Hostname'
+  shell: hostname -f
+  delegate_to: "{{ katello_server }}"
+  register: katello_fqdn
+
+- name: 'Get FreeIPA Shortname'
+  shell: hostname -s
+  register: freeipa_shortname
+
+- name: 'Install FreeIPA server package (this could take a while)'
+  yum: name=ipa-server state=latest
+
+- name: 'Install FreeIPA DNS Package'
+  yum: name=ipa-server-dns state=latest
+
+- name: 'Install Haveged (faster population of PRNG)'
+  yum: name=haveged state=latest
+
+- name: 'Start Haveged'
+  service: name=haveged state=started
+
+- name: 'Fix /etc/hosts record for self'
+  lineinfile: dest=/etc/hosts regexp=".*{{ ansible_nodename }}.*localhost.*" line="{{ freeipa_ip }} {{ ansible_nodename }}" state=present
+
+- name: 'Ensure localhost record is in /etc/hosts'
+  lineinfile: dest=/etc/hosts line="127.0.0.1 localhost.localdomain localhost" state=present
+
+- name: 'Run FreeIPA Install'
+  shell: ipa-server-install -U -r EXAMPLE.COM -p changeme -a changeme --setup-dns --forwarder 8.8.8.8 creates=/etc/krb5.keytab
+
+- name: 'Add /etc/hosts record for FreeIPA'
+  delegate_to: "{{ katello_server }}"
+  lineinfile: dest=/etc/hosts regexp=".*{{ ansible_nodename }}$" line="{{ freeipa_ip }} {{ ansible_nodename }}" state=present
+
+- name: 'Install FreeIPA client'
+  delegate_to: "{{ katello_server }}"
+  yum: name=ipa-client state=latest
+
+- name: 'Install FreeIPA admin tools'
+  delegate_to: "{{ katello_server }}"
+  yum: name=ipa-admintools state=latest
+
+- name: 'Register Foreman in FreeIPA'
+  delegate_to: "{{ katello_server }}"
+  shell: ipa-client-install --domain example.com --server {{ ansible_nodename }} --mkhomedir --fixed-primary --realm=EXAMPLE.COM --force-join -p admin@EXAMPLE.COM -w changeme -U creates=/etc/krb5.keytab
+
+- name: 'Run foreman-prepare-realm'
+  delegate_to: "{{ katello_server }}"
+  shell: echo changeme | foreman-prepare-realm admin@EXAMPLE.COM realm-proxy chdir=/root creates=/root/freeipa.keytab
+
+- name: 'Create HTTP principal'
+  delegate_to: "{{ katello_server }}"
+  shell: echo changeme | kinit admin@EXAMPLE.COM && ipa service-add HTTP/{{ katello_fqdn.stdout }} --force
+
+- name: 'Copy keytab'
+  delegate_to: "{{ katello_server }}"
+  shell: cp /root/freeipa.keytab /etc/foreman-proxy/freeipa.keytab && chown foreman-proxy /etc/foreman-proxy/freeipa.keytab && chmod 0600 /etc/foreman-proxy/freeipa.keytab
+
+- name: 'Enable Realm with foreman-installer'
+  delegate_to: "{{ katello_server }}"
+  shell: foreman-installer --foreman-proxy-realm=true --foreman-ipa-authentication=true

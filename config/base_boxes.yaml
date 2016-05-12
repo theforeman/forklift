@@ -59,6 +59,13 @@ boxes:
       group: 'capsule'
       server: 'centos7-katello-nightly'
 
+  centos7-freeipa-nightly:
+      box: centos7
+      ansible:
+        playbook: 'playbooks/freeipa.yml'
+        group: 'freeipa'
+        server: 'centos7-katello-nightly'
+
   centos6-bats:
     box: centos6
     <<: *bats_shell
