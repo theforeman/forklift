@@ -1,0 +1,4 @@
+---
+- include: install_freeipa_server.yml
+  become: true
+- include: install_freeipa_client.yml
