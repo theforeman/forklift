@@ -98,6 +98,14 @@ boxes:
       variables:
         puppet_repositories_version: 4
 
+  centos7-freeipa-server:
+      box: centos7
+      memory: 1024
+      ansible:
+        playbook: 'playbooks/freeipa_server.yml'
+        group: 'freeipa_server'
+        server: 'centos7-katello-3.1'
+
   centos6-bats:
     box: centos6
     <<: *bats_shell
