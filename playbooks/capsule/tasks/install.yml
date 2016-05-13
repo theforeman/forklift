@@ -1,0 +1,15 @@
+---
+- name: 'Install Capsule Installer RPM'
+  yum: name=foreman-installer-katello
+- name: 'Run Install'
+  shell: >
+    foreman-installer -v --scenario capsule
+    --foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
+    --foreman-proxy-trusted-hosts "{{ ansible_nodename }}"
+    --foreman-proxy-foreman-base-url "https://{{ server_fqdn.stdout }}"
+    --foreman-proxy-register-in-foreman true
+    --foreman-proxy-oauth-consumer-key "{{ oauth_consumer_key.stdout }}"
+    --foreman-proxy-oauth-consumer-secret "{{ oauth_consumer_secret.stdout }}"
+    --capsule-certs-tar "{{ capsule_certs_tar }}"
+    --capsule-parent-fqdn "{{ server_fqdn.stdout }}"
+    --capsule-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"

@@ -38,10 +38,26 @@ boxes:
     <<: *install_shell
     options: --scenario=katello
 
+  centos6-capsule-nightly:
+    box: centos6
+    ansible:
+      playbook: 'playbooks/capsule.yml'
+      group: 'capsule'
+      server: 'centos6-katello-nightly'
+
   centos7-katello-nightly:
     box: centos7
     <<: *install_shell
-    options: --scenario=katello
+    options: --scenario=katello --disable-selinux
+    ansible:
+      group: 'server'
+
+  centos7-capsule-nightly:
+    box: centos7
+    ansible:
+      playbook: 'playbooks/capsule.yml'
+      group: 'capsule'
+      server: 'centos7-katello-nightly'
 
   centos6-bats:
     box: centos6
@@ -50,7 +66,7 @@ boxes:
   centos7-bats:
     box: centos7
     <<: *bats_shell
-  
+
   centos6-devel:
     box: centos6
     <<: *install_shell

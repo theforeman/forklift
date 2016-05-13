@@ -50,32 +50,28 @@ module KatelloDeploy
     end
 
     def process_versions(config, versions)
-      versions['foreman'].each do |version|
-        config['boxes']["centos6-foreman-#{version}"] = Marshal.load(
-          Marshal.dump(config['boxes']['centos6-foreman-nightly'])
-        )
-        config['boxes']["centos6-foreman-#{version}"]['options'] << " --version #{version}"
+      %w(centos6 centos7).each do |os|
+        versions['foreman'].each do |version|
+          config['boxes']["#{os}-foreman-#{version}"] = Marshal.load(
+            Marshal.dump(config['boxes']["#{os}-foreman-nightly"])
+          )
+          config['boxes']["#{os}-foreman-#{version}"]['options'] << " --version #{version}"
 
-        next unless (katello_version = versions['mapping'][version])
+          next unless (katello_version = versions['mapping'][version])
 
-        config['boxes']["centos6-katello-#{katello_version}"] = Marshal.load(
-          Marshal.dump(config['boxes']['centos6-katello-nightly'])
-        )
-        config['boxes']["centos6-katello-#{katello_version}"]['options'] << " --version #{version}"
-      end
+          katello_box = Marshal.load(
+            Marshal.dump(config['boxes']["#{os}-katello-nightly"])
+          )
+          katello_box['options'] << " --version #{version}"
 
-      versions['foreman'].each do |version|
-        config['boxes']["centos7-foreman-#{version}"] = Marshal.load(
-          Marshal.dump(config['boxes']['centos7-foreman-nightly'])
-        )
-        config['boxes']["centos7-foreman-#{version}"]['options'] << " --version #{version}"
+          capsule_box = Marshal.load(
+            Marshal.dump(config['boxes']["#{os}-capsule-nightly"])
+          )
+          capsule_box['ansible']['server'] = "#{os}-katello-#{katello_version}"
 
-        next unless (katello_version = versions['mapping'][version])
-
-        config['boxes']["centos7-katello-#{katello_version}"] = Marshal.load(
-          Marshal.dump(config['boxes']['centos7-katello-nightly'])
-        )
-        config['boxes']["centos7-katello-#{katello_version}"]['options'] << " --version #{version}"
+          config['boxes']["#{os}-katello-#{katello_version}"] = katello_box
+          config['boxes']["#{os}-capsule-#{katello_version}"] = capsule_box
+        end
       end
     end
 

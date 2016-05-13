@@ -1,0 +1,6 @@
+---
+- hosts: server capsule
+  roles:
+    - etc_hosts
+    - common
+    - capsule
