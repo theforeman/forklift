@@ -140,6 +140,10 @@ EOF
   service goferd status || service goferd start
 }
 
+@test "30 sec of sleep for groggy gofers" {
+  sleep 30
+}
+
 @test "install package remotely (katello-agent)" {
   timeout 300 hammer -u admin -p changeme host package install --host $(hostname -f) \
     --packages walrus
