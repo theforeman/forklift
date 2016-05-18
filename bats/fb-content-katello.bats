@@ -110,6 +110,10 @@ gpgcheck=0
 priority=1
 enabled=1
 EOF
+  # newer subscription-manager requires centos 6.8 yum, which is available in CR repo
+  if tIsRHEL 6; then
+    tPackageExists centos-release-cr || tPackageInstall centos-release-cr
+  fi
   tPackageExists subscription-manager || tPackageInstall subscription-manager
   yum install -y subscription-manager
 }
