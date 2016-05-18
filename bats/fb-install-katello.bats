@@ -56,6 +56,17 @@ setup() {
   sed -ir "s/^\s*server\s*=.*/server = $(hostname -f)/g" /etc/puppet/puppet.conf
 }
 
+@test "enable haveged" {
+  if tIsRHEL 6; then
+    yum -y update ca-certificates
+    rpm -ivh "http://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm"; yum install -y haveged
+    service haveged start
+  elif tIsRHEL 7; then
+    rpm -ivh "http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"; yum install -y haveged
+    systemctl start haveged
+  fi
+}
+
 
 @test "run the installer" {
   if [ -e "/vagrant/setup.rb" ]; then
