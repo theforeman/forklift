@@ -50,7 +50,7 @@ tIsFedora() {
 
 tIsRHEL() {
   if [ -z "$1" ]; then
-    tIsRedHatCompatible
+    tIsRedHatCompatible && ! tIsFedoraCompatible
   else
     tSetOSVersion
     tIsRedHatCompatible && [[ "$1" -eq "$OS_VERSION" ]]
@@ -89,7 +89,8 @@ tPackageInstall() {
   if tIsRedHatCompatible; then
     yum -y install $*
   elif tIsDebianCompatible; then
-    apt-get install -y $*
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $*
   else
     false # not implemented
   fi
@@ -99,7 +100,8 @@ tPackageUpgrade() {
   if tIsRedHatCompatible; then
     yum -y upgrade $*
   elif tIsDebianCompatible; then
-    apt-get upgrade -y $*
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get -y --only-upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $*
   else
     false # not implemented
   fi
@@ -115,12 +117,76 @@ tPackageVersion() {
   fi
 }
 
+tServiceDisable() {
+  if tCommandExists systemctl; then
+    systemctl disable "$1"
+  else
+    if tIsRedHatCompatible; then
+      chkconfig "$1" off
+    elif tIsDebianCompatible; then
+      update-rc.d "$1" disable
+    else
+      false # not implemented
+    fi
+  fi
+}
+
+tServiceEnable() {
+  if tCommandExists systemctl; then
+    systemctl enable "$1"
+  else
+    if tIsRedHatCompatible; then
+      chkconfig "$1" on
+    elif tIsDebianCompatible; then
+      update-rc.d "$1" enable
+    else
+      false # not implemented
+    fi
+  fi
+}
+
+tServiceStart() {
+  if tCommandExists systemctl; then
+    systemctl start "$1"
+  else
+    service "$1" start
+  fi
+}
+
+tServiceStop() {
+  if tCommandExists systemctl; then
+    systemctl stop "$1"
+  else
+    service "$1" stop
+  fi
+}
+
 tCommandExists() {
   type -p "$1" >/dev/null
 }
 
 tFileExists() {
   [[ -f "$1" ]]
+}
+
+tRHSubscribeAttach() {
+  if tIsRHEL; then
+    [[ -z "$RHSM_USER" || -z "$RHSM_PASS" || -z "$RHSM_POOL" ]] && skip "No subscription-manager credentials and pool id"
+    tPackageExists subscription-manager || tPackageInstall subscription-manager
+    echo $RHSM_USER $RHSM_PASS $RHSM_POOL
+    subscription-manager register --username=$RHSM_USER --password=$RHSM_PASS
+    subscription-manager attach --pool=$RHSM_POOL
+    subscription-manager repos --enable rhel-server-rhscl-$OS_VERSION-rpms --enable rhel-$OS_VERSION-server-optional-rpms
+  else
+    skip "Not required"
+  fi
+}
+
+tRHEnableEPEL() {
+  tIsRHEL || skip "Not required"
+  tSetOSVersion
+  tPackageExists epel-release || \
+    rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-${OS_VERSION}.noarch.rpm
 }
 
 tNonZeroFile() {
