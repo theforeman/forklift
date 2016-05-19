@@ -149,8 +149,9 @@ EOF
 }
 
 @test "install package remotely (katello-agent)" {
+  # see http://projects.theforeman.org/issues/15089 for bug related to "|| true"
   timeout 300 hammer -u admin -p changeme host package install --host $(hostname -f) \
-    --packages walrus
+    --packages walrus || true
   tPackageExists walrus
 }
 
