@@ -3,7 +3,7 @@ require 'test_helper'
 class TestKojiDownloader < Minitest::Test
 
   def setup
-    @downloader = KatelloDeploy::KojiDownloader.new(
+    @downloader = Forklift::KojiDownloader.new(
       :task_id => '215467',
       :directory => '/tmp/fake_repo'
     )

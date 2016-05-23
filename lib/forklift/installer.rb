@@ -2,7 +2,7 @@ require 'yaml'
 require 'English'
 require 'fileutils'
 
-module KatelloDeploy
+module Forklift
   class Installer
 
     attr_accessor :installer_options, :skip_installer, :scenario, :root_dir, :installers

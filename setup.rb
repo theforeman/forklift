@@ -2,7 +2,7 @@
 
 require 'optparse'
 require './lib/kernel'
-require './lib/katello_deploy'
+require './lib/forklift'
 
 # default options
 options = {
@@ -84,11 +84,11 @@ end
 
 system('setenforce 0') if options[:katello_version] == "2.1" || options[:devel] || options[:disable_selinux]
 
-operating_system = KatelloDeploy::OperatingSystem.new
+operating_system = Forklift::OperatingSystem.new
 options[:os] ||= operating_system.detect
 operating_system.supported?(options[:os])
 
-repositories = KatelloDeploy::Repositories.new(
+repositories = Forklift::Repositories.new(
   :version => options[:version],
   :os_version => operating_system.version(options[:os]),
   :scenario => options[:scenario],
@@ -97,15 +97,15 @@ repositories = KatelloDeploy::Repositories.new(
 configured = repositories.configure(options[:koji_repos])
 exit(1) unless configured
 
-KatelloDeploy::Processors::KojiTaskProcessor.process(options[:koji_task])
+Forklift::Processors::KojiTaskProcessor.process(options[:koji_task])
 
-installer_options = KatelloDeploy::Processors::InstallerOptionsProcessor.process(
+installer_options = Forklift::Processors::InstallerOptionsProcessor.process(
   :installer_options => options[:installer_options],
   :devel_user => options[:devel_user],
   :deployment_dir => options[:deployment_dir]
 )
 
-installer = KatelloDeploy::Installer.new(
+installer = Forklift::Installer.new(
   :installer_options => installer_options,
   :skip_installer => options[:skip_installer],
   :scenario => options[:scenario],
@@ -113,10 +113,10 @@ installer = KatelloDeploy::Installer.new(
 )
 success = installer.setup
 
-KatelloDeploy::Processors::ModulePullRequestProcessor.process(options[:module_prs], File.expand_path(File.dirname(__FILE__)))
+Forklift::Processors::ModulePullRequestProcessor.process(options[:module_prs], File.expand_path(File.dirname(__FILE__)))
 
 success = installer.install
 
-KatelloDeploy::Processors::ScriptsProcessor.process if options[:process_scripts]
+Forklift::Processors::ScriptsProcessor.process if options[:process_scripts]
 
 exit(1) unless success

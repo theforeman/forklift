@@ -3,7 +3,7 @@ require 'test_helper'
 class TestRepoFile < Minitest::Test
 
   def setup
-    @repo_file = KatelloDeploy::RepoFile.new(
+    @repo_file = Forklift::RepoFile.new(
       :name => 'Test Repo',
       :baseurl => 'file:///tmp/fake_repo'
     )

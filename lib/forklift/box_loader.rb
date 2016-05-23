@@ -1,4 +1,4 @@
-module KatelloDeploy
+module Forklift
   class BoxLoader
 
     attr_accessor :boxes, :shells

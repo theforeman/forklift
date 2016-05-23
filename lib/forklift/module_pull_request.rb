@@ -1,4 +1,4 @@
-module KatelloDeploy
+module Forklift
   class ModulePullRequest
 
     attr_reader :puppetfile, :base_path

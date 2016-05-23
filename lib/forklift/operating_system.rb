@@ -1,4 +1,4 @@
-module KatelloDeploy
+module Forklift
   class OperatingSystem
 
     SUPPORTED_OS = %w(rhel6 centos6 fedora19 rhel7 centos7).freeze

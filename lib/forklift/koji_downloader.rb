@@ -1,6 +1,6 @@
 require 'open-uri'
 
-module KatelloDeploy
+module Forklift
   class KojiDownloader
 
     attr_reader :task_id, :directory

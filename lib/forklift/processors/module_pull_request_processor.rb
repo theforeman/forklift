@@ -1,13 +1,13 @@
-require 'katello_deploy/koji_downloader'
-require 'katello_deploy/repo_maker'
+require 'forklift/koji_downloader'
+require 'forklift/repo_maker'
 
-module KatelloDeploy
+module Forklift
   module Processors
     module ModulePullRequestProcessor
       def self.process(module_prs = [], base_path = '/')
         return false if module_prs.empty?
 
-        module_pr = KatelloDeploy::ModulePullRequest.new(:base_path => base_path)
+        module_pr = Forklift::ModulePullRequest.new(:base_path => base_path)
         prepared = module_pr.prepare
 
         return false unless prepared

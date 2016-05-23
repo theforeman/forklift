@@ -1,7 +1,7 @@
 require 'yaml'
-require 'katello_deploy/repo_file'
+require 'forklift/repo_file'
 
-module KatelloDeploy
+module Forklift
   class Repositories
 
     attr_reader :os_version, :distro, :version, :scenario
@@ -86,12 +86,12 @@ module KatelloDeploy
     def setup_foreman_koji_repos(os, version = 'nightly')
       version = version.gsub('releases/', '')
 
-      foreman = KatelloDeploy::RepoFile.new(
+      foreman = Forklift::RepoFile.new(
         :name => 'foreman_koji',
         :baseurl => "http://koji.katello.org/releases/yum/foreman-#{version}/RHEL/#{os}/x86_64/"
       )
 
-      plugins = KatelloDeploy::RepoFile.new(
+      plugins = Forklift::RepoFile.new(
         :name => 'foreman_plugins',
         :baseurl => "http://koji.katello.org/releases/yum/foreman-plugins-#{version}/RHEL/#{os}/x86_64/"
       )
@@ -101,25 +101,25 @@ module KatelloDeploy
     end
 
     def setup_katello_koji_repos(os, version = 'nightly')
-      katello = KatelloDeploy::RepoFile.new(
+      katello = Forklift::RepoFile.new(
         :name => 'katello_koji',
         :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/katello/el#{os}/x86_64/",
         :priority => 1
       )
 
-      client = KatelloDeploy::RepoFile.new(
+      client = Forklift::RepoFile.new(
         :name => 'katello_client_koji',
         :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/client/el#{os}/x86_64/",
         :priority => 1
       )
 
-      pulp = KatelloDeploy::RepoFile.new(
+      pulp = Forklift::RepoFile.new(
         :name => 'pulp_koji',
         :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/pulp/el#{os}/x86_64/",
         :priority => 1
       )
 
-      candlepin = KatelloDeploy::RepoFile.new(
+      candlepin = Forklift::RepoFile.new(
         :name => 'candlepin_koji',
         :baseurl => "http://koji.katello.org/releases/yum/katello-#{version}/candlepin/el#{os}/x86_64/",
         :priority => 1
