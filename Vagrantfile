@@ -1,11 +1,11 @@
 require 'yaml'
-require './lib/katello_deploy'
+require './lib/forklift'
 
 VAGRANTFILE_API_VERSION = '2'
 SUPPORT_SSH_INSERT_KEY = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
 SUPPORT_BOX_CHECK_UPDATE = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.5')
 
-module KatelloDeploy
+module Forklift
   @box_loader = BoxLoader.new
   @boxes = @box_loader.add_boxes('config/base_boxes.yaml', 'config/versions.yaml')
   @boxes = @box_loader.add_boxes('boxes.yaml', 'config/versions.yaml') if File.exists?('boxes.yaml')

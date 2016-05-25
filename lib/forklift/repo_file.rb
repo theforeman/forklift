@@ -1,4 +1,4 @@
-module KatelloDeploy
+module Forklift
   class RepoFile
 
     attr_accessor :name, :baseurl, :enabled, :gpgcheck, :protect, :priority

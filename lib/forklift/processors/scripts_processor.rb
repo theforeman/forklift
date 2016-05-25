@@ -1,4 +1,4 @@
-module KatelloDeploy
+module Forklift
   module Processors
     module ScriptsProcessor
       def self.process

@@ -3,7 +3,7 @@ require 'test_helper'
 class TestInstaller < Minitest::Test
 
   def setup
-    @installer = KatelloDeploy::Installer.new
+    @installer = Forklift::Installer.new
   end
 
   def test_run_installer
@@ -13,7 +13,7 @@ class TestInstaller < Minitest::Test
   end
 
   def test_skip_installer
-    @installer = KatelloDeploy::Installer.new(:skip_installer => true)
+    @installer = Forklift::Installer.new(:skip_installer => true)
     @installer.expects(:system).with('katello-installer').never
     assert @installer.run_installer('katello-installer')
   end
@@ -29,7 +29,7 @@ class TestInstaller < Minitest::Test
   end
 
   def test_install_katello
-    @installer = KatelloDeploy::Installer.new(:scenario => 'katello')
+    @installer = Forklift::Installer.new(:scenario => 'katello')
     @installer.expects(:install_puppet)
     @installer.expects(:system).with('yum -y install katello')
     @installer.expects(:system).with('yum -y update')
@@ -40,7 +40,7 @@ class TestInstaller < Minitest::Test
   end
 
   def test_install_devel
-    @installer = KatelloDeploy::Installer.new(:scenario => 'katello-devel')
+    @installer = Forklift::Installer.new(:scenario => 'katello-devel')
     @installer.expects(:install_puppet)
     @installer.expects(:system).with('yum -y update')
     @installer.expects(:system).with('yum -y install foreman-installer-katello-devel')

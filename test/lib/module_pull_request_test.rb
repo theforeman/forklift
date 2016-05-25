@@ -3,7 +3,7 @@ require 'test_helper'
 class TestModulePullRequest < Minitest::Test
 
   def setup
-    @module_pr = KatelloDeploy::ModulePullRequest.new(:base_path => '/tmp')
+    @module_pr = Forklift::ModulePullRequest.new(:base_path => '/tmp')
   end
 
   def teardown

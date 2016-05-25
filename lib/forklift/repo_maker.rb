@@ -1,6 +1,6 @@
-require 'katello_deploy/repo_file'
+require 'forklift/repo_file'
 
-module KatelloDeploy
+module Forklift
   class RepoMaker
 
     attr_reader :name, :priority

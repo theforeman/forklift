@@ -1,21 +1,19 @@
-# Katello Deployment
+# Forklift
 
-This repository provides methods to easily test and deploy a Katello server.  There are two
-different types of setups&mdash;nightly and development. The latter is for setting up Katello from
-git repositories so that you can contribute to Katello. Nightly installs are production installs
-from the nightly RPMs that contain the bleeding edge Katello code.
+This repository provides methods to easily test and deploy a Foreman or Katello server. There are two
+different types of setups&mdash;nightly and development. The latter is for setting up Foreman/Katello from git repositories so that you can contribute to Foreman, Katello or any other plugins. Nightly installs are production installs from the nightly RPMs that contain the bleeding edge code.
 
 In terms of the type of deployments, there are also two options: VM and direct. Using Vagrant will
 automatically provision the VM with VirtualBox or libvirt while a direct deployment assumes you are
 not using a VM or you already have the VM created. Check the table below to verify which operating
 system you can use for which type of deployment.
 
-| OS        | 2.0 |Nightly | Development | Direct | Vagrant |
-|-----------|:----|:-------|:------------|:-------|:--------|
-| CentOS 6  | X   | X      | X           | X      | X       |
-| CentOS 7  | X   | X      | X           | X      | X       |
-| RHEL 6    | X   | X      | X           | X      |         |
-| RHEL 7    | X   | X      | X           | X      |         |
+| OS        | Production |Nightly | Development | Direct | Vagrant |
+|-----------|:-----------|:-------|:------------|:-------|:--------|
+| CentOS 6  | X          | X      | X           | X      | X       |
+| CentOS 7  | X          | X      | X           | X      | X       |
+| RHEL 6    | X          | X      | X           | X      |         |
+| RHEL 7    | X          | X      | X           | X      |         |
 
 
 ## Vagrant Deployment
@@ -23,15 +21,15 @@ system you can use for which type of deployment.
 A Vagrant deployment will provision either a development setup (using git repositories) or an
 install using the nightly RPMs.
 
-The first step in using Vagrant to deploy a Katello environment is to ensure that Vagrant and this repository are installed and setup. To do so:
+The first step in using Vagrant to deploy an environment is to ensure that Vagrant and this repository are installed and setup. To do so:
 
 1. Ensure you have Vagrant installed
    * For **libvirt**:
      1. Ensure you have the prerequisites installed `sudo yum install ruby rubygems ruby-devel gcc`
      2. Vagrant 1.6.5+ can be downloaded and installed from [Vagrant Downloads](http://www.vagrantup.com/downloads.html)
    * For **Virtualbox**, Vagrant 1.6.5+ can be downloaded and installed from [Vagrant Downloads](http://www.vagrantup.com/downloads.html)
-1. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
-1. Enter the repository - `cd katello-deploy`
+1. Clone this repository - `git clone https://github.com/Katello/forklift.git`
+1. Enter the repository - `cd forklift`
 
 ### Using VirtualBox (Windows, OS X)
 
@@ -86,7 +84,7 @@ The box can now be accessed via ssh and the Rails server started directly (this 
 
 ### Adding Custom Boxes
 
-Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the katello-deploy directory. While this can be added to the Vagrantfile directly, updates to the katello-deploy repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `boxes.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
+Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `boxes.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
 
 ```
 my-nightly-test:
@@ -98,7 +96,7 @@ Options:
 
 ```
 box -- the ':name' one of the defined boxes in the Vagrantfile
-installer -- options that you would like passed to the katello-installer
+installer -- options that you would like passed to the installer
 options -- options that setup.rb accepts, e.g. --skip-installer
 shell -- customize the shell script run
 bridged -- deploy on Libvirt with a bridged networking configuration, value of this parameter should be the interface of the host (e.g. em1)
@@ -146,9 +144,9 @@ module APlugin
     DB           = 'db'
     WEB          = 'web'
     PARENT_NAME  = 'centos6-devel'
-    PROJECT_PATH = "#{KatelloDeploy::ROOT}/../a_repo"
+    PROJECT_PATH = "#{Forklift::ROOT}/../a_repo"
 
-    KatelloDeploy.define_vm config, KatelloDeploy.new_box(PARENT_NAME, DB) do |machine|
+    Forklift.define_vm config, Forklift.new_box(PARENT_NAME, DB) do |machine|
       machine.vm.provision :shell do |shell|
         shell.inline = 'echo doing DB box provisioning'
         config.vm.synced_folder PROJECT_PATH, "/home/vagrant/a_repo"
@@ -158,7 +156,7 @@ module APlugin
       end
     end
 
-    KatelloDeploy.define_vm config, KatelloDeploy.new_box(PARENT_NAME, WEB) do |machine|
+    Forklift.define_vm config, Forklift.new_box(PARENT_NAME, WEB) do |machine|
       machine.vm.provision :shell do |shell|
         shell.inline = 'echo doing WEB box provisioning'
         shell.inline = 'echo doing another WEB box provisioning'
@@ -278,8 +276,8 @@ subscription-manager register --username USER --password PASSWORD --auto-attach
 
 1. ssh to target machine **as root**
 2. Install git and ruby - `yum install -y git ruby`
-3. Clone this repository - `git clone https://github.com/Katello/katello-deploy.git`
-4. Enter the repository - `cd katello-deploy`
+3. Clone this repository - `git clone https://github.com/Katello/forklift.git`
+4. Enter the repository - `cd forklift`
 
 For a release version in production:
 
@@ -295,7 +293,7 @@ For development:
 
 ## Bats Testing
 
-Included with katello-deploy is a small live test suite.  The current tests are:
+Included with forklift is a small live test suite.  The current tests are:
 
   * fb-install-katello.bats - Installs katello and runs a few simple tests
 
