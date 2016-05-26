@@ -6,4 +6,4 @@
   roles:
     - etc_hosts
     - common
-    - capsule
+    - {role: capsule, selinux_enabled: false}
