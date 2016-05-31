@@ -6,28 +6,11 @@ SUPPORT_SSH_INSERT_KEY = Gem.loaded_specs['vagrant'].version >= Gem::Version.cre
 SUPPORT_BOX_CHECK_UPDATE = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.5')
 
 module Forklift
-  @box_loader = BoxLoader.new
-  @boxes = @box_loader.add_boxes('config/base_boxes.yaml', 'config/versions.yaml')
-  @boxes = @box_loader.add_boxes('boxes.yaml', 'config/versions.yaml') if File.exists?('boxes.yaml')
 
-  @ansible_groups = {}
-
-  Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-    @boxes.each do |name, box|
-      define_vm config, box
-    end
-
-    config.vm.provider :libvirt do |domain|
-      domain.memory = 4608
-      domain.cpus   = 2
-    end
-
-    config.vm.provider :virtualbox do |domain|
-      domain.memory = 4608
-      domain.cpus   = 2
-      domain.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
-      domain.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
-    end
+  def self.plugin_base_boxes
+    current = File.dirname(__FILE__)
+    base_boxes = Dir.glob "#{current}/plugins/*/base_boxes.yaml"
+    base_boxes.each { |boxes| add_boxes(boxes) }
   end
 
   def self.plugin_vagrantfiles
@@ -35,7 +18,9 @@ module Forklift
     Dir.glob "#{current}/plugins/*/Vagrantfile"
   end
 
-  plugin_vagrantfiles.each { |f| load f }
+  def self.add_boxes(boxes)
+    @boxes = @box_loader.add_boxes(boxes, 'config/versions.yaml')
+  end
 
   def self.define_vm(config, box = {})
     config.vm.define box.fetch('name'), primary: box.fetch('default', false) do |machine|
@@ -130,6 +115,33 @@ module Forklift
       end
 
       yield machine if block_given?
+    end
+  end
+
+  @box_loader = BoxLoader.new
+  @boxes = @box_loader.add_boxes('config/base_boxes.yaml', 'config/versions.yaml')
+  plugin_vagrantfiles.each { |f| load f }
+  plugin_base_boxes
+  @boxes = @box_loader.add_boxes('boxes.yaml', 'config/versions.yaml') if File.exists?('boxes.yaml')
+
+  @ansible_groups = {}
+
+
+  Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    @boxes.each do |name, box|
+      define_vm config, box
+    end
+
+    config.vm.provider :libvirt do |domain|
+      domain.memory = 4608
+      domain.cpus   = 2
+    end
+
+    config.vm.provider :virtualbox do |domain|
+      domain.memory = 4608
+      domain.cpus   = 2
+      domain.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
+      domain.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
     end
   end
 
