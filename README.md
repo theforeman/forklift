@@ -80,7 +80,7 @@ The box can now be accessed via ssh and the Rails server started directly (this 
     vagrant ssh <deployment>
     cd /home/vagrant/foreman
     sudo service iptables stop
-    rails s
+    bin/rails s -b 0.0.0.0
 
 ### Adding Custom Boxes
 
