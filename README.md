@@ -65,15 +65,31 @@ This will create a libvirt based virtual machine running the Katello server on C
 
 ### Development Deployment
 
-A Katello development environment can be deployed on CentOS 6 or 7. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin.
+A Katello development environment can be deployed on CentOS 6 or 7. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin. There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
 
-To deploy to CentOS 6:
+  1. Copy boxes.yaml.example to boxes.yaml. If you already have a boxes.yaml, you can copy the entries in boxes.yaml.example to your boxes.yaml.
+  2. Now, replace <my_github_username> with your github username
+  3. Fill in any other options, examples:
+    * --katello-devel-use-ssh-fork: will add your fork by SSH instead of HTTPS
+    * --katello-devel-fork-remote-name: will change the naming convention for your fork's remote
+    * --katello-devel-upstream-remote-name: will change the naming convention for the upstream (non-fork) repositories remote
+    * --katello-devel-extra-plugins: specify other plugins to have setup and configured
 
-    vagrant up centos6-devel
+For example, if I wanted my upstream remotes to be origin and to install the remote execution and discovery plugins:
 
-To deploy to CentOS 7:
+```
+centos7-devel:
+  box: centos7
+  shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
+  options: --scenario=katello-devel
+  installer: --katello-devel-github-username myname --katello-devel-upstream-remote-name origin --katello-devel-extra-plugins theforeman/foreman_remote_execution --katello-devel-extra-plugins theforeman/foreman_disocvery
+```
 
-    vagrant up centos7-devel
+Lastly, spin up the box:
+
+```
+vagrant up centos7-devel
+```
 
 The box can now be accessed via ssh and the Rails server started directly (this assumes you are connecting as the default `vagrant` user):
 

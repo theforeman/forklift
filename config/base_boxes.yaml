@@ -67,16 +67,6 @@ boxes:
     box: centos7
     <<: *bats_shell
 
-  centos6-devel:
-    box: centos6
-    <<: *install_shell
-    options: --scenario=katello-devel
-
-  centos7-devel:
-    box: centos7
-    <<: *install_shell
-    options: --scenario=katello-devel
-
   runcible:
     box: centos7
     <<: *runcible_shell
