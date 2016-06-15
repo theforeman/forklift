@@ -95,7 +95,7 @@ setup() {
   activation_key_id=$(hammer -u admin -p changeme activation-key info --organization="Default Organization" \
     --name="Test AK" | grep ID | tr -d ' ' | cut -d':' -f2)
   subscription_id=$(hammer -u admin -p changeme subscription list --organization="Default Organization" \
-    | grep "Test Product" | cut -d\| -f8 | tr -d ' ')
+    | grep "Test Product" | cut -d\| -f1 | tr -d ' ')
   hammer -u admin -p changeme activation-key add-subscription --id=$activation_key_id \
     --subscription-id=$subscription_id | grep -q "Subscription added to activation key"
 }
