@@ -1,5 +1,8 @@
 ---
 - hosts: server capsule
+  vars:
+    capsule_server_group: "server-{{ inventory_hostname }}"
+    capsule_server: "{{ groups[capsule_server_group][0] }}"
   roles:
     - etc_hosts
     - common

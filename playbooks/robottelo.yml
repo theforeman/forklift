@@ -1,0 +1,4 @@
+---
+- hosts: server capsule
+  roles:
+    - robottelo
