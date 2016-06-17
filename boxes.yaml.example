@@ -8,3 +8,10 @@ centos7-devel:
 katello-remote-execution:
   box: centos7-katello-nightly
   installer: --enable-foreman-remote-execution
+
+centos7-capsule-devel:
+    box: centos7
+    ansible:
+      playbook: 'playbooks/capsule-dev.yml'
+      group: 'capsule'
+      server: 'centos7-devel'

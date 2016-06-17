@@ -16,12 +16,12 @@
   lineinfile: dest=/etc/hosts regexp=".*{{ ansible_nodename }}$" line="{{ capsule_ip }} {{ ansible_nodename }}" state=present
 
 - name: 'Get oauth-consumer-key'
-  shell: grep oauth_consumer_key /etc/foreman/settings.yaml | cut -d ' ' -f 2
+  shell: grep oauth_consumer_key "{{ foreman_directory }}"settings.yaml | cut -d ' ' -f 2
   delegate_to: "{{ capsule_server }}"
   register: oauth_consumer_key
 
 - name: 'Get oauth-consumer-secret'
-  shell: grep oauth_consumer_secret /etc/foreman/settings.yaml | cut -d ' ' -f 2
+  shell: grep oauth_consumer_secret "{{ foreman_directory }}"settings.yaml | cut -d ' ' -f 2
   delegate_to: "{{ capsule_server }}"
   register: oauth_consumer_secret
 
@@ -31,8 +31,9 @@
   register: pulp_oauth_secret
 
 - name: 'Generate Certs'
-  command: capsule-certs-generate --capsule-fqdn {{ ansible_nodename }} --certs-tar {{ capsule_certs_tar }}
+  command: capsule-certs-generate --capsule-fqdn {{ ansible_nodename }} --certs-tar {{ capsule_certs_tar }} --disable-system-checks
   delegate_to: "{{ capsule_server }}"
+
 - name: 'Fetch Certs'
   delegate_to: "{{ capsule_server }}"
   fetch:
@@ -49,6 +50,11 @@
     name: '*'
     update_cache: yes
     state: latest
+
+- name: 'Change cert permissions'
+  file: path='/etc/pki/katello/private' mode=0775
+  delegate_to: "{{ capsule_server }}"
+  when: devel is defined and devel == true
 
 - name: 'Install Capsule Installer RPM'
   yum:
