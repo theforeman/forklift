@@ -82,7 +82,7 @@ centos7-devel:
   box: centos7
   shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
   options: --scenario=katello-devel
-  installer: --katello-devel-github-username myname --katello-devel-upstream-remote-name origin --katello-devel-extra-plugins theforeman/foreman_remote_execution --katello-devel-extra-plugins theforeman/foreman_disocvery
+  installer: --katello-devel-github-username myname --katello-devel-upstream-remote-name origin --katello-devel-extra-plugins theforeman/foreman_remote_execution --katello-devel-extra-plugins theforeman/foreman_discovery
 ```
 
 Lastly, spin up the box:
