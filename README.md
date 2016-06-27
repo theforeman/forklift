@@ -28,6 +28,7 @@ The first step in using Vagrant to deploy an environment is to ensure that Vagra
      1. Ensure you have the prerequisites installed `sudo yum install ruby rubygems ruby-devel gcc`
      2. Vagrant 1.6.5+ can be downloaded and installed from [Vagrant Downloads](http://www.vagrantup.com/downloads.html)
    * For **Virtualbox**, Vagrant 1.6.5+ can be downloaded and installed from [Vagrant Downloads](http://www.vagrantup.com/downloads.html)
+   * For automatic management of host names install the `vagrant-hostmanager` plugin.
 1. Clone this repository - `git clone https://github.com/Katello/forklift.git`
 1. Enter the repository - `cd forklift`
 
