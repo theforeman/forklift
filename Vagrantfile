@@ -69,7 +69,6 @@ module Forklift
             ansible.playbook = box.fetch('ansible').fetch('playbook')
 
             ansible.groups = @ansible_groups
-            ansible.sudo = true
           end
         end
       end
