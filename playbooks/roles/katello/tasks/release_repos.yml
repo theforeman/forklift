@@ -1,0 +1,5 @@
+---
+- name: 'Update Katello release RPM'
+  yum:
+    name: http://fedorapeople.org/groups/katello/releases/yum/{{ katello_version }}/katello/el7/x86_64/katello-repos-latest.rpm
+    state: present

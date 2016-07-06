@@ -1,0 +1,28 @@
+---
+- name: 'Ensure OS is updated'
+  yum:
+    name: '*'
+    state: latest
+
+- name: 'Update Foreman release RPM'
+  yum:
+    name: http://yum.theforeman.org/releases/{{ capsule_foreman_version }}/el7/x86_64/foreman-release.rpm
+    state: present
+
+- include: release_repos.yml
+  when: capsule_use_release_repos and not capsule_use_koji_repos
+
+- include: koji_repos.yml
+  when: capsule_use_koji_repos
+
+- name: 'Update packages'
+  yum:
+    name: '*'
+    state: latest
+
+- name: 'Run installer upgrade'
+  command: >
+    foreman-installer
+    -v
+    --scenario capsule
+    --upgrade
