@@ -1,6 +1,7 @@
 ---
 - name: 'Set SELinux to Permissive'
   selinux: policy=targeted state=permissive
+  when: selinux_enabled == False
 
 - name: 'Get Server Hostname'
   shell: hostname -f
