@@ -1,6 +1,56 @@
 ---
+- name: 'Set SELinux to Permissive'
+  selinux: policy=targeted state=permissive
+
+- name: 'Get Server Hostname'
+  shell: hostname -f
+  delegate_to: "{{ capsule_server }}"
+  register: server_fqdn
+
+- name: 'Get Server IP Address'
+  shell: ifconfig eth0 2>/dev/null|awk '/inet/ {print $2}'|sed 's/addr://'
+  delegate_to: "{{ capsule_server }}"
+  register: server_ip
+
+- set_fact: server_ip="{{ server_ip.stdout.split('\n')[0] }}"
+
+- name: 'Add /etc/hosts record for capsule'
+  delegate_to: "{{ capsule_server }}"
+  lineinfile: dest=/etc/hosts regexp=".*{{ ansible_nodename }}$" line="{{ capsule_ip }} {{ ansible_nodename }}" state=present
+
+- name: 'Get oauth-consumer-key'
+  shell: grep oauth_consumer_key /etc/foreman/settings.yaml | cut -d ' ' -f 2
+  delegate_to: "{{ capsule_server }}"
+  register: oauth_consumer_key
+
+- name: 'Get oauth-consumer-secret'
+  shell: grep oauth_consumer_secret /etc/foreman/settings.yaml | cut -d ' ' -f 2
+  delegate_to: "{{ capsule_server }}"
+  register: oauth_consumer_secret
+
+- name: 'Get pulp-oauth-secret'
+  shell: grep oauth_secret /etc/pulp/server.conf | tail -1 | cut -d ' ' -f 2
+  delegate_to: "{{ capsule_server }}"
+  register: pulp_oauth_secret
+
+- name: 'Generate Certs'
+  command: capsule-certs-generate --capsule-fqdn {{ ansible_nodename }} --certs-tar {{ capsule_certs_tar }}
+  delegate_to: "{{ capsule_server }}"
+- name: 'Fetch Certs'
+  delegate_to: "{{ capsule_server }}"
+  fetch:
+    src: "{{ capsule_certs_tar }}"
+    dest: /tmp
+
+- name: 'Copy Certs to Capsule'
+  copy:
+    src: "/tmp/{{ inventory_hostname }}{{ capsule_certs_tar }}"
+    dest: ~/
+
 - name: 'Install Capsule Installer RPM'
   yum: name=foreman-installer-katello
+  when: custom_install == False
+
 - name: 'Run Install'
   shell: >
     foreman-installer -v --scenario capsule
@@ -13,3 +63,4 @@
     --capsule-certs-tar "{{ capsule_certs_tar }}"
     --capsule-parent-fqdn "{{ server_fqdn.stdout }}"
     --capsule-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"
+  when: custom_install == False

@@ -1,0 +1,29 @@
+---
+- name: 'Update Foreman release RPM'
+  command: >
+    yum update -y http://yum.theforeman.org/releases/{{ katello_foreman_version }}/el7/x86_64/foreman-release.rpm
+
+- include: release_repos.yml
+  when: katello_use_release_repos and not katello_use_koji_repos
+
+- include: koji_repos.yml
+  when: katello_use_koji_repos
+
+- name: 'Update foreman-release-scl'
+  yum:
+    name: foreman-release-scl
+    update_cache: yes
+    state: latest
+
+- name: 'Update packages'
+  yum:
+    name: '*'
+    update_cache: yes
+    state: latest
+
+- name: 'Run installer upgrade'
+  command: >
+    foreman-installer
+    -v
+    --scenario katello
+    --upgrade

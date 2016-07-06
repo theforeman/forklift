@@ -1,0 +1,3 @@
+---
+- include: upgrade.yml
+  when: katello_upgrade == True
