@@ -41,11 +41,11 @@ OptionParser.new do |opts|
     options[:deployment_dir] = dir
   end
 
-  opts.on("--version [VERSION]", ['nightly', '1.7', '1.8', '1.9', '1.10', '1.11'], "Set the version of Foreman to install") do |version|
+  opts.on("--version [VERSION]", ['nightly', '1.7', '1.8', '1.9', '1.10', '1.11', '1.12'], "Set the version of Foreman to install") do |version|
     options[:version] = version
   end
 
-  opts.on("--katello-version [KATELLO_VERSION]", ['nightly', '2.3', '2.4', '3.0'], "Set the version of Katello to install") do |version|
+  opts.on("--katello-version [KATELLO_VERSION]", ['nightly', '2.3', '2.4', '3.0', '3.1'], "Set the version of Katello to install") do |version|
     options[:katello_version] = version
   end
 
