@@ -9,5 +9,8 @@ services:
       - "3000:3000"
     depends_on:
       - db
-# proxy:
-#   build: proxy
+  proxy:
+    build: proxy
+    command: /usr/src/app/bin/smart-proxy
+    ports:
+      - "8000:8000"

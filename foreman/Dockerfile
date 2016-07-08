@@ -17,5 +17,3 @@ RUN git clone https://github.com/theforeman/foreman.git /usr/src/app
 RUN bundle
 RUN cp config/settings.yaml.example config/settings.yaml
 ADD database.yml config/database.yml
-#EXPOSE 3000
-#ENTRYPOINT ["rails", "server", "-b", "0.0.0.0"]
