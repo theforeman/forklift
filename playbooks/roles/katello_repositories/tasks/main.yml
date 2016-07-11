@@ -1,0 +1,6 @@
+---
+- include: release_repos.yml
+  when: katello_repositories_use_release and not katello_repositories_use_koji
+
+- include: koji_repos.yml
+  when: katello_repositories_use_koji

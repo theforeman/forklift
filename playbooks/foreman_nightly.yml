@@ -1,0 +1,5 @@
+- hosts: all
+  roles:
+    - etc_hosts
+    - foreman_repositories
+    - foreman

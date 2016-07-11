@@ -1,0 +1,6 @@
+- hosts: all
+  roles:
+    - etc_hosts
+    - foreman_repositories
+    - katello_repositories
+    - katello

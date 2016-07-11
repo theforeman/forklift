@@ -55,6 +55,7 @@ module Forklift
           config['boxes']["#{os}-foreman-#{version}"] = Marshal.load(
             Marshal.dump(config['boxes']["#{os}-foreman-nightly"])
           )
+          config['boxes']["#{os}-foreman-#{version}"]['options'] ||= []
           config['boxes']["#{os}-foreman-#{version}"]['options'] << " --version #{version}"
 
           next unless (katello_version = versions['mapping'][version])
@@ -62,6 +63,7 @@ module Forklift
           katello_box = Marshal.load(
             Marshal.dump(config['boxes']["#{os}-katello-nightly"])
           )
+          katello_box['options'] ||= []
           katello_box['options'] << " --version #{version}"
 
           capsule_box = Marshal.load(

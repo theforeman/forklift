@@ -1,0 +1,2 @@
+---
+foreman_installer_command: foreman-installer -v --scenario foreman
