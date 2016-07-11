@@ -1,11 +1,14 @@
 foreman:
   - 'nightly'
   - '1.11'
+  - '1.12'
 
 katello:
   - 'nightly'
   - '3.0'
+  - '3.1'
 
 mapping:
   'nightly': 'nightly'
   '1.11': '3.0'
+  '1.12': '3.1'
