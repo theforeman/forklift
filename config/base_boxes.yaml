@@ -71,3 +71,19 @@ boxes:
     box: centos7
     <<: *runcible_shell
     privileged: false
+
+  pipeline-katello-centos7:
+    box: centos7
+    memory: 4680
+
+  pipeline-capsule-centos7:
+    box: centos7
+    memory: 3072
+
+  pipeline-katello-3.1-centos7:
+    box: centos7
+    memory: 4680
+
+  pipeline-capsule-3.1-centos7:
+    box: centos7
+    memory: 3072

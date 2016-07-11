@@ -2,4 +2,5 @@
 - name: "Build hosts file"
   lineinfile: dest=/etc/hosts regexp='.*{{ item.replace('.', '-') }}$' line="{{ hostvars[item].ansible_ssh_host }} {{ item.replace('.', '-') }}.{{ etc_hosts_domain }} {{ item.replace('.', '-') }}" state=present
   when: hostvars[item].ansible_ssh_host is defined
+  become: yes
   with_items: "{{ groups['all'] }}"

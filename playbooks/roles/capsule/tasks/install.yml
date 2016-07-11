@@ -48,7 +48,8 @@
     dest: ~/
 
 - name: 'Install Capsule Installer RPM'
-  yum: name=foreman-installer-katello
+  yum:
+    name: foreman-installer-katello
   when: custom_install == False
 
 - name: 'Run Install'
