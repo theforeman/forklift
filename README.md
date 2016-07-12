@@ -1,5 +1,19 @@
 # Forklift
 
+ * [Vagrant Deployment](#vagrant-deployment)
+ * [Non-vagrant Deployment](#direct-deployment)
+ * [Nightly Install](#nightly-production-install)
+ * [Bats Testing](#bats-testing)
+ * [Development Deployment](#development-deployment)
+ * [Custom Vagrant Boxes](#adding-custom-boxes)
+ * [Post Install Scripts](#run-scripts-post-install)
+ * [Use Koji Scratch Builds](#koji-scratch-builds)
+ * [Test Puppet Module Pull Requests](#testing-module-pull-requests)
+ * [Plugins](#plugins)
+ * [Troubleshooting](#troubleshooting)
+
+## Intro
+
 This repository provides methods to easily test and deploy a Foreman or Katello server. There are two
 different types of setups&mdash;nightly and development. The latter is for setting up Foreman/Katello from git repositories so that you can contribute to Foreman, Katello or any other plugins. Nightly installs are production installs from the nightly RPMs that contain the bleeding edge code.
 
@@ -14,7 +28,6 @@ system you can use for which type of deployment.
 | CentOS 7  | X          | X      | X           | X      | X       |
 | RHEL 6    | X          | X      | X           | X      |         |
 | RHEL 7    | X          | X      | X           | X      |         |
-
 
 ## Vagrant Deployment
 
