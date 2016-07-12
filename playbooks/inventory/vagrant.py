@@ -19,11 +19,15 @@ def parse_args():
 def list_running_hosts():
     cmd = "vagrant status --machine-readable"
     status = subprocess.check_output(cmd.split()).rstrip()
-    hosts = []
+    hosts = {}
     for line in status.split('\n'):
-        (_, host, key, value) = line.split(',')
+        if len(line.split(',')) == 4:
+            (_, host, key, value) = line.split(',')
+        else:
+            (_, host, key, value, provider) = line.split(',')
+
         if key == 'state' and value == 'running':
-            hosts.append(host)
+            hosts[host] = get_host_details(host)
     return hosts
 
 
@@ -43,7 +47,7 @@ def main():
     args = parse_args()
     if args.list:
         hosts = list_running_hosts()
-        json.dump({'vagrant': hosts}, sys.stdout)
+        json.dump(hosts, sys.stdout)
     else:
         details = get_host_details(args.host)
         json.dump(details, sys.stdout)
