@@ -1,4 +1,4 @@
-development: &default
+production: &default
   adapter: postgresql
   encoding: unicode
   database: postgres

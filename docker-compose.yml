@@ -1,16 +1,48 @@
 version: '2'
 services:
+  memcache:
+    image: memcached
   db:
     image: postgres
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/pgdata
   foreman:
     build: foreman
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: rails server -p 80 -b 0.0.0.0
     ports:
-      - "3000:3000"
-    depends_on:
+      - 80
+    volumes:
+      - ./assets:/usr/src/app/public/assets
+    links:
       - db
+      - memcache
+      - proxy
+  haproxy:
+    image: dockercloud/haproxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    links:
+      - foreman
+    ports:
+      - 80:80
+      - 1936:1936
   proxy:
     build: proxy
     command: /usr/src/app/bin/smart-proxy
     ports:
-      - "8000:8000"
+      - 8000:8000
+  client:
+    build: client
+    environment:
+      - FOREMAN_URL=http://haproxy
+    depends_on:
+      - haproxy
+  foreman-init:
+    build: foreman
+    command: bundle exec rake db:migrate db:seed assets:clean assets:precompile apipie:cache:index
+    volumes:
+      - ./assets:/usr/src/app/public/assets
+    depends_on:
+      - db
