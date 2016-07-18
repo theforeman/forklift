@@ -6,7 +6,7 @@ Docker compose of Foreman in a LB (using haproxy) setup, including basic client 
 
 Install `docker-compose` from [docker compose](https://docs.docker.com/compose/install/) (or via native packaging)
 
-cd into this directory and run `docker-compose up`. This will build postgres image and Foreman (develop branch) image.
+cd into this directory and run `docker-compose build`. This will build postgres image and Foreman (develop branch) image.
 
 Once the environment is up, you may simply login to `http://localhost`. SSL is disabled for this deployment.
 
