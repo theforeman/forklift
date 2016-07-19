@@ -1,3 +1,6 @@
 ---
+- include: install.yml
+  when: katello_upgrade == False
+
 - include: upgrade.yml
   when: katello_upgrade == True

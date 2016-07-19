@@ -1,0 +1,20 @@
+---
+- name: 'Update packages'
+  yum:
+    name: '*'
+    update_cache: yes
+    state: latest
+
+- name: 'Install foreman-release-scl'
+  yum:
+    name: foreman-release-scl
+    update_cache: yes
+    state: latest
+
+- name: 'Install foreman-installer'
+  yum:
+    name: foreman-installer
+    state: latest
+
+- name: 'Run installer'
+  command: "{{ foreman_installer_command }}"
