@@ -122,3 +122,7 @@ tCommandExists() {
 tFileExists() {
   [[ -f "$1" ]]
 }
+
+tNonZeroFile() {
+  [[ -s "$1" ]]
+}

@@ -6,15 +6,8 @@
 
 - name: 'Install bats'
   shell: /root/forklift/bats/bootstrap.sh
-  args:
-    chdir: /
-
-- name: 'Copy bats'
-  shell: >
-    mv /bats/libexec/* /usr/bin/
 
 - name: 'Run bats'
-  shell: >
-    /root/forklift/bats/fb-content-katello.bats
-  args:
-    chdir: /
+  shell: /usr/local/bin/katello-bats content capsule
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
