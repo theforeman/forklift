@@ -1,0 +1,40 @@
+- hosts: localhost
+  tasks:
+    - name: 'Bring up box for Katello'
+      command: vagrant up pipeline-katello-3.1-centos7
+
+    - name: 'Bring up box for Capsule'
+      command: vagrant up pipeline-capsule-3.1-centos7
+
+    - name: 'Refresh inventory'
+      meta: refresh_inventory
+
+- hosts: pipeline-katello-3.1-centos7
+  become: yes
+  vars:
+    katello_version: 3.1
+    katello_foreman_version: 1.12
+    katello_repositories_use_koji: true
+  roles:
+    - etc_hosts
+    - foreman_repositories
+    - katello_repositories
+    - katello
+
+- hosts: pipeline-capsule-3.1-centos7
+  become: yes
+  vars:
+    capsule_server: pipeline-katello-3.1-centos7
+    katello_version: 3.1
+    foreman_version: 1.12
+    katello_repositories_use_koji: true
+  roles:
+    - etc_hosts
+    - foreman_repositories
+    - katello_repositories
+    - capsule
+
+- hosts: pipeline-katello-3.1-centos7
+  become: true
+  roles:
+    - bats

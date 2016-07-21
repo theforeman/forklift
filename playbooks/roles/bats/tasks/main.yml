@@ -1,0 +1,20 @@
+---
+- name: 'Clone bats'
+  git:
+    repo: https://github.com/katello/forklift.git
+    dest: /root/forklift
+
+- name: 'Install bats'
+  shell: /root/forklift/bats/bootstrap.sh
+  args:
+    chdir: /
+
+- name: 'Copy bats'
+  shell: >
+    mv /bats/libexec/* /usr/bin/
+
+- name: 'Run bats'
+  shell: >
+    /root/forklift/bats/fb-content-katello.bats
+  args:
+    chdir: /
