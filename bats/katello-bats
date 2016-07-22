@@ -8,6 +8,7 @@ Usage: $0 [options]
       nightly     Run bats against nightly
       devel       Run bats against development
       content     Run content tests (yum + puppet)
+      capsule     Run capsule tests (requires content)
       virt-whom   Run virt-whom candlepin tests
       swapfile    Create a 2048MB swapfile
 EOF
@@ -36,6 +37,9 @@ for arg do
       swapfile)
         swapfile=true
         ;;
+      capsule)
+        katello_capsule=true
+        ;;
    esac
 done
 
@@ -58,6 +62,12 @@ fi
 if [ "$katello_content_tests" == true ];
 then
     BATS_ARGS="$BATS_ARGS fb-content-katello.bats"
+fi
+
+# Must have run content suite when testing the capsule
+if [ "$katello_capsule" == true ];
+then
+    BATS_ARGS="$BATS_ARGS fb-capsule.bats"
 fi
 
 if [ "$katello_virt_whom" == true ];
