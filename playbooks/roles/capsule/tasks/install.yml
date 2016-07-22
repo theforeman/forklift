@@ -1,7 +1,4 @@
 ---
-- name: 'Set SELinux to Permissive'
-  selinux: policy=targeted state=permissive
-
 - name: 'Get Server Hostname'
   shell: hostname -f
   delegate_to: "{{ capsule_server }}"
