@@ -96,7 +96,7 @@ module Forklift
 
     def syscall(command)
       system(command)
-      $CHILD_STATUS == 0
+      $CHILD_STATUS.zero?
     end
 
     def foreman_root
