@@ -64,11 +64,25 @@ module Forklift
           @ansible_groups["server-#{box.fetch('name')}"] = box['ansible']['server']
         end
 
-        if box['ansible'].key?('playbook')
-          machine.vm.provision :ansible do |ansible|
-            ansible.playbook = box.fetch('ansible').fetch('playbook')
+        if (playbooks = box['ansible']['playbook'])
 
-            ansible.groups = @ansible_groups
+          if playbooks.is_a?(String)
+            machine.vm.provision 'main', type: 'ansible' do |ansible|
+              ansible.playbook = playbooks
+
+              ansible.groups = @ansible_groups
+            end
+
+          elsif playbooks.is_a?(Array)
+
+            playbooks.each_with_index do |playbook, index|
+              machine.vm.provision "main#{index}", type: 'ansible' do |ansible|
+                ansible.playbook = playbook
+
+                ansible.groups = @ansible_groups
+              end
+            end
+
           end
         end
       end

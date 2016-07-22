@@ -160,6 +160,19 @@ static:
         libvirt__iface_name: vnet2
 ```
 
+#### Ansible
+
+Boxes can be further customized by declaring Ansible playbooks to be run during provisioning. One or more playbooks can be specified and will be executed sequentially. An ignored directory can be used to put playbooks into 'user_playbooks' without worrying about adding them during a git commit.
+
+```
+ansible:
+  box: centos7-katello-nightly
+  ansible:
+    playbook:
+      - 'user_playbooks/vim.yml'
+      - 'user_playbooks/zsh.yml'
+```
+
 ### Plugins
 
 Any file on path `./plugins/*/Vagrantfile` will be loaded on `./Vagrantfile` evaluation. `plugins` directory is ignored by git therefore other git repositories can be cloned into `plugins` to add custom machines.
