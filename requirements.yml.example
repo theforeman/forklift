@@ -1,0 +1,5 @@
+# from galaxy
+- src: yatesr.timezone
+
+# from GitHub
+- src: https://github.com/bennojoy/nginx
