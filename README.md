@@ -1,4 +1,6 @@
-# Forklift
+<img src="https://raw.githubusercontent.com/katello/forklift/master/docs/forklift.png" height="100px">
+
+# Forklift: lifting Foreman into your environment
 
  * [Vagrant Deployment](#vagrant-deployment)
  * [Non-vagrant Deployment](#direct-deployment)

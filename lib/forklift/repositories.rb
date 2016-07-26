@@ -75,7 +75,7 @@ module Forklift
     end
 
     def bootstrap_foreman(version, os_version)
-      version = (version == 'nightly') ? 'nightly' : "releases/#{version}"
+      version = version == 'nightly' ? 'nightly' : "releases/#{version}"
       local_install("http://yum.theforeman.org/#{version}/el#{os_version}/x86_64/foreman-release.rpm")
     end
 
