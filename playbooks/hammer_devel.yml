@@ -1,0 +1,4 @@
+---
+- hosts: all
+  roles:
+    - hammer_devel
