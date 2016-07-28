@@ -96,7 +96,9 @@ module Forklift
 
     def syscall(command)
       system(command)
-      $CHILD_STATUS.zero?
+
+      # rubocop:disable SpecialGlobalVars
+      $?.success?
     end
 
     def foreman_root
