@@ -1,0 +1,71 @@
+---
+- name: 'Clone the hammer repositories'
+  git:
+    repo: https://github.com/{{ item }}.git
+    dest: ~/{{ item.split('/')[1] }}
+    update: no
+  with_items: "{{ hammer_devel_repositories }}"
+
+- name: 'Add local gems to Gemfile.local'
+  blockinfile:
+    dest: ~/hammer-cli-katello/Gemfile.local
+    create: yes
+    block: |
+      gem 'hammer_cli', :path => '../hammer-cli'
+      gem 'hammer_cli_foreman', :path => '../hammer-cli-foreman'
+      gem 'hammer_cli_foreman_tasks', :path => '../hammer-cli-foreman-tasks'
+
+- name: 'Remove hammer_cli_foreman in Gemfile'
+  lineinfile:
+    dest: ~/hammer-cli-katello/Gemfile
+    regexp: "gem 'hammer_cli_foreman'"
+    line: ''
+
+- name: 'Remove hammer_cli in Gemfile'
+  lineinfile:
+    dest: ~/hammer-cli-katello/Gemfile
+    regexp: "gem 'hammer_cli'"
+    line: ''
+
+- name: 'Install bundler'
+  command: bash -lc 'gem install bundler'
+
+- name: 'Install gem native dependencies'
+  become: true
+  yum: name=gcc-c++ state=present
+
+- name: 'Install gems'
+  bundler: state=present chdir=~/hammer-cli-katello executable=~/.rbenv/shims/bundle
+
+- name: 'Add hammer config directories'
+  file: path=~/.hammer state=directory
+  file: path=~/.hammer/cli.modules.d state=directory
+
+- name: 'Configure hammer'
+  blockinfile:
+    dest: ~/.hammer/cli_config.yml
+    create: true
+
+- name: 'Configure hammer-cli-foreman'
+  blockinfile:
+    dest: ~/.hammer/cli.modules.d/foreman.yml
+    create: true
+    block: |
+      :foreman:
+        :enable_module: true
+        :host: {{ hammer_devel_host }}
+        :username: {{ hammer_devel_username }}
+        :password: {{ hammer_devel_password }}
+
+- name: 'Configure hammer-cli-katello'
+  blockinfile:
+    dest: ~/.hammer/cli.modules.d/katello.yml
+    create: true
+    block: |
+      :katello:
+        :enable_module: true
+
+- name: 'Wrap hammer in bundle exec'
+  lineinfile:
+    dest: ~/.bash_profile
+    line: 'alias hammer="bundle exec hammer"'
