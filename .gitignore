@@ -16,3 +16,5 @@ Gemfile.lock
 *.pyc
 user_playbooks/*.yml
 user_playbooks/*.yaml
+playbooks/galaxy_roles
+requirements.yml
