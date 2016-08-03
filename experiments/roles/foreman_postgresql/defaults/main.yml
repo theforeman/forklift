@@ -1,0 +1,4 @@
+---
+foreman_postgresql_database: foreman
+foreman_postgresql_user: foreman
+foreman_postgresql_password: foreman
