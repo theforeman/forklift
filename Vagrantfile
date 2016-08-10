@@ -40,7 +40,7 @@ module Forklift
         network['options'] = network['options'].inject({}){ |memo,(k,v)| memo.update(k.to_sym => v) }
       end
 
-      if box.key?('shell') && !box['shell'].nil? 
+      if box.key?('shell') && !box['shell'].nil?
         machine.vm.provision :shell do |shell|
           shell.inline = box.fetch('shell')
           shell.privileged = false if box.key?('privileged')
@@ -97,6 +97,7 @@ module Forklift
           end
           p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
           p.memory = box.fetch('memory') if box.fetch('memory', false)
+          p.machine_virtual_size = box.fetch('disk_size') if box.fetch('disk_size', false)
         end
       end
 
