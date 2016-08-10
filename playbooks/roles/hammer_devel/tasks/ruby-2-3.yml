@@ -1,0 +1,17 @@
+- name: 'Install SCL repository'
+  become: true
+  yum: name=centos-release-scl state=present
+
+- name: 'Install Ruby SCL'
+  become: true
+  yum: name=rh-ruby23,rh-ruby23-ruby-devel state=present
+
+- name: 'Enable rh-ruby23 at login'
+  become: true
+  blockinfile:
+    dest: /etc/profile.d/enable-rh-ruby23.sh
+    create: yes
+    block: |
+      #!/bin/bash
+      source /opt/rh/rh-ruby23/enable
+      export X_SCLS="`scl enable rh-ruby23 'echo $X_SCLS'`"

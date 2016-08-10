@@ -1,0 +1,31 @@
+---
+- name: 'Add hammer config directory'
+  file: path=~/.hammer state=directory
+
+- name: 'Add hammer module config directory'
+  file: path=~/.hammer/cli.modules.d state=directory
+
+- name: 'Configure hammer'
+  command: cp ~/hammer-cli/config/cli_config.template.yml ~/.hammer/cli_config.yml
+
+- name: 'Configure hammer-cli-foreman'
+  blockinfile:
+    dest: ~/.hammer/cli.modules.d/foreman.yml
+    create: true
+    block: |
+      :foreman:
+        :enable_module: true
+        :host: {{ hammer_devel_host }}
+        :username: {{ hammer_devel_username }}
+        :password: {{ hammer_devel_password }}
+
+- name: 'Configure hammer-cli-katello'
+  blockinfile:
+    dest: ~/.hammer/cli.modules.d/katello.yml
+    create: true
+    block: |
+      :katello:
+        :enable_module: true
+
+- name: 'Alias hammer'
+  lineinfile: dest=~/.bash_profile line="alias hammer='cd ~/hammer-cli-katello && bundle exec hammer'"

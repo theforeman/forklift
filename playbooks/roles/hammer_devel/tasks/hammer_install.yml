@@ -1,0 +1,26 @@
+---
+- name: 'Clone the hammer repositories'
+  git:
+    repo: https://github.com/{{ item }}.git
+    dest: ~/{{ item.split('/')[1] }}
+    update: no
+  with_items: "{{ hammer_devel_repositories }}"
+
+- name: 'Add local gems to Gemfile.local'
+  blockinfile:
+    dest: ~/hammer-cli-katello/Gemfile.local
+    create: yes
+    block: |
+      gem 'hammer_cli', :path => '../hammer-cli'
+      gem 'hammer_cli_foreman', :path => '../hammer-cli-foreman'
+      gem 'hammer_cli_foreman_tasks', :path => '../hammer-cli-foreman-tasks'
+
+- name: 'Install gem native dependencies'
+  become: true
+  yum: name=gcc-c++ state=present
+
+- name: 'Install bundler'
+  gem: name=bundler state=present
+
+- name: 'Install gems'
+  bundler: chdir=~/hammer-cli-katello state=present executable=~/bin/bundle
