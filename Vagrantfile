@@ -3,6 +3,7 @@ require './lib/forklift'
 
 VAGRANTFILE_API_VERSION = '2'
 SUPPORT_SSH_INSERT_KEY = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
+SUPPORT_NAMED_PROVISIONERS = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
 SUPPORT_BOX_CHECK_UPDATE = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.5')
 
 module Forklift
@@ -67,7 +68,8 @@ module Forklift
         if (playbooks = box['ansible']['playbook'])
 
           if playbooks.is_a?(String)
-            machine.vm.provision 'main', type: 'ansible' do |ansible|
+            args = SUPPORT_NAMED_PROVISIONERS ? ['main', type: 'ansible'] : [:ansible]
+            machine.vm.provision *args do |ansible|
               ansible.playbook = playbooks
 
               ansible.groups = @ansible_groups
