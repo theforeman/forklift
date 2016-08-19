@@ -2,6 +2,10 @@
 
 # Forklift: lifting Foreman into your environment
 
+    |o |
+    [T]|
+    o-o|L▀
+
  * [Vagrant Deployment](#vagrant-deployment)
  * [Non-vagrant Deployment](#direct-deployment)
  * [Nightly Install](#nightly-production-install)
