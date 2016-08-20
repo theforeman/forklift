@@ -2,7 +2,7 @@ FROM fedora:latest
 #RUN dnf -y update
 RUN dnf -y install ruby{,-devel,gems} rubygem-{nokogiri,bundler,unf_ext,rdoc} redhat-rpm-config nodejs git postgresql-devel gcc-c++ make hostname
 RUN dnf clean all
-MAINTAINER ohadlevy@gmail.com
+LABEL MAINTAINER="ohadlevy@gmail.com"
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
