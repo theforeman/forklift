@@ -1,4 +1,5 @@
 FROM fedora:latest
+LABEL MAINTAINER="ohadlevy@gmail.com"
 #RUN dnf -y update
 RUN dnf -y install ruby{,-devel,gems} rubygem-{bundler,rdoc} git gcc-c++ make hostname
 RUN dnf clean all
