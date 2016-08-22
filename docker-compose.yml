@@ -7,14 +7,14 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - ./pgdata:/var/lib/postgresql/data/pgdata
+      - ./pgdata:/var/lib/postgresql/data/pgdata:z
   foreman:
     build: foreman
     command: rails server -p 80 -b 0.0.0.0
     ports:
       - 80
     volumes:
-      - ./assets:/usr/src/app/public/assets
+      - ./assets:/usr/src/app/public/assets:z
     links:
       - db
       - memcache
