@@ -15,18 +15,6 @@
       gem 'hammer_cli_foreman', :path => '../hammer-cli-foreman'
       gem 'hammer_cli_foreman_tasks', :path => '../hammer-cli-foreman-tasks'
 
-- name: 'Remove hammer_cli_foreman in Gemfile'
-  lineinfile:
-    dest: ~/hammer-cli-katello/Gemfile
-    regexp: "gem 'hammer_cli_foreman'"
-    line: ''
-
-- name: 'Remove hammer_cli in Gemfile'
-  lineinfile:
-    dest: ~/hammer-cli-katello/Gemfile
-    regexp: "gem 'hammer_cli'"
-    line: ''
-
 - name: 'Install bundler'
   command: bash -lc 'gem install bundler'
 
