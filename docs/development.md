@@ -71,6 +71,11 @@ koji:
 
 The setup.rb script supports specifying any number of modules and associated pull requests for testing. For example, if a module under goes a refactoring, and you want to test that it continues to work with the installer. You'll need the name of the module and the pull request number you want to test. Note that the name in this situation is the name as laid down in the module directory as opposed to the github repository name. In other words, use 'qpid' not 'puppet-qpid'. Formatting requires the module name followed by a '/' and then the pull request number. See examples below.
 
+Note that you'll need a checkout of [katello-installer](https://github.com/Katello/katello-installer) as a subdirectory in forklift:
+```
+git clone https://github.com/Katello/katello-installer.git
+```
+
 Single module PR:
 ```
 ./setup.rb --module-prs qpid/12
