@@ -1,11 +1,11 @@
 ---
 centos7-devel:
   box: centos7
-  shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
-  options: --scenario=katello-devel
-  installer: --katello-devel-github-username <my_github_username>
   ansible:
-    group: 'server'
+    playbook: 'playbooks/devel.yml'
+    group: 'devel'
+    variables:
+      katello_devel_github_username: <REPLACE ME>
 
 katello-remote-execution:
   box: centos7-katello-nightly
