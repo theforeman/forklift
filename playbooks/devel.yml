@@ -1,0 +1,17 @@
+---
+- hosts: devel
+  become: true
+  vars:
+    foreman_installer_scenario: katello-devel
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--katello-devel-github-username {{ katello_devel_github_username }}"
+    foreman_installer_additional_packages:
+      - foreman-installer-katello-devel
+  roles:
+    - etc_hosts
+    - epel_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer
