@@ -1,10 +1,4 @@
 ---
-centos6-devel:
-  box: centos6
-  shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
-  options: --scenario=katello-devel
-  installer: --katello-devel-github-username <my_github_username>
-
 centos7-devel:
   box: centos7
   shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
