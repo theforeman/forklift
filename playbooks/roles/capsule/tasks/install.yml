@@ -51,7 +51,7 @@
 
 - name: 'Run Install'
   shell: >
-    foreman-installer -v --scenario capsule
+    foreman-installer -v --scenario capsule --disable-system-checks
     --foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
     --foreman-proxy-trusted-hosts "{{ ansible_nodename }}"
     --foreman-proxy-foreman-base-url "https://{{ server_fqdn.stdout }}"

@@ -5,5 +5,5 @@ katello_foreman_version: nightly
 katello_use_release_repos: True
 katello_use_koji_repos: False
 katello_password: changeme
-katello_installer_command: foreman-installer -v --scenario katello --foreman-admin-password "{{ katello_password }}"
+katello_installer_command: foreman-installer -v --scenario katello --disable-system-checks --foreman-admin-password "{{ katello_password }}"
 katello_skip_installer: False
