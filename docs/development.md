@@ -12,13 +12,13 @@ This covers how to setup and configure a development environment using the Forkl
 
 A Katello development environment can be deployed on CentOS 6 or 7. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin. There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
 
-  1. Copy boxes.yaml.example to boxes.yaml. If you already have a boxes.yaml, you can copy the entries in boxes.yaml.example to your boxes.yaml.
-  2. Now, replace <my_github_username> with your github username
+  1. Copy `boxes.yaml.example` to `boxes.yaml`. If you already have a `boxes.yaml`, you can copy the entries in `boxes.yaml.example` to your `boxes.yaml`.
+  2. Now, replace `<my_github_username>` with your github username
   3. Fill in any other options, examples:
-    * --katello-devel-use-ssh-fork: will add your fork by SSH instead of HTTPS
-    * --katello-devel-fork-remote-name: will change the naming convention for your fork's remote
-    * --katello-devel-upstream-remote-name: will change the naming convention for the upstream (non-fork) repositories remote
-    * --katello-devel-extra-plugins: specify other plugins to have setup and configured
+    * `--katello-devel-use-ssh-fork`: will add your fork by SSH instead of HTTPS
+    * `--katello-devel-fork-remote-name`: will change the naming convention for your fork's remote
+    * `--katello-devel-upstream-remote-name`: will change the naming convention for the upstream (non-fork) repositories remote
+    * `--katello-devel-extra-plugins`: specify other plugins to have setup and configured
 
 For example, if I wanted my upstream remotes to be origin and to install the remote execution and discovery plugins:
 
