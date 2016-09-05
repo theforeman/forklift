@@ -25,4 +25,5 @@
     foreman-installer
     -v
     --scenario capsule
+    --disable-system-checks
     --upgrade

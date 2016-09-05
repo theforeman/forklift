@@ -19,7 +19,7 @@ class TestInstallerOptionsProcessor < Minitest::Test
       :devel_user => 'testuser'
     )
     @installer_options = "#{@installer_options} --katello-devel-user=testuser"\
-        ' --certs-group=testuser --katello-deployment-dir=/home/testuser'
+        ' --certs-group=testuser --katello-deployment-dir=/home/testuser --disable-system-checks'
 
     assert_equal installer_options, @installer_options
   end

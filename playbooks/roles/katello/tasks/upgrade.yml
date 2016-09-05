@@ -26,4 +26,5 @@
     foreman-installer
     -v
     --scenario katello
+    --disable-system-checks
     --upgrade

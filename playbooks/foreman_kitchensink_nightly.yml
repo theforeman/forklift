@@ -2,6 +2,7 @@
   vars:
     katello_installer_command: >
       foreman-installer -v
+      --disable-system-checks
       --scenario katello
       --enable-foreman-plugin-discovery
       --enable-foreman-plugin-bootdisk

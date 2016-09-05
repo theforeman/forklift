@@ -10,7 +10,7 @@ module Forklift
 
         directory = deployment_dir || "/home/#{devel_user}"
         "#{installer_options} --katello-devel-user=#{devel_user}"\
-        " --certs-group=#{devel_user} --katello-deployment-dir=#{directory}"
+        " --certs-group=#{devel_user} --katello-deployment-dir=#{directory} --disable-system-checks"
       end
     end
   end

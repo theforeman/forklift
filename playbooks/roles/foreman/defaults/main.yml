@@ -1,2 +1,2 @@
 ---
-foreman_installer_command: foreman-installer -v --scenario foreman
+foreman_installer_command: foreman-installer -v --scenario foreman --disable-system-checks
