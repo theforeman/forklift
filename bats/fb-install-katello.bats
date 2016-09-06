@@ -74,18 +74,18 @@ setup() {
   fi
 
   if [ $USE_KOJI_REPOS ]; then
-    ruby setup.rb --install-options="-v --foreman-admin-password=changeme" --koji-repos
+    ruby setup.rb --install-options="-v --foreman-admin-password=changeme --disable-system-checks" --koji-repos
   else
-    ruby setup.rb --install-options="-v --foreman-admin-password=changeme" --scenario katello
+    ruby setup.rb --install-options="-v --foreman-admin-password=changeme --disable-system-checks" --scenario katello
   fi
 }
 
 @test "run the installer once again" {
   if [ -e "/vagrant/katello-installer" ]; then
     cd /vagrant/katello-installer
-    ./bin/foreman-installer --no-colors -v
+    ./bin/foreman-installer --no-colors -v  --disable-system-checks
   else
-    foreman-installer --no-colors -v
+    foreman-installer --no-colors -v --disable-system-checks
   fi
 }
 
