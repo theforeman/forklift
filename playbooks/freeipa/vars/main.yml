@@ -1,0 +1,3 @@
+---
+katello_server: "{{ groups[server_group][0] }}"
+freeipa_ip: "{{ ansible_eth0.ipv4.address }}"

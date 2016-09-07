@@ -1,0 +1,6 @@
+---
+- hosts: server freeipa
+  roles:
+    - etc_hosts
+    - common
+    - freeipa
