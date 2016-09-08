@@ -1,5 +1,4 @@
 ---
-release: "{{ ansible_distribution_version.split('.')[0] }}"
 version_map:
   'nightly': 'nightly'
   '3.0': '1.11'

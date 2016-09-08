@@ -4,7 +4,7 @@ require 'forklift/repo_file'
 module Forklift
   class Repositories
 
-    attr_reader :os_version, :distro, :version, :scenario
+    attr_reader :os_version, :distro, :version, :scenario, :puppet_four
 
     def initialize(args)
       @versions = YAML.load_file('config/versions.yaml')
@@ -12,6 +12,7 @@ module Forklift
       @os_version = args.fetch(:os_version)
       @distro = args.fetch(:distro)
       @scenario = args.fetch(:scenario, 'foreman')
+      @puppet_four = args.fetch(:puppet_four, false)
     end
 
     def configure(koji_repos = false)
@@ -43,6 +44,7 @@ module Forklift
       system('rpm -e foreman-release')
       system('rpm -e katello-repos')
       system('rpm -e puppetlabs-release')
+      system('rpm -e puppetlabs-release-pc1')
     end
 
     def configure_rhel(os_version)
@@ -80,7 +82,11 @@ module Forklift
     end
 
     def bootstrap_puppet(os_version)
-      local_install("http://yum.puppetlabs.com/puppetlabs-release-el-#{os_version}.noarch.rpm")
+      if @puppet_four
+        local_install("https://yum.puppetlabs.com/puppetlabs-release-pc1-el-#{os_version}.noarch.rpm")
+      else
+        local_install("http://yum.puppetlabs.com/puppetlabs-release-el-#{os_version}.noarch.rpm")
+      end
     end
 
     def setup_foreman_koji_repos(os, version = 'nightly')

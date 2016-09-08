@@ -44,6 +44,12 @@
     src: "/tmp/{{ inventory_hostname }}{{ capsule_certs_tar }}"
     dest: ~/
 
+- name: 'Update packages'
+  yum:
+    name: '*'
+    update_cache: yes
+    state: latest
+
 - name: 'Install Capsule Installer RPM'
   yum:
     name: foreman-installer-katello

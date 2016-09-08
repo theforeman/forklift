@@ -37,6 +37,10 @@ OptionParser.new do |opts|
     options[:skip_installer] = true
   end
 
+  opts.on("--puppet-four", "Use puppet 4") do |devel|
+    options[:puppet_four] = true
+  end
+
   opts.on("--deployment-dir [DIRECTORY]", "Set a custom path for installing to (defaults to /home/USERNAME)") do |dir|
     options[:deployment_dir] = dir
   end
@@ -92,7 +96,8 @@ repositories = Forklift::Repositories.new(
   :version => options[:version],
   :os_version => operating_system.version(options[:os]),
   :scenario => options[:scenario],
-  :distro => operating_system.distro(options[:os])
+  :distro => operating_system.distro(options[:os]),
+  :puppet_four => options[:puppet_four]
 )
 configured = repositories.configure(options[:koji_repos])
 exit(1) unless configured
@@ -109,7 +114,8 @@ installer = Forklift::Installer.new(
   :installer_options => installer_options,
   :skip_installer => options[:skip_installer],
   :scenario => options[:scenario],
-  :root_dir => Dir.pwd
+  :root_dir => Dir.pwd,
+  :puppet_four => options[:puppet_four]
 )
 success = installer.setup
 

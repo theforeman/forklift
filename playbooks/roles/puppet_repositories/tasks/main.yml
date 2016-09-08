@@ -1,0 +1,12 @@
+---
+- name: 'Setup Puppet 3 Repository'
+  yum:
+    name: http://yum.puppetlabs.com/puppetlabs-release-el-{{ ansible_distribution_major_version }}.noarch.rpm
+    state: present
+  when: puppet_repositories_version == 3
+
+- name: 'Setup Puppet 4 Repository'
+  yum:
+    name: https://yum.puppetlabs.com/puppetlabs-release-pc1-el-{{ ansible_distribution_major_version }}.noarch.rpm
+    state: present
+  when: puppet_repositories_version == 4

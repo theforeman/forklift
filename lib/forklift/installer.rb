@@ -5,7 +5,7 @@ require 'fileutils'
 module Forklift
   class Installer
 
-    attr_accessor :installer_options, :skip_installer, :scenario, :root_dir, :installers
+    attr_accessor :installer_options, :skip_installer, :scenario, :root_dir, :installers, :puppet_four
 
     def initialize(args = {})
       self.installer_options = args.fetch(:installer_options, '')
@@ -13,6 +13,7 @@ module Forklift
       self.scenario = args.fetch(:scenario, 'foreman')
       self.installers = YAML.load_file('config/installers.yaml')
       self.root_dir = args.fetch(:root_dir, '.')
+      self.puppet_four = args.fetch(:puppet_four, false)
     end
 
     def setup
@@ -33,10 +34,12 @@ module Forklift
         puts 'Uninstalling puppet gem'
         system('gem uninstall puppet')
         system('yum -y remove puppet')
+        system('yum -y remove puppet-agent')
       end
 
       # ensure puppet is installed
-      system('yum -y update puppet')
+      puppet_pkg = @puppet_four ? 'puppet-agent' : 'puppet'
+      system("yum -y install #{puppet_pkg} && yum -y update #{puppet_pkg}")
     end
 
     def install_packages(packages)

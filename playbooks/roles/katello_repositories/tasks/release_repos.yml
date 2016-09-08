@@ -1,5 +1,5 @@
 ---
 - name: 'Setup Katello Repository'
   yum:
-    name: https://fedorapeople.org/groups/katello/releases/yum/{{ katello_version }}/katello/el{{ release }}/x86_64/katello-repos-latest.rpm
+    name: https://fedorapeople.org/groups/katello/releases/yum/{{ katello_version }}/katello/el{{ ansible_distribution_major_version }}/x86_64/katello-repos-latest.rpm
     state: present

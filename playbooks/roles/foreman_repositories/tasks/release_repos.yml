@@ -1,15 +1,5 @@
 ---
-- name: 'Setup Epel Repository'
-  yum:
-    name: http://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ release }}.noarch.rpm
-    state: present
-
-- name: 'Setup Puppetlabs Repository'
-  yum:
-    name: http://yum.puppetlabs.com/puppetlabs-release-el-{{ release }}.noarch.rpm
-    state: present
-
 - name: 'Setup Foreman Repository'
   yum:
-    name: http://yum.theforeman.org/{{ "releases/" if foreman_version != 'nightly' else '' }}{{ foreman_version }}/el{{ release }}/x86_64/foreman-release.rpm
+    name: http://yum.theforeman.org/{{ "releases/" if foreman_version != 'nightly' else '' }}{{ foreman_version }}/el{{ ansible_distribution_major_version }}/x86_64/foreman-release.rpm
     state: present
