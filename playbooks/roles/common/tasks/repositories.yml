@@ -1,9 +1,0 @@
----
-- name: 'Setup Epel Repository'
-  yum: name=http://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ release }}.noarch.rpm state=present
-- name: 'Setup Puppetlabs Repository'
-  yum: name=http://yum.puppetlabs.com/puppetlabs-release-el-{{ release }}.noarch.rpm state=present
-- name: 'Setup Foreman Repository'
-  yum: name=http://yum.theforeman.org/releases/{{ foreman_version }}/el{{ release }}/x86_64/foreman-release.rpm state=present
-- name: 'Setup Katello Repository'
-  yum: name=https://fedorapeople.org/groups/katello/releases/yum/{{ katello_version }}/katello/el{{ release }}/x86_64/katello-repos-latest.rpm state=present
