@@ -2,7 +2,8 @@ module Forklift
   module Processors
     module InstallerOptionsProcessor
       def self.process(args)
-        installer_options = args.fetch(:installer_options, '') + ' --disable-system-checks'
+        installer_options = args.fetch(:installer_options, '')
+        installer_options += ' --disable-system-checks' if installer_options
         devel_user = args.fetch(:devel_user, nil)
         deployment_dir = args.fetch(:deployment_dir, nil)
 
