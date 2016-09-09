@@ -1,0 +1,8 @@
+---
+release: "{{ ansible_distribution_version.split('.')[0] }}"
+version_map:
+  'nightly': 'nightly'
+  '3.0': '1.11'
+  '3.1': '1.12'
+katello_version: "{{ inventory_host.split('-')[-1] if inventory_hostname.split('-')[-1] in version_map.keys() else 'nightly' }}"
+foreman_version: "{{ version_map[katello_version] }}"
