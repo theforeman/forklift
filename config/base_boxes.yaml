@@ -127,7 +127,7 @@ boxes:
     box: centos7
     memory: 3072
 
-  hammer-devel-centos7:
+  centos7-hammer-devel:
     box: centos7
     memory: 512
     ansible:

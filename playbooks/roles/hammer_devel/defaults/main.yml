@@ -1,6 +1,6 @@
 ---
 hammer_devel_ruby_version: 2.3.1
-hammer_devel_host: 'http://katello-devel.example.com:3000/'
+hammer_devel_host: http://centos7-devel.example.com:3000
 hammer_devel_username: admin
 hammer_devel_password: changeme
 hammer_devel_repositories:

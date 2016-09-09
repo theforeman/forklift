@@ -1,4 +1,5 @@
 ---
 - include: git.yml
-- include: rbenv.yml
-- include: hammer.yml
+- include: ruby-2-3.yml
+- include: hammer_install.yml
+- include: hammer_config.yml
