@@ -45,6 +45,8 @@ module Forklift
       system('rpm -e katello-repos')
       system('rpm -e puppetlabs-release')
       system('rpm -e puppetlabs-release-pc1')
+      system('rpm -e foreman-release-scl')
+      system('rpm -e centos-release-scl centos-release-scl-rh')
     end
 
     def configure_rhel(os_version)
