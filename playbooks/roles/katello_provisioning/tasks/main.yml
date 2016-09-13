@@ -1,0 +1,10 @@
+---
+# Configure Libvirt and it's networking for use with Foreman
+- include: libvirt.yml
+
+# Setup Foreman with DNS, TFTP, DHCP
+- include: foreman.yml
+
+# Setup Katello for content - activation keys, repos, etc
+- include: katello.yml
+  when: katello_provisioning_setup_content

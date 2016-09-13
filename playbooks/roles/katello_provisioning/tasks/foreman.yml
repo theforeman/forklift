@@ -1,0 +1,43 @@
+---
+- name: 'enable provisioning with foreman-installer'
+  shell: >
+    foreman-installer --disable-system-checks
+    --foreman-proxy-dns true
+    --foreman-proxy-dns-interface virbr1
+    --foreman-proxy-dns-zone katellolabs.org
+    --foreman-proxy-dns-forwarders 8.8.8.8
+    --foreman-proxy-dns-reverse 73.168.192.in-addr.arpa
+    --foreman-proxy-dhcp true
+    --foreman-proxy-dhcp-provider libvirt
+    --foreman-proxy-libvirt-network provision
+    --foreman-proxy-dhcp-interface virbr1
+    --foreman-proxy-dhcp-range "192.168.73.2 192.168.73.100"
+    --foreman-proxy-dhcp-gateway 192.168.73.1
+    --foreman-proxy-dhcp-nameservers 192.168.73.1
+    --foreman-proxy-tftp-servername 192.168.73.1
+    --foreman-proxy-tftp true
+    --foreman-proxy-tftp-managed false
+
+- name: 'restart foreman-proxy'
+  service: name=foreman-proxy state=restarted
+
+- name: 'restart foreman'
+  service: name=httpd state=restarted
+
+- name: 'create compute resource'
+  shell: >
+    {{ katello_provisioning_hammer }} compute-resource create --name "libvirt" --url "qemu:///system" --provider libvirt
+    --organizations "{{ katello_provisioning_organization }}" --locations "{{ katello_provisioning_location }}"
+
+- name: 'create domain'
+  shell: >
+    {{ katello_provisioning_hammer }} domain create --name katellolabs.org --dns-id 1
+    --organizations "{{ katello_provisioning_organization }}" --locations "{{ katello_provisioning_location }}"
+
+- name: 'create subnet'
+  shell: >
+    {{ katello_provisioning_hammer }} subnet create --name "192.168.73.0/24"
+    --dhcp-id 1 --dns-id 1 --tftp-id 1 --domains katellolabs.org --from 192.168.73.2 --to 192.168.73.100
+    --network 192.168.73.0 --mask 255.255.255.0
+    --ipam DHCP --gateway 192.168.73.1 --dns-primary 192.168.73.1
+    --organizations "{{ katello_provisioning_organization }}" --locations "{{ katello_provisioning_location }}"
