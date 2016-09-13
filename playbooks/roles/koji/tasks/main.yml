@@ -1,0 +1,33 @@
+---
+- name: 'Install koji package'
+  yum:
+    name: 'koji'
+    state: 'present'
+
+- name: 'Make repo directory'
+  file:
+    path: '{{ koji_repo_directory }}'
+    state: 'directory'
+
+- name: 'Download RPMs'
+  command: "koji --server {{ koji_host }} download-task {{ koji_task_id }}"
+  args:
+    chdir: "{{ koji_repo_directory }}"
+
+- name: 'Install createrepo'
+  yum:
+    name: 'createrepo'
+    state: 'present'
+
+- name: 'Create repo'
+  command: "createrepo {{ koji_repo_directory }}"
+
+- name: 'Add repo file'
+  yum_repository:
+    name: "koji-task-{{ koji_task_id }}-repo"
+    description: 'Local repository for Koji task RPMs'
+    baseurl: "file://{{ koji_repo_directory }}"
+    file: "koji_task_repo_{{ koji_task_id }}"
+    priority: 1
+    enabled: yes
+    gpgcheck: no

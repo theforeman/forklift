@@ -1,0 +1,4 @@
+---
+koji_host: 'http://koji.katello.org/kojihub'
+koji_task_id:
+koji_repo_directory: "/tmp/koji-repo"
