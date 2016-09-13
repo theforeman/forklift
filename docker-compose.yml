@@ -15,6 +15,7 @@ services:
       - 80
     volumes:
       - ./assets:/usr/src/app/public/assets:z
+      - ./webpack:/usr/src/app/public/webpack:z
     links:
       - db
       - memcache
@@ -41,8 +42,9 @@ services:
       - haproxy
   foreman-init:
     build: foreman
-    command: bundle exec rake db:migrate db:seed assets:clean assets:precompile apipie:cache:index
+    command: bundle exec rake db:migrate db:seed assets:clean assets:precompile webpack:compile apipie:cache:index
     volumes:
       - ./assets:/usr/src/app/public/assets
+      - ./webpack:/usr/src/app/public/webpack
     depends_on:
       - db

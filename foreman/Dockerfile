@@ -1,6 +1,6 @@
 FROM fedora:latest
 #RUN dnf -y update
-RUN dnf -y install ruby{,-devel,gems} rubygem-{nokogiri,bundler,unf_ext,rdoc} redhat-rpm-config nodejs git postgresql-devel gcc-c++ make hostname
+RUN dnf -y install ruby{,-devel,gems} rubygem-{nokogiri,bundler,unf_ext,rdoc} redhat-rpm-config nodejs npm git postgresql-devel gcc-c++ make hostname
 RUN dnf clean all
 LABEL MAINTAINER="ohadlevy@gmail.com"
 
