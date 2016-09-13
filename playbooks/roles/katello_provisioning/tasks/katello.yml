@@ -9,14 +9,18 @@
     --url http://mirror.centos.org/centos/7/os/x86_64 --download-policy on_demand --organization "{{ katello_provisioning_organization }}"
 
 - name: 'sync the repo'
-  shell: >
-    {{ katello_provisioning_hammer }} repository synchronize --name "CentOS 7" --product "CentOS" --organization "{{ katello_provisioning_organization }}"
+shell: >
+  {{ katello_provisioning_hammer }} repository synchronize --name "CentOS 7" --product "CentOS" --organization "{{ katello_provisioning_organization }}"
 
 - name: 'create activation key'
   shell: >
-     {{ katello_provisioning_hammer }} activation-key create --organizationon "{{ katello_provisioning_organization }}"
+     {{ katello_provisioning_hammer }} activation-key create --organization "{{ katello_provisioning_organization }}"
      --name="CentOS 7" --content-view="Default Organization View" --lifecycle-environment="Library" --unlimited-hosts
+
+- name: 'medium env should be in locs'
+  shell: >
+    {{ katello_provisioning_hammer }} medium update --name "{{ katello_provisioning_organization|regex_replace('\s', '_') }}/Library/CentOS/CentOS_7" --organizations "{{ katello_provisioning_organization }}" --locations "{{ katello_provisioning_location }}"
 
 - name: 'create a host group'
   shell: >
-      {{ katello_provisioning_hammer }} hostgroup create --name "Forklift CentOS 7" --architecture x86_64 --content-view "Default Organization View" --domain katellolabs.org --lifecycle-environment Library --operatingsystem "CentOS 7" --root-pass changeme --organizations "{{ katello_provisioning_organization }}" --query-organization "{{ katello_provisioning_organization }}" --partition-table "Kickstart default" --medium "{{ katello_provisioning_organization|regex_replace('\s', '_') }}/Library/CentOS/CentOS_7" --content-source-id 1 --puppet-ca-proxy-id 1 --puppet-proxy-id 1 --subnet "192.168.73.0/24" --locations "{{ katello_provisioning_location }}"
+      {{ katello_provisioning_hammer }} hostgroup create --name "Forklift CentOS 7" --architecture x86_64 --content-view "Default Organization View" --domain example.com --lifecycle-environment Library --operatingsystem "CentOS 7" --root-pass changeme --organizations "{{ katello_provisioning_organization }}" --query-organization "{{ katello_provisioning_organization }}" --partition-table "Kickstart default" --medium "{{ katello_provisioning_organization|regex_replace('\s', '_') }}/Library/CentOS/CentOS_7" --content-source-id 1 --puppet-ca-proxy-id 1 --puppet-proxy-id 1 --subnet "192.168.73.0/24" --locations "{{ katello_provisioning_location }}"

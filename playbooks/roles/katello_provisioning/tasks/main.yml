@@ -3,7 +3,7 @@
 - include: libvirt.yml
 
 # Setup Foreman with DNS, TFTP, DHCP
-- include: foreman.yml
+#- include: foreman.yml
 
 # Setup Katello for content - activation keys, repos, etc
 - include: katello.yml

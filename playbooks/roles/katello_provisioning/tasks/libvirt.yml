@@ -21,7 +21,13 @@
   virt_net:
     command: define
     name: provision
-    xml: '{{ lookup("template", "../templates/provision.xml.j2") }}'
+    xml: '{{ lookup("template", "../templates/network.xml.j2") }}'
+
+- name: 'create the provisioning storage network'
+  virt_pool:
+    command: define
+    name: provision
+    xml: '{{ lookup("template", "../templates/storage.xml.j2") }}'
 
 # Setup TFTP for libvirt
 - name: 'create /var/lib/tftpboot'
@@ -47,6 +53,11 @@
 
 - name: 'start the provision libvirt network'
   virt_net:
+    state: active
+    name: provision
+
+- name: 'start the provision libvirt storage pool'
+  virt_pool:
     state: active
     name: provision
 

@@ -3,8 +3,9 @@
   shell: >
     foreman-installer --disable-system-checks
     --foreman-proxy-dns true
+    --foreman-proxy-dns-provider libvirt
     --foreman-proxy-dns-interface virbr1
-    --foreman-proxy-dns-zone katellolabs.org
+    --foreman-proxy-dns-zone example.com
     --foreman-proxy-dns-forwarders 8.8.8.8
     --foreman-proxy-dns-reverse 73.168.192.in-addr.arpa
     --foreman-proxy-dhcp true
@@ -24,6 +25,10 @@
 - name: 'restart foreman'
   service: name=httpd state=restarted
 
+- name: 'refresh features'
+  shell: >
+    {{ katello_provisioning_hammer }} proxy refresh-features --id 1
+
 - name: 'create compute resource'
   shell: >
     {{ katello_provisioning_hammer }} compute-resource create --name "libvirt" --url "qemu:///system" --provider libvirt
@@ -31,13 +36,13 @@
 
 - name: 'create domain'
   shell: >
-    {{ katello_provisioning_hammer }} domain create --name katellolabs.org --dns-id 1
+    {{ katello_provisioning_hammer }} domain create --name example.com --dns-id 1
     --organizations "{{ katello_provisioning_organization }}" --locations "{{ katello_provisioning_location }}"
 
 - name: 'create subnet'
   shell: >
     {{ katello_provisioning_hammer }} subnet create --name "192.168.73.0/24"
-    --dhcp-id 1 --dns-id 1 --tftp-id 1 --domains katellolabs.org --from 192.168.73.2 --to 192.168.73.100
+    --dhcp-id 1 --dns-id 1 --tftp-id 1 --domains example.com --from 192.168.73.2 --to 192.168.73.100
     --network 192.168.73.0 --mask 255.255.255.0
     --ipam DHCP --gateway 192.168.73.1 --dns-primary 192.168.73.1
     --organizations "{{ katello_provisioning_organization }}" --locations "{{ katello_provisioning_location }}"
