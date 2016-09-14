@@ -1,0 +1,10 @@
+---
+# https://github.com/Katello/hammer-cli-import/pull/31
+- shell: >
+    sudo rm /etc/hammer/cli.modules.d/import.yml
+  ignore_errors: True
+
+# https://bodhi.fedoraproject.org/updates/FEDORA-EPEL-2016-65343dc650
+- shell: >
+    yum localinstall https://kojipkgs.fedoraproject.org//packages/rubygem-ruby-libvirt/0.6.0/1.el7/x86_64/rubygem-ruby-libvirt-0.6.0-1.el7.x86_64.rpm
+  ignore_errors: True

@@ -33,33 +33,29 @@
 - name: 'create /var/lib/tftpboot'
   file: path=/var/lib/tftpboot state=directory mode=0755
 
-- name: 'create /var/lib/tftpboot/boot'
-  file: path=/var/lib/tftpboot/boot state=directory mode=0755
+  #- name: 'create /var/lib/tftpboot/boot'
+  #file: path=/var/lib/tftpboot/boot state=directory mode=0755
 
-- name: 'create /var/lib/tftpboot/pxelinux.cfg'
-  file: path=/var/lib/tftpboot/pxelinux.cfg state=directory mode=0755
+  #- name: 'create /var/lib/tftpboot/pxelinux.cfg'
+  #file: path=/var/lib/tftpboot/pxelinux.cfg state=directory mode=0755
 
-- name: 'install syslinux for tftp directory'
-  yum: name=syslinux state=present
+  #- name: 'install syslinux for tftp directory'
+  #yum: name=syslinux state=present
 
-- name: 'copy syslinux files to /var/lib/tftpboot'
-  shell: cp /usr/share/syslinux/{pxelinux.0,menu.c32,chain.c32} /var/lib/tftpboot
+  #- name: 'copy syslinux files to /var/lib/tftpboot'
+  #shell: cp /usr/share/syslinux/{pxelinux.0,menu.c32,chain.c32} /var/lib/tftpboot
 
-- name: 'chown /var/lib/tftpboot for foreman-proxy user'
-  shell: chown -R foreman-proxy:nobody /var/lib/tftpboot
+  #- name: 'chown /var/lib/tftpboot for foreman-proxy user'
+  #shell: chown -R foreman-proxy:nobody /var/lib/tftpboot
 
-- name: 'setuid on /var/lib/tftpboot'
-  shell: find /var/lib/tftpboot/ -type d | xargs chmod g+s
+  #- name: 'setuid on /var/lib/tftpboot'
+  #shell: find /var/lib/tftpboot/ -type d | xargs chmod g+s
 
 - name: 'start the provision libvirt network'
-  virt_net:
-    state: active
-    name: provision
+  virt_net: state=active name=provision
 
 - name: 'start the provision libvirt storage pool'
-  virt_pool:
-    state: active
-    name: provision
+  virt_pool: state=active name=provision
 
 - name: 'install libvirt gem'
   yum: name=rubygem-ruby-libvirt state=present

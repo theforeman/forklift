@@ -2,4 +2,6 @@
 katello_provisioning_hammer: hammer -u admin -p changeme
 katello_provisioning_organization: Default Organization
 katello_provisioning_location: Default Location
-katello_provisioning_setup_content: True
+katello_provisioning_libvirt: True
+katello_provisioning_foreman: True
+katello_provisioning_katello: True

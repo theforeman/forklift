@@ -1,10 +1,18 @@
 ---
-# Configure Libvirt and it's networking for use with Foreman
-- include: libvirt.yml
+- shell: >
+    {{ katello_provisioning_hammer }} --output json proxy info --name {{ ansible_fqdn }}
+  register: katello_provisioning_smart_proxy_json
 
-# Setup Foreman with DNS, TFTP, DHCP
-#- include: foreman.yml
+- set_fact:
+    katello_provisioning_smart_proxy: "{{ katello_provisioning_smart_proxy_json.stdout|from_json }}"
 
-# Setup Katello for content - activation keys, repos, etc
-- include: katello.yml
-  when: katello_provisioning_setup_content
+- include: yak_shaving.yml # FIXME
+
+- include: libvirt.yml  # Configure Libvirt and it's networking for use with Foreman
+  when: katello_provisioning_libvirt
+
+- include: foreman.yml  # Setup Foreman with DNS, TFTP, DHCP
+  when: katello_provisioning_foreman
+
+- include: katello.yml  # Setup Katello content - activation keys, repos, etc, and a host group
+  when: katello_provisioning_katello
