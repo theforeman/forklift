@@ -68,27 +68,13 @@ module Forklift
         @host_vars = {box['name'] => box['ansible']['variables']}
 
         if (playbooks = box['ansible']['playbook'])
-
-          if playbooks.is_a?(String)
-            args = SUPPORT_NAMED_PROVISIONERS ? ['main', type: 'ansible'] : [:ansible]
-            machine.vm.provision *args do |ansible|
-              ansible.playbook = playbooks
+          [playbooks].flatten.each_with_index do |playbook, index|
+            args = SUPPORT_NAMED_PROVISIONERS ? ["main#{index}", type: 'ansible'] : [:ansible]
+            machine.vm.provision(*args) do |ansible|
+              ansible.playbook = playbook
               ansible.host_vars = @host_vars if @host_vars && Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new('1.8.0')
-
               ansible.groups = @ansible_groups
             end
-
-          elsif playbooks.is_a?(Array)
-
-            playbooks.each_with_index do |playbook, index|
-              machine.vm.provision "main#{index}", type: 'ansible' do |ansible|
-                ansible.playbook = playbook
-                ansible.host_vars = @host_vars if @host_vars && Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new('1.8.0')
-
-                ansible.groups = @ansible_groups
-              end
-            end
-
           end
         end
       end
