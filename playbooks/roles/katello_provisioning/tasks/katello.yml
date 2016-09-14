@@ -84,6 +84,7 @@
     --partition-table "Kickstart default"
     --medium "{{ katello_provisioning_organization|regex_replace('\s', '_') }}/Library/CentOS/CentOS_7"
     --content-source-id {{ katello_provisioning_smart_proxy.Id }}
+    --environment production
     --puppet-ca-proxy-id {{ katello_provisioning_smart_proxy.Id }}
     --puppet-proxy-id {{ katello_provisioning_smart_proxy.Id }}
     --subnet "192.168.73.0/24"

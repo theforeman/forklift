@@ -63,6 +63,14 @@
     --locations "{{ katello_provisioning_location }}"
   when: katello_provisioning_domain.stderr.find('not found') != -1
 
+- name: 'update domain'  # it may have been automatically created by puppet if katello reports first
+  shell: >
+    {{ katello_provisioning_hammer }} domain update
+    --name example.com
+    --dns-id {{ katello_provisioning_smart_proxy.Id }}
+    --organizations "{{ katello_provisioning_organization }}"
+    --locations "{{ katello_provisioning_location }}"
+
 # Subnet
 - name: 'find subnet'
   shell: >
@@ -88,3 +96,25 @@
     --organizations "{{ katello_provisioning_organization }}"
     --locations "{{ katello_provisioning_location }}"
   when: katello_provisioning_subnet.stderr.find('not found') != -1
+
+# Puppet
+- name: 'find environment'
+  shell: >
+    {{ katello_provisioning_hammer }} environment info --name "production"
+  register: katello_provisioning_environment
+  ignore_errors: True
+
+- name: 'create environment'
+  shell: >
+    {{ katello_provisioning_hammer }} environment create
+    --name production
+    --organizations "{{ katello_provisioning_organization }}"
+    --locations "{{ katello_provisioning_location }}"
+  when: katello_provisioning_environment.stderr.find('not found') != -1
+
+- name: 'update environment'  # it may have been automatically created by puppet if katello reports first
+  shell: >
+    {{ katello_provisioning_hammer }} environment update
+    --name production
+    --organizations "{{ katello_provisioning_organization }}"
+    --locations "{{ katello_provisioning_location }}"
