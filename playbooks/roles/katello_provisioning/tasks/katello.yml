@@ -2,7 +2,9 @@
 # Product
 - name: 'find product'
   shell: >
-    {{ katello_provisioning_hammer }} product info --name "CentOS" --organization "{{ katello_provisioning_organization }}"
+    {{ katello_provisioning_hammer }} product info
+    --name "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
   register: katello_provisioning_product
   ignore_errors: True
 
@@ -13,10 +15,13 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_product.stderr.find('not found') != -1
 
-# Repo
-- name: 'find repo'
+# CentOS
+- name: 'find centos repo'
   shell: >
-    {{ katello_provisioning_hammer }} repository info --name "CentOS 7" --product "CentOS" --organization "{{ katello_provisioning_organization }}"
+    {{ katello_provisioning_hammer }} repository info
+    --name "CentOS 7"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
   register: katello_provisioning_repo
   ignore_errors: True
 
@@ -31,17 +36,75 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_repo.stderr.find('not found') != -1
 
-- name: 'sync the repo'
+- name: 'sync the centos repo'
   shell: >
     {{ katello_provisioning_hammer }} repository synchronize
     --name "CentOS 7"
     --product "CentOS"
     --organization "{{ katello_provisioning_organization }}"
 
+# Katello Agent
+- name: 'find agent repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository info
+    --name "Katello Agent"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_repo
+  ignore_errors: True
+
+- name: 'create agent repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository create
+    --product="CentOS"
+    --content-type="yum"
+    --name "Katello Agent"
+    --url https://fedorapeople.org/groups/katello/releases/yum/nightly/client/el7/x86_64/
+    --download-policy on_demand
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_repo.stderr.find('not found') != -1
+
+- name: 'sync the agent repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository synchronize
+    --name "Katello Agent"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+
+# Puppet 4
+- name: 'find puppet4 repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository info
+    --name "Puppet 4"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_repo
+  ignore_errors: True
+
+- name: 'create puppet4 repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository create
+    --product="CentOS"
+    --content-type="yum"
+    --name "Puppet 4"
+    --url http://yum.puppetlabs.com/el/7/PC1/x86_64
+    --download-policy on_demand
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_repo.stderr.find('not found') != -1
+
+- name: 'sync the puppet4 repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository synchronize
+    --name "Puppet 4"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+
 # Activation key
 - name: 'find activation key'
   shell: >
-    {{ katello_provisioning_hammer }} activation-key info --name "CentOS 7" --organization "{{ katello_provisioning_organization }}"
+    {{ katello_provisioning_hammer }} activation-key info
+    --name "CentOS 7"
+    --organization "{{ katello_provisioning_organization }}"
   register: katello_provisioning_activation_key
   ignore_errors: True
 
@@ -58,14 +121,15 @@
 - name: 'medium env should be in locs'
   shell: >
     {{ katello_provisioning_hammer }} medium update
-    --name "{{ katello_provisioning_organization|regex_replace('\s', '_') }}/Library/CentOS/CentOS_7"
+    --name "{{ katello_provisioning_organization_label }}/Library/CentOS/CentOS_7"
     --organizations "{{ katello_provisioning_organization }}"
     --locations "{{ katello_provisioning_location }}"
 
 # Host group
 - name: 'find host group'
   shell: >
-    {{ katello_provisioning_hammer }} hostgroup info --name "Forklift CentOS 7"
+    {{ katello_provisioning_hammer }} hostgroup info
+    --name "Forklift CentOS 7"
   register: katello_provisioning_hg
   ignore_errors: True
 
@@ -82,7 +146,7 @@
     --organizations "{{ katello_provisioning_organization }}"
     --query-organization "{{ katello_provisioning_organization }}"
     --partition-table "Kickstart default"
-    --medium "{{ katello_provisioning_organization|regex_replace('\s', '_') }}/Library/CentOS/CentOS_7"
+    --medium "{{ katello_provisioning_organization_label }}/Library/CentOS/CentOS_7"
     --content-source-id {{ katello_provisioning_smart_proxy.Id }}
     --environment production
     --puppet-ca-proxy-id {{ katello_provisioning_smart_proxy.Id }}
