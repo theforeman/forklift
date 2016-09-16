@@ -27,5 +27,13 @@
       :katello:
         :enable_module: true
 
+- name: 'Configure hammer-cli-csv'
+  blockinfile:
+    dest: ~/.hammer/cli.modules.d/csv.yml
+    create: true
+    block: |
+      :csv:
+        :enable_module: true
+
 - name: 'Alias hammer'
   lineinfile: dest=~/.bash_profile line="alias hammer='cd ~/hammer-cli-katello && bundle exec hammer'"

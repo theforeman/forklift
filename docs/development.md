@@ -7,6 +7,7 @@ This covers how to setup and configure a development environment using the Forkl
  * [Test Puppet Module Pull Requests](#testing-module-pull-requests)
  * [Jenkins Job Builder](#jenkins-job-builder-development)
  * [Redmine Development](#redmine-development)
+ * [Hammer Development](#hammer-development)
 
 ## Development Environment Deployment
 
@@ -149,3 +150,21 @@ Assuming you have a clone of the Redmine repository somewhere locally, edit the 
 ```
 docker-compose up redmine
 ```
+
+## Hammer Development
+
+Hammer is the command line interface (CLI) to Foreman and Katello. It supports plugins
+such as [Foreman Tasks](https://github.com/theforeman/hammer-cli-foreman-tasks) and
+importing/exporting data via [CSV](https://github.com/Katello/hammer-cli-csv).
+The CLI can be configured to work with any version of Foreman. To facilitate
+development in Hammer or any of its plugins, a lightweight vagrant box is
+provided in this repository:
+
+```sh
+vagrant up centos7-hammer-devel
+```
+
+In the vagrant box, find the Hammer repositories at `/home/vagrant/` and the
+configuration at `/home/vagrant/.hammer`. Specifically, to change the Foreman
+instance Hammer points to, update
+`/home/vagrant/.hammer/cli.modules.d/foreman.yml`.
