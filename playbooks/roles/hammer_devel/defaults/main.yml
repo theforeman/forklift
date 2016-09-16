@@ -7,4 +7,5 @@ hammer_devel_repositories:
   - theforeman/hammer-cli
   - theforeman/hammer-cli-foreman
   - theforeman/hammer-cli-foreman-tasks
+  - katello/hammer-cli-csv
   - katello/hammer-cli-katello

@@ -14,6 +14,7 @@
       gem 'hammer_cli', :path => '../hammer-cli'
       gem 'hammer_cli_foreman', :path => '../hammer-cli-foreman'
       gem 'hammer_cli_foreman_tasks', :path => '../hammer-cli-foreman-tasks'
+      gem 'hammer_cli_csv', :path => '../hammer-cli-csv'
 
 - name: 'Install gem native dependencies'
   become: true
