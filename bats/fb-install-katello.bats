@@ -74,7 +74,7 @@ setup() {
   fi
 
   if [ $USE_KOJI_REPOS ]; then
-    ruby setup.rb --install-options="-v --foreman-admin-password=changeme --disable-system-checks" --koji-repos
+    ruby setup.rb --install-options="-v --foreman-admin-password=changeme --disable-system-checks" --koji-repos --scenario katello
   else
     ruby setup.rb --install-options="-v --foreman-admin-password=changeme --disable-system-checks" --scenario katello
   fi

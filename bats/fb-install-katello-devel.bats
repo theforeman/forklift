@@ -61,7 +61,7 @@ setup() {
     unzip master.zip
     cd katello-deploy-master
   fi
-  ruby setup.rb --devel
+  ruby setup.rb --scenario katello-devel
 }
 
 @test "start the web-app" {
