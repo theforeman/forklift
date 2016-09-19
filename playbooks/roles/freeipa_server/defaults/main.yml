@@ -1,6 +1,8 @@
 ---
 server_group: "server-{{ inventory_hostname }}"
-katello_server: "{{ groups[server_group][0] }}"
+katello_server_origin: "{{ groups[server_group][0] }}"
+katello_server: "{{ katello_server_origin.replace('centos','c') }}"
+katello_server_ip: "{{hostvars[katello_server_origin]['ansible_ssh_host']}}"
 
 freeipa_server_ip: "{{ ansible_eth0.ipv4.address }}"
 freeipa_server_realm: "EXAMPLE.COM"
