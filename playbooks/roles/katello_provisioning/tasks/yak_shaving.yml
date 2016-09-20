@@ -1,14 +1,5 @@
 ---
-# https://github.com/Katello/katello/pull/6311
-- shell: >
-    wget https://raw.githubusercontent.com/bbuckingham/katello/5608b835b01dbe39cbea48ffad11396c83fd684d/app/controllers/katello/concerns/api/v2/hostgroups_controller_extensions.rb -O /opt/theforeman/tfm/root/usr/share/gems/gems/katello-3.2.0/app/controllers/katello/concerns/api/v2/hostgroups_controller_extensions.rb
-
 # https://github.com/Katello/hammer-cli-import/pull/31
 - shell: >
     sudo rm /etc/hammer/cli.modules.d/import.yml
-  ignore_errors: True
-
-# https://bodhi.fedoraproject.org/updates/FEDORA-EPEL-2016-65343dc650
-- shell: >
-    yum localinstall -y https://kojipkgs.fedoraproject.org//packages/rubygem-ruby-libvirt/0.6.0/1.el7/x86_64/rubygem-ruby-libvirt-0.6.0-1.el7.x86_64.rpm
   ignore_errors: True

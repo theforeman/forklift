@@ -1,12 +1,12 @@
 ---
+- include: yak_shaving.yml # FIXME
+
 - shell: >
     {{ katello_provisioning_hammer }} --output json proxy info --name {{ ansible_fqdn }}
   register: katello_provisioning_smart_proxy_json
 
 - set_fact:
     katello_provisioning_smart_proxy: "{{ katello_provisioning_smart_proxy_json.stdout|from_json }}"
-
-- include: yak_shaving.yml # FIXME
 
 - include: libvirt.yml  # Configure Libvirt and it's networking for use with Foreman
   when: katello_provisioning_libvirt
