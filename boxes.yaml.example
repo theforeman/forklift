@@ -15,3 +15,11 @@ centos7-capsule-devel:
       playbook: 'playbooks/capsule-dev.yml'
       group: 'capsule'
       server: 'centos7-devel'
+
+katello-client:
+  box: centos7
+  ansible:
+    playbook: 'playbooks/katello_client.yml'
+    group: 'client'
+    server: 'centos7-devel'
+

@@ -1,0 +1,9 @@
+- hosts: server client
+  become: true
+  vars:
+    client_server_group: "server-{{ inventory_hostname }}"
+    katello_server: "{{ groups[client_server_group][0] }}"
+  roles:
+    - etc_hosts
+    - katello_repositories
+    - katello_client
