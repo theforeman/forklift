@@ -31,7 +31,7 @@
   register: pulp_oauth_secret
 
 - name: 'Generate Certs'
-  command: capsule-certs-generate --capsule-fqdn {{ ansible_nodename }} --certs-tar {{ capsule_certs_tar }} --disable-system-checks
+  command: capsule-certs-generate --capsule-fqdn {{ ansible_nodename }} --certs-tar {{ capsule_certs_tar }}
   delegate_to: "{{ capsule_server }}"
 
 - name: 'Fetch Certs'
