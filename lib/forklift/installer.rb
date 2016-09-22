@@ -51,6 +51,13 @@ module Forklift
 
       curr_dir = Dir.pwd
 
+      if File.exist?("#{curr_dir}/katello-installer/modules")
+        symlink(
+          "#{curr_dir}/katello-installer/modules",
+          '/usr/share/katello-installer-base/modules'
+        )
+      end
+
       symlink(
         "#{curr_dir}/katello-installer/config/katello-answers.yaml",
         "#{foreman_config_root}/katello-answers.yaml"
@@ -68,13 +75,6 @@ module Forklift
         "#{curr_dir}/katello-installer/config/katello-devel.migrations",
         "#{foreman_config_root}/katello-devel.migrations"
       )
-
-      if File.exist?("#{curr_dir}/katello-installer/modules")
-        symlink(
-          "#{curr_dir}/katello-installer/modules",
-          '/usr/share/katello-installer-base/modules'
-        )
-      end
     end
 
     def run_installer(command)
