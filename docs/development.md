@@ -8,6 +8,8 @@ This covers how to setup and configure a development environment using the Forkl
  * [Jenkins Job Builder](#jenkins-job-builder-development)
  * [Redmine Development](#redmine-development)
  * [Hammer Development](#hammer-development)
+ * [Capsule Development](#capsule-development)
+ * [Client Development](#client-development)
 
 ## Development Environment Deployment
 
@@ -168,3 +170,77 @@ In the vagrant box, find the Hammer repositories at `/home/vagrant/` and the
 configuration at `/home/vagrant/.hammer`. Specifically, to change the Foreman
 instance Hammer points to, update
 `/home/vagrant/.hammer/cli.modules.d/foreman.yml`.
+
+## Capsule Development
+
+To use this functionality, add the following configuration to your boxes.yaml,
+changing the hostnames as needed
+
+### To setup a capsule and a new development environment
+
+* setup boxes.yaml
+
+```
+foo:
+  box: centos7
+  shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
+  options: --scenario=katello-devel
+  installer: --katello-devel-github-username <your-github-name>
+  ansible:
+    group: 'server'
+
+capsule-dev:
+  box: centos7
+  ansible:
+    playbook: 'playbooks/capsule-dev.yml'
+    group: 'capsule'
+    server: 'foo'
+```
+* ```vagrant up foo```
+* ssh into foo and ```rails s```
+* ```vagrant up capsule-dev```
+
+
+### To setup a capsule with an existing development environment
+
+* Add the following to the existing Katello development server's configuration in boxes.yaml
+```
+  ansible:
+    group: 'server'
+```
+* Add a box for a capsule, using the katello server's name in the "server" field:
+
+```
+capsule-dev:
+  box: centos7
+  ansible:
+    playbook: 'playbooks/capsule-dev.yml'
+    group: 'capsule'
+    server: 'your-katello-server-name'
+```
+* ssh into existing development server and ```rails s```
+* spin up new capsule ```vagrant up capsule-dev```
+
+## Client Development
+
+In boxes.yaml:
+
+Add your client, replacing 'your-katello-server-name' with your main katello development server name
+
+```
+client1:
+  box: centos7
+  ansible:
+    playbook: 'playbooks/katello_client.yml'
+    group: 'client'
+    server: 'your-katello-server-name'
+```
+
+then add
+
+```
+  ansible:
+    group: 'server'
+```
+
+to the main katello server you want the client attached to
