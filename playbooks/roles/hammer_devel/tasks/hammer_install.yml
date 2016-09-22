@@ -4,6 +4,7 @@
     repo: https://github.com/{{ item }}.git
     dest: ~/{{ item.split('/')[1] }}
     update: no
+    remote: upstream
   with_items: "{{ hammer_devel_repositories }}"
 
 - name: 'Add local gems to Gemfile.local'
@@ -11,10 +12,14 @@
     dest: ~/hammer-cli-katello/Gemfile.local
     create: yes
     block: |
-      gem 'hammer_cli', :path => '../hammer-cli'
-      gem 'hammer_cli_foreman', :path => '../hammer-cli-foreman'
-      gem 'hammer_cli_foreman_tasks', :path => '../hammer-cli-foreman-tasks'
-      gem 'hammer_cli_csv', :path => '../hammer-cli-csv'
+      gem 'pry'
+      path '../' do
+        gem 'hammer_cli'
+        gem 'hammer_cli_foreman'
+        gem 'hammer_cli_foreman_admin'
+        gem 'hammer_cli_foreman_tasks'
+        gem 'hammer_cli_csv'
+      end
 
 - name: 'Install gem native dependencies'
   become: true

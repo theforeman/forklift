@@ -9,31 +9,43 @@
   command: cp ~/hammer-cli/config/cli_config.template.yml ~/.hammer/cli_config.yml
 
 - name: 'Configure hammer-cli-foreman'
-  blockinfile:
+  command: cp ~/hammer-cli-foreman/config/foreman.yml ~/.hammer/cli.modules.d/
+
+- name: 'Update hammer-cli-foreman host'
+  lineinfile:
     dest: ~/.hammer/cli.modules.d/foreman.yml
-    create: true
-    block: |
-      :foreman:
-        :enable_module: true
-        :host: {{ hammer_devel_host }}
-        :username: {{ hammer_devel_username }}
-        :password: {{ hammer_devel_password }}
+    line: '  :host: {{ hammer_devel_host }}'
+    regexp: 'host'
+
+- name: 'Update hammer-cli-foreman username'
+  lineinfile:
+    dest: ~/.hammer/cli.modules.d/foreman.yml
+    line: '  :username: {{ hammer_devel_username }}'
+    regexp: 'username'
+
+- name: 'Update hammer-cli-foreman password'
+  lineinfile:
+    dest: ~/.hammer/cli.modules.d/foreman.yml
+    line: '  :password: {{ hammer_devel_password }}'
+    regexp: 'password'
+
+- name: 'Enable hammer-cli-foreman-admin'
+  command: cp ~/hammer-cli-foreman-admin/config/foreman_admin.yml ~/.hammer/cli.modules.d/
+
+- name: 'Configure hammer-cli-foreman-admin logging core'
+  command: cp ~/hammer-cli-foreman-admin/config/cli.modules.d/foreman_admin_logging_core.yml ~/.hammer/cli.modules.d/
+
+- name: 'Configure hammer-cli-foreman-admin logging for katello'
+  command: cp ~/hammer-cli-foreman-admin/config/cli.modules.d/foreman_admin_logging_katello.yml ~/.hammer/cli.modules.d/
 
 - name: 'Configure hammer-cli-katello'
-  blockinfile:
-    dest: ~/.hammer/cli.modules.d/katello.yml
-    create: true
-    block: |
-      :katello:
-        :enable_module: true
+  command: cp ~/hammer-cli-katello/config/katello.yml ~/.hammer/cli.modules.d/
 
 - name: 'Configure hammer-cli-csv'
-  blockinfile:
-    dest: ~/.hammer/cli.modules.d/csv.yml
-    create: true
-    block: |
-      :csv:
-        :enable_module: true
+  command: cp ~/hammer-cli-csv/config/csv.yml ~/.hammer/cli.modules.d/
 
 - name: 'Alias hammer'
-  lineinfile: dest=~/.bash_profile line="alias hammer='cd ~/hammer-cli-katello && bundle exec hammer'"
+  lineinfile: dest=~/.bash_profile line="alias hammer='BUNDLE_GEMFILE=~/hammer-cli-katello/Gemfile bundle exec hammer'"
+
+- name: 'Alias rake'
+  lineinfile: dest=~/.bash_profile line="alias rake='bundle exec rake'"
