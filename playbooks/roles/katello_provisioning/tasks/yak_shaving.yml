@@ -1,5 +1,0 @@
----
-# https://github.com/Katello/hammer-cli-import/pull/31
-- shell: >
-    sudo rm /etc/hammer/cli.modules.d/import.yml
-  ignore_errors: True

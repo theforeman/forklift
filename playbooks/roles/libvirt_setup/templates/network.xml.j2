@@ -1,0 +1,15 @@
+<network>
+ <name>provision</name>
+ <forward mode='nat'/>
+ <bridge name='virbr1' stp='on' delay='0' />
+ <domain name="example.com"/>
+ <dns>
+ </dns>
+ <ip address='{{ libvirt_setup_ip_address }}' netmask='255.255.255.0'>
+   <tftp root='/var/lib/tftpboot' />
+   <dhcp>
+     <range start='{{ libvirt_setup_dhcp_start }}' end='{{ libvirt_setup_dhcp_end }}' />
+     <bootp file='pxelinux.0' />
+   </dhcp>
+ </ip>
+</network>

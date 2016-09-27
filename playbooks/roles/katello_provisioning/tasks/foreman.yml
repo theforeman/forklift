@@ -1,4 +1,10 @@
 ---
+- name: 'install libvirt gem'
+  yum: name=rubygem-ruby-libvirt state=present
+
+- name: 'install foreman-libvirt'
+  yum: name=foreman-libvirt state=present
+
 - name: 'enable provisioning with foreman-installer'
   shell: >
     foreman-installer
@@ -118,3 +124,8 @@
     --name production
     --organizations "{{ katello_provisioning_organization }}"
     --locations "{{ katello_provisioning_location }}"
+
+# query local nameservers http://projects.theforeman.org/issues/13419
+- name 'query local nameservers'
+  shell: >
+    {{ katello_provisioning_hammer }} set --name query_local_nameservers --value true
