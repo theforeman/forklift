@@ -126,6 +126,6 @@
     --locations "{{ katello_provisioning_location }}"
 
 # query local nameservers http://projects.theforeman.org/issues/13419
-- name 'query local nameservers'
+- name: 'query local nameservers'
   shell: >
-    {{ katello_provisioning_hammer }} set --name query_local_nameservers --value true
+    {{ katello_provisioning_hammer }} settings set --name query_local_nameservers --value true
