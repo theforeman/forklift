@@ -128,7 +128,11 @@ module Forklift
   @boxes = @box_loader.add_boxes('config/base_boxes.yaml', 'config/versions.yaml')
   plugin_vagrantfiles.each { |f| load f }
   plugin_base_boxes
-  @boxes = @box_loader.add_boxes('boxes.yaml', 'config/versions.yaml') if File.exists?('boxes.yaml')
+  unsorted = @box_loader.add_boxes('boxes.yaml', 'config/versions.yaml') if File.exists?('boxes.yaml')
+  @boxes  = unsorted.keys.sort.inject({}) do |hash, key|
+    hash[key] = unsorted[key]
+    hash
+  end
 
   @ansible_groups = {}
 
