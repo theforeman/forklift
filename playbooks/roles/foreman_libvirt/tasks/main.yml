@@ -1,0 +1,16 @@
+---
+# Get the smart proxy ID of the local Foreman:
+- shell: >
+    {{ foreman_libvirt_hammer }} --output json proxy info --name {{ ansible_fqdn }}
+  register: foreman_libvirt_smart_proxy_json
+
+- set_fact:
+    foreman_libvirt_smart_proxy: "{{ foreman_libvirt_smart_proxy_json.stdout|from_json }}"
+
+# Configure libvirt with a dummy network and storage
+- include: libvirt.yml
+  when: foreman_libvirt_setup_libvirt
+
+# Configure foreman provisioning and management of the network
+- include: foreman.yml
+  when: foreman_libvirt_setup_foreman

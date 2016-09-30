@@ -1,0 +1,45 @@
+---
+# Product
+- name: "find product: {{ katello_content_product }}"
+  shell: >
+    {{ katello_content_hammer }} product info
+    --name "{{ katello_content_product }}"
+    --organization "{{ katello_content_organization }}"
+  register: katello_content_product_find
+  ignore_errors: True
+
+- name: "create product {{ katello_content_product }}"
+  shell: >
+    {{ katello_content_hammer }} product create
+    --name "{{ katello_content_product }}"
+    --organization "{{ katello_content_organization }}"
+  when: katello_content_product_find.stderr.find('not found') != -1
+
+# CentOS
+- name: 'find repo'
+  shell: >
+    {{ katello_content_hammer }} repository info
+    --name "{{ katello_content_repository }}"
+    --product "{{ katello_content_product }}"
+    --organization "{{ katello_content_organization }}"
+  register: katello_content_repo_find
+  ignore_errors: True
+
+- name: 'create repo if not exist'
+  shell: >
+    {{ katello_content_hammer }} repository create
+    --product="{{ katello_content_product }}"
+    --content-type="yum"
+    --name "{{ katello_content_repository }}"
+    --url "{{ katello_content_repository_url }}"
+    --download-policy on_demand
+    --organization "{{ katello_content_organization }}"
+  when: katello_content_repo_find.stderr.find('not found') != -1
+
+- name: 'sync the repo'
+  shell: >
+    {{ katello_content_hammer }} repository synchronize
+    --name "{{ katello_content_repository }}"
+    --product "{{ katello_content_product }}"
+    --organization "{{ katello_content_organization }}"
+  when: katello_content_sync_repo
