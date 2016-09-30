@@ -1,0 +1,16 @@
+---
+# Get the smart proxy ID of the local katello:
+- shell: >
+    {{ katello_provisioning_hammer }} --output json proxy info --name {{ ansible_fqdn }}
+  register: katello_provisioning_smart_proxy_json
+
+- set_fact:
+    katello_provisioning_smart_proxy: "{{ katello_provisioning_smart_proxy_json.stdout|from_json }}"
+
+# Setup Foreman with DNS, TFTP, DHCP
+- include: foreman.yml
+  when: katello_provisioning_foreman
+
+# Setup Katello content - activation keys, repos, etc, and a host group
+- include: katello.yml
+  when: katello_provisioning_katello

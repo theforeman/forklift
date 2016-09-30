@@ -1,0 +1,163 @@
+---
+# Product
+- name: 'find product'
+  shell: >
+    {{ katello_provisioning_hammer }} product info
+    --name "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_product
+  ignore_errors: True
+
+- name: 'create centos product'
+  shell: >
+    {{ katello_provisioning_hammer }} product create
+    --name "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_product.stderr.find('not found') != -1
+
+# CentOS
+- name: 'find centos repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository info
+    --name "CentOS 7"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_repo
+  ignore_errors: True
+
+- name: 'create centos repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository create
+    --product="CentOS"
+    --content-type="yum"
+    --name "CentOS 7"
+    --url http://mirror.centos.org/centos/7/os/x86_64
+    --download-policy on_demand
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_repo.stderr.find('not found') != -1
+
+- name: 'sync the centos repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository synchronize
+    --name "CentOS 7"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+
+# Katello Agent
+- name: 'find agent repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository info
+    --name "Katello Agent"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_repo
+  ignore_errors: True
+
+- name: 'create agent repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository create
+    --product="CentOS"
+    --content-type="yum"
+    --name "Katello Agent"
+    --url https://fedorapeople.org/groups/katello/releases/yum/nightly/client/el7/x86_64/
+    --download-policy on_demand
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_repo.stderr.find('not found') != -1
+
+- name: 'sync the agent repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository synchronize
+    --name "Katello Agent"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+
+# Puppet 4
+- name: 'find puppet4 repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository info
+    --name "Puppet 4"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_repo
+  ignore_errors: True
+
+- name: 'create puppet4 repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository create
+    --product="CentOS"
+    --content-type="yum"
+    --name "Puppet 4"
+    --url http://yum.puppetlabs.com/el/7/PC1/x86_64
+    --download-policy on_demand
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_repo.stderr.find('not found') != -1
+
+- name: 'sync the puppet4 repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository synchronize
+    --name "Puppet 4"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+
+# Activation key
+- name: 'find activation key'
+  shell: >
+    {{ katello_provisioning_hammer }} activation-key info
+    --name "CentOS 7"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_activation_key
+  ignore_errors: True
+
+- name: 'create activation key'
+  shell: >
+    {{ katello_provisioning_hammer }} activation-key create
+    --organization "{{ katello_provisioning_organization }}"
+    --name="CentOS 7"
+    --content-view="Default Organization View"
+    --lifecycle-environment="Library"
+    --unlimited-hosts
+  when: katello_provisioning_activation_key.stderr.find('not found') != -1
+
+- name: 'medium env should be in locs'
+  shell: >
+    {{ katello_provisioning_hammer }} medium update
+    --name "{{ katello_provisioning_organization_label }}/Library/CentOS/CentOS_7"
+    --organizations "{{ katello_provisioning_organization }}"
+    --locations "{{ katello_provisioning_location }}"
+
+# Host group
+- name: 'find host group'
+  shell: >
+    {{ katello_provisioning_hammer }} hostgroup info
+    --name "Forklift CentOS 7"
+  register: katello_provisioning_hg
+  ignore_errors: True
+
+- name: 'create a host group'
+  shell: >
+    {{ katello_provisioning_hammer }} hostgroup create
+    --name "Forklift CentOS 7"
+    --architecture x86_64
+    --content-view "Default Organization View"
+    --domain example.com
+    --lifecycle-environment Library
+    --operatingsystem "CentOS 7"
+    --root-pass changeme
+    --organizations "{{ katello_provisioning_organization }}"
+    --query-organization "{{ katello_provisioning_organization }}"
+    --partition-table "Kickstart default"
+    --medium "{{ katello_provisioning_organization_label }}/Library/CentOS/CentOS_7"
+    --content-source-id {{ katello_provisioning_smart_proxy.Id }}
+    --environment production
+    --puppet-ca-proxy-id {{ katello_provisioning_smart_proxy.Id }}
+    --puppet-proxy-id {{ katello_provisioning_smart_proxy.Id }}
+    --subnet "192.168.73.0/24"
+    --locations "{{ katello_provisioning_location }}"
+  when: katello_provisioning_hg.stderr.find('not found') != -1
+
+- name: 'set enable-puppet4 parameter'
+  shell: >
+      {{ katello_provisioning_hammer }} hostgroup set-parameter
+      --hostgroup "Forklift CentOS 7"
+      --name enable-puppet4
+      --value true

@@ -1,0 +1,58 @@
+---
+- name: 'install the virtualization hypervisor package group'
+  yum:
+    name: "@Virtualization Hypervisor"
+    state: present
+
+- name: 'install the virtualization tools package group'
+  yum:
+    name: "@Virtualization Tools"
+    state: present
+
+- name: 'disable libvirt authentication'
+  lineinfile:
+    dest: /etc/libvirt/libvirtd.conf
+    line: 'auth_unix_rw = "none"'
+
+- name: 'restart libvirt'
+  service: name=libvirtd state=restarted
+
+- name: 'create the provisioning libvirt network'
+  virt_net:
+    command: define
+    name: provision
+    xml: '{{ lookup("template", "../templates/network.xml.j2") }}'
+
+- name: 'create the provisioning storage network'
+  virt_pool:
+    command: define
+    name: provision
+    xml: '{{ lookup("template", "../templates/storage.xml.j2") }}'
+
+# Setup TFTP for libvirt
+- name: 'create /var/lib/tftpboot'
+  file: path=/var/lib/tftpboot state=directory mode=0755
+
+- name: 'create /var/lib/tftpboot/boot'
+  file: path=/var/lib/tftpboot/boot state=directory mode=0755
+
+- name: 'create /var/lib/tftpboot/pxelinux.cfg'
+  file: path=/var/lib/tftpboot/pxelinux.cfg state=directory mode=0755
+
+- name: 'install syslinux for tftp directory'
+  yum: name=syslinux state=present
+
+- name: 'copy syslinux files to /var/lib/tftpboot'
+  shell: cp /usr/share/syslinux/{pxelinux.0,menu.c32,chain.c32} /var/lib/tftpboot
+
+- name: 'chown /var/lib/tftpboot for foreman-proxy user'
+  shell: chown -R foreman-proxy:nobody /var/lib/tftpboot
+
+- name: 'setuid on /var/lib/tftpboot'
+  shell: find /var/lib/tftpboot/ -type d | xargs chmod g+s
+
+- name: 'start the provision libvirt network'
+  virt_net: state=active name=provision
+
+- name: 'start the provision libvirt storage pool'
+  virt_pool: state=active name=provision
