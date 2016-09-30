@@ -1,16 +1,58 @@
 ---
-# Get the smart proxy ID of the local katello:
-- shell: >
-    {{ katello_provisioning_hammer }} --output json proxy info --name {{ ansible_fqdn }}
-  register: katello_provisioning_smart_proxy_json
+# Activation key
+- name: 'find activation key'
+  shell: >
+    {{ katello_provisioning_hammer }} activation-key info
+    --name "CentOS 7 Default"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_activation_key
+  ignore_errors: True
 
-- set_fact:
-    katello_provisioning_smart_proxy: "{{ katello_provisioning_smart_proxy_json.stdout|from_json }}"
+- name: 'create activation key'
+  shell: >
+    {{ katello_provisioning_hammer }} activation-key create
+    --organization "{{ katello_provisioning_organization }}"
+    --name="CentOS 7 Default"
+    --content-view="Default Organization View"
+    --lifecycle-environment="Library"
+    --unlimited-hosts
+  when: katello_provisioning_activation_key.stderr.find('not found') != -1
 
-# Setup Foreman with DNS, TFTP, DHCP
-- include: foreman.yml
-  when: katello_provisioning_foreman
+- name: 'medium env should be in locs'
+  shell: >
+    {{ katello_provisioning_hammer }} medium update
+    --name "{{ katello_provisioning_organization_label }}/Library/CentOS/CentOS_7"
+    --organizations "{{ katello_provisioning_organization }}"
+    --locations "{{ katello_provisioning_location }}"
 
-# Setup Katello content - activation keys, repos, etc, and a host group
-- include: katello.yml
-  when: katello_provisioning_katello
+# Host group
+- name: 'find host group'
+  shell: >
+    {{ katello_provisioning_hammer }} hostgroup info
+    --name "Forklift"
+  register: katello_provisioning_hg
+  ignore_errors: True
+
+- name: 'create a host group'
+  shell: >
+    {{ katello_provisioning_hammer }} hostgroup create
+    --name "Forklift"
+    --architecture x86_64
+    --content-view "Default Organization View"
+    --lifecycle-environment Library
+    --operatingsystem "CentOS 7"
+    --root-pass changeme
+    --organizations "{{ katello_provisioning_organization }}"
+    --query-organization "{{ katello_provisioning_organization }}"
+    --partition-table "Kickstart default"
+    --medium "{{ katello_provisioning_organization_label }}/Library/CentOS/CentOS_7"
+    --content-source-id {{ katello_provisioning_smart_proxy.Id }}
+    --locations "{{ katello_provisioning_location }}"
+  when: katello_provisioning_hg.stderr.find('not found') != -1
+
+- name: 'set enable-puppet4 parameter'
+  shell: >
+      {{ katello_provisioning_hammer }} hostgroup set-parameter
+      --hostgroup "Forklift"
+      --name enable-puppet4
+      --value true

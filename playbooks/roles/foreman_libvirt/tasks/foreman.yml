@@ -1,0 +1,186 @@
+---
+- name: 'install libvirt gem'
+  yum: name=rubygem-ruby-libvirt state=present
+
+- name: 'install foreman-libvirt'
+  yum: name=foreman-libvirt state=present
+
+- name: 'enable provisioning with foreman-installer'
+  shell: >
+    foreman-installer {{ foreman_libvirt_installer_opts }}
+    --foreman-proxy-dns true
+    --foreman-proxy-dns-provider libvirt
+    --foreman-proxy-dns-interface virbr1
+    --foreman-proxy-dns-zone example.com
+    --foreman-proxy-dns-forwarders 8.8.8.8
+    --foreman-proxy-dns-reverse 73.168.192.in-addr.arpa
+    --foreman-proxy-dhcp true
+    --foreman-proxy-dhcp-provider libvirt
+    --foreman-proxy-libvirt-network provision
+    --foreman-proxy-dhcp-interface virbr1
+    --foreman-proxy-dhcp-range "192.168.73.2 192.168.73.100"
+    --foreman-proxy-dhcp-gateway 192.168.73.1
+    --foreman-proxy-dhcp-nameservers 192.168.73.1
+    --foreman-proxy-tftp-servername 192.168.73.1
+    --foreman-proxy-tftp true
+    --foreman-proxy-tftp-managed false
+
+- name: 'restart foreman-proxy'
+  service: name=foreman-proxy state=restarted
+
+- name: 'restart foreman'
+  service: name=httpd state=restarted
+
+- name: 'refresh features'
+  shell: >
+    {{ foreman_libvirt_hammer }} proxy refresh-features --id {{ foreman_libvirt_smart_proxy.Id }}
+
+# Compute Resource
+- name: 'find compute resource'
+  shell: >
+    {{ foreman_libvirt_hammer }} compute-resource info --name "libvirt"
+  register: foreman_libvirt_compute_resource
+  ignore_errors: True
+
+- name: 'create compute resource'
+  shell: >
+    {{ foreman_libvirt_hammer }} compute-resource create
+    --name "libvirt"
+    --url "qemu:///system"
+    --provider libvirt
+    {% if foreman_libvirt_organizations %}
+    --organizations "{{ foreman_libvirt_organization }}"
+    {% endif %}
+    {% if foreman_libvirt_locations %}
+    --locations "{{ foreman_libvirt_location }}"
+    {% endif %}
+  when: foreman_libvirt_compute_resource.stderr.find('not found') != -1
+
+# Domain
+- name: 'find domain'
+  shell: >
+    {{ foreman_libvirt_hammer }} domain info --name "example.com"
+  register: foreman_libvirt_domain
+  ignore_errors: True
+
+- name: 'create domain'
+  shell: >
+    {{ foreman_libvirt_hammer }} domain create
+    --name example.com
+    --dns-id {{ foreman_libvirt_smart_proxy.Id }}
+    {% if foreman_libvirt_organizations %}
+    --organizations "{{ foreman_libvirt_organization }}"
+    {% endif %}
+    {% if foreman_libvirt_locations %}
+    --locations "{{ foreman_libvirt_location }}"
+    {% endif %}
+  when: foreman_libvirt_domain.stderr.find('not found') != -1
+
+- name: 'update domain'  # it may have been automatically created by puppet if katello reports first
+  shell: >
+    {{ foreman_libvirt_hammer }} domain update
+    --name example.com
+    --dns-id {{ foreman_libvirt_smart_proxy.Id }}
+    {% if foreman_libvirt_organizations %}
+    --organizations "{{ foreman_libvirt_organization }}"
+    {% endif %}
+    {% if foreman_libvirt_locations %}
+    --locations "{{ foreman_libvirt_location }}"
+    {% endif %}
+
+# Subnet
+- name: 'find subnet'
+  shell: >
+    {{ foreman_libvirt_hammer }} subnet info --name "192.168.73.0/24"
+  register: foreman_libvirt_subnet
+  ignore_errors: True
+
+- name: 'create subnet'
+  shell: >
+    {{ foreman_libvirt_hammer }} subnet create
+    --name "192.168.73.0/24"
+    --dhcp-id {{ foreman_libvirt_smart_proxy.Id }}
+    --dns-id {{ foreman_libvirt_smart_proxy.Id }}
+    --tftp-id {{ foreman_libvirt_smart_proxy.Id }}
+    --domains example.com
+    --from 192.168.73.2
+    --to 192.168.73.100
+    --network 192.168.73.0
+    --mask 255.255.255.0
+    --ipam DHCP
+    --gateway 192.168.73.1
+    --dns-primary 192.168.73.1
+    {% if foreman_libvirt_organizations %}
+    --organizations "{{ foreman_libvirt_organization }}"
+    {% endif %}
+    {% if foreman_libvirt_locations %}
+    --locations "{{ foreman_libvirt_location }}"
+    {% endif %}
+  when: foreman_libvirt_subnet.stderr.find('not found') != -1
+
+# Puppet
+- name: 'find environment'
+  shell: >
+    {{ foreman_libvirt_hammer }} environment info --name "production"
+  register: foreman_libvirt_environment
+  ignore_errors: True
+
+- name: 'create environment'
+  shell: >
+    {{ foreman_libvirt_hammer }} environment create
+    --name production
+    {% if foreman_libvirt_organizations %}
+    --organizations "{{ foreman_libvirt_organization }}"
+    {% endif %}
+    {% if foreman_libvirt_locations %}
+    --locations "{{ foreman_libvirt_location }}"
+    {% endif %}
+  when: foreman_libvirt_environment.stderr.find('not found') != -1
+
+- name: 'update environment'  # it may have been automatically created by puppet if katello reports first
+  shell: >
+    {{ foreman_libvirt_hammer }} environment update
+    --name production
+    {% if foreman_libvirt_organizations %}
+    --organizations "{{ foreman_libvirt_organization }}"
+    {% endif %}
+    {% if foreman_libvirt_locations %}
+    --locations "{{ foreman_libvirt_location }}"
+    {% endif %}
+
+# query local nameservers http://projects.theforeman.org/issues/13419
+- name: 'query local nameservers'
+  shell: >
+    {{ foreman_libvirt_hammer }} settings set --name query_local_nameservers --value true
+
+# Host group
+- name: 'find host group'
+  shell: >
+    {{ foreman_libvirt_hammer }} hostgroup info
+    --name "{{ foreman_libvirt_hostgroup }}"
+  register: foreman_libvirt_hg
+  ignore_errors: True
+
+- name: 'create the host group'
+  shell: >
+    {{ foreman_libvirt_hammer }} hostgroup create
+    --name "{{ foreman_libvirt_hostgroup }}"
+  when: foreman_libvirt_hg.stderr.find('not found') != -1
+
+- name: 'update the host group'
+  shell: >
+    {{ foreman_libvirt_hammer }} hostgroup update
+    --name "{{ foreman_libvirt_hostgroup }}"
+    --domain example.com
+    --root-pass changeme
+    --partition-table "Kickstart default"
+    --environment production
+    --puppet-ca-proxy-id {{ foreman_libvirt_smart_proxy.Id }}
+    --puppet-proxy-id {{ foreman_libvirt_smart_proxy.Id }}
+    --subnet "192.168.73.0/24"
+    {% if foreman_libvirt_organizations %}
+    --organizations "{{ foreman_libvirt_organization }}"
+    {% endif %}
+    {% if foreman_libvirt_locations %}
+    --locations "{{ foreman_libvirt_location }}"
+    {% endif %}

@@ -1,0 +1,9 @@
+---
+katello_content_hammer: hammer -u admin -p changeme
+katello_content_organization: Default Organization
+katello_content_organization_label: "{{ katello_content_centos_organization|regex_replace('\\s', '_') }}"
+katello_content_location: Default Location
+katello_content_product: CentOS
+katello_content_repository: CentOS 7
+katello_content_repository_url: http://mirror.centos.org/centos/7/os/x86_64
+katello_content_sync_repo: True

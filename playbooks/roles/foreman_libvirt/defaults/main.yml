@@ -1,0 +1,20 @@
+---
+foreman_libvirt_setup_libvirt: True
+foreman_libvirt_setup_foreman: True
+
+foreman_libvirt_installer_opts: ""
+foreman_libvirt_organizations: False
+foreman_libvirt_locations: False
+
+# Network setup:
+foreman_libvirt_ip_address: 192.168.73.1
+foreman_libvirt_dhcp_start: 192.168.73.2
+foreman_libvirt_dhcp_end: 192.168.73.254
+foreman_libvirt_storage_path: /var/lib/libvirt/images
+
+# Foreman setup:
+foreman_libvirt_hammer: hammer -u admin -p changeme
+foreman_libvirt_organization: Default Organization
+foreman_libvirt_organization_label: "{{ foreman_libvirt_organization|regex_replace('\\s', '_') }}"
+foreman_libvirt_location: Default Location
+foreman_libvirt_hostgroup: Forklift

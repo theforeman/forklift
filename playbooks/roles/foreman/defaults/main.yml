@@ -1,2 +1,3 @@
 ---
-foreman_installer_command: foreman-installer -v --scenario foreman --disable-system-checks
+foreman_password: changeme
+foreman_installer_command: foreman-installer -v --scenario foreman --foreman-admin-password "{{ foreman_password }}"

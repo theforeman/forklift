@@ -8,6 +8,16 @@ shells:
 
 boxes:
   centos6:
+     box_name: centos/6
+     default:  true
+     pty:      true
+
+  centos7:
+     box_name: centos/7
+     default:  true
+     pty:      true
+
+  centos6-legacy:
     box_name:   'centos6'
     image_name: !ruby/regexp '/CentOS 6.*PV/'
     default:    true
@@ -15,7 +25,7 @@ boxes:
     virtualbox: 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/vmware/opscode_centos-6.6_chef-provisionerless.box'
     libvirt:    'http://m0dlx.com/files/foreman/boxes/centos64.box'
 
-  centos7:
+  centos7-legacy:
     box_name:   'centos7_1'
     image_name: !ruby/regexp '/CentOS 7.*PV/'
     default:    true
@@ -29,17 +39,17 @@ boxes:
     libvirt: http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-Vagrant-Libvirt.box
 
   centos6-foreman-nightly:
-    box: centos6
+    box: centos6-legacy
     <<: *install_shell
     options: --scenario=foreman
 
   centos7-foreman-nightly:
-    box: centos7
+    box: centos7-legacy
     <<: *install_shell
     options: --scenario=foreman
 
   centos6-katello-nightly:
-    box: centos6
+    box: centos6-legacy
     <<: *install_shell
     options: --scenario=katello
 
@@ -68,13 +78,13 @@ boxes:
         puppet_repositories_version: 4
 
   centos7-katello-nightly:
-    box: centos7
+    box: centos7-legacy
     <<: *install_shell
     options: --scenario=katello --disable-selinux
     ansible:
       group: 'server'
 
-  centos7-provision-nightly:
+  centos7-katello-provision-nightly:
     box: centos7
     memory: 8096
     ansible:
@@ -82,6 +92,17 @@ boxes:
           - 'playbooks/katello.yml'
           - 'playbooks/katello_provisioning.yml'
       group: 'server'
+      variables:
+        puppet_repositories_version: 4
+
+  centos7-foreman-provision-nightly:
+    box: centos7
+    memory: 6144
+    ansible:
+      group: 'foreman'
+      playbook:
+          - 'playbooks/foreman.yml'
+          - 'playbooks/foreman_provisioning.yml'
       variables:
         puppet_repositories_version: 4
 
@@ -118,32 +139,32 @@ boxes:
         server: 'centos7-katello-nightly'
 
   centos6-bats:
-    box: centos6
+    box: centos6-legacy
     <<: *bats_shell
 
   centos7-bats:
-    box: centos7
+    box: centos7-legacy
     <<: *bats_shell
 
   runcible:
-    box: centos7
+    box: centos7-legacy
     <<: *runcible_shell
     privileged: false
 
   pipeline-katello-centos7:
-    box: centos7
+    box: centos7-legacy
     memory: 4680
 
   pipeline-capsule-centos7:
-    box: centos7
+    box: centos7-legacy
     memory: 3072
 
   pipeline-katello-3.1-centos7:
-    box: centos7
+    box: centos7-legacy
     memory: 4680
 
   pipeline-capsule-3.1-centos7:
-    box: centos7
+    box: centos7-legacy
     memory: 3072
 
   centos7-hammer-devel:

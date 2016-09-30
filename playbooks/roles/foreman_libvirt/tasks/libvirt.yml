@@ -1,4 +1,9 @@
 ---
+- name: 'install python libvirt bindings'
+  yum:
+    name: libvirt-python
+    state: present
+
 - name: 'install the virtualization hypervisor package group'
   yum:
     name: "@Virtualization Hypervisor"

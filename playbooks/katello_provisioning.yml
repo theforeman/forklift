@@ -1,5 +1,44 @@
-- hosts: all
+- name: Setup Libvirt
+  hosts: all
   become: true
   roles:
-    - libvirt_setup
-    - katello_provisioning
+    - role: foreman_libvirt
+      foreman_libvirt_organizations: True
+      foreman_libvirt_locations: True
+      foreman_libvirt_installer_opts: "--disable-system-checks"
+
+- name: Setup CentOS Repository
+  hosts: all
+  become: true
+  roles:
+      - role: katello_content
+        katello_content_repository: "CentOS 7"
+        katello_content_product: "CentOS"
+        katello_content_repository_url: "http://mirror.centos.org/centos/7/os/x86_64"
+        katello_content_sync_repo: True
+
+- name: Setup Puppet Repository
+  hosts: all
+  become: true
+  roles:
+      - role: katello_content
+        katello_content_repository: "Puppet 4"
+        katello_content_product: "Puppet Labs"
+        katello_content_repository_url: "http://yum.puppetlabs.com/el/7/PC1/x86_64"
+        katello_content_sync_repo: True
+
+- name: Setup Katello Agent Repository
+  hosts: all
+  become: true
+  roles:
+      - role: katello_content
+        katello_content_repository: "Katello Agent Nightly"
+        katello_content_product: "Katello"
+        katello_content_repository_url: "https://fedorapeople.org/groups/katello/releases/yum/nightly/client/el7/x86_64/"
+        katello_content_sync_repo: True
+
+- name: Configure Activation Key and Host Group
+  hosts: all
+  become: true
+  roles:
+      - katello_provisioning
