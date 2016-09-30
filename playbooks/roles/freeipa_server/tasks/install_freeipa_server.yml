@@ -1,0 +1,36 @@
+- name: 'Install FreeIPA server packages (this could take a while)'
+  yum:
+    name: ipa-server,ipa-server-dns
+    state: latest
+
+- name: 'Install Haveged (faster population of PRNG)'
+  yum:
+    name: haveged
+    state: latest
+
+- name: 'Start Haveged'
+  service:
+    name: haveged
+    state: started
+
+- name: 'Fix /etc/hosts record for self'
+  lineinfile:
+    dest: /etc/hosts
+    regexp: ".*{{ ansible_nodename }}.*localhost.*"
+    line: "{{ freeipa_server_ip }} {{ ansible_nodename }}"
+    state: present
+
+- name: 'Fix /etc/hosts freeipa installation'
+  replace:
+    dest: /etc/hosts
+    regexp: "127.*c7-freeipa-server.*"
+    replace: ""
+
+- name: 'Ensure localhost record is in /etc/hosts'
+  lineinfile:
+    dest: /etc/hosts
+    line: "127.0.0.1 localhost.localdomain localhost"
+    state: present
+
+- name: 'Run FreeIPA Install'
+  shell: ipa-server-install -U -r {{ freeipa_server_realm }} -p {{ freeipa_server_directory_manager_password }} -a {{ freeipa_server_directory_admin_password }} creates=/etc/krb5.keytab
