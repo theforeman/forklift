@@ -10,10 +10,10 @@ class TestBoxLoader < Minitest::Test
     assert @box_loader.add_boxes('config/base_boxes.yaml', 'config/versions.yaml')
   end
 
-  def test_centos6
+  def test_centos7
     boxes = @box_loader.add_boxes('config/base_boxes.yaml', 'config/versions.yaml')
-    assert_equal 'centos6-katello-nightly', boxes['centos6-katello-nightly']['name']
-    assert_equal 'centos6', boxes['centos6-katello-nightly']['box_name']
+    assert_equal 'centos7-katello-nightly', boxes['centos7-katello-nightly']['name']
+    assert_equal 'centos7_1', boxes['centos7-katello-nightly']['box_name']
   end
 
 end

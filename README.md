@@ -16,9 +16,14 @@ Forklift provides tools to create Foreman/Katello environments for development, 
 
 ## Using Forklift
 
+### Requirements
+
+* Vagrant - 1.8+ - Both the VirtualBox and Libvirt providers are tested
+* Ansible - 2.1+
+
 ### Quickstart
 
-This will walk through the simplest path of spinning up a production test environment of a bleeding edge nightly installation assuming vagrant and Libvirt are installed and configured.
+This will walk through the simplest path of spinning up a production test environment of a bleeding edge nightly installation assuming Vagrant and Libvirt are installed and configured.
 
 ```
 git clone https://github.com/katello/forklift.git
