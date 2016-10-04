@@ -69,9 +69,8 @@ boxes:
 
   centos7-katello-nightly:
     box: centos7
-    <<: *install_shell
-    options: --scenario=katello --disable-selinux
     ansible:
+      playbook: 'playbooks/katello.yml'
       group: 'server'
 
   centos7-provision-nightly:
