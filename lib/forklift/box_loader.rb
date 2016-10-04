@@ -50,29 +50,16 @@ module Forklift
     end
 
     def process_versions(config, versions)
-      %w(centos6 centos7).each do |os|
-        versions['foreman'].each do |version|
-          config['boxes']["#{os}-foreman-#{version}"] = Marshal.load(
-            Marshal.dump(config['boxes']["#{os}-foreman-nightly"])
-          )
-          config['boxes']["#{os}-foreman-#{version}"]['options'] ||= []
-          config['boxes']["#{os}-foreman-#{version}"]['options'] << " --version #{version}"
+      versions['installers'].each do |version|
+        version['boxes'].each do |base_box|
+          %w(foreman katello).each do |scenario|
+            installer_box = build_box(config['boxes'][base_box], 'server', "playbooks/#{scenario}.yml", version)
+            config['boxes']["#{base_box}-#{scenario}-#{version[scenario]}"] = installer_box
+          end
 
-          next unless (katello_version = versions['mapping'][version])
-
-          katello_box = Marshal.load(
-            Marshal.dump(config['boxes']["#{os}-katello-nightly"])
-          )
-          katello_box['options'] ||= []
-          katello_box['options'] << " --version #{version}"
-
-          capsule_box = Marshal.load(
-            Marshal.dump(config['boxes']["#{os}-capsule-nightly"])
-          )
-          capsule_box['ansible']['server'] = "#{os}-katello-#{katello_version}"
-
-          config['boxes']["#{os}-katello-#{katello_version}"] = katello_box
-          config['boxes']["#{os}-capsule-#{katello_version}"] = capsule_box
+          capsule_box = build_box(config['boxes'][base_box], 'capsule', 'playbooks/capsule.yml', version)
+          capsule_box['ansible']['server'] = "#{base_box}-katello-#{version['katello']}"
+          config['boxes']["#{base_box}-capsule-#{version['katello']}"] = capsule_box
         end
       end
     end
@@ -85,6 +72,22 @@ module Forklift
     def find_base_box(name)
       return false if name.nil?
       @boxes[name]
+    end
+
+    def build_box(base_box, group, playbook, version)
+      box = Marshal.load(Marshal.dump(base_box))
+
+      box['ansible'] = {
+        'playbook' => playbook,
+        'group'    => group,
+        'variables' => {
+          'foreman_version'             => version['foreman'],
+          'katello_version'             => version['katello'],
+          'puppet_repositories_version' => version['puppet']
+        }
+      }
+
+      box
     end
 
   end
