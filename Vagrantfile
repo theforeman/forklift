@@ -152,6 +152,7 @@ module Forklift
     config.vm.provider :libvirt do |domain|
       domain.memory = 4608
       domain.cpus   = 2
+      domain.driver = "qemu"
     end
 
     config.vm.provider :virtualbox do |domain|
