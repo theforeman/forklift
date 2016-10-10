@@ -1,0 +1,37 @@
+---
+- name: 'install the docker package'
+  yum:
+    name: docker
+    state: latest
+
+- name: 'install the atomic package'
+  yum:
+    name: atomic
+    state: latest
+
+- name: 'install AR docker image'
+  docker_image:
+    name: "{{ atomic_registry_upstream_image }}"
+
+- name: 'install master script'
+  shell: atomic install "{{ atomic_registry_upstream_image_name }}"
+  environment:
+    REGISTRYPORT: "{{ atomic_registry_registry_port }}"
+    CONSOLEPORT: "{{ atomic_registry_console_port }}"
+    MASTERPORT: "{{ atomic_registry_master_port }}"
+    MASTERIMAGE: "{{ atomic_registry_master_image }}"
+    CONSOLEIMAGE: "{{ atomic_registry_console_image }}"
+    REGISTRYIMAGE: "{{ atomic_registry_registry_image }}"
+
+- name: 'enable AR services'
+  service: name=atomic-registry-master.service enabled=yes state=started
+
+- name: Wait untils docker containers have started
+  shell: docker ps|wc -l
+  register: result
+  until: result.stdout.find("4") != -1
+  retries: 30
+  delay: 15
+
+- name: Finish running the installer
+  shell: /var/run/setup-atomic-registry.sh
