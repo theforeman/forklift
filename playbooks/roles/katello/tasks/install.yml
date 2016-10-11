@@ -16,6 +16,10 @@
     name: katello
     state: latest
 
+- name: 'Apply module pull requests to installer'
+  include: module_pr.yml
+  when: katello_module_prs is defined
+
 - name: 'Run installer'
   command: "{{ katello_installer_command }}"
   when: not katello_skip_installer
