@@ -1,7 +1,7 @@
 ---
 - include: packages.yml
 
-- include: module_prs.yml
+- include: module_pr.yml
   when: foreman_installer_module_prs != ""
 
 - include: install.yml
