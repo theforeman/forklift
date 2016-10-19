@@ -1,0 +1,6 @@
+---
+- name: 'Ensure libselinux-python is installed'
+  yum:
+    name: 'libselinux-python'
+    state: installed
+- selinux: policy=targeted state={{ selinux_state }}
