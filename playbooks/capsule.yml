@@ -5,6 +5,7 @@
     capsule_server_group: "server-{{ inventory_hostname }}"
     capsule_server: "{{ groups[capsule_server_group][0] }}"
   roles:
+    - selinux
     - etc_hosts
     - epel_repositories
     - puppet_repositories
