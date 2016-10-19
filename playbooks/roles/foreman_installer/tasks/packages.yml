@@ -16,5 +16,8 @@
     name: foreman-installer
     state: latest
 
-- name: 'Run installer'
-  command: "{{ foreman_installer_command }}"
+- name: 'Install additional packages'
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ foreman_installer_additional_packages }}"

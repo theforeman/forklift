@@ -17,4 +17,4 @@
       cd {{ item.split("/")[1] }} &&
       git fetch origin pull/{{ item.split("/")[2] }}/head:pr &&
       git merge pr
-  with_items: "{{ katello_module_prs.split(',') }}"
+  with_items: "{{ foreman_installer_module_prs.split(',') }}"
