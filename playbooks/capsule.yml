@@ -11,3 +11,18 @@
     - foreman_repositories
     - katello_repositories
     - capsule
+    - role: foreman_installer
+      foreman_installer_scenario: capsule
+      foreman_installer_options_internal_use_only:
+          - '--disable-system-checks
+            --foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
+            --foreman-proxy-trusted-hosts "{{ ansible_nodename }}"
+            --foreman-proxy-foreman-base-url "https://{{ server_fqdn.stdout }}"
+            --foreman-proxy-register-in-foreman true
+            --foreman-proxy-oauth-consumer-key "{{ oauth_consumer_key.stdout }}"
+            --foreman-proxy-oauth-consumer-secret "{{ oauth_consumer_secret.stdout }}"
+            --capsule-certs-tar "{{ capsule_certs_tar }}"
+            --capsule-parent-fqdn "{{ server_fqdn.stdout }}"
+            --capsule-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"'
+      foreman_installer_additional_packages:
+          - foreman-installer-katello
