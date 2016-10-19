@@ -63,13 +63,15 @@ module Forklift
           katello_box = Marshal.load(
             Marshal.dump(config['boxes']["#{os}-katello-nightly"])
           )
-          katello_box['options'] ||= []
-          katello_box['options'] << " --version #{version}"
+          katello_box['ansible'] ||= {}
+          katello_box['ansible']['variables'] = { 'foreman_version' => version }
 
           capsule_box = Marshal.load(
             Marshal.dump(config['boxes']["#{os}-capsule-nightly"])
           )
+          capsule_box['ansible'] ||= {}
           capsule_box['ansible']['server'] = "#{os}-katello-#{katello_version}"
+          capsule_box['ansible']['variables'] = { 'foreman_version' => version }
 
           config['boxes']["#{os}-katello-#{katello_version}"] = katello_box
           config['boxes']["#{os}-capsule-#{katello_version}"] = capsule_box
