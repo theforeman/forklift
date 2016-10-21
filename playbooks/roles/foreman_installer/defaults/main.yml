@@ -1,0 +1,17 @@
+---
+foreman_installer_additional_packages: []
+foreman_installer_admin_password: changeme
+foreman_installer_skip_installer: False
+foreman_installer_verbose: True
+foreman_installer_scenario: foreman
+
+# Comma-separated list of "organization/module/pr_number", e.g. "katello/capsule/37,katello/certs/34"
+foreman_installer_module_prs: ""
+
+# There are two options, so a user can supply their own, and a playbook can
+# specify theirs. For example, katello needs "--disable-system-checks" so we
+# put it in internal_use_only. It's an array. foreman_installer_options
+# is just a string appended to the installer, because vagrant can't
+# pass structured data through via the host variables interface.
+foreman_installer_options: ""
+foreman_installer_options_internal_use_only: []
