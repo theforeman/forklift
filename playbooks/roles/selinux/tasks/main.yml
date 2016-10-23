@@ -3,4 +3,8 @@
   yum:
     name: 'libselinux-python'
     state: installed
-- selinux: policy=targeted state={{ selinux_state }}
+
+- name: 'Set selinux state'
+  selinux:
+    policy: targeted
+    state: "{{ selinux_state }}"
