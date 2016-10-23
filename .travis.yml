@@ -1,5 +1,11 @@
 sudo: false
-language: ruby
-rvm:
-  - "2.0.0"
-  - "2.2.0"
+language: python
+python:
+  - 2.7
+install:
+  - pip install ansible-lint
+  - rvm install 2.2.4
+script:
+  - bundle install
+  - bundle exec rake
+  - ansible-lint -r rules/ playbooks/*

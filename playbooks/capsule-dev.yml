@@ -8,5 +8,5 @@
     - foreman_repositories
     - katello_repositories
     - etc_hosts
-    - {role: capsule, foreman_directory: '/home/vagrant/foreman/config/', 
+    - {role: capsule, foreman_directory: '/home/vagrant/foreman/config/',
        devel: True, base_foreman_directory: '/home/vagrant/foreman/'}

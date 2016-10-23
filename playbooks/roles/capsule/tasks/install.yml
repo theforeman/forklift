@@ -9,11 +9,16 @@
   delegate_to: "{{ capsule_server }}"
   register: server_ip
 
-- set_fact: server_ip="{{ server_ip.stdout.split('\n')[0] }}"
+- name: 'Set fact for Server IP'
+  set_fact: server_ip="{{ server_ip.stdout.split('\n')[0] }}"
 
 - name: 'Add /etc/hosts record for capsule'
   delegate_to: "{{ capsule_server }}"
-  lineinfile: dest=/etc/hosts regexp=".*{{ ansible_nodename }}$" line="{{ capsule_ip }} {{ ansible_nodename }}" state=present
+  lineinfile:
+    dest: /etc/hosts
+    regexp: ".*{{ ansible_nodename }}$"
+    line: "{{ capsule_ip }} {{ ansible_nodename }}"
+    state: present
 
 - name: 'Get oauth-consumer-key'
   shell: grep oauth_consumer_key "{{ foreman_directory }}"settings.yaml | cut -d ' ' -f 2

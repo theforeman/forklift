@@ -5,8 +5,12 @@
   command: 'rpm -Uvh http://{{ katello_server }}/pub/katello-ca-consumer-latest.noarch.rpm'
 
 - name: 'Register client with subscription-manager'
-  command: 'subscription-manager register --org={{ katello_client_organization }} --environment={{ katello_client_environment }} 
-            --username={{ katello_client_username }} --password={{ katello_client_password }}'
+  command: >
+    "subscription-manager register
+      --org={{ katello_client_organization }}
+      --environment={{ katello_client_environment }}
+      --username={{ katello_client_username }}
+      --password={{ katello_client_password }}"
 
 - name: 'Install katello-agent'
   yum: name=katello-agent
