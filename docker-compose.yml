@@ -3,7 +3,7 @@ services:
   memcache:
     image: memcached
   db:
-    image: postgres
+    image: postgres:9.5
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
