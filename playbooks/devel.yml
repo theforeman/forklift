@@ -2,6 +2,7 @@
 - hosts: devel
   become: true
   vars:
+    katello_version: nightly
     foreman_installer_scenario: katello-devel
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
