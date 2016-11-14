@@ -7,8 +7,8 @@ if [ -d "bats" ]; then
 fi
 git clone https://github.com/sstephenson/bats.git && bats/install.sh /usr/local
 
-if [ -d "katello-deploy" ]; then 
-  rm -rf katello-deploy
+if [ -d "forklift" ]; then
+  rm -rf forklift
 fi
 
-git clone https://github.com/katello/katello-deploy.git && katello-deploy/bats/install.sh /usr/local
+git clone https://github.com/katello/forklift.git && forklift/bats/install.sh /usr/local
