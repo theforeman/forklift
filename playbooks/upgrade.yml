@@ -1,0 +1,14 @@
+- hosts: all
+  become: true
+  vars:
+    foreman_version: nightly
+    katello_version: nightly
+    foreman_installer_upgrade: True
+    foreman_repositories_use_koji: True
+    katello_repositories_use_koji: True
+    foreman_installer_scenario: katello
+  roles:
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer

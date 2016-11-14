@@ -5,3 +5,7 @@
   when: foreman_installer_module_prs != ""
 
 - include: install.yml
+  when: foreman_installer_upgrade == False
+
+- include: upgrade.yml
+  when: foreman_installer_upgrade == True
