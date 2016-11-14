@@ -4,7 +4,7 @@
       command: vagrant up pipeline-katello-3.1-centos7
 
     - name: 'Bring up box for Capsule'
-      command: vagrant up pipeline-capsule-3.1-centos7
+      command: vagrant up pipeline-proxy-3.1-centos7
 
     - name: 'Refresh inventory'
       meta: refresh_inventory
@@ -12,8 +12,10 @@
 - hosts: pipeline-katello-3.1-centos7
   become: yes
   vars:
+    puppet_repositories_version: 3
     katello_version: 3.1
     foreman_version: 1.12
+    foreman_repositories_use_koji: true
     katello_repositories_use_koji: true
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
@@ -21,6 +23,7 @@
     foreman_installer_additional_packages:
       - katello
   roles:
+    - selinux
     - etc_hosts
     - epel_repositories
     - puppet_repositories
@@ -28,12 +31,14 @@
     - katello_repositories
     - foreman_installer
 
-- hosts: pipeline-capsule-3.1-centos7
+- hosts: pipeline-proxy-3.1-centos7
   become: yes
   vars:
-    capsule_server: pipeline-katello-3.1-centos7
+    puppet_repositories_version: 3
+    foreman_proxy_content_server: pipeline-katello-3.1-centos7
     katello_version: 3.1
     foreman_version: 1.12
+    foreman_repositories_use_koji: true
     katello_repositories_use_koji: true
     foreman_installer_scenario: capsule
     foreman_installer_options_internal_use_only:
@@ -43,18 +48,34 @@
         --foreman-proxy-register-in-foreman true
         --foreman-proxy-oauth-consumer-key "{{ oauth_consumer_key.stdout }}"
         --foreman-proxy-oauth-consumer-secret "{{ oauth_consumer_secret.stdout }}"
-        --capsule-certs-tar "{{ capsule_certs_tar }}"
+        --capsule-certs-tar "{{ foreman_proxy_content_certs_tar }}"
         --capsule-parent-fqdn "{{ server_fqdn.stdout }}"
         --capsule-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"'
     foreman_installer_additional_packages:
       - foreman-installer-katello
   roles:
+    - selinux
     - etc_hosts
     - epel_repositories
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
-    - capsule
+    - foreman_proxy_content
+    - foreman_installer
+
+- hosts: pipeline-katello-3.1-centos7
+  become: true
+  vars:
+    foreman_version: 1.14
+    katello_version: 3.3
+    foreman_installer_upgrade: True
+    foreman_repositories_use_koji: True
+    katello_repositories_use_koji: True
+    foreman_installer_scenario: katello
+  roles:
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
     - foreman_installer
 
 - hosts: pipeline-katello-3.1-centos7
@@ -62,7 +83,7 @@
   roles:
     - bats
 
-- hosts: pipeline-capsule-3.1-centos7
+- hosts: pipeline-proxy-3.1-centos7
   become: true
   vars:
     bats_tests:

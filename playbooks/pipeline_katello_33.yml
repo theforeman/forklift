@@ -1,26 +1,30 @@
 - hosts: localhost
   tasks:
     - name: 'Bring up box for Katello'
-      command: vagrant up pipeline-katello-3.1-centos7
+      command: vagrant up pipeline-katello-3.3-centos7
 
     - name: 'Bring up box for Capsule'
-      command: vagrant up pipeline-capsule-3.1-centos7
+      command: vagrant up pipeline-proxy-3.3-centos7
 
     - name: 'Refresh inventory'
       meta: refresh_inventory
 
-- hosts: pipeline-katello-3.1-centos7
+- hosts: pipeline-katello-3.3-centos7
   become: yes
   vars:
-    katello_version: 3.1
-    foreman_version: 1.12
+    puppet_repositories_version: 3
+    katello_version: 3.3
+    foreman_version: 1.14
+    foreman_repositories_use_koji: true
     katello_repositories_use_koji: true
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
     foreman_installer_additional_packages:
       - katello
   roles:
+    - selinux
     - etc_hosts
     - epel_repositories
     - puppet_repositories
@@ -28,41 +32,45 @@
     - katello_repositories
     - foreman_installer
 
-- hosts: pipeline-capsule-3.1-centos7
+- hosts: pipeline-proxy-3.3-centos7
   become: yes
   vars:
-    capsule_server: pipeline-katello-3.1-centos7
-    katello_version: 3.1
-    foreman_version: 1.12
+    puppet_repositories_version: 3
+    foreman_proxy_content_server: pipeline-katello-3.3-centos7
+    katello_version: 3.3
+    foreman_version: 1.14
+    foreman_repositories_use_koji: true
     katello_repositories_use_koji: true
-    foreman_installer_scenario: capsule
+    foreman_installer_scenario: foreman-proxy-content
     foreman_installer_options_internal_use_only:
-      - '--foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
+      - '--disable-system-checks
+        --foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
         --foreman-proxy-trusted-hosts "{{ ansible_nodename }}"
         --foreman-proxy-foreman-base-url "https://{{ server_fqdn.stdout }}"
         --foreman-proxy-register-in-foreman true
         --foreman-proxy-oauth-consumer-key "{{ oauth_consumer_key.stdout }}"
         --foreman-proxy-oauth-consumer-secret "{{ oauth_consumer_secret.stdout }}"
-        --capsule-certs-tar "{{ capsule_certs_tar }}"
-        --capsule-parent-fqdn "{{ server_fqdn.stdout }}"
-        --capsule-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"'
+        --foreman-proxy-content-certs-tar "{{ foreman_proxy_content_certs_tar }}"
+        --foreman-proxy-content-parent-fqdn "{{ server_fqdn.stdout }}"
+        --foreman-proxy-content-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"'
     foreman_installer_additional_packages:
       - foreman-installer-katello
   roles:
+    - selinux
     - etc_hosts
     - epel_repositories
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
-    - capsule
+    - foreman_proxy_content
     - foreman_installer
 
-- hosts: pipeline-katello-3.1-centos7
+- hosts: pipeline-katello-3.3-centos7
   become: true
   roles:
     - bats
 
-- hosts: pipeline-capsule-3.1-centos7
+- hosts: pipeline-proxy-3.3-centos7
   become: true
   vars:
     bats_tests:
