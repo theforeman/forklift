@@ -34,7 +34,7 @@ module Forklift
     end
 
     def katello_version
-      @versions['mapping'][@version]
+      @versions['installers'].select { |scenario| scenario['foreman'] == @version }[0]['katello']
     end
 
     def cleanup
