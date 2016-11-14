@@ -1,13 +1,27 @@
 ---
-- name: 'Clone bats'
+- name: "Get /usr/bin/bats stat"
+  stat:
+    path: "/usr/bin/bats"
+  register: bats_bin
+
+- name: "Clone bats"
   git:
-    repo: https://github.com/katello/forklift.git
-    dest: /root/forklift
+    repo: "https://github.com/sstephenson/bats.git"
+    dest: "{{ bats_git_dir }}"
+  when: bats_bin.stat.exists == False
 
-- name: 'Install bats'
-  shell: /root/forklift/bats/bootstrap.sh
+- name: "Install bats"
+  shell: "{{ bats_git_dir }}/install.sh /usr"
+  args:
+    creates: "/usr/bin/bats"
 
-- name: 'Run bats'
-  shell: /usr/local/bin/katello-bats content proxy
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+- name: "Clone forklift"
+  git:
+    repo: "https://github.com/katello/forklift.git"
+    dest: "{{ bats_forklift_dir }}"
+    update: "{{ bats_update_forklift }}"
+
+- name: "Run bats"
+  shell: "bats {{ bats_tests }}"
+  args:
+    chdir: "{{ bats_forklift_dir }}/bats"
