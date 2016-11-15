@@ -25,9 +25,6 @@ for arg do
       nightly)
         katello_nightly_install=true
         ;;
-      devel)
-        katello_devel_install=true
-        ;;
       content)
         katello_content_tests=true
         ;;
@@ -42,17 +39,6 @@ for arg do
         ;;
    esac
 done
-
-if [ "$katello_devel_install" == true ] && [ "$katello_nightly_install" == true ];
-then
-    echo "You may only run the nightly or devel installer, not both"
-    exit 1
-fi
-
-if [ "$katello_devel_install" == true ];
-then
-    BATS_ARGS=fb-install-katello-devel.bats
-fi
 
 if [ "$katello_nightly_install" == true ];
 then
