@@ -4,9 +4,11 @@
   vars:
     capsule_server_group: "server-{{ inventory_hostname }}"
     capsule_server: "{{ groups[capsule_server_group][0] }}"
+    katello_version: nightly
   roles:
     - foreman_repositories
     - katello_repositories
+    - epel_repositories
     - etc_hosts
     - {role: capsule, foreman_directory: '/home/vagrant/foreman/config/',
        devel: True, base_foreman_directory: '/home/vagrant/foreman/'}
