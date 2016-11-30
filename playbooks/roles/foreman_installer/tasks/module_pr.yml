@@ -6,7 +6,7 @@
 
 - name: 'install puppetlabs-strings'
   shell: >
-      /opt/puppetlabs/puppet/bin/puppet module install puppetlabs-strings
+      /opt/puppetlabs/puppet/bin/gem install puppet-strings
   when: puppet_repositories_version == 4
 
 - name: "install module PR into installer directory"
