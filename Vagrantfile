@@ -1,5 +1,5 @@
 require 'yaml'
-require './lib/forklift'
+require './lib/forklift/box_loader'
 
 VAGRANTFILE_API_VERSION = '2'
 SUPPORT_SSH_INSERT_KEY = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
