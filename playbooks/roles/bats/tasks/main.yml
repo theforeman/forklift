@@ -8,6 +8,6 @@
   shell: /root/forklift/bats/bootstrap.sh
 
 - name: 'Run bats'
-  shell: /usr/local/bin/katello-bats content capsule
+  shell: /usr/local/bin/katello-bats content proxy
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/bin"

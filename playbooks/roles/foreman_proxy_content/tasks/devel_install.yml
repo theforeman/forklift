@@ -1,0 +1,19 @@
+- name: 'get existing rails server pid'
+  command: cat {{ base_foreman_directory }}tmp/pids/server.pid
+  register: existing_rails_server
+  become_user: vagrant
+  ignore_errors: True
+  delegate_to: "{{ foreman_proxy_content_server }}"
+
+- name: 'check for rails server'
+  fail: msg="No rails server detected running on {{ foreman_proxy_content_server }},
+             please run `rails s` on {{ foreman_proxy_content_server }}"
+  when: existing_rails_server.rc != 0
+
+- name: 'Add group foreman'
+  group: name=foreman state=present
+  delegate_to: "{{ foreman_proxy_content_server }}"
+
+- name: 'Install katello-foreman_proxy_content'
+  yum: name="katello-foreman_proxy_content"
+  delegate_to: "{{ foreman_proxy_content_server }}"

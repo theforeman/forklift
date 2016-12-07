@@ -4,7 +4,7 @@
       command: vagrant up pipeline-katello-centos7
 
     - name: 'Bring up box for Capsule'
-      command: vagrant up pipeline-capsule-centos7
+      command: vagrant up pipeline-proxy-centos7
 
     - name: 'Refresh inventory'
       meta: refresh_inventory
@@ -21,10 +21,10 @@
     - katello_repositories
     - katello
 
-- hosts: pipeline-capsule-centos7
+- hosts: pipeline-proxy-centos7
   become: yes
   vars:
-    capsule_server: pipeline-katello-centos7
+    foreman_proxy_content_server: pipeline-katello-centos7
     katello_version: nightly
     foreman_version: nightly
     katello_repositories_use_koji: true
@@ -32,7 +32,7 @@
     - etc_hosts
     - foreman_repositories
     - katello_repositories
-    - capsule
+    - foreman_proxy_content
 
 - hosts: pipeline-katello-centos7
   become: true

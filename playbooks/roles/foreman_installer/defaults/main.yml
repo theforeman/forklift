@@ -5,7 +5,7 @@ foreman_installer_skip_installer: False
 foreman_installer_verbose: True
 foreman_installer_scenario: foreman
 
-# Comma-separated list of "organization/module/pr_number", e.g. "katello/capsule/37,katello/certs/34"
+# Comma-separated list of "organization/module/pr_number", e.g. "katello/foreman_proxy_content/37,katello/certs/34"
 foreman_installer_module_prs: ""
 
 # There are two options, so a user can supply their own, and a playbook can

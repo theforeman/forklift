@@ -1,0 +1,6 @@
+---
+custom_install: False
+foreman_proxy_content_upgrade: False
+foreman_proxy_content_use_release_repos: True
+foreman_proxy_content_use_koji_repos: False
+foreman_proxy_content_foreman_version: nightly

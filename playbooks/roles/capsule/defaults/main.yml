@@ -1,6 +1,0 @@
----
-custom_install: False
-capsule_upgrade: False
-capsule_use_release_repos: True
-capsule_use_koji_repos: False
-capsule_foreman_version: nightly
