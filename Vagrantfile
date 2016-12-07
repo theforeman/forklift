@@ -1,10 +1,11 @@
 require 'yaml'
-require './lib/forklift'
+require "#{File.dirname(__FILE__)}/lib/forklift"
 
 VAGRANTFILE_API_VERSION = '2'
 SUPPORT_SSH_INSERT_KEY = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
 SUPPORT_NAMED_PROVISIONERS = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
 SUPPORT_BOX_CHECK_UPDATE = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.5')
+VAGRANTFILE_DIR = File.dirname(__FILE__)
 
 module Forklift
 
@@ -20,7 +21,7 @@ module Forklift
   end
 
   def self.add_boxes(boxes)
-    @boxes = @box_loader.add_boxes(boxes, 'config/versions.yaml')
+    @boxes = @box_loader.add_boxes(boxes, "#{VAGRANTFILE_DIR}/config/versions.yaml")
   end
 
   def self.define_vm(config, box = {})
@@ -125,10 +126,10 @@ module Forklift
   end
 
   @box_loader = BoxLoader.new
-  @boxes = @box_loader.add_boxes('config/base_boxes.yaml', 'config/versions.yaml')
+  @boxes = @box_loader.add_boxes("#{VAGRANTFILE_DIR}/config/base_boxes.yaml", "#{VAGRANTFILE_DIR}/config/versions.yaml")
   plugin_vagrantfiles.each { |f| load f }
   plugin_base_boxes
-  @boxes = @box_loader.add_boxes('boxes.yaml', 'config/versions.yaml') if File.exists?('boxes.yaml')
+  @boxes = @box_loader.add_boxes("#{VAGRANTFILE_DIR}/boxes.yaml", "#{VAGRANTFILE_DIR}/config/versions.yaml") if File.exists?("#{VAGRANTFILE_DIR}/boxes.yaml")
   @boxes  = @boxes.keys.sort.inject({}) do |hash, key|
     hash[key] = @boxes[key]
     hash
