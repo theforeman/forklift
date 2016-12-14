@@ -1,6 +1,7 @@
 gem 'puma-rails', :platform => :ruby
 gem 'foreman'
 gem 'rdoc' # until https://github.com/theforeman/foreman/pull/3632 is merged.
+gem 'coffee-script-source', '1.11.1'
 
 #gem "foreman_memcache",         :github => "theforeman/foreman_memcache"
 #gem "foreman_discovery",        :github => "theforeman/foreman_discovery", :branch => 'develop'
