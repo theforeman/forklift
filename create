@@ -1,9 +1,9 @@
-#!/bin/bash -xe
+#!/usr/bin/env ruby
 
-oc login 192.168.121.135:8443 -u admin -p admin --insecure-skip-tls-verify=true
+`oc login 192.168.121.135:8443 -u admin -p admin --insecure-skip-tls-verify=true`
 
-#oc new-project foreman --description="Foreman on Openshift" --display-name="The Foreman"
+`oc create -f templates`
+`oc update -f templates`
 
-oc update -f templates/foreman.yaml
-
-oc new-app --template=foreman
+`oc new-app --template=foreman`
+`oc new-app --template=postgresql-ephemeral`
