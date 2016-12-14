@@ -2,7 +2,7 @@ gem 'puma-rails', :platform => :ruby
 gem 'foreman'
 gem 'rdoc' # until https://github.com/theforeman/foreman/pull/3632 is merged.
 
-gem "foreman_memcache",         :github => "theforeman/foreman_memcache"
+#gem "foreman_memcache",         :github => "theforeman/foreman_memcache"
 #gem "foreman_discovery",        :github => "theforeman/foreman_discovery", :branch => 'develop'
 #gem "foreman_dhcp_browser",     :github => "theforeman/foreman_dhcp_browser"
 #gem 'foreman_bootdisk',         :github => 'theforeman/foreman_bootdisk'
