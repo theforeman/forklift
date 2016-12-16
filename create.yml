@@ -7,13 +7,14 @@
     postgresql_port: 5432
     postgresql_host: postgresql
   tasks:
-    #- name: 'Delete Foreman project'
-    #command: oc delete project foreman
+    - name: 'Create .tmp directory'
+      file:
+        path: .tmp
 
     - name: 'Clone templates repository'
       git:
         repo: https://github.com/openshift/openshift-ansible.git
-        dest: tmp/openshift-ansible
+        dest: .tmp/openshift-ansible
 
     - name: 'Create Foreman project'
       command: oc new-project foreman --description="Foreman on Openshift" --display-name="The Foreman"
