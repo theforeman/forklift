@@ -73,11 +73,17 @@ setup() {
     cd katello-deploy-master
   fi
 
+  cmd = "ruby setup.rb --install-options=\"-v --foreman-admin-password=changeme --disable-system-checks\" --scenario katello"
+
   if [ $USE_KOJI_REPOS ]; then
-    ruby setup.rb --install-options="-v --foreman-admin-password=changeme --disable-system-checks" --koji-repos --scenario katello
-  else
-    ruby setup.rb --install-options="-v --foreman-admin-password=changeme --disable-system-checks" --scenario katello
+    cmd="$cmd --koji-repos"
   fi
+  
+  if [ $USE_PUPPET_FOUR ]; then
+   cmd="$cmd --puppet-four"
+  fi
+
+  `$cmd`
 }
 
 @test "run the installer once again" {
