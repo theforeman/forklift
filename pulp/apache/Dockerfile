@@ -1,7 +1,4 @@
-FROM pulp/base:latest
-MAINTAINER Pulp Team <pulp-list@redhat.com>
-
-EXPOSE 80 443
+FROM pulp-base:latest
 
 ADD run.sh /run.sh
 
