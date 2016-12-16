@@ -1,0 +1,4 @@
+---
+foreman_proxy_content_certs_tar: "/root/{{ ansible_nodename }}.tar.gz"
+foreman_proxy_content_ip: "{{ ansible_default_ipv4.address }}"
+foreman_directory: "/etc/foreman/"

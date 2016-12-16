@@ -6,14 +6,14 @@
 
 - name: 'Update Foreman release RPM'
   yum:
-    name: http://yum.theforeman.org/releases/{{ capsule_foreman_version }}/el7/x86_64/foreman-release.rpm
+    name: http://yum.theforeman.org/releases/{{ foreman_proxy_content_foreman_version }}/el7/x86_64/foreman-release.rpm
     state: present
 
 - include: release_repos.yml
-  when: capsule_use_release_repos and not capsule_use_koji_repos
+  when: foreman_proxy_content_use_release_repos and not foreman_proxy_content_use_koji_repos
 
 - include: koji_repos.yml
-  when: capsule_use_koji_repos
+  when: foreman_proxy_content_use_koji_repos
 
 - name: 'Update packages'
   yum:
@@ -24,6 +24,6 @@
   command: >
     foreman-installer
     -v
-    --scenario capsule
+    --scenario foreman-proxy-content
     --disable-system-checks
     --upgrade

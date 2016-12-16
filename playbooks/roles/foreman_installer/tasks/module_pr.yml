@@ -9,6 +9,11 @@
       /opt/puppetlabs/puppet/bin/gem install puppet-strings
   when: puppet_repositories_version == 4
 
+- name: "install git"
+  yum:
+    name: 'git'
+    state: 'present'
+
 - name: "install module PR into installer directory"
   shell: >
       cd {{ (item.split("/")[0] == 'theforeman') | ternary("/usr/share/foreman-installer/modules", "/usr/share/katello-installer-base/modules") }} &&
