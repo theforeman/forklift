@@ -83,7 +83,7 @@ setup() {
    cmd="$cmd --puppet-four"
   fi
 
-  `$cmd`
+  $cmd
 }
 
 @test "run the installer once again" {
