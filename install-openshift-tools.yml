@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  vars:
+    openshift_version: v1.3.2
+    openshift_checksum: ac1d579
+  tasks:
+    - name: 'Create .tmp directory'
+      file:
+        path: .tmp
+        state: directory
+
+    - name: 'Download OpenShift client tools'
+      unarchive:
+        src: "https://github.com/openshift/origin/releases/download/{{ openshift_version }}/openshift-origin-client-tools-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit.tar.gz"
+        dest: "{{ playbook_dir }}/.tmp/"
+        creates: "{{ playbook_dir }}/.tmp/openshift-origin-client-tools-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit"
+        remote_src: yes
+          
+    - name: 'Link CLI to local bin'
+      file:
+        state: link
+        src: "{{ playbook_dir }}/.tmp/openshift-origin-client-tools-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit/oc"
+        dest: ~/.local/bin
