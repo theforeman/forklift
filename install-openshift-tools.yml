@@ -15,9 +15,14 @@
         dest: "{{ playbook_dir }}/.tmp/"
         creates: "{{ playbook_dir }}/.tmp/openshift-origin-client-tools-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit"
         remote_src: yes
+    
+    - name: 'Create local bin'
+      file:
+        path: ~/.local/bin
+        state: directory
           
     - name: 'Link CLI to local bin'
       file:
         state: link
         src: "{{ playbook_dir }}/.tmp/openshift-origin-client-tools-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit/oc"
-        dest: ~/.local/bin
+        dest: ~/.local/bin/oc
