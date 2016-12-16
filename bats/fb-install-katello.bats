@@ -73,7 +73,7 @@ setup() {
     cd katello-deploy-master
   fi
 
-  cmd = "ruby setup.rb --install-options=\"-v --foreman-admin-password=changeme --disable-system-checks\" --scenario katello"
+  cmd="ruby setup.rb --install-options=\"-v --foreman-admin-password=changeme --disable-system-checks\" --scenario katello"
 
   if [ $USE_KOJI_REPOS ]; then
     cmd="$cmd --koji-repos"
