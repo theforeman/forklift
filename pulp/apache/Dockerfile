@@ -1,4 +1,5 @@
 FROM pulp-base:latest
+USER apache
 
 # we make the images available on port 80 for this non-secure demo, so docker
 # won't complain about SSL validation during "docker pull"
