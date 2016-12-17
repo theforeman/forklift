@@ -47,6 +47,9 @@ Now that we have docker and the appropriate client tools setup we can spin up a 
 
     oc cluster up
 
+Enable privileged user access inside containers:
+
+    oadm policy add-scc-to-group anyuid system:authenticated
 
 ## Creating the Foreman Deployment
 
