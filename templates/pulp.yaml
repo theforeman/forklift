@@ -9,6 +9,30 @@ metadata:
 labels:
   template: "pulp"
 objects:
+  - kind: "Service"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+      annotations: 
+        description: "Exposes and load balances the application pods"
+    spec: 
+      ports: 
+        - name: "web"
+          port: 8080
+          targetPort: 8080
+      selector: 
+        name: "${NAME}"
+
+  - kind: "Route"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+    spec: 
+      host: ""
+      to: 
+        kind: "Service"
+        name: "${NAME}"
+
   - kind: "ImageStream"
     apiVersion: "v1"
     metadata: 
@@ -20,6 +44,27 @@ objects:
     apiVersion: "v1"
     metadata: 
       name: "${NAME}-apache"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}-worker"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}-beat"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}-resource-manager"
       annotations: 
         description: "Keeps track of changes in the application image"
 
@@ -49,6 +94,84 @@ objects:
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
+      name: "${NAME}-worker"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/foreman-docker-compose.git"
+          ref: "compose-to-openshift"
+        contextDir: "pulp/worker"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+          from:
+            kind: "ImageStreamTag"
+            name: "pulp-base:latest"
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "${NAME}-worker:latest"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-beat"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/foreman-docker-compose.git"
+          ref: "compose-to-openshift"
+        contextDir: "pulp/beat"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+          from:
+            kind: "ImageStreamTag"
+            name: "pulp-base:latest"
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "${NAME}-beat:latest"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-resource-manager"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/foreman-docker-compose.git"
+          ref: "compose-to-openshift"
+        contextDir: "pulp/resource_manager"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+          from:
+            kind: "ImageStreamTag"
+            name: "pulp-base:latest"
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "${NAME}-resource-manager:latest"
+  
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
       name: "${NAME}-apache"
     spec: 
       source: 
@@ -72,30 +195,6 @@ objects:
           kind: "ImageStreamTag"
           name: "${NAME}-apache:latest"
 
-  - kind: "Service"
-    apiVersion: "v1"
-    metadata: 
-      name: "${NAME}"
-      annotations: 
-        description: "Exposes and load balances the application pods"
-    spec: 
-      ports: 
-        - name: "web"
-          port: 8080
-          targetPort: 8080
-      selector: 
-        name: "${NAME}"
-
-  - kind: "Route"
-    apiVersion: "v1"
-    metadata: 
-      name: "${NAME}"
-    spec: 
-      host: ""
-      to: 
-        kind: "Service"
-        name: "${NAME}"
-
   - kind: "DeploymentConfig"
     apiVersion: "v1"
     metadata:
@@ -111,6 +210,9 @@ objects:
             execNewPod:
               containerName: "${NAME}-apache"
               command:
+                - runuser
+                - -u
+                - apache
                 - pulp-manage-db
               volumes:
                 - dev-log
@@ -144,6 +246,141 @@ objects:
                 - httpd
                 - "-D"
                 - FOREGROUND
+              resources: {}
+              env: []
+              volumeMounts:
+                - name: dev-log
+                  mountPath: /dev/log
+          volumes:
+            - name: dev-log
+              emptyDir:
+                path: /dev/log
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-resource-manager"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}-resource-manager"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}-resource-manager:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "${NAME}-resource-manager"
+      replicas: 1
+      template:
+        metadata:
+          name: "${NAME}-resource-manager"
+          labels:
+            name: "${NAME}-resource-manager"
+        spec:
+          restartPolicy: Always
+          containers:
+            - name: "pulp-resource-manager"
+              image: "${NAME}-resource-manager:latest"
+              ports:
+                - containerPort: 5672
+                  protocol: TCP
+              resources: {}
+              env: []
+              volumeMounts:
+                - name: dev-log
+                  mountPath: /dev/log
+          volumes:
+            - name: dev-log
+              emptyDir:
+                path: /dev/log
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-beat"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}-beat"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}-beat:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "${NAME}-beat"
+      replicas: 1
+      template:
+        metadata:
+          name: "${NAME}-beat"
+          labels:
+            name: "${NAME}-beat"
+        spec:
+          restartPolicy: Always
+          containers:
+            - name: "pulp-beat"
+              image: "${NAME}-beat:latest"
+              ports:
+                - containerPort: 5672
+                  protocol: TCP
+              resources: {}
+              env: []
+              volumeMounts:
+                - name: dev-log
+                  mountPath: /dev/log
+          volumes:
+            - name: dev-log
+              emptyDir:
+                path: /dev/log
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-worker"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}-worker"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}-worker:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "${NAME}-worker"
+      replicas: 1
+      template:
+        metadata:
+          name: "${NAME}-worker"
+          labels:
+            name: "${NAME}-worker"
+        spec:
+          restartPolicy: Always
+          containers:
+            - name: "pulp-worker"
+              image: "${NAME}-worker:latest"
+              ports:
+                - containerPort: 5672
+                  protocol: TCP
               resources: {}
               env: []
               volumeMounts:
