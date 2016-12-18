@@ -6,6 +6,7 @@ FROM pulp/base:latest
 #RUN rm /etc/httpd/conf.d/pulp_docker.conf
 #ADD pulp_docker.conf /etc/httpd/conf.d/pulp_docker.conf
 
+ADD pulp.conf /etc/httpd/conf.d/pulp.conf
 ADD httpdsed /httpdsed
 ADD pulpsed /pulpsed
 RUN sed -i -f /httpdsed /etc/httpd/conf/httpd.conf
