@@ -5,8 +5,8 @@
 :unattended: true
 :login: true
 :require_ssl: false
-:locations_enabled: false
-:organizations_enabled: false
+:locations_enabled: true
+:organizations_enabled: true
 :support_jsonp: false
 :mark_translated: false
 :admin_email: noreply@foreman.org

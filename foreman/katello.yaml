@@ -1,0 +1,18 @@
+:katello:
+  :rest_client_timeout: 3600
+
+  :post_sync_url: http://<%= ENV['hostname'] %>/katello/api/v2/repositories/sync_complete?token=MEJ8UiYrjYE4V6Q2vPuxs7k4iz9cDpDq
+
+  :candlepin:
+    :url: http://candlepin:8080/candlepin
+    :oauth_key: katello
+    :oauth_secret: DFxGoYTHDKh8uChVuiJu8WMpXmZEX26R
+
+  :pulp:
+    :url: http://pulp:8080/pulp/api/v2/
+    :oauth_key: katello
+    :oauth_secret: DFxGoYTHDKh8uChVuiJu8WMpXmZEX26R
+
+  :qpid:
+    :url: amqp:tcp:qpid:5672
+    :subscriptions_queue_address: katello_event_queue

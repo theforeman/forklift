@@ -1,6 +1,7 @@
 FROM fedora:latest
 #RUN dnf -y update
 RUN dnf -y install ruby{,-devel,gems} rubygem-{nokogiri,bundler,unf_ext,rdoc} redhat-rpm-config nodejs npm git postgresql-devel gcc-c++ make hostname sqlite-devel
+RUN dnf -y install libxslt-devel libxml2-devel qpid-cpp-client-devel
 RUN dnf clean all
 LABEL MAINTAINER="ohadlevy@gmail.com"
 
@@ -9,15 +10,17 @@ WORKDIR /usr/src/app
 
 ENV RAILS_ENV=production
 ENV FOREMAN_APIPIE_LANGS=en
-ENV REPO_URL=https://github.com/foreman/foreman.git
+ENV REPO_URL=https://github.com/theforeman/foreman.git
 ENV REPO_BRANCH=develop
 
 #TODO: support local path instead of checkout
 RUN git clone -b ${REPO_BRANCH} ${REPO_URL} /usr/src/app
+RUN mkdir -p config/settings.plugins.d
 #RUN touch config/initializers/local_secret_token.rb
 RUN [ -e 'package.json' ] && npm install || exit 0
 ADD Gemfile.local.rb bundler.d/Gemfile.local.rb
 ADD settings.yaml config/settings.yaml
+ADD katello.yaml config/settings.plugins.d/katello.yaml
 RUN bundle --without mysql:test:development:mysql2:jenkins:openid:libvirt
 
 ADD build_database.yml config/database.yml
@@ -28,6 +31,8 @@ RUN bundle exec rake security:generate_encryption_key
 RUN bundle exec rake assets:precompile
 RUN bundle exec rake webpack:compile
 RUN bundle exec rake apipie:cache:index
+RUN bundle exec rake plugin:assets:precompile['katello']
+RUN bundle exec rake plugin:apipie:cache['katello']
 
 ADD database.yml config/database.yml
 RUN chmod 777 -R /usr/src/app/tmp
