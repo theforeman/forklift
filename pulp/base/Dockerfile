@@ -9,5 +9,8 @@ RUN yum install -y python-qpid python-qpid-qmf findutils nmap-ncat qpid-tools py
 RUN yum install -y pulp-rpm-plugins pulp-puppet-plugins pulp-docker-plugins
 RUN yum clean all
 
+RUN yum -y install wget
+RUN wget -O /usr/lib/python2.7/site-packages/pulp/server/logs.py https://raw.githubusercontent.com/ehelms/pulp/log-to-file/server/pulp/server/logs.py
+
 ADD server.conf /etc/pulp/server.conf
 RUN chgrp apache /etc/pulp/server.conf
