@@ -8,5 +8,3 @@ RUN  yum update -y && \
      yum clean all
 
 EXPOSE 5672
-
-ENTRYPOINT ["qpidd", "--auth=no"]
