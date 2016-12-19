@@ -10,3 +10,4 @@ RUN wget -O /usr/share/candlepin/cpsetup https://raw.githubusercontent.com/candl
 RUN wget -O /usr/share/candlepin/cpdb https://raw.githubusercontent.com/candlepin/candlepin/master/server/code/setup/cpdb
 
 ADD setup.sh /setup.sh
+ADD candlepin.conf /etc/candlepin/candlepin.conf
