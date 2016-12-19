@@ -3,7 +3,7 @@ gem 'foreman'
 gem 'rdoc' # until https://github.com/theforeman/foreman/pull/3632 is merged.
 gem 'coffee-script-source', '1.11.1'
 
-gem "katello", :github => "katello/katello"
+gem "katello", :github => "ehelms/katello", :branch => 'openshift-changes'
 
 #gem "foreman_memcache",         :github => "theforeman/foreman_memcache"
 #gem "foreman_discovery",        :github => "theforeman/foreman_discovery", :branch => 'develop'

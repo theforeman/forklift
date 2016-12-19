@@ -10,9 +10,14 @@
 
   :pulp:
     :url: http://<%= ENV['PULP_SERVICE_HOST'] %>:<%= ENV['PULP_SERVICE_PORT'] %>/pulp/api/v2/
-    :oauth_key: katello
-    :oauth_secret: katello
+    :basic_auth:
+      :user: admin
+      :password: admin
 
   :qpid:
     :url: amqp:tcp:qpid:5672
     :subscriptions_queue_address: katello_event_queue
+
+  :loggers:
+    :pulp_rest:
+      :enabled: true

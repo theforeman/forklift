@@ -9,6 +9,7 @@ FROM pulp/base:latest
 ADD pulp.conf /etc/httpd/conf.d/pulp.conf
 ADD httpdsed /httpdsed
 ADD pulpsed /pulpsed
+ADD .htpasswd /etc/httpd/.htpasswd
 RUN sed -i -f /httpdsed /etc/httpd/conf/httpd.conf
 RUN sed -i -f /pulpsed /etc/httpd/conf.d/pulp.conf
 
