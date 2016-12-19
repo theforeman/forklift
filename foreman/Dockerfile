@@ -10,8 +10,8 @@ WORKDIR /usr/src/app
 
 ENV RAILS_ENV=production
 ENV FOREMAN_APIPIE_LANGS=en
-ENV REPO_URL=https://github.com/theforeman/foreman.git
-ENV REPO_BRANCH=develop
+ENV REPO_URL=https://github.com/ehelms/foreman.git
+ENV REPO_BRANCH=openshift-changes
 
 #TODO: support local path instead of checkout
 RUN git clone -b ${REPO_BRANCH} ${REPO_URL} /usr/src/app
