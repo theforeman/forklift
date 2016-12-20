@@ -51,6 +51,10 @@ Enable privileged user access inside containers:
 
     oadm policy add-scc-to-group anyuid system:authenticated
 
+Or use the all-in-one playbook to do this:
+
+    ansible-playbook cluster-up.yml
+
 ## Creating the Foreman Deployment
 
 There are two aspects to the deployment: the default images and templates being loaded into OpenShift and creating the Foreman deployment. All of this is handled by a convenient playbook provided. You can view the configuration of the Foreman deployment itself by looking in the `templates/foreman.yaml` file. To create the application:
