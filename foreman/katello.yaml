@@ -9,7 +9,7 @@
     :oauth_secret: katello
 
   :pulp:
-    :url: http://<%= ENV['PULP_SERVICE_HOST'] %>:<%= ENV['PULP_SERVICE_PORT'] %>/pulp/api/v2/
+    :url: http://admin:admin@<%= ENV['PULP_SERVICE_HOST'] %>:<%= ENV['PULP_SERVICE_PORT'] %>/pulp/api/v2/
     :basic_auth:
       :user: admin
       :password: admin
