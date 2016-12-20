@@ -31,6 +31,9 @@ objects:
         type: "Docker"
         dockerStrategy:
           dockerfilePath: Dockerfile
+          env:
+            - name: 'KATELLO'
+              value: "${USE_KATELLO}"
       triggers: 
         - type: "ImageChange"
         - type: "ConfigChange"
@@ -235,3 +238,8 @@ parameters:
     required: true
     description: "Maximum amount of memory the Rails container can use."
     value: "512Mi"
+
+  - name: "USE_KATELLO"
+    displayName: "Use Katello"
+    required: false
+    description: "Include Katello as a plugin"

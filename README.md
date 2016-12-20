@@ -58,3 +58,20 @@ There are two aspects to the deployment: the default images and templates being 
     ansible-playbook create.yml
 
 This step will create a new OpenShift project named Foreman, load into the default image streams and templates from the `openshift-ansible` repository. Then, two applications will be created. The first is an ephemeral Postgres database using the default templates provided by OpenShift. The second is the Foreman application itself which will build a Foreman image and then deploy it.
+
+## Available Deployments
+
+The repository provides the ability to deploy the applications associated with Foreman and Katello as stand alone projects as well as the entire kitchensink. 
+
+  * Foreman
+  * Foreman with Katello
+  * Pulp
+  * Candlepin
+  * Qpid
+
+## TODOs
+
+ * solve Pulp journald logging (and remove use of Stream handler hack on my fork)
+ * use separate database for Candlepin
+ * move away from basic auth for Pulp
+ * run foreman-tasks in its own container

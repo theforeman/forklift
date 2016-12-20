@@ -30,5 +30,5 @@
     - name: 'Link oadm to local bin'
       file:
         state: link
-        src: "{{ playbook_dir }}/.tmp/openshift-origin-server-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit/adm"
+        src: "{{ playbook_dir }}/.tmp/openshift-origin-server-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit/oadm"
         dest: ~/.local/bin/oadm
