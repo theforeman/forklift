@@ -6,7 +6,7 @@ RUN yum install -y epel-release
 RUN yum clean all
 RUN yum update -y
 RUN yum install -y python-qpid python-qpid-qmf findutils nmap-ncat qpid-tools python-gofer-qpid pulp-server
-RUN yum install -y pulp-rpm-plugins pulp-puppet-plugins pulp-docker-plugins
+RUN yum install -y pulp-rpm-plugins pulp-puppet-plugins pulp-docker-plugins pulp-katello
 RUN yum clean all
 
 RUN yum -y install wget
