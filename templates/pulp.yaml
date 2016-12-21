@@ -225,6 +225,14 @@ objects:
             from:
               kind: "ImageStreamTag"
               name: "${NAME}-apache:latest"
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}-worker"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}-worker:latest"
         - type: "ConfigChange"
       selector:
         name: "${NAME}"
@@ -251,10 +259,27 @@ objects:
               volumeMounts:
                 - name: dev-log
                   mountPath: /dev/log
+                - name: pulp-content
+                  mountPath: /var/lib/pulp
+            - name: "pulp-worker"
+              image: "${NAME}-worker:latest"
+              ports:
+                - containerPort: 5672
+                  protocol: TCP
+              resources: {}
+              env: []
+              volumeMounts:
+                - name: dev-log
+                  mountPath: /dev/log
+                - name: pulp-content
+                  mountPath: /var/lib/pulp
           volumes:
             - name: dev-log
               emptyDir:
                 path: /dev/log
+            - name: pulp-content
+              emptyDir:
+                path: /var/lib/pulp
 
   - kind: "DeploymentConfig"
     apiVersion: "v1"
@@ -333,51 +358,6 @@ objects:
           containers:
             - name: "pulp-beat"
               image: "${NAME}-beat:latest"
-              ports:
-                - containerPort: 5672
-                  protocol: TCP
-              resources: {}
-              env: []
-              volumeMounts:
-                - name: dev-log
-                  mountPath: /dev/log
-          volumes:
-            - name: dev-log
-              emptyDir:
-                path: /dev/log
-
-  - kind: "DeploymentConfig"
-    apiVersion: "v1"
-    metadata:
-      name: "${NAME}-worker"
-      annotations:
-        description: "Defines how to deploy the application server"
-    spec:
-      strategy:
-        type: "Recreate"
-      triggers:
-        - type: "ImageChange"
-          imageChangeParams:
-            automatic: true
-            containerNames:
-              - "${NAME}-worker"
-            from:
-              kind: "ImageStreamTag"
-              name: "${NAME}-worker:latest"
-        - type: "ConfigChange"
-      selector:
-        name: "${NAME}-worker"
-      replicas: 1
-      template:
-        metadata:
-          name: "${NAME}-worker"
-          labels:
-            name: "${NAME}-worker"
-        spec:
-          restartPolicy: Always
-          containers:
-            - name: "pulp-worker"
-              image: "${NAME}-worker:latest"
               ports:
                 - containerPort: 5672
                   protocol: TCP

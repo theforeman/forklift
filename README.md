@@ -4,6 +4,12 @@
 
 The following is currently a proof of concept for running Foreman, Katello and the backend systems therein on OpenShift. This currently uses repository forks with patches, as well as security and data persistence compromises to achieve this. There is a list of to-dos at the bottom of this README that outlines next steps to get this closer to both production and developer readiness.
 
+Caveats:
+
+ * runs with ephemeral database storage (i.e. if you destroy project, data is lost)
+ * uses ephemeral storage for Pulp content (i.e. if you destroy project, data is lost)
+ * running without any SSL
+
 ## Setup and Installation of OpenShift
 
 This setup requires access to OpenShift 3.2 or later. The easiest way to run and play with this locally is to use the OpenShift Origin client tools 1.3+ and docker. This short guide will run through setting up a local test environment.
@@ -79,7 +85,7 @@ The repository provides the ability to deploy the applications associated with F
 
 ## TODOs
 
- * shared mount point across Pulp workers and Pulp server instance
+ * use persistent volume for Pulp workers and Pulp server instance
  * add pulp_streamer and squid services
  * solve Pulp journald logging (and remove use of Stream handler hack on my fork)
  * use separate database for Candlepin
