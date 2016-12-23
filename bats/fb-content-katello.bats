@@ -10,91 +10,105 @@ setup() {
   tSetOSVersion
 }
 
+@test "Create an Empty Organization" {
+  org=`hammer -u admin -p changeme organization list | grep -q "Empty Organization"`
+
+  if [ $org != 0 ]; then
+    hammer -u admin -p changeme organization create \
+      --name="Empty Organization" | grep -q "Organization created"
+  fi
+}
+
+@test "create an Organization" {
+  hammer -u admin -p changeme organization create \
+    --name="Test Organization" | grep -q "Organization created"
+}
+
 @test "create a product" {
-  hammer -u admin -p changeme product create --organization="Default Organization" \
+  hammer -u admin -p changeme product create --organization="Test Organization" \
     --name="Test Product" | grep -q "Product created"
 }
 
 @test "create package repository" {
-  hammer -u admin -p changeme repository create --organization="Default Organization" \
+  hammer -u admin -p changeme repository create --organization="Test Organization" \
     --product="Test Product" --content-type="yum" --name "Zoo" \
     --url https://repos.fedorapeople.org/repos/pulp/pulp/demo_repos/zoo/ | grep -q "Repository created"
 }
 
 @test "upload package" {
   wget https://repos.fedorapeople.org/repos/pulp/pulp/demo_repos/test_errata_install/animaniacs-0.1-1.noarch.rpm -P /tmp
-  hammer -u admin -p changeme repository upload-content --organization="Default Organization"\
+  hammer -u admin -p changeme repository upload-content --organization="Test Organization"\
     --product="Test Product" --name="Zoo" --path="/tmp/animaniacs-0.1-1.noarch.rpm" | grep -q "Successfully uploaded"
 }
 
 @test "sync repository" {
-  hammer -u admin -p changeme repository synchronize --organization="Default Organization" \
+  hammer -u admin -p changeme repository synchronize --organization="Test Organization" \
     --product="Test Product" --name="Zoo"
 }
 
 @test "create puppet repository" {
-  hammer -u admin -p changeme repository create --organization="Default Organization" \
+  hammer -u admin -p changeme repository create --organization="Test Organization" \
     --product="Test Product" --content-type="puppet" --name "Puppet Modules" | grep -q "Repository created"
 }
 
 @test "upload puppet module" {
   curl -o /tmp/stbenjam-dummy-0.2.0.tar.gz https://forgeapi.puppetlabs.com/v3/files/stbenjam-dummy-0.2.0.tar.gz
   tFileExists /tmp/stbenjam-dummy-0.2.0.tar.gz && hammer -u admin -p changeme repository upload-content \
-    --organization="Default Organization" --product="Test Product" --name="Puppet Modules" \
+    --organization="Test Organization" --product="Test Product" --name="Puppet Modules" \
     --path="/tmp/stbenjam-dummy-0.2.0.tar.gz" | grep -q "Successfully uploaded"
 }
 
 @test "create lifecycle environment" {
-  hammer -u admin -p changeme lifecycle-environment create --organization="Default Organization" \
+  hammer -u admin -p changeme lifecycle-environment create --organization="Test Organization" \
     --prior="Library" --name="Test" | grep -q "Environment created"
 }
 
 @test "create content view" {
-  hammer -u admin -p changeme content-view create --organization="Default Organization" \
+  hammer -u admin -p changeme content-view create --organization="Test Organization" \
     --name="Test CV" | grep -q "Content view created"
 }
 
 @test "add repo to content view" {
-  repo_id=$(hammer -u admin -p changeme repository list --organization="Default Organization" \
+  repo_id=$(hammer -u admin -p changeme repository list --organization="Test Organization" \
     | grep Zoo | cut -d\| -f1 | egrep -i '[0-9]+')
-  hammer -u admin -p changeme content-view add-repository --organization="Default Organization" \
+  hammer -u admin -p changeme content-view add-repository --organization="Test Organization" \
     --name="Test CV" --repository-id=$repo_id | grep -q "The repository has been associated"
 }
 
 @test "add puppet module to content view" {
-  repo_id=$(hammer -u admin -p changeme repository list --organization="Default Organization" \
+  repo_id=$(hammer -u admin -p changeme repository list --organization="Test Organization" \
     | grep Puppet | cut -d\| -f1 | egrep -i '[0-9]+')
   module_id=$(hammer -u admin -p changeme puppet-module list --repository-id=$repo_id | grep dummy | cut -d\| -f1)
-  hammer -u admin -p changeme content-view puppet-module add --organization="Default Organization" \
+  hammer -u admin -p changeme content-view puppet-module add --organization="Test Organization" \
     --content-view="Test CV" --id=$module_id | grep -q "Puppet module added to content view"
 }
 
 @test "publish content view" {
-  hammer -u admin -p changeme content-view publish --organization="Default Organization" \
+  hammer -u admin -p changeme content-view publish --organization="Test Organization" \
     --name="Test CV"
 }
 
 @test "promote content view" {
-  hammer -u admin -p changeme content-view version promote  --organization="Default Organization" \
+  hammer -u admin -p changeme content-view version promote  --organization="Test Organization" \
     --content-view="Test CV" --to-lifecycle-environment="Test" --version 1
 }
 
 @test "create activation key" {
-  hammer -u admin -p changeme activation-key create --organization="Default Organization" \
+  hammer -u admin -p changeme activation-key create --organization="Test Organization" \
     --name="Test AK" --content-view="Test CV" --lifecycle-environment="Test" \
     --unlimited-hosts | grep -q "Activation key created"
 }
 
 @test "disable auto-attach" {
-  hammer -u admin -p changeme activation-key update --organization="Default Organization" \
+  hammer -u admin -p changeme activation-key update --organization="Test Organization" \
     --name="Test AK" --auto-attach=false
 }
 
 @test "add subscription to activation key" {
   sleep 10
-  activation_key_id=$(hammer -u admin -p changeme activation-key info --organization="Default Organization" \
+  activation_key_id=$(hammer -u admin -p changeme activation-key info --organization="Test Organization" \
     --name="Test AK" | grep ID | tr -d ' ' | cut -d':' -f2)
-  subscription_id=$(hammer -u admin -p changeme subscription list --organization="Default Organization" \
+  subscription_id=$(hammer -u admin -p changeme subscription list --organization="Test Organization" \
     | grep "Test Product" | cut -d\| -f1 | tr -d ' ')
   hammer -u admin -p changeme activation-key add-subscription --id=$activation_key_id \
     --subscription-id=$subscription_id | grep -q "Subscription added to activation key"
@@ -171,4 +185,9 @@ EOF
 @test "puppet run applies dummy module" {
   skip # because of above
   puppet agent --test && grep -q Lorem /tmp/dummy
+}
+
+@test "Delete an Organization" {
+  hammer -u admin -p changeme organization delete \
+    --name="Test Organization"
 }
