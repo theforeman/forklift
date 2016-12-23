@@ -28,7 +28,7 @@
 # (default: true)
 #:forward_verify: true
 
-:foreman_url: http://127.0.0.1:3000
+:foreman_url: http://foreman:8080
 
 # SSL settings for client authentication against Foreman. If undefined, the values
 # from general SSL options are used instead. Mainly useful when Foreman uses
@@ -47,7 +47,7 @@
 # host to bind ports to (possible values: *, localhost, 0.0.0.0)
 :bind_host: '0.0.0.0'
 # http is disabled by default. To enable, uncomment 'http_port' setting
-:http_port: 8000
+:http_port: 8080
 # https is enabled if certificate, CA certificate, and private key are present in locations specifed by
 # ssl_certificate, ssl_ca_file, and ssl_private_key correspondingly
 # default values for https_port is 8443

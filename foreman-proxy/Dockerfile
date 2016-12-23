@@ -13,3 +13,5 @@ RUN git clone ${REPO_URL} /usr/src/app
 RUN mkdir /usr/src/app/logs
 RUN bundle --without bmc:krb5:libvirt:puppet_proxy_legacy:test:windows 
 ADD settings.yml config/settings.yml
+
+ADD register.sh register.sh
