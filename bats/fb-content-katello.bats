@@ -10,10 +10,12 @@ setup() {
   tSetOSVersion
 }
 
+# Ensure we have at least one organization present so that the test organization
+# can be deleted at the end
 @test "Create an Empty Organization" {
-  org=`hammer -u admin -p changeme organization list | grep -q "Empty Organization"`
+  run hammer -u admin -p changeme organization info --name "Empty Organization"
 
-  if [ $org != 0 ]; then
+  if [ $status != 0 ]; then
     hammer -u admin -p changeme organization create \
       --name="Empty Organization" | grep -q "Organization created"
   fi
@@ -73,14 +75,6 @@ setup() {
     | grep Zoo | cut -d\| -f1 | egrep -i '[0-9]+')
   hammer -u admin -p changeme content-view add-repository --organization="Test Organization" \
     --name="Test CV" --repository-id=$repo_id | grep -q "The repository has been associated"
-}
-
-@test "add puppet module to content view" {
-  repo_id=$(hammer -u admin -p changeme repository list --organization="Test Organization" \
-    | grep Puppet | cut -d\| -f1 | egrep -i '[0-9]+')
-  module_id=$(hammer -u admin -p changeme puppet-module list --repository-id=$repo_id | grep dummy | cut -d\| -f1)
-  hammer -u admin -p changeme content-view puppet-module add --organization="Test Organization" \
-    --content-view="Test CV" --id=$module_id | grep -q "Puppet module added to content view"
 }
 
 @test "publish content view" {
@@ -171,6 +165,24 @@ EOF
 
 @test "install package locally" {
   tPackageInstall lion && tPackageExists lion
+}
+
+@test "add puppet module to content view" {
+  repo_id=$(hammer -u admin -p changeme repository list --organization="Test Organization" \
+    | grep Puppet | cut -d\| -f1 | egrep -i '[0-9]+')
+  module_id=$(hammer -u admin -p changeme puppet-module list --repository-id=$repo_id | grep dummy | cut -d\| -f1)
+  hammer -u admin -p changeme content-view puppet-module add --organization="Test Organization" \
+    --content-view="Test CV" --id=$module_id | grep -q "Puppet module added to content view"
+}
+
+@test "publish content view" {
+  hammer -u admin -p changeme content-view publish --organization="Test Organization" \
+    --name="Test CV"
+}
+
+@test "promote content view" {
+  hammer -u admin -p changeme content-view version promote  --organization="Test Organization" \
+    --content-view="Test CV" --to-lifecycle-environment="Test" --version 1
 }
 
 @test "add puppetclass to host" {
