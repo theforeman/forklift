@@ -20,7 +20,6 @@ RUN mkdir -p config/settings.plugins.d
 RUN [ -e 'package.json' ] && npm install || exit 0
 ADD Gemfile.local.rb bundler.d/Gemfile.local.rb
 ADD settings.yaml config/settings.yaml
-ADD katello.yaml config/settings.plugins.d/katello.yaml
 RUN bundle --without mysql:test:development:mysql2:jenkins:openid:libvirt
 
 ADD build_database.yml config/database.yml
@@ -31,8 +30,10 @@ RUN bundle exec rake security:generate_encryption_key
 RUN bundle exec rake assets:precompile
 RUN bundle exec rake webpack:compile
 RUN bundle exec rake apipie:cache:index
-RUN bundle exec rake plugin:assets:precompile['katello']
-RUN bundle exec rake plugin:apipie:cache['katello']
+
+ADD katello.yaml config/settings.plugins.d/katello.yaml
+ADD enable_katello.sh script/enable_katello.sh
+RUN sh script/enable_katello.sh
 
 ADD database.yml config/database.yml
 RUN chmod 777 -R /usr/src/app/tmp

@@ -2,8 +2,9 @@ gem 'puma-rails', :platform => :ruby
 gem 'foreman'
 gem 'rdoc' # until https://github.com/theforeman/foreman/pull/3632 is merged.
 gem 'coffee-script-source', '1.11.1'
+gem 'concurrent-ruby', '1.0.3'
 
-if ENV['ENABLE_KATELLO'] != "false"
+if ENV['ENABLE_KATELLO'] == "true"
   gem "katello", :github => "ehelms/katello", :branch => 'openshift-changes'
 end
 
