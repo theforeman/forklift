@@ -1,6 +1,0 @@
----
-openshift:
-  box: centos7
-  ansible:
-    playbook: 'plugins/foreman-openshift/playbooks/openshift.yml'
-    group: 'openshift'
