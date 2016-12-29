@@ -1,11 +1,5 @@
 ---
 - hosts: localhost
-  vars:
-    postgresql_user: foreman
-    postgresql_password: foreman
-    postgresql_database: foreman
-    postgresql_port: 5432
-    postgresql_host: postgresql
   tasks:
     - name: 'Create .tmp directory'
       file:
@@ -16,8 +10,8 @@
         repo: https://github.com/openshift/openshift-ansible.git
         dest: .tmp/openshift-ansible
 
-    - name: 'Create Foreman project'
-      command: oc new-project foreman --description="Foreman on Openshift" --display-name="The Foreman"
+    - name: 'Create Foreman Proxy project'
+      command: oc new-project foreman-proxy --description="Foreman Proxy" --display-name="The Foreman Proxy"
 
     - name: 'Load default imagestreams'
       command: oc create -f .tmp/openshift-ansible/roles/openshift_examples/files/examples/v1.4/image-streams/image-streams-centos7.json
@@ -27,23 +21,6 @@
 
     - name: 'Load quickstart templates'
       command: oc create -f .tmp/openshift-ansible/roles/openshift_examples/files/examples/v1.4/quickstart-templates
-
-    - name: 'Create Postgres application'
-      command: >
-        oc new-app postgresql-ephemeral
-        -p POSTGRESQL_USER={{ postgresql_user }}
-        -p POSTGRESQL_PASSWORD={{ postgresql_password }}
-        -p POSTGRESQL_DATABASE={{ postgresql_database }}
-    
-    - name: 'Create Foreman template'
-      command: oc create -f templates/foreman.yaml
-
-    - name: 'Create Foreman application'
-      command: >
-        oc new-app foreman
-        -p DATABASE_USER={{ postgresql_user }}
-        -p DATABASE_NAME={{ postgresql_database }}
-        -p DATABASE_PASSWORD={{ postgresql_password }}
     
     - name: 'Create Puppetserver template'
       command: oc create -f templates/puppet.yaml
@@ -51,7 +28,6 @@
     - name: 'Create Puppetserver application'
       command: >
         oc new-app puppet
-    
     - name: 'Create Foreman Proxy template'
       command: oc create -f templates/foreman-proxy.yaml
 

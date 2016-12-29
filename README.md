@@ -9,6 +9,7 @@ Caveats:
  * runs with ephemeral database storage (i.e. if you destroy project, data is lost)
  * uses ephemeral storage for Pulp content (i.e. if you destroy project, data is lost)
  * running without any SSL
+ * using forks of some repositories due to needed functionality for this to work
 
 ## Setup and Installation of OpenShift
 
@@ -77,15 +78,32 @@ This step will create a new OpenShift project named Foreman, load into the defau
 
 The repository provides the ability to deploy the applications associated with Foreman and Katello as stand alone projects as well as the entire kitchensink. 
 
-  * Foreman
-  * Foreman with Katello
+  * Foreman with Foreman Proxy and Puppetserver
+  * Foreman with Katello, Foreman Proxy and Puppetserver
+  * Foreman Proxy
   * Pulp
   * Candlepin
   * Qpid
 
+## Deployment Verification
+
+As part of this deployment, there is an effort to verify the functionality of the deployment based upon automated testing. The current baseline for this is the `bats` testing that is performed on an installation on the Katello nightly pipeline. To perform this test verification yourself.
+
+First, edit `openshift/docker/bats/foreman.yml` to change the `host` field of the Hammer config to the hostname provided by OpenShift for your running Foreman/Katello instance. Next, build the new image:
+
+    docker build --tag bats:latest openshift/docker/bats
+
+Now, run the tests:
+
+    docker run bats
+    
+Currently this test is expected to run manually on your host outside the OpenShift environment. Future enhancements would be to push this into OpenShift and run as a stand-alone container or OpenShift job. Potentially even spinning up a Jenkins to run a test pipeline.
+
 ## TODOs
 
- * use persistent volume for Pulp workers and Pulp server instance
+This is a list of TODOs that were obvious to this point for what needs to be solved. By no means is this the full and final list.
+
+ * use persistent volume for Pulp workers and Pulp server instance for sharing content
  * add pulp_streamer and squid services
  * solve Pulp journald logging (and remove use of Stream handler hack on my fork)
  * use separate database for Candlepin
@@ -97,3 +115,12 @@ The repository provides the ability to deploy the applications associated with F
  * add goferd service for clients
  * add foreman-proxy deployment
  * add qdrouterd for client connections
+ * add Katello client certificate RPM for subscription-manager registration
+ * run public facing routes on SSL
+ * connect internal services via SSL using secrets
+ * fix issue where Foreman deployment fails the first time seeding architecture data
+ * concurrency issue with a proxy being spun up at the same time as the server and needing to register
+ * Puppet server and Pulp need shared storage for puppet environments
+ * run bats inside OpenShift
+ * handle conditional enablement of Foreman plugins
+ * remove pin of concurrent ruby in Gemfile

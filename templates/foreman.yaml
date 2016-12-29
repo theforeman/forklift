@@ -32,8 +32,8 @@ objects:
         dockerStrategy:
           dockerfilePath: Dockerfile
           env:
-            - name: 'KATELLO'
-              value: "${USE_KATELLO}"
+            - name: 'ENABLE_KATELLO'
+              value: "${ENABLE_KATELLO}"
       triggers: 
         - type: "ImageChange"
         - type: "ConfigChange"
@@ -115,6 +115,8 @@ objects:
                   value: "changeme"
                 - name: SEED_ADMIN_EMAIL
                   value: "admin@example.com"
+                - name: ENABLE_KATELLO
+                  value: "${ENABLE_KATELLO}"
 
   - kind: "Service"
     apiVersion: "v1"
@@ -239,7 +241,8 @@ parameters:
     description: "Maximum amount of memory the Rails container can use."
     value: "512Mi"
 
-  - name: "USE_KATELLO"
+  - name: "ENABLE_KATELLO"
     displayName: "Use Katello"
     required: false
     description: "Include Katello as a plugin"
+    value: "false"

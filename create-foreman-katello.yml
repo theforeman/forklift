@@ -79,6 +79,21 @@
     - name: 'Create Foreman application'
       command: >
         oc new-app foreman
+        -p ENABLE_KATELLO="true"
         -p DATABASE_USER={{ postgresql_user }}
         -p DATABASE_NAME={{ postgresql_database }}
         -p DATABASE_PASSWORD={{ postgresql_password }}
+    
+    - name: 'Create Foreman Proxy template'
+      command: oc create -f templates/foreman-proxy.yaml
+
+    - name: 'Create Foreman Proxy application'
+      command: >
+        oc new-app foreman-proxy
+    
+    - name: 'Create Puppetserver template'
+      command: oc create -f templates/puppet.yaml
+
+    - name: 'Create Puppetserver application'
+      command: >
+        oc new-app puppet

@@ -273,6 +273,8 @@ objects:
                   mountPath: /dev/log
                 - name: pulp-content
                   mountPath: /var/lib/pulp
+                - name: pulp-puppet
+                  mountPath: /etc/puppet
           volumes:
             - name: dev-log
               emptyDir:
@@ -280,6 +282,9 @@ objects:
             - name: pulp-content
               emptyDir:
                 path: /var/lib/pulp
+            - name: pulp-puppet
+              emptyDir:
+                path: /etc/puppet
 
   - kind: "DeploymentConfig"
     apiVersion: "v1"
