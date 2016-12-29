@@ -1,5 +1,7 @@
 #!/bin/bash
 
-puppet agent -t
+if ! [ -f /etc/puppet/ssl/certs/foreman-proxy.pem ]; then
+  puppet agent -t
+fi
 
 /usr/src/app/bin/smart-proxy
