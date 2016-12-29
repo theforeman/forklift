@@ -1,0 +1,8 @@
+---
+:enabled: true
+:pulp_url: http://pulp:8080/pulp
+# Path to pulp, pulp content and mongodb directories
+#:pulp_dir: /var/lib/pulp
+#:pulp_content_dir: /var/lib/pulp/content
+#:puppet_content_dir: /etc/pupppet/environments
+#:mongodb_dir: /var/lib/mongodb
