@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  tasks:
+    - name: "Spin cluster up"
+      command: oc cluster up
+
+    - name: "Login as system admin to OpenShift"
+      command: oc login -u system:admin
+
+    - name: 'Set security context'
+      command: oadm policy add-scc-to-group anyuid system:authenticated
+
+    - name: "Login back in as developer"
+      command: oc login -u developer -p a
