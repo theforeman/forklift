@@ -38,9 +38,9 @@ objects:
       source: 
         type: "Git"
         git:
-          uri: "https://github.com/ehelms/foreman-docker-compose.git"
-          ref: "compose-to-openshift"
-        contextDir: "qpid"
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/qpid"
       strategy:
         type: "Docker"
         dockerStrategy:
@@ -112,6 +112,7 @@ parameters:
   - name: "CONTEXT_DIR"
     displayName: "Context Directory"
     description: "Set this to the relative path to your project if it is not in the root of your repository."
+    value: "openshift/docker"
 
   - name: "MEMORY_LIMIT"
     displayName: "Memory Limit"

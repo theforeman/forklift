@@ -68,6 +68,36 @@ objects:
       annotations: 
         description: "Keeps track of changes in the application image"
 
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "journald"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "journald"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/journald"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "journald:latest"
+
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
@@ -76,9 +106,9 @@ objects:
       source: 
         type: "Git"
         git:
-          uri: "https://github.com/ehelms/foreman-docker-compose.git"
-          ref: "compose-to-openshift"
-        contextDir: "pulp/base"
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/pulp/base"
       strategy:
         type: "Docker"
         dockerStrategy:
@@ -99,9 +129,9 @@ objects:
       source: 
         type: "Git"
         git:
-          uri: "https://github.com/ehelms/foreman-docker-compose.git"
-          ref: "compose-to-openshift"
-        contextDir: "pulp/worker"
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/pulp/worker"
       strategy:
         type: "Docker"
         dockerStrategy:
@@ -125,9 +155,9 @@ objects:
       source: 
         type: "Git"
         git:
-          uri: "https://github.com/ehelms/foreman-docker-compose.git"
-          ref: "compose-to-openshift"
-        contextDir: "pulp/beat"
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/pulp/beat"
       strategy:
         type: "Docker"
         dockerStrategy:
@@ -151,9 +181,9 @@ objects:
       source: 
         type: "Git"
         git:
-          uri: "https://github.com/ehelms/foreman-docker-compose.git"
-          ref: "compose-to-openshift"
-        contextDir: "pulp/resource_manager"
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/pulp/resource_manager"
       strategy:
         type: "Docker"
         dockerStrategy:
@@ -177,9 +207,9 @@ objects:
       source: 
         type: "Git"
         git:
-          uri: "https://github.com/ehelms/foreman-docker-compose.git"
-          ref: "compose-to-openshift"
-        contextDir: "pulp/apache"
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/pulp/apache"
       strategy:
         type: "Docker"
         dockerStrategy:
@@ -215,7 +245,7 @@ objects:
                 - apache
                 - pulp-manage-db
               volumes:
-                - dev-log
+                #- dev-log
       triggers:
         - type: "ImageChange"
           imageChangeParams:
@@ -233,6 +263,14 @@ objects:
             from:
               kind: "ImageStreamTag"
               name: "${NAME}-worker:latest"
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "journald"
+            from:
+              kind: "ImageStreamTag"
+              name: "journald:latest"
         - type: "ConfigChange"
       selector:
         name: "${NAME}"
@@ -257,8 +295,8 @@ objects:
               resources: {}
               env: []
               volumeMounts:
-                - name: dev-log
-                  mountPath: /dev/log
+                #- name: dev-log
+                #mountPath: /dev/log
                 - name: pulp-content
                   mountPath: /var/lib/pulp
             - name: "pulp-worker"
@@ -269,16 +307,25 @@ objects:
               resources: {}
               env: []
               volumeMounts:
-                - name: dev-log
-                  mountPath: /dev/log
+                #- name: dev-log
+                #mountPath: /dev/log
                 - name: pulp-content
                   mountPath: /var/lib/pulp
                 - name: pulp-puppet
                   mountPath: /etc/puppet
+            - name: "journald"
+              image: "journald:latest"
+              ports:
+                - containerPort: 514
+                  protocol: UDP
+              resources: {}
+              #volumeMounts:
+              #- name: dev-log
+              #mountPath: /dev/log
           volumes:
-            - name: dev-log
-              emptyDir:
-                path: /dev/log
+            #- name: dev-log
+            #emptyDir:
+            #path: /dev/log
             - name: pulp-content
               emptyDir:
                 path: /var/lib/pulp
@@ -323,13 +370,13 @@ objects:
                   protocol: TCP
               resources: {}
               env: []
-              volumeMounts:
-                - name: dev-log
-                  mountPath: /dev/log
+              #volumeMounts:
+              #- name: dev-log
+              #mountPath: /dev/log
           volumes:
-            - name: dev-log
-              emptyDir:
-                path: /dev/log
+            #- name: dev-log
+            #emptyDir:
+            #path: /dev/log
 
   - kind: "DeploymentConfig"
     apiVersion: "v1"
@@ -368,13 +415,13 @@ objects:
                   protocol: TCP
               resources: {}
               env: []
-              volumeMounts:
-                - name: dev-log
-                  mountPath: /dev/log
+              #volumeMounts:
+              #- name: dev-log
+              #mountPath: /dev/log
           volumes:
-            - name: dev-log
-              emptyDir:
-                path: /dev/log
+            #- name: dev-log
+            #emptyDir:
+            #path: /dev/log
 
 parameters: 
   - name: "NAME"
@@ -392,6 +439,7 @@ parameters:
   - name: "CONTEXT_DIR"
     displayName: "Context Directory"
     description: "Set this to the relative path to your project if it is not in the root of your repository."
+    value: "openshift/docker"
 
   - name: "APPLICATION_USER"
     displayName: "Application Username"
