@@ -1,0 +1,109 @@
+@startuml
+
+note as storage_type
+end note
+
+note as general
+  This diagram outlines the design of all components and 
+  their interactions within the OpenShift/Kubernetes environment.
+  Squares represent pods, with each entry inside represeting a 
+  running container within the pod (thus, any square can be scaled independently).
+  Cylinders represent volume mounts that are shared amongst pods.
+  
+  This configuration repesents a setup using ephemeral storage via emptyDir mounts.
+end note
+
+/' Pods '/
+node "Postgres" {
+  [Postgres] as postgres
+}
+
+node "Foreman Web Application" {
+  node "Foreman" {
+    [Foreman] as foreman
+    [Foreman Tasks] as foreman_tasks
+    [Dynflow] as dynflow
+    [Katello] as katello
+  }
+}
+
+node "Candlepin" {
+  [Candlepin] as candlepin
+}
+
+node "MongoDB" {
+  [MongoDB] as mongodb
+}
+
+node "Pulp" {
+  [Pulp Apache] as pulp_apache
+  [Pulp Worker] as pulp_worker
+}
+
+node "Pulp Celery Beat" {
+  [Pulp Celery Beat] as pulp_celery_beat
+}
+
+node "Pulp Resource Manager" {
+  [Pulp Resource Manager] as pulp_resource_manager
+}
+
+node "Qpid" {
+  [Qpid] as qpid
+}
+
+node "Foreman Proxy" {
+  [Foreman Proxy] as foreman_proxy
+}
+
+node "Puppet Server" {
+  [Puppet Server] as puppet_server
+}
+
+/' Volumes '/
+database "Pulp Content" {
+  [/var/lib/pulp] as pulp_content
+}
+
+database "Pulp Puppet" {
+  [/etc/puppet] as pulp_puppet
+}
+
+database "Postgres Datastore" {
+  [Postgres Datastore] as postgres_datastore
+}
+
+database "MongoDB Datastore" {
+  [MongoDB Datastore] as mongodb_datastore
+}
+
+/' Connections '/
+postgres --> postgres_datastore
+mongodb --> mongodb_datastore
+
+pulp_apache --> mongodb
+pulp_worker --> mongodb
+
+pulp_worker --> qpid
+pulp_resource_manager --> qpid
+pulp_celery_beat --> qpid
+
+pulp_apache --> pulp_content
+pulp_worker --> pulp_content
+pulp_apache --> pulp_puppet
+pulp_worker --> pulp_puppet
+
+candlepin --> postgres
+candlepin --> qpid
+
+foreman --> postgres
+foreman --> pulp_apache
+foreman --> candlepin
+foreman --> qpid
+
+foreman_proxy --> puppet_server
+foreman_proxy <--> foreman
+
+puppet_server --> pulp_puppet
+
+@enduml

@@ -11,6 +11,8 @@ Caveats:
  * running without any SSL
  * using forks of some repositories due to needed functionality for this to work
 
+For diagrams outlining the design when using both ephemeral and persistent storage, please see the diagrams in the `docs/` folder.
+
 ## Setup and Installation of OpenShift
 
 This setup requires access to OpenShift 3.2 or later. The easiest way to run and play with this locally is to use the OpenShift Origin client tools 1.3+ and docker. This short guide will run through setting up a local test environment.
