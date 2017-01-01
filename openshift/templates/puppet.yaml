@@ -58,6 +58,14 @@ objects:
                 - containerPort: 8140
                   protocol: TCP
               resources: {}
+              volumeMounts:
+                - name: puppet-environments
+                  mountPath: /etc/puppet
+                  subPath: puppet
+          volumes:
+            - name: puppet-environments
+              persistentVolumeClaim:
+                claimName: pulp-content
 
   - kind: "Service"
     apiVersion: "v1"

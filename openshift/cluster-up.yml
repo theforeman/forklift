@@ -12,3 +12,6 @@
 
     - name: "Login back in as developer"
       command: oc login -u developer -p a
+
+    - name: "Delete initial project"
+      command: oc delete project myproject

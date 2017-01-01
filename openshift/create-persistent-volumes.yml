@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  vars:
+    local_volume_path: /tmp/data01
+    owner: apache
+    group: apache
+  tasks:
+    - name: "Create local volume"
+      become: true
+      file:
+        path: "{{ local_volume_path }}"
+        state: directory
+        owner: apache
+        group: apache
+
+    - name: "Login as system admin to OpenShift"
+      command: oc login -u system:admin
+
+    - name: "Create persistent volume"
+      command: oc create -f volumes/local.yaml
+
+    - name: "Login back in as developer"
+      command: oc login -u developer -p a

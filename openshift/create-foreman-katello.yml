@@ -97,3 +97,6 @@
     - name: 'Create Puppetserver application'
       command: >
         oc new-app puppet
+
+    - name: 'Create Persisten Volume Claim'
+      command: oc create -f claims/pulp_content.yaml

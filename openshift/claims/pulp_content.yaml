@@ -1,0 +1,12 @@
+---
+kind: "PersistentVolumeClaim"
+apiVersion: "v1"
+metadata:
+  name: "pulp-content"
+spec:
+  volumeName: pv0001
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
