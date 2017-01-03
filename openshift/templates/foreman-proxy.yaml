@@ -4,7 +4,7 @@ apiVersion: "v1"
 metadata:
   name: "foreman-proxy"
   annotations:
-    description: "Foreman application"
+    description: "Foreman Proxy Application"
     tags: "quickstart,foreman-proxy"
 labels:
   template: "foreman-proxy"

@@ -1,14 +1,7 @@
 ---
 - hosts: localhost
-  vars:
-    postgresql_user: foreman
-    postgresql_password: foreman
-    postgresql_database: foreman
-    postgresql_port: 5432
-    postgresql_host: postgresql
-    mongodb_user:  admin
-    mongodb_password: admin
-    mongodb_database: pulp_database
+  vars_files:
+    - parameters.yml
   tasks:
     - name: 'Create .tmp directory'
       file:
@@ -31,6 +24,27 @@
     - name: 'Load quickstart templates'
       command: oc create -f .tmp/openshift-ansible/roles/openshift_examples/files/examples/v1.4/quickstart-templates
 
+    - name: 'Create Persistent Volume Claim'
+      command: oc create -f claims/pulp_content.yaml
+    
+    - name: 'Create Candlepin template'
+      command: oc create -f templates/candlepin.yaml
+    
+    - name: 'Create Puppetserver template'
+      command: oc create -f templates/puppet.yaml
+    
+    - name: 'Create Foreman Proxy template'
+      command: oc create -f templates/foreman-proxy.yaml
+    
+    - name: 'Create Foreman template'
+      command: oc create -f templates/foreman.yaml
+    
+    - name: 'Create Pulp template'
+      command: oc create -f templates/pulp.yaml
+    
+    - name: 'Create Qpid template'
+      command: oc create -f templates/qpid.yaml
+
     - name: 'Create Postgres application'
       command: >
         oc new-app postgresql-ephemeral
@@ -45,9 +59,6 @@
         -p MONGODB_ADMIN_PASSWORD={{ mongodb_password }}
         -p MONGODB_PASSWORD={{ mongodb_password }}
         -p MONGODB_DATABASE={{ mongodb_database }}
-    
-    - name: 'Create Candlepin template'
-      command: oc create -f templates/candlepin.yaml
 
     - name: 'Create Candlepin application'
       command: >
@@ -55,16 +66,9 @@
         -p DATABASE_USER={{ postgresql_user }}
         -p DATABASE_PASSWORD={{ postgresql_password }}
         -p DATABASE_NAME={{ postgresql_database }}
-    
-    - name: 'Create Qpid template'
-      command: oc create -f templates/qpid.yaml
 
     - name: 'Create Qpid application'
-      command: >
-        oc new-app qpid
-    
-    - name: 'Create Pulp template'
-      command: oc create -f templates/pulp.yaml
+      command: oc new-app qpid
 
     - name: 'Create Pulp application'
       command: >
@@ -72,31 +76,17 @@
         -p DATABASE_USER={{ mongodb_user }}
         -p DATABASE_PASSWORD={{ mongodb_password }}
         -p DATABASE_NAME={{ mongodb_database }}
-    
-    - name: 'Create Foreman template'
-      command: oc create -f templates/foreman.yaml
 
     - name: 'Create Foreman application'
       command: >
         oc new-app foreman
-        -p ENABLE_KATELLO="true"
+        -p ENABLE_KATELLO={{ enable_katello }}
         -p DATABASE_USER={{ postgresql_user }}
         -p DATABASE_NAME={{ postgresql_database }}
         -p DATABASE_PASSWORD={{ postgresql_password }}
-    
-    - name: 'Create Foreman Proxy template'
-      command: oc create -f templates/foreman-proxy.yaml
 
     - name: 'Create Foreman Proxy application'
-      command: >
-        oc new-app foreman-proxy
-    
-    - name: 'Create Puppetserver template'
-      command: oc create -f templates/puppet.yaml
+      command: oc new-app foreman-proxy
 
     - name: 'Create Puppetserver application'
-      command: >
-        oc new-app puppet
-
-    - name: 'Create Persisten Volume Claim'
-      command: oc create -f claims/pulp_content.yaml
+      command: oc new-app puppet
