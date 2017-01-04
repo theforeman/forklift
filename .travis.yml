@@ -8,4 +8,4 @@ install:
 script:
   - bundle install
   - bundle exec rake
-  - ansible-lint -r rules/ playbooks/*
+  - ansible-lint -r ansible/rules/ ansible/playbooks/* ansible/roles/*

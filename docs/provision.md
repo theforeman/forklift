@@ -18,7 +18,7 @@ reboot:
     - Option 1: Use the `centos7-provisioning-nightly` box.
 
     - Option 2: Use an existing katello box (e.g. centos7-katello-p4-nightly) and run the provisioning playbook (it takes a while, as it syncs (on-demand) centos7, puppet 4).   ***Note*: If you are using puppet 4, you need to increase the ram on the box, to something like 8096 otherwise candlepin crashes with OOM.**
-        `ansible-playbook -l centos7-katello-p4-nightly playbooks/katello_provisioning.yml`
+        `ansible-playbook -l centos7-katello-p4-nightly ansible/playbooks/katello_provisioning.yml`
 
 4. Login and create a compute profile, because this isn't possible with hammer or the API.
 

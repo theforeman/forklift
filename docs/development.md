@@ -193,7 +193,7 @@ foo:
 capsule-dev:
   box: centos7
   ansible:
-    playbook: 'playbooks/capsule-dev.yml'
+    playbook: 'ansible/playbooks/capsule-dev.yml'
     group: 'capsule'
     server: 'foo'
 ```
@@ -215,7 +215,7 @@ capsule-dev:
 capsule-dev:
   box: centos7
   ansible:
-    playbook: 'playbooks/capsule-dev.yml'
+    playbook: 'ansible/playbooks/capsule-dev.yml'
     group: 'capsule'
     server: 'your-katello-server-name'
 ```
@@ -232,7 +232,7 @@ Add your client, replacing 'your-katello-server-name' with your main katello dev
 client1:
   box: centos7
   ansible:
-    playbook: 'playbooks/katello_client.yml'
+    playbook: 'ansible/playbooks/katello_client.yml'
     group: 'client'
     server: 'your-katello-server-name'
 ```

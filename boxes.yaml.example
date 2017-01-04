@@ -2,7 +2,7 @@
 centos7-devel:
   box: centos7
   ansible:
-    playbook: 'playbooks/devel.yml'
+    playbook: 'ansible/playbooks/devel.yml'
     group: 'devel'
     variables:
       katello_devel_github_username: <REPLACE ME>
@@ -14,14 +14,14 @@ katello-remote-execution:
 centos7-proxy-devel:
     box: centos7
     ansible:
-      playbook: 'playbooks/foreman_proxy_content_dev.yml'
+      playbook: 'ansible/playbooks/foreman_proxy_content_dev.yml'
       group: 'foreman-proxy-content'
       server: 'centos7-devel'
 
 katello-client:
   box: centos7
   ansible:
-    playbook: 'playbooks/katello_client.yml'
+    playbook: 'ansible/playbooks/katello_client.yml'
     group: 'client'
     server: 'centos7-devel'
 
