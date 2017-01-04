@@ -103,15 +103,15 @@ yum -y install vim
 
 Boxes can be further customized by declaring Ansible playbooks to be run during provisioning. One or more playbooks can be specified and will be executed sequentially. An ignored directory can be used to put playbooks into 'user_playbooks' without worrying about adding them during a git commit.
 
-Ansible roles may also be installed directly using the [`ansible-galaxy` command](http://docs.ansible.com/ansible/galaxy.html#the-ansible-galaxy-command-line-tool). These roles will be installed at `playbooks/galaxy_roles` and will be ignored by git. You may also specify roles in a `requirements.yml`, which you can use to install all desired roles with `ansible-galaxy install -r requirements.yml`
+Ansible roles may also be installed directly using the [`ansible-galaxy` command](http://docs.ansible.com/ansible/galaxy.html#the-ansible-galaxy-command-line-tool). These roles will be installed at `ansible/playbooks/galaxy_roles` and will be ignored by git. You may also specify roles in a `requirements.yml`, which you can use to install all desired roles with `ansible-galaxy install -r requirements.yml`
 
 ```
 ansible:
   box: centos7-katello-nightly
   ansible:
     playbook:
-      - 'user_playbooks/vim.yml'
-      - 'user_playbooks/zsh.yml'
+      - 'ansible/user_playbooks/vim.yml'
+      - 'ansible/user_playbooks/zsh.yml'
 ```
 
 ### Plugins

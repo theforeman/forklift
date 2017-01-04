@@ -29,8 +29,8 @@ boxes:
     memory: 8096
     ansible:
       playbook:
-          - 'playbooks/katello.yml'
-          - 'playbooks/katello_provisioning.yml'
+          - 'ansible/playbooks/katello.yml'
+          - 'ansible/playbooks/katello_provisioning.yml'
       group: 'server'
       variables:
         puppet_repositories_version: 4
@@ -39,7 +39,7 @@ boxes:
       box: centos7
       memory: 2048
       ansible:
-        playbook: 'playbooks/freeipa_server.yml'
+        playbook: 'ansible/playbooks/freeipa_server.yml'
         group: 'freeipa_server'
         server: 'centos7-katello-nightly'
 
@@ -76,5 +76,5 @@ boxes:
     box: centos7
     memory: 512
     ansible:
-      playbook: 'playbooks/hammer_devel.yml'
+      playbook: 'ansible/playbooks/hammer_devel.yml'
       group: 'hammer_devel'
