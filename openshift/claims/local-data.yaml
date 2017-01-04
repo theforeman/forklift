@@ -2,11 +2,10 @@
 kind: "PersistentVolumeClaim"
 apiVersion: "v1"
 metadata:
-  name: "pulp-content"
+  name: "local-data"
 spec:
-  volumeName: pv0001
   accessModes:
-    - ReadWriteOnce
+    - "ReadWriteOnce"
   resources:
     requests:
-      storage: 3Gi
+      storage: "10Gi"

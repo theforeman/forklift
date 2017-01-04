@@ -59,13 +59,13 @@ objects:
                   protocol: TCP
               resources: {}
               volumeMounts:
-                - name: puppet-environments
+                - name: local-data
                   mountPath: /etc/puppet
                   subPath: puppet
           volumes:
-            - name: puppet-environments
+            - name: local-data
               persistentVolumeClaim:
-                claimName: pulp-content
+                claimName: local-data
 
   - kind: "Service"
     apiVersion: "v1"

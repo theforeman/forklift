@@ -265,19 +265,19 @@ objects:
               volumeMounts:
                 #- name: dev-log
                 #mountPath: /dev/log
-                - name: pulp-content
+                - name: local-data
                   mountPath: /var/lib/pulp
                   subPath: pulp
-                - name: pulp-content
+                - name: local-data
                   mountPath: /etc/puppet
                   subPath: puppet
           volumes:
             #- name: dev-log
             #emptyDir:
             #path: /dev/log
-            - name: pulp-content
+            - name: local-data
               persistentVolumeClaim:
-                claimName: pulp-content
+                claimName: local-data
 
   - kind: "DeploymentConfig"
     apiVersion: "v1"
@@ -335,16 +335,16 @@ objects:
               volumeMounts:
                 #- name: dev-log
                 #mountPath: /dev/log
-                - name: pulp-content
+                - name: local-data
                   mountPath: /var/lib/pulp
                   subPath: pulp
           volumes:
             #- name: dev-log
             #emptyDir:
             #path: /dev/log
-            - name: pulp-content
+            - name: local-data
               persistentVolumeClaim:
-                claimName: pulp-content
+                claimName: local-data
 
   - kind: "DeploymentConfig"
     apiVersion: "v1"

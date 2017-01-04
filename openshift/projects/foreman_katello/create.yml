@@ -1,92 +1,102 @@
 ---
 - hosts: localhost
+  vars:
+    resource_path: ../..
   vars_files:
     - parameters.yml
   tasks:
     - name: 'Create .tmp directory'
       file:
-        path: .tmp
+        path: "{{ resource_path }}/.tmp"
 
     - name: 'Clone templates repository'
       git:
         repo: https://github.com/openshift/openshift-ansible.git
-        dest: .tmp/openshift-ansible
+        dest: "{{ resource_path }}/.tmp/openshift-ansible"
 
     - name: 'Create Foreman project'
       command: oc new-project foreman-katello --description="Foreman with Katello on Openshift" --display-name="The Foreman with Katello"
 
     - name: 'Load default imagestreams'
-      command: oc create -f .tmp/openshift-ansible/roles/openshift_examples/files/examples/v1.4/image-streams/image-streams-centos7.json
-
-    - name: 'Load database templates'
-      command: oc create -f .tmp/openshift-ansible/roles/openshift_examples/files/examples/v1.4/db-templates
+      command: oc create -f {{ resource_path }}/.tmp/openshift-ansible/roles/openshift_examples/files/examples/v1.4/image-streams/image-streams-centos7.json
 
     - name: 'Load quickstart templates'
-      command: oc create -f .tmp/openshift-ansible/roles/openshift_examples/files/examples/v1.4/quickstart-templates
+      command: oc create -f {{ resource_path }}/.tmp/openshift-ansible/roles/openshift_examples/files/examples/v1.4/quickstart-templates
 
     - name: 'Create Persistent Volume Claim'
-      command: oc create -f claims/pulp_content.yaml
+      command: oc create -f {{ resource_path }}/claims/local-data.yaml
+
+    - name: 'Create Postgresql template'
+      command: oc create -f {{ resource_path }}/templates/postgresql.yaml
+
+    - name: 'Create MongoDB template'
+      command: oc create -f {{ resource_path }}/templates/mongodb.yaml
     
     - name: 'Create Candlepin template'
-      command: oc create -f templates/candlepin.yaml
+      command: oc create -f {{ resource_path }}/templates/candlepin.yaml
     
     - name: 'Create Puppetserver template'
-      command: oc create -f templates/puppet.yaml
+      command: oc create -f {{ resource_path }}/templates/puppet.yaml
     
     - name: 'Create Foreman Proxy template'
-      command: oc create -f templates/foreman-proxy.yaml
+      command: oc create -f {{ resource_path }}/templates/foreman-proxy.yaml
     
     - name: 'Create Foreman template'
-      command: oc create -f templates/foreman.yaml
+      command: oc create -f {{ resource_path }}/templates/foreman.yaml
     
     - name: 'Create Pulp template'
-      command: oc create -f templates/pulp.yaml
+      command: oc create -f {{ resource_path }}/templates/pulp.yaml
     
     - name: 'Create Qpid template'
-      command: oc create -f templates/qpid.yaml
+      command: oc create -f {{ resource_path }}/templates/qpid.yaml
 
     - name: 'Create Postgres application'
-      command: >
-        oc new-app postgresql-ephemeral
-        -p POSTGRESQL_USER={{ postgresql_user }}
-        -p POSTGRESQL_PASSWORD={{ postgresql_password }}
-        -p POSTGRESQL_DATABASE={{ postgresql_database }}
+      shell: >
+        oc process postgresql
+        POSTGRESQL_USER={{ postgresql_user }}
+        POSTGRESQL_PASSWORD={{ postgresql_password }}
+        POSTGRESQL_DATABASE={{ postgresql_database }}
+        | oc create -f -
 
     - name: 'Create MongoDB application'
-      command: >
-        oc new-app mongodb-ephemeral
-        -p MONGODB_USER={{ mongodb_user }}
-        -p MONGODB_ADMIN_PASSWORD={{ mongodb_password }}
-        -p MONGODB_PASSWORD={{ mongodb_password }}
-        -p MONGODB_DATABASE={{ mongodb_database }}
+      shell: >
+        oc process mongodb
+        MONGODB_USER={{ mongodb_user }}
+        MONGODB_ADMIN_PASSWORD={{ mongodb_password }}
+        MONGODB_PASSWORD={{ mongodb_password }}
+        MONGODB_DATABASE={{ mongodb_database }}
+        | oc create -f -
 
     - name: 'Create Candlepin application'
-      command: >
-        oc new-app candlepin
-        -p DATABASE_USER={{ postgresql_user }}
-        -p DATABASE_PASSWORD={{ postgresql_password }}
-        -p DATABASE_NAME={{ postgresql_database }}
+      shell: >
+        oc process candlepin
+        DATABASE_USER={{ postgresql_user }}
+        DATABASE_PASSWORD={{ postgresql_password }}
+        DATABASE_NAME={{ postgresql_database }}
+        | oc create -f -
 
     - name: 'Create Qpid application'
-      command: oc new-app qpid
+      shell: oc process qpid | oc create -f -
 
     - name: 'Create Pulp application'
-      command: >
-        oc new-app pulp
-        -p DATABASE_USER={{ mongodb_user }}
-        -p DATABASE_PASSWORD={{ mongodb_password }}
-        -p DATABASE_NAME={{ mongodb_database }}
+      shell: >
+        oc process pulp
+        DATABASE_USER={{ mongodb_user }}
+        DATABASE_PASSWORD={{ mongodb_password }}
+        DATABASE_NAME={{ mongodb_database }}
+        | oc create -f -
 
     - name: 'Create Foreman application'
-      command: >
-        oc new-app foreman
-        -p ENABLE_KATELLO={{ enable_katello }}
-        -p DATABASE_USER={{ postgresql_user }}
-        -p DATABASE_NAME={{ postgresql_database }}
-        -p DATABASE_PASSWORD={{ postgresql_password }}
+      shell: >
+        oc process foreman
+        ENABLE_KATELLO={{ enable_katello }}
+        DATABASE_USER={{ postgresql_user }}
+        DATABASE_NAME={{ postgresql_database }}
+        DATABASE_PASSWORD={{ postgresql_password }}
+        | oc create -f -
 
     - name: 'Create Foreman Proxy application'
-      command: oc new-app foreman-proxy
+      shell: oc process foreman-proxy | oc create -f -
 
     - name: 'Create Puppetserver application'
-      command: oc new-app puppet
+      shell: oc process puppet | oc create -f -

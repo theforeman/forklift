@@ -27,55 +27,60 @@
       command: oc replace -f {{ resource_path }}templates/foreman-proxy.yaml
 
     - name: 'Update Postgres application'
-      command: >
-        oc new-app postgresql-ephemeral
-        -p POSTGRESQL_USER={{ postgresql_user }}
-        -p POSTGRESQL_PASSWORD={{ postgresql_password }}
-        -p POSTGRESQL_DATABASE={{ postgresql_database }}
+      shell: >
+        oc process postgresql-ephemeral
+        POSTGRESQL_USER={{ postgresql_user }}
+        POSTGRESQL_PASSWORD={{ postgresql_password }}
+        POSTGRESQL_DATABASE={{ postgresql_database }}
+        | oc replace -f -
       ignore_errors: true
 
     - name: 'Update MongoDB application'
-      command: >
-        oc new-app mongodb-ephemeral
-        -p MONGODB_USER={{ mongodb_user }}
-        -p MONGODB_ADMIN_PASSWORD={{ mongodb_password }}
-        -p MONGODB_PASSWORD={{ mongodb_password }}
-        -p MONGODB_DATABASE={{ mongodb_database }}
+      shell: >
+        oc process mongodb-ephemeral
+        MONGODB_USER={{ mongodb_user }}
+        MONGODB_ADMIN_PASSWORD={{ mongodb_password }}
+        MONGODB_PASSWORD={{ mongodb_password }}
+        MONGODB_DATABASE={{ mongodb_database }}
+        | oc replace -f -
       ignore_errors: true
 
     - name: 'Update Candlepin application'
       command: >
-        oc new-app candlepin
-        -p DATABASE_USER={{ postgresql_user }}
-        -p DATABASE_PASSWORD={{ postgresql_password }}
-        -p DATABASE_NAME={{ postgresql_database }}
+        oc process candlepin
+        DATABASE_USER={{ postgresql_user }}
+        DATABASE_PASSWORD={{ postgresql_password }}
+        DATABASE_NAME={{ postgresql_database }}
+        | oc replace -f -
       ignore_errors: true
 
     - name: 'Update Qpid application'
-      command: oc new-app qpid
+      shell: oc process qpid | oc replace -f -
       ignore_errors: true
 
     - name: 'Update Pulp application'
-      command: >
-        oc new-app pulp
-        -p DATABASE_USER={{ mongodb_user }}
-        -p DATABASE_PASSWORD={{ mongodb_password }}
-        -p DATABASE_NAME={{ mongodb_database }}
+      shell: >
+        oc process pulp
+        DATABASE_USER={{ mongodb_user }}
+        DATABASE_PASSWORD={{ mongodb_password }}
+        DATABASE_NAME={{ mongodb_database }}
+        | oc replace -f -
       ignore_errors: true
 
     - name: 'Update Foreman application'
-      command: >
-        oc new-app foreman
-        -p ENABLE_KATELLO={{ enable_katello }}
-        -p DATABASE_USER={{ postgresql_user }}
-        -p DATABASE_NAME={{ postgresql_database }}
-        -p DATABASE_PASSWORD={{ postgresql_password }}
+      shell: >
+        oc process foreman
+        ENABLE_KATELLO={{ enable_katello }}
+        DATABASE_USER={{ postgresql_user }}
+        DATABASE_NAME={{ postgresql_database }}
+        DATABASE_PASSWORD={{ postgresql_password }}
+        | oc replace -f -
       ignore_errors: true
 
     - name: 'Update Foreman Proxy application'
-      command: oc new-app foreman-proxy
+      shell: oc process foreman-proxy | oc replace -f -
       ignore_errors: true
 
     - name: 'Update Puppetserver application'
-      command: oc new-app puppet
+      shell: oc process puppet | oc replace -f -
       ignore_errors: true

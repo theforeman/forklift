@@ -12,3 +12,5 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/tmp/data01"
+  ClaimRef:
+    name: "local-data"
