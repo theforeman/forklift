@@ -6,13 +6,16 @@ set -o pipefail
 load os_helper
 load foreman_helper
 
-setup() {
-  tSetOSVersion
-
-	tCommandExists curl || tPackageInstall curl
-	tCommandExists dig || tPackageInstall bind-utils || tPackageInstall dnsutils
-
-  export HOSTNAME=$(hostname -f)
+tSetNameserver() {
+  run tGetRecord ch txt version.bind
+  case $output in
+    *PowerDNS*)
+      NAMESERVER="powerdns"
+      ;;
+    *)
+      NAMESERVER="bind"
+      ;;
+  esac
 }
 
 tSpRequest() {
@@ -60,12 +63,22 @@ tDeleteRecord() {
 }
 
 tFlushCache() {
-  run tGetRecord ch txt version.bind
-  case $output in
-    *PowerDNS*)
+  case $NAMESERVER in
+    powerdns)
       pdns_control purge $1
       ;;
   esac
+}
+
+setup() {
+  tSetOSVersion
+
+	tCommandExists curl || tPackageInstall curl
+	tCommandExists dig || tPackageInstall bind-utils || tPackageInstall dnsutils
+
+  tSetNameserver
+
+  export HOSTNAME=$(hostname -f)
 }
 
 @test "verify dns feature is enabled" {
@@ -130,6 +143,11 @@ tFlushCache() {
 }
 
 @test "verify record type CNAME" {
+  if [[ $NAMESERVER == "bind" ]] ; then
+    # http://projects.theforeman.org/issues/17879
+    skip "CNAME records not supported"
+  fi
+
   local target=bats-test.example.com
   local alias=bats-alias.example.com
   local type=CNAME
