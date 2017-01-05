@@ -80,35 +80,30 @@ module Forklift
         end
       end
 
-      if box.key?('libvirt')
-        machine.vm.provider :libvirt do |p, override|
-          override.vm.box_url = box.fetch('libvirt')
-          override.vm.synced_folder ".", "/vagrant", type: "rsync"
-          override.vm.network :public_network, :dev => box.fetch('bridged'), :mode => 'bridge' if box.fetch('bridged', false)
-          networks.each do |network|
-            override.vm.network network['type'], network['options']
-          end
-          p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
-          p.memory = box.fetch('memory') if box.fetch('memory', false)
-          p.machine_virtual_size = box.fetch('disk_size') if box.fetch('disk_size', false)
+      machine.vm.provider :libvirt do |p, override|
+        override.vm.box_url = box.fetch('libvirt') if box.fetch('libvirt', false)
+        override.vm.synced_folder ".", "/vagrant", type: "rsync"
+        override.vm.network :public_network, :dev => box.fetch('bridged'), :mode => 'bridge' if box.fetch('bridged', false)
+        networks.each do |network|
+          override.vm.network network['type'], network['options']
         end
+        p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
+        p.memory = box.fetch('memory') if box.fetch('memory', false)
+        p.machine_virtual_size = box.fetch('disk_size') if box.fetch('disk_size', false)
       end
 
-      if box.key?('virtualbox')
-        machine.vm.provider :virtualbox do |p, override|
-          override.vm.box_url = box.fetch('virtualbox')
-          p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
-          p.memory = box.fetch('memory') if box.fetch('memory', false)
+      machine.vm.provider :virtualbox do |p, override|
+        override.vm.box_url = box.fetch('virtualbox') if box.fetch('virtualbox', false)
+        p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
+        p.memory = box.fetch('memory') if box.fetch('memory', false)
 
-          if box.fetch('name').to_s.include?('devel')
-            config.vm.network :forwarded_port, guest: 3000, host: 3330
-            config.vm.network :forwarded_port, guest: 443, host: 4430
-          else
-            override.vm.network :forwarded_port, guest: 80, host: 8080
-            override.vm.network :forwarded_port, guest: 443, host: 4433
-          end
+        if box.fetch('name').to_s.include?('devel')
+          config.vm.network :forwarded_port, guest: 3000, host: 3330
+          config.vm.network :forwarded_port, guest: 443, host: 4430
+        else
+          override.vm.network :forwarded_port, guest: 80, host: 8080
+          override.vm.network :forwarded_port, guest: 443, host: 4433
         end
-
       end
 
       if box.fetch('image_name', false)
