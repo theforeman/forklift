@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # Adapted from Mark Mandel's implementation
 # https://github.com/ansible/ansible/blob/devel/plugins/inventory/vagrant.py
 import argparse
