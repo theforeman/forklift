@@ -4,7 +4,7 @@ This covers how to setup and configure a development environment using the Forkl
 
  * [Development Environment Deployment](#development-environment-deployment)
  * [Use Koji Scratch Builds](#koji-scratch-builds)
- * [Test Puppet Module Pull Requests](#testing-module-pull-requests)
+ * [Test Puppet Module Pull Requests](#test-puppet-module-pull-requests)
  * [Jenkins Job Builder](#jenkins-job-builder-development)
  * [Redmine Development](#redmine-development)
  * [Hammer Development](#hammer-development)
@@ -96,30 +96,22 @@ The Koji role and task ID variable can be added to download and configure a repo
     - katello
 ```
 
-## Testing Module Pull Requests
+## Test Puppet Module Pull Requests
 
-The setup.rb script supports specifying any number of modules and associated pull requests for testing. For example, if a module under goes a refactoring, and you want to test that it continues to work with the installer. You'll need the name of the module and the pull request number you want to test. Note that the name in this situation is the name as laid down in the module directory as opposed to the github repository name. In other words, use 'qpid' not 'puppet-qpid'. Formatting requires the module name followed by a '/' and then the pull request number. See examples below.
+Testing installer puppet module pull requests is possible through an Ansible variable. Any number of modules and associated pull requests may be specified. For example, if a module under goes a refactoring, and you want to test that it continues to work with the installer. The pull requests are indicated by the github project, repository, and pull request number (eg. katello/qpid/23). Note that the name in this situation is the name as laid down in the module directory as opposed to the github repository name. In other words, use 'qpid' not 'puppet-qpid'. The pull requests are specified through the 'foreman_installer_module_prs' variable in the 'ansible' 'variables' section of your box definition. See examples below.
 
-Note that you'll need a checkout of [katello-installer](https://github.com/Katello/katello-installer) as a subdirectory in forklift:
-```
-git clone https://github.com/Katello/katello-installer.git
-```
-
-Single module PR:
-```
-./setup.rb --module-prs qpid/12
+Single module PR in boxes.yaml:
+```yaml
+ansible:
+  variables:
+    foreman_installer_module_prs: "katello/katello_devel/97"
 ```
 
 Multiple modules:
-```
-./setup.rb --module-prs qpid/12,katello/11
-```
-
-Custom Box:
-```
-module_test:
-  box: centos6
-  options: --module-prs qpid/12
+```yaml
+ansible:
+  variables:
+    foreman_installer_module_prs: "katello/katello_devel/97,katello/qpid/34"
 ```
 
 ## Jenkins Job Builder Development
