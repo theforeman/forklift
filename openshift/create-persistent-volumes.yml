@@ -13,11 +13,33 @@
         owner: apache
         group: apache
 
-    - name: "Login as system admin to OpenShift"
-      command: oc login -u system:admin
+    - name: "Create Pulp sub-path"
+      become: true
+      file:
+        path: "{{ local_volume_path }}/pulp"
+        state: directory
+        mode: 0777
+
+    - name: "Create Puppet sub-path"
+      become: true
+      file:
+        path: "{{ local_volume_path }}/puppet"
+        state: directory
+        mode: 0777
+
+    - name: "Create Postgresql sub-path"
+      become: true
+      file:
+        path: "{{ local_volume_path }}/postgresql"
+        state: directory
+        mode: 0777
+
+    - name: "Create MongoDB sub-path"
+      become: true
+      file:
+        path: "{{ local_volume_path }}/mongodb"
+        state: directory
+        mode: 0777
 
     - name: "Create persistent volume"
       command: oc create -f volumes/local.yaml
-
-    - name: "Login back in as developer"
-      command: oc login -u developer -p a

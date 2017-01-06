@@ -7,7 +7,8 @@ note as general
   running container within the pod (thus, any square can be scaled independently).
   Cylinders represent volume mounts that are shared amongst pods.
   
-  This configuration repesents a setup using persistent storage mounts.
+  This configuration repesents a setup using persistent storage by creating a
+  single directory volume with sub-paths in it for each data storage.
 end note
 
 /' Pods '/
@@ -61,20 +62,22 @@ node "Puppet Server" {
 }
 
 /' Volumes '/
-database "Pulp Content" {
-  [/var/lib/pulp] as pulp_content
-}
+database "local directory" {
+  folder "Pulp Content" {
+    [/var/lib/pulp] as pulp_content
+  }
+  
+  folder "Puppet environments" {
+    [/etc/puppet] as puppet_environments
+  }
 
-database "Pulp Puppet" {
-  [/etc/puppet] as pulp_puppet
-}
+  folder "Postgres Database" {
+    [Postgres Datastore] as postgres_datastore
+  }
 
-database "Postgres Datastore" {
-  [Postgres Datastore] as postgres_datastore
-}
-
-database "MongoDB Datastore" {
-  [MongoDB Datastore] as mongodb_datastore
+  folder "MongoDB Database" {
+    [MongoDB Datastore] as mongodb_datastore
+  }
 }
 
 /' Connections '/
@@ -90,8 +93,8 @@ pulp_celery_beat --> qpid
 
 pulp_apache --> pulp_content
 pulp_worker --> pulp_content
-pulp_apache --> pulp_puppet
-pulp_worker --> pulp_puppet
+pulp_apache --> puppet_environments
+pulp_worker --> puppet_environments
 
 candlepin --> postgres
 candlepin --> qpid
@@ -104,6 +107,6 @@ katello --> qpid
 foreman_proxy --> puppet_server
 foreman_proxy <--> foreman
 
-puppet_server --> pulp_puppet
+puppet_server --> puppet_environments
 
 @enduml
