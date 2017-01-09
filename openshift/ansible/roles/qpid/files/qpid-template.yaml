@@ -1,0 +1,121 @@
+---
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "qpid"
+  annotations:
+    description: "Qpid application"
+    tags: "quickstart,qpid"
+labels:
+  template: "qpid"
+objects:
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+  
+  - kind: "Service"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+      annotations: 
+        description: "Exposes and load balances the application pods"
+    spec: 
+      ports: 
+        - name: "web"
+          port: 5672
+          targetPort: 5672
+      selector: 
+        name: "${NAME}"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/qpid"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "${NAME}:latest"
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "${NAME}"
+      replicas: 1
+      template:
+        metadata:
+          name: "${NAME}"
+          labels:
+            name: "${NAME}"
+        spec:
+          restartPolicy: Always
+          containers:
+            - name: "qpid"
+              image: "${NAME}:latest"
+              ports:
+                - containerPort: 5672
+                  protocol: TCP
+              args:
+                - qpidd
+                - "--auth=no"
+                - -p
+                - "5672"
+              resources: {}
+              env: []
+
+parameters: 
+  - name: "NAME"
+    displayName: "Name"
+    description: "The name assigned to all of the frontend objects defined in this template."
+    required: true
+    value: "qpid"
+
+  - name: "NAMESPACE"
+    displayName: "Namespace"
+    required: true
+    description: "The OpenShift Namespace where the ImageStream resides."
+    value: "openshift"
+
+  - name: "CONTEXT_DIR"
+    displayName: "Context Directory"
+    description: "Set this to the relative path to your project if it is not in the root of your repository."
+    value: "openshift/docker"
+
+  - name: "MEMORY_LIMIT"
+    displayName: "Memory Limit"
+    required: true
+    description: "Maximum amount of memory the Rails container can use."
+    value: "512Mi"

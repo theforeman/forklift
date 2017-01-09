@@ -1,0 +1,5 @@
+---
+postgresql_user: foreman
+postgresql_password: foreman
+postgresql_database: foreman
+postgresql_volume_claim: local-data

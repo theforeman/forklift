@@ -1,0 +1,4 @@
+---
+project_name: "foreman"
+project_display_name: "Foreman"
+project_description: "{{ project_display_name }} on Openshift"

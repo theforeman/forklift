@@ -1,0 +1,11 @@
+---
+- name: 'Create Candlepin application'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  shell: >
+    oc process -f {{ role_path }}/files/candlepin-template.yaml
+    DATABASE_USER={{ candlepin_database_user }}
+    DATABASE_PASSWORD={{ candlepin_database_password }}
+    DATABASE_NAME={{ candlepin_database }}
+    | oc create -f -

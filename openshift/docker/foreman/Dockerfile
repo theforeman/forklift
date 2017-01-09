@@ -1,7 +1,7 @@
 FROM fedora:latest
-#RUN dnf -y update
+RUN dnf -y update
 RUN dnf -y install ruby{,-devel,gems} rubygem-{nokogiri,bundler,unf_ext,rdoc} redhat-rpm-config nodejs npm git postgresql-devel gcc-c++ make hostname sqlite-devel
-RUN dnf -y install libxslt-devel libxml2-devel qpid-cpp-client-devel
+RUN dnf -y install zlib-devel libxslt-devel libxml2-devel qpid-cpp-client-devel
 RUN dnf clean all
 LABEL MAINTAINER="ohadlevy@gmail.com"
 

@@ -1,0 +1,8 @@
+---
+- name: 'Create Foreman Proxy application'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  shell: >
+    oc process -f {{ role_path }}/files/foreman-proxy-template.yaml
+    | oc create -f -

@@ -1,0 +1,6 @@
+---
+- name: "Create project"
+  command: "oc new-project {{ project_name }} --description=\"{{ project_description }}\" --display-name=\"{{ project_display_name }}\""
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"

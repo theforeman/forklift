@@ -1,0 +1,12 @@
+---
+- name: 'Create Pulp application'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  shell: >
+    oc process -f {{ role_path }}/files/pulp-template.yaml
+    DATABASE_USER={{ pulp_database_user }}
+    DATABASE_PASSWORD={{ pulp_database_password }}
+    DATABASE_NAME={{ pulp_database }}
+    PULP_CONTENT_VOLUME_CLAIM={{ pulp_content_volume_claim }}
+    | oc create -f -

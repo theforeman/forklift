@@ -18,3 +18,15 @@
 
     - name: "Delete initial project"
       command: oc delete project myproject
+    
+    - name: 'Create .tmp directory'
+      file:
+        path: .tmp
+
+    - name: 'Clone templates repository'
+      git:
+        repo: https://github.com/openshift/openshift-ansible.git
+        dest: .tmp/openshift-ansible
+
+      #- name: 'Load default imagestreams'
+      #command: oc create -f .tmp/openshift-ansible/roles/openshift_examples/files/examples/v1.4/image-streams/image-streams-centos7.json -n openshift

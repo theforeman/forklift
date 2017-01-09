@@ -58,15 +58,6 @@
         POSTGRESQL_DATABASE={{ postgresql_database }}
         | oc create -f -
 
-    - name: 'Create MongoDB application'
-      shell: >
-        oc process mongodb
-        MONGODB_USER={{ mongodb_user }}
-        MONGODB_ADMIN_PASSWORD={{ mongodb_password }}
-        MONGODB_PASSWORD={{ mongodb_password }}
-        MONGODB_DATABASE={{ mongodb_database }}
-        | oc create -f -
-
     - name: 'Create Candlepin application'
       shell: >
         oc process candlepin

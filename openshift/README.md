@@ -72,7 +72,7 @@ Or use the all-in-one playbook to do this:
 
 There are two aspects to the deployment: the default images and templates being loaded into OpenShift and creating the Foreman deployment. All of this is handled by a convenient playbook provided. You can view the configuration of the Foreman deployment itself by looking in the `templates/foreman.yaml` file. To create the application:
 
-    ansible-playbook projects/foreman_katello/create.yml
+    ansible-playbook ansible/playbooks/foreman.yaml
 
 This step will create a new OpenShift project named Foreman, load into the default image streams and templates from the `openshift-ansible` repository. Then, two applications will be created. The first is an ephemeral Postgres database using the default templates provided by OpenShift. The second is the Foreman application itself which will build a Foreman image and then deploy it.
 
@@ -83,8 +83,8 @@ The repository provides the ability to deploy the applications associated with F
   * Foreman with Foreman Proxy and Puppetserver
   * Foreman with Katello, Foreman Proxy and Puppetserver
   * Foreman Proxy
-  * Pulp
-  * Candlepin
+  * Pulp (ansible/playbooks/pulp.yaml)
+  * Candlepin (ansible/playbooks/candlepin.yaml)
   * Qpid
 
 ## Deployment Verification

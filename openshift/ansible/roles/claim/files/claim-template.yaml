@@ -1,0 +1,31 @@
+---
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "persistent-volume-claim"
+labels:
+  template: "persistent-volume-claim-template"
+parameters:
+  - name: "NAME"
+    displayName: "Name"
+    description: "Name for the volume claim"
+    value: "local-data"
+  - name: "STORAGE"
+    displayName: "Storage"
+    description: "Size of the volume claim"
+    value: "10Gi"
+  - name: "ACCESS_MODE"
+    displayName: "Access Mode"
+    description: "Access mode for the volume claim"
+    value: "ReadWriteOnce"
+objects:
+  - kind: "PersistentVolumeClaim"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}"
+    spec:
+      accessModes:
+        - "${ACCESS_MODE}"
+      resources:
+        requests:
+          storage: "${STORAGE}"

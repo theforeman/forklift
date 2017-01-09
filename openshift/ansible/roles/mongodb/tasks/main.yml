@@ -1,0 +1,12 @@
+---
+- name: 'Create MongoDB application'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  shell: >
+    oc process -f {{ role_path }}/files/mongodb-template.yaml
+    MONGODB_USER={{ mongodb_user }}
+    MONGODB_ADMIN_PASSWORD={{ mongodb_admin_password }}
+    MONGODB_PASSWORD={{ mongodb_password }}
+    MONGODB_DATABASE={{ mongodb_database }}
+    | oc create -f -

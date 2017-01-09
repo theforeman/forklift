@@ -1,0 +1,6 @@
+---
+foreman_enable_katello: false
+
+foreman_database: foreman
+foreman_database_user: foreman
+foreman_database_password: foreman

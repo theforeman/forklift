@@ -63,6 +63,11 @@ parameters:
     description: Version of MongoDB image to be used (2.4, 2.6, 3.2 or latest).
     value: '3.2'
     required: true
+  - name: VOLUME_CLAIM_NAME
+    displayName: Volume Claim Name
+    description: The name of the persistent volume claim to use
+    value: local-data
+    required: true
 objects:
   - kind: Service
     apiVersion: v1
@@ -159,4 +164,4 @@ objects:
           volumes:
             - name: ${DATABASE_SERVICE_NAME}-data
               persistentVolumeClaim:
-                claimName: local-data
+                claimName: ${VOLUME_CLAIM_NAME}

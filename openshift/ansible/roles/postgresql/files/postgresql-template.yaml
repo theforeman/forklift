@@ -2,25 +2,25 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: mongodb
+  name: postgresql
   creationTimestamp: null
   annotations:
-    openshift.io/display-name: MongoDB (Persistent)
-    description: 'MongoDB database service, with persistent storage. For more information
-      about using this template, including OpenShift considerations, see https://github.com/sclorg/mongodb-container/blob/master/3.2/README.md.
+    openshift.io/display-name: PostgreSQL (Persistent)
+    description: 'PostgreSQL database service, with persistent storage. For more information
+      about using this template, including OpenShift considerations, see https://github.com/sclorg/postgresql-container/blob/master/9.5.
 
 
       NOTE: Scaling to more than one replica is not supported. You must have persistent
       volumes available in your cluster to use this template.'
-    iconClass: icon-mongodb
-    tags: database,mongodb
+    iconClass: icon-postgresql
+    tags: database,postgresql
 message: "The following service(s) have been created in your project: ${DATABASE_SERVICE_NAME}.\n\
-  \n       Username: ${MONGODB_USER}\n       Password: ${MONGODB_PASSWORD}\n  Database\
-  \ Name: ${MONGODB_DATABASE}\n Connection URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${DATABASE_SERVICE_NAME}/${MONGODB_DATABASE}\n\
+  \n       Username: ${POSTGRESQL_USER}\n       Password: ${POSTGRESQL_PASSWORD}\n\
+  \  Database Name: ${POSTGRESQL_DATABASE}\n Connection URL: mysql://${DATABASE_SERVICE_NAME}:5432/\n\
   \nFor more information about using this template, including OpenShift considerations,\
-  \ see https://github.com/sclorg/mongodb-container/blob/master/3.2/README.md."
+  \ see https://github.com/sclorg/postgresql-container/blob/master/9.5."
 labels:
-  template: mongodb-template
+  template: postgresql-template
 parameters:
   - name: MEMORY_LIMIT
     displayName: Memory Limit
@@ -33,35 +33,34 @@ parameters:
   - name: DATABASE_SERVICE_NAME
     displayName: Database Service Name
     description: The name of the OpenShift Service exposed for the database.
-    value: mongodb
+    value: postgresql
     required: true
-  - name: MONGODB_USER
-    displayName: MongoDB Connection Username
-    description: Username for MongoDB user that will be used for accessing the database.
+  - name: POSTGRESQL_USER
+    displayName: PostgreSQL Connection Username
+    description: Username for PostgreSQL user that will be used for accessing the database.
     generate: expression
     from: user[A-Z0-9]{3}
     required: true
-  - name: MONGODB_PASSWORD
-    displayName: MongoDB Connection Password
-    description: Password for the MongoDB connection user.
+  - name: POSTGRESQL_PASSWORD
+    displayName: PostgreSQL Connection Password
+    description: Password for the PostgreSQL connection user.
     generate: expression
     from: '[a-zA-Z0-9]{16}'
     required: true
-  - name: MONGODB_DATABASE
-    displayName: MongoDB Database Name
-    description: Name of the MongoDB database accessed.
+  - name: POSTGRESQL_DATABASE
+    displayName: PostgreSQL Database Name
+    description: Name of the PostgreSQL database accessed.
     value: sampledb
     required: true
-  - name: MONGODB_ADMIN_PASSWORD
-    displayName: MongoDB Admin Password
-    description: Password for the database admin user.
-    generate: expression
-    from: '[a-zA-Z0-9]{16}'
+  - name: POSTGRESQL_VERSION
+    displayName: Version of PostgreSQL Image
+    description: Version of PostgreSQL image to be used (9.2, 9.4, 9.5 or latest).
+    value: '9.5'
     required: true
-  - name: MONGODB_VERSION
-    displayName: Version of MongoDB Image
-    description: Version of MongoDB image to be used (2.4, 2.6, 3.2 or latest).
-    value: '3.2'
+  - name: VOLUME_CLAIM_NAME
+    displayName: Volume Claim Name
+    description: The name of the persistent volume claim to use
+    value: local-data
     required: true
 objects:
   - kind: Service
@@ -71,10 +70,10 @@ objects:
       creationTimestamp: null
     spec:
       ports:
-        - name: mongo
+        - name: postgresql
           protocol: TCP
-          port: 27017
-          targetPort: 27017
+          port: 5432
+          targetPort: 5432
           nodePort: 0
       selector:
         name: ${DATABASE_SERVICE_NAME}
@@ -95,10 +94,10 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-            - mongodb
+            - postgresql
             from:
               kind: ImageStreamTag
-              name: mongodb:${MONGODB_VERSION}
+              name: postgresql:${POSTGRESQL_VERSION}
               namespace: ${NAMESPACE}
             lastTriggeredImage: ''
         - type: ConfigChange
@@ -112,42 +111,40 @@ objects:
             name: ${DATABASE_SERVICE_NAME}
         spec:
           containers:
-            - name: mongodb
+            - name: postgresql
               image: ' '
               ports:
-                - containerPort: 27017
+                - containerPort: 5432
                   protocol: TCP
               readinessProbe:
                 timeoutSeconds: 1
-                initialDelaySeconds: 3
+                initialDelaySeconds: 5
                 exec:
                   command:
                     - /bin/sh
                     - -i
                     - -c
-                    - mongo 127.0.0.1:27017/$MONGODB_DATABASE -u $MONGODB_USER -p $MONGODB_PASSWORD
-                      --eval="quit()"
+                    - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                      'SELECT 1'
               livenessProbe:
                 timeoutSeconds: 1
                 initialDelaySeconds: 30
                 tcpSocket:
-                  port: 27017
+                  port: 5432
               env:
-                - name: MONGODB_USER
-                  value: ${MONGODB_USER}
-                - name: MONGODB_PASSWORD
-                  value: ${MONGODB_PASSWORD}
-                - name: MONGODB_DATABASE
-                  value: ${MONGODB_DATABASE}
-                - name: MONGODB_ADMIN_PASSWORD
-                  value: ${MONGODB_ADMIN_PASSWORD}
+                - name: POSTGRESQL_USER
+                  value: ${POSTGRESQL_USER}
+                - name: POSTGRESQL_PASSWORD
+                  value: ${POSTGRESQL_PASSWORD}
+                - name: POSTGRESQL_DATABASE
+                  value: ${POSTGRESQL_DATABASE}
               resources:
                 limits:
                   memory: ${MEMORY_LIMIT}
               volumeMounts:
                 - name: ${DATABASE_SERVICE_NAME}-data
-                  mountPath: /var/lib/mongodb/data
-                  subPath: mongodb
+                  mountPath: /var/lib/pgsql/data
+                  subPath: postgresql
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: IfNotPresent
               capabilities: {}
@@ -159,4 +156,4 @@ objects:
           volumes:
             - name: ${DATABASE_SERVICE_NAME}-data
               persistentVolumeClaim:
-                claimName: local-data
+                claimName: ${VOLUME_CLAIM_NAME}
