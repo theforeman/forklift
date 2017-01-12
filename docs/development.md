@@ -169,7 +169,7 @@ instance Hammer points to, update
 To use this functionality, add the following configuration to your boxes.yaml,
 changing the hostnames as needed
 
-### To setup a capsule and a new development environment
+### To setup a smart proxy (capsule) and a new development environment
 
 * setup boxes.yaml
 
@@ -185,8 +185,8 @@ foo:
 capsule-dev:
   box: centos7
   ansible:
-    playbook: 'playbooks/capsule-dev.yml'
-    group: 'capsule'
+    playbook: 'playbooks/foreman_proxy_content_dev.yml'
+    group: 'foreman-proxy-content'
     server: 'foo'
 ```
 * ```vagrant up foo```
@@ -207,8 +207,8 @@ capsule-dev:
 capsule-dev:
   box: centos7
   ansible:
-    playbook: 'playbooks/capsule-dev.yml'
-    group: 'capsule'
+    playbook: 'playbooks/foreman_proxy_content_dev.yml'
+    group: 'foreman-proxy-content'
     server: 'your-katello-server-name'
 ```
 * ssh into existing development server and ```rails s```
