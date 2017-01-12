@@ -1,0 +1,7 @@
+---
+- name: 'enable-ostree-repo'
+  yum_repository:
+    name: atomic
+    description: Centos Atomic Build Repository
+    baseurl: http://buildlogs.centos.org/centos/7/atomic/x86_64/Packages/
+    gpgcheck: no
