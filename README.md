@@ -40,6 +40,19 @@ cp boxes.yaml.example boxes.yaml
 vagrant up centos7-devel
 ```
 
+### Poor man's DNS a.k.a /etc/hosts
+
+For the multi-host setup, one of the easiest way of making the name
+resolution working with vagrant is using
+[vagrant-hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager). Forklift supports
+this plugin by default. The only thing on needs to do is install the vagrant-hostmanager plugin:
+
+```
+vagrant plugin install vagrant-hostmanager
+```
+
+By default, the boxes are set with `example.com` domain.
+
 ### Adding Custom Boxes
 
 Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `boxes.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
