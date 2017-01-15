@@ -1,3 +1,5 @@
+require 'json'
+
 module Forklift
   class BoxLoader
 
@@ -57,9 +59,10 @@ module Forklift
             config['boxes']["#{base_box}-#{scenario}-#{version[scenario]}"] = installer_box
           end
 
-          capsule_box = build_box(config['boxes'][base_box], 'capsule', 'playbooks/capsule.yml', version)
-          capsule_box['ansible']['server'] = "#{base_box}-katello-#{version['katello']}"
-          config['boxes']["#{base_box}-capsule-#{version['katello']}"] = capsule_box
+          foreman_proxy_box = build_box(config['boxes'][base_box], 'foreman_proxy_content',
+                                        'playbooks/foreman_proxy_content.yml', version)
+          foreman_proxy_box['ansible']['server'] = "#{base_box}-katello-#{version['katello']}"
+          config['boxes']["#{base_box}-foreman-proxy-#{version['katello']}"] = foreman_proxy_box
         end
       end
     end
@@ -75,7 +78,7 @@ module Forklift
     end
 
     def build_box(base_box, group, playbook, version)
-      box = Marshal.load(Marshal.dump(base_box))
+      box = JSON.parse(JSON.dump(base_box))
 
       box['ansible'] = {
         'playbook' => playbook,
