@@ -11,6 +11,5 @@
       foreman_installer_scenario: katello
       foreman_installer_options_internal_use_only:
           - "--disable-system-checks"
-          - "--foreman-admin-password {{ foreman_installer_admin_password }}"
       foreman_installer_additional_packages:
           - katello
