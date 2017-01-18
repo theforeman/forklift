@@ -118,13 +118,6 @@
     --unlimited-hosts
   when: katello_provisioning_activation_key.stderr.find('not found') != -1
 
-- name: 'medium env should be in locs'
-  shell: >
-    {{ katello_provisioning_hammer }} medium update
-    --name "{{ katello_provisioning_organization_label }}/Library/CentOS/CentOS_7"
-    --organizations "{{ katello_provisioning_organization }}"
-    --locations "{{ katello_provisioning_location }}"
-
 # Host group
 - name: 'find host group'
   shell: >
@@ -146,8 +139,9 @@
     --organizations "{{ katello_provisioning_organization }}"
     --query-organization "{{ katello_provisioning_organization }}"
     --partition-table "Kickstart default"
-    --medium "{{ katello_provisioning_organization_label }}/Library/CentOS/CentOS_7"
     --content-source-id {{ katello_provisioning_smart_proxy.Id }}
+    --operatingsystem "CentOS_Linux 7"
+    --kickstart-repository-id 1
     --environment production
     --puppet-ca-proxy-id {{ katello_provisioning_smart_proxy.Id }}
     --puppet-proxy-id {{ katello_provisioning_smart_proxy.Id }}
