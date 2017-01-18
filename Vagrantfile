@@ -144,6 +144,14 @@ module Forklift
       config.hostmanager.include_offline = true
     end
 
+    if Vagrant.has_plugin?("vagrant-cachier")
+      config.cache.scope = :box
+      config.cache.synced_folder_opts = {
+        type: :nfs,
+        mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+      }
+    end
+
     @boxes.each do |name, box|
       define_vm config, box
     end
