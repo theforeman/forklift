@@ -1,3 +1,6 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
 require 'yaml'
 require "#{File.dirname(__FILE__)}/lib/forklift"
 
