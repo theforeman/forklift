@@ -1,3 +1,6 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
 require 'yaml'
 require "#{File.dirname(__FILE__)}/lib/forklift"
 
@@ -139,6 +142,14 @@ module Forklift
       config.hostmanager.manage_host = true
       config.hostmanager.manage_guest = true
       config.hostmanager.include_offline = true
+    end
+
+    if Vagrant.has_plugin?("vagrant-cachier")
+      config.cache.scope = :box
+      config.cache.synced_folder_opts = {
+        type: :nfs,
+        mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+      }
     end
 
     @boxes.each do |name, box|

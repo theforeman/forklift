@@ -9,6 +9,11 @@
     name: "@Virtualization Tools"
     state: present
 
+- name: 'install the libvirt-python package'
+  yum:
+    name: "libvirt-python"
+    state: present
+
 - name: 'disable libvirt authentication'
   lineinfile:
     dest: /etc/libvirt/libvirtd.conf
@@ -52,7 +57,7 @@
   shell: find /var/lib/tftpboot/ -type d | xargs chmod g+s
 
 - name: 'start the provision libvirt network'
-  virt_net: state=active name=provision
+  virt_net: state=active name=provision autostart=yes
 
 - name: 'start the provision libvirt storage pool'
-  virt_pool: state=active name=provision
+  virt_pool: state=active name=provision autostart=yes
