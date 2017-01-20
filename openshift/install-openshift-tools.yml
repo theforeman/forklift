@@ -1,8 +1,8 @@
 ---
 - hosts: localhost
   vars:
-    openshift_version: v1.3.2
-    openshift_checksum: ac1d579
+    openshift_version: v1.4.0
+    openshift_checksum: 208f053
   tasks:
     - name: 'Create .tmp directory'
       file:
@@ -13,7 +13,7 @@
       unarchive:
         src: "https://github.com/openshift/origin/releases/download/{{ openshift_version }}/openshift-origin-server-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit.tar.gz"
         dest: "{{ playbook_dir }}/.tmp/"
-        creates: "{{ playbook_dir }}/.tmp/openshift-origin-server-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit"
+        creates: "{{ playbook_dir }}/.tmp/openshift-origin-server-{{ openshift_version }}+{{ openshift_checksum }}-linux-64bit"
         remote_src: yes
     
     - name: 'Create local bin'
@@ -24,11 +24,11 @@
     - name: 'Link CLI to local bin'
       file:
         state: link
-        src: "{{ playbook_dir }}/.tmp/openshift-origin-server-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit/oc"
+        src: "{{ playbook_dir }}/.tmp/openshift-origin-server-{{ openshift_version }}+{{ openshift_checksum }}-linux-64bit/oc"
         dest: ~/.local/bin/oc
     
     - name: 'Link oadm to local bin'
       file:
         state: link
-        src: "{{ playbook_dir }}/.tmp/openshift-origin-server-{{ openshift_version }}-{{ openshift_checksum }}-linux-64bit/oadm"
+        src: "{{ playbook_dir }}/.tmp/openshift-origin-server-{{ openshift_version }}+{{ openshift_checksum }}-linux-64bit/oadm"
         dest: ~/.local/bin/oadm
