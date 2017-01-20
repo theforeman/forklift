@@ -8,17 +8,6 @@
     postgresql_user: "candlepin"
     postgresql_password: "candlepin"
     postgresql_volume_claim: "{{ claim_name }}"
-    mongodb_volume_claim: "{{ claim_name }}"
-    mongodb_database: "pulp_database"
-    mongodb_user: "admin"
-    mongodb_password: "admin"
-    pulp_database: "{{ mongodb_database }}"
-    pulp_database_user: "{{ mongodb_user }}"
-    pulp_database_password: "{{ mongodb_password }}"
-    pulp_content_volume_claim: "{{ claim_name }}"
-    candlepin_database_user: "{{ postgresql_user }}"
-    candlepin_database_password: "{{ postgresql_password }}"
-    candlepin_database: "{{ postgresql_database }}"
     foreman_database: "{{ postgresql_database }}"
     foreman_database_user: "{{ postgresql_user }}"
     foreman_database_password: "{{ postgresql_password }}"
@@ -27,11 +16,7 @@
   roles:
     - project
     - claim
-    - mongodb
     - postgresql
-    - qpid
-    - candlepin
-    - pulp
     - foreman
     - puppet
     - foreman_proxy
