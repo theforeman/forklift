@@ -14,6 +14,7 @@
     pulp_content_volume_claim: "{{ claim_name }}"
   roles:
     - project
+    - volume
     - claim
     - mongodb
     - qpid

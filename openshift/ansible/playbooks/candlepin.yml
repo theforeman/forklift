@@ -13,6 +13,7 @@
     candlepin_database: "{{ postgresql_database }}"
   roles:
     - project
+    - volume
     - claim
     - postgresql
     - candlepin

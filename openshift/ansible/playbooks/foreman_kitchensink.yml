@@ -26,6 +26,7 @@
     puppet_volume_claim: "{{ claim_name }}"
   roles:
     - project
+    - volume
     - claim
     - mongodb
     - postgresql

@@ -6,8 +6,6 @@ The following is currently a proof of concept for running Foreman, Katello and t
 
 Caveats:
 
- * runs with ephemeral database storage (i.e. if you destroy project, data is lost)
- * uses ephemeral storage for Pulp content (i.e. if you destroy project, data is lost)
  * running without any SSL
  * using forks of some repositories due to needed functionality for this to work
 
@@ -56,15 +54,7 @@ You can change the version of the OpenShift Client Tools that are installed by e
 
 ### Setup OpenShift
 
-Now that we have docker and the appropriate client tools setup we can spin up a docker based OpenShift cluster:
-
-    oc cluster up
-
-Enable privileged user access inside containers:
-
-    oadm policy add-scc-to-group anyuid system:authenticated
-
-Or use the all-in-one playbook to do this:
+Now that we have docker and the appropriate client tools setup we can spin up a docker based OpenShift cluster using the playbook to do this:
 
     ansible-playbook cluster-up.yml
 
@@ -80,8 +70,8 @@ This step will create a new OpenShift project named Foreman, load into the defau
 
 The repository provides the ability to deploy the applications associated with Foreman and Katello as stand alone projects as well as the entire kitchensink. 
 
-  * Foreman with Foreman Proxy and Puppetserver
-  * Foreman with Katello, Foreman Proxy and Puppetserver
+  * Foreman with Foreman Proxy and Puppetserver (ansible/playbooks/foreman.yaml)
+  * Foreman with Katello, Foreman Proxy and Puppetserver (ansible/playbooks/foreman_kitchensink.yaml)
   * Foreman Proxy
   * Pulp (ansible/playbooks/pulp.yaml)
   * Candlepin (ansible/playbooks/candlepin.yaml)
