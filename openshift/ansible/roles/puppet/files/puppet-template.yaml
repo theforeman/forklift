@@ -1,0 +1,91 @@
+---
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "puppet"
+  annotations:
+    description: "Puppet application"
+    tags: "quickstart,puppet"
+labels:
+  template: "puppet"
+parameters: 
+  - name: "NAME"
+    displayName: "Name"
+    description: "The name assigned to all of the frontend objects defined in this template."
+    required: true
+    value: "puppet"
+  - name: VOLUME_CLAIM_NAME
+    displayName: Volume Claim Name
+    description: The name of the persistent volume claim to use
+    value: local-data
+    required: true
+objects:
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+    spec:
+      tags:
+        - name: "latest"
+          from:
+            kind: "DockerImage"
+            name: "puppet/puppetserver"
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "${NAME}"
+      replicas: 1
+      template:
+        metadata:
+          name: "${NAME}"
+          labels:
+            name: "${NAME}"
+        spec:
+          restartPolicy: Always
+          containers:
+            - name: "puppet"
+              image: "${NAME}:latest"
+              ports:
+                - containerPort: 8140
+                  protocol: TCP
+              resources: {}
+              volumeMounts:
+                - name: local-data
+                  mountPath: /etc/puppet
+                  subPath: puppet
+          volumes:
+            - name: local-data
+              persistentVolumeClaim:
+                claimName: ${VOLUME_CLAIM_NAME}
+  - kind: "Service"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+      annotations: 
+        description: "Exposes and load balances the application pods"
+    spec: 
+      ports: 
+        - name: "8140"
+          port: 8140
+          targetPort: 8140
+      selector: 
+        name: "${NAME}"
