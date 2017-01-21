@@ -70,14 +70,14 @@ This step will create a new OpenShift project named Foreman, load into the defau
 
 If you want to deploy a full functional Foreman with plugins such as Katello, Discovery and Remote Execution:
 
-    ansible-playbook ansible/playbooks/foreman_kitchensink.yml
+    ansible-playbook ansible/playbooks/foreman_platform.yml
 
 ## Available Deployments
 
-The repository provides the ability to deploy the applications associated with Foreman and Katello as stand alone projects as well as the entire kitchensink. 
+The repository provides the ability to deploy the applications associated with Foreman and Katello as stand alone projects as well as the entire platform. 
 
   * Foreman with Foreman Proxy and Puppetserver (ansible/playbooks/foreman.yaml)
-  * Foreman with Katello, Foreman Proxy and Puppetserver (ansible/playbooks/foreman_kitchensink.yaml)
+  * Foreman with Katello, Foreman Proxy and Puppetserver (ansible/playbooks/foreman_platform.yaml)
   * Foreman Proxy
   * Pulp (ansible/playbooks/pulp.yaml)
   * Candlepin (ansible/playbooks/candlepin.yaml)
@@ -101,24 +101,19 @@ Currently this test is expected to run manually on your host outside the OpenShi
 
 This is a list of TODOs that were obvious to this point for what needs to be solved. By no means is this the full and final list.
 
- * use persistent volume for Pulp workers and Pulp server instance for sharing content
  * add pulp_streamer and squid services
  * solve Pulp journald logging (and remove use of Stream handler hack on my fork)
- * use separate database for Candlepin
+ * use separate database for Candlepin?
  * move away from basic auth for Pulp to cert auth
  * run foreman-tasks in its own container
  * add qpid connection to Candlepin
  * add qpid connection to Katello
- * use persistent Postgras
  * add goferd service for clients
- * add foreman-proxy deployment
  * add qdrouterd for client connections
  * add Katello client certificate RPM for subscription-manager registration
  * run public facing routes on SSL
  * connect internal services via SSL using secrets
  * fix issue where Foreman deployment fails the first time seeding architecture data
  * concurrency issue with a proxy being spun up at the same time as the server and needing to register
- * Puppet server and Pulp need shared storage for puppet environments
  * run bats inside OpenShift
- * handle conditional enablement of Foreman plugins
  * remove pin of concurrent ruby in Gemfile

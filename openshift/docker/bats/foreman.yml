@@ -3,7 +3,7 @@
   :enable_module: true
 
   # Your foreman server address
-  :host: http://foreman-foreman-kitchensink.192.168.1.32.xip.io/
+  :host: http://foreman-foreman-platform.192.168.1.32.xip.io/
 
   # Credentials. You'll be asked for them interactively if you leave them blank here
   :username: 'admin'

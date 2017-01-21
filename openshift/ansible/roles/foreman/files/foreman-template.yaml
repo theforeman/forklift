@@ -34,6 +34,18 @@ objects:
           env:
             - name: 'ENABLE_KATELLO'
               value: "${ENABLE_KATELLO}"
+            - name: 'ENABLE_FOREMAN_DISCOVERY'
+              value: "${ENABLE_FOREMAN_DISCOVERY}"
+            - name: 'ENABLE_FOREMAN_REMOTE_EXECUTION'
+              value: "${ENABLE_FOREMAN_REMOTE_EXECUTION}"
+            - name: 'ENABLE_FOREMAN_DOCKER'
+              value: "${ENABLE_FOREMAN_DOCKER}"
+            - name: 'ENABLE_FOREMAN_HOOKS'
+              value: "${ENABLE_FOREMAN_HOOKS}"
+            - name: 'ENABLE_FOREMAN_ANSIBLE'
+              value: "${ENABLE_FOREMAN_ANSIBLE}"
+            - name: 'ENABLE_FOREMAN_OPENSCAP'
+              value: "${ENABLE_FOREMAN_OPENSCAP}"
       triggers: 
         - type: "ImageChange"
         - type: "ConfigChange"
@@ -117,6 +129,18 @@ objects:
                   value: "admin@example.com"
                 - name: ENABLE_KATELLO
                   value: "${ENABLE_KATELLO}"
+                - name: 'ENABLE_FOREMAN_DISCOVERY'
+                  value: "${ENABLE_FOREMAN_DISCOVERY}"
+                - name: 'ENABLE_FOREMAN_REMOTE_EXECUTION'
+                  value: "${ENABLE_FOREMAN_REMOTE_EXECUTION}"
+                - name: 'ENABLE_FOREMAN_DOCKER'
+                  value: "${ENABLE_FOREMAN_DOCKER}"
+                - name: 'ENABLE_FOREMAN_HOOKS'
+                  value: "${ENABLE_FOREMAN_HOOKS}"
+                - name: 'ENABLE_FOREMAN_ANSIBLE'
+                  value: "${ENABLE_FOREMAN_ANSIBLE}"
+                - name: 'ENABLE_FOREMAN_OPENSCAP'
+                  value: "${ENABLE_FOREMAN_OPENSCAP}"
 
   - kind: "Service"
     apiVersion: "v1"
@@ -245,4 +269,40 @@ parameters:
     displayName: "Use Katello"
     required: false
     description: "Include Katello as a plugin"
+    value: "false"
+
+  - name: "ENABLE_FOREMAN_DISCOVERY"
+    displayName: "Use Foreman Discovery"
+    required: false
+    description: "Include Foreman Discovery as a plugin"
+    value: "false"
+
+  - name: "ENABLE_FOREMAN_REMOTE_EXECUTION"
+    displayName: "Use Foreman Remote Execution"
+    required: false
+    description: "Include Foreman Remote Execution as a plugin"
+    value: "false"
+
+  - name: "ENABLE_FOREMAN_ANSIBLE"
+    displayName: "Use Foreman Ansible"
+    required: false
+    description: "Include Foreman Remote Execution as a plugin"
+    value: "false"
+
+  - name: "ENABLE_FOREMAN_DOCKER"
+    displayName: "Use Foreman Docker"
+    required: false
+    description: "Include Foreman Remote Execution as a plugin"
+    value: "false"
+
+  - name: "ENABLE_FOREMAN_OPENSCAP"
+    displayName: "Use Foreman Openscap"
+    required: false
+    description: "Include Foreman Remote Execution as a plugin"
+    value: "false"
+
+  - name: "ENABLE_FOREMAN_HOOKS"
+    displayName: "Use Foreman Hooks"
+    required: false
+    description: "Include Foreman Remote Execution as a plugin"
     value: "false"

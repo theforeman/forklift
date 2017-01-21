@@ -32,8 +32,8 @@ RUN bundle exec rake webpack:compile
 RUN bundle exec rake apipie:cache:index
 
 ADD katello.yaml config/settings.plugins.d/katello.yaml
-ADD enable_katello.sh script/enable_katello.sh
-RUN sh script/enable_katello.sh
+ADD enable_plugin.sh script/enable_plugin.sh
+RUN sh script/enable_plugin.sh
 
 ADD database.yml config/database.yml
 RUN chmod 777 -R /usr/src/app/tmp
