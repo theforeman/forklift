@@ -60,11 +60,17 @@ Now that we have docker and the appropriate client tools setup we can spin up a 
 
 ## Creating the Foreman Deployment
 
-There are two aspects to the deployment: the default images and templates being loaded into OpenShift and creating the Foreman deployment. All of this is handled by a convenient playbook provided. You can view the configuration of the Foreman deployment itself by looking in the `templates/foreman.yaml` file. To create the application:
+There are two aspects to the deployment: the default images and templates being loaded into OpenShift and creating the Foreman deployment. All of this is handled by a convenient playbook provided. You can view the configuration of the Foreman deployment itself by looking at the Ansible role: `ansible/roles/foreman`. To create the application:
 
-    ansible-playbook ansible/playbooks/foreman.yaml
+    ansible-playbook ansible/playbooks/foreman.yml
 
 This step will create a new OpenShift project named Foreman, load into the default image streams and templates from the `openshift-ansible` repository. Then, two applications will be created. The first is an ephemeral Postgres database using the default templates provided by OpenShift. The second is the Foreman application itself which will build a Foreman image and then deploy it.
+
+## Creating Foreman Deployment with Katello and Plugins
+
+If you want to deploy a full functional Foreman with plugins such as Katello, Discovery and Remote Execution:
+
+    ansible-playbook ansible/playbooks/foreman_kitchensink.yml
 
 ## Available Deployments
 
