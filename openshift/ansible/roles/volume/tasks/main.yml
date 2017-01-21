@@ -1,6 +1,5 @@
 ---
 - name: "Create local volume"
-  become: true
   file:
     path: "{{ local_volume_path }}"
     state: directory
@@ -8,28 +7,24 @@
     group: apache
 
 - name: "Create Pulp sub-path"
-  become: true
   file:
     path: "{{ local_volume_path }}/pulp"
     state: directory
     mode: 0777
 
 - name: "Create Puppet sub-path"
-  become: true
   file:
     path: "{{ local_volume_path }}/puppet"
     state: directory
     mode: 0777
 
 - name: "Create Postgresql sub-path"
-  become: true
   file:
     path: "{{ local_volume_path }}/postgresql"
     state: directory
     mode: 0777
 
 - name: "Create MongoDB sub-path"
-  become: true
   file:
     path: "{{ local_volume_path }}/mongodb"
     state: directory
