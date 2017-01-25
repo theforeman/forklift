@@ -1,0 +1,93 @@
+---
+- name: 'prepare hammer taxonomy options'
+  set_fact:
+    data_users_hammer_taxonomy_params: "--organizations '{{ data_users_organization }}' --locations '{{ data_users_location }}'"
+  when: data_users_use_taxonomies
+
+- name: 'prepare blank hammer taxonomy options'
+  set_fact:
+    data_users_hammer_taxonomy_params: ""
+  when: not data_users_use_taxonomies
+
+
+# john with manager and viewer role
+- name: 'Find user john'
+  shell: >
+    {{ data_users_hammer }} user info --login "john"
+  register: data_users_john
+  ignore_errors: True
+  tags:
+    - seed
+
+- name: 'Create user john'
+  shell: >
+    {{ data_users_hammer }} user create
+    --login john
+    --admin false
+    --auth-source-id 1
+    --firstname John
+    --lastname Manager
+    --mail john.manager@example.com
+    --password john
+    {{ data_users_hammer_taxonomy_params }}
+  when: data_users_john.stderr.find('not found') != -1
+  tags:
+    - seed
+
+- name: 'Assign user john to group Manager'
+  shell: "{{ data_users_hammer }} user add-role --login john --role Manager"
+  when: data_users_john.stderr.find('not found') != -1
+  tags:
+    - seed
+
+- name: 'Assign user john to group Manager'
+  shell: "{{ data_users_hammer }} user add-role --login john --role Viewer"
+  when: data_users_john.stderr.find('not found') != -1
+  tags:
+    - seed
+
+# jane with viewer role
+- name: 'Find user jane'
+  shell: >
+    {{ data_users_hammer }} user info --login "jane"
+  register: data_users_jane
+  ignore_errors: True
+  tags:
+    - seed
+
+- name: 'Create user jane'
+  shell: >
+    {{ data_users_hammer }} user create
+    --login jane
+    --admin false
+    --auth-source-id 1
+    --firstname Jane
+    --lastname Viewer
+    --mail jane.viewer@example.com
+    --password jane
+    {{ data_users_hammer_taxonomy_params }}
+  when: data_users_jane.stderr.find('not found') != -1
+  tags:
+    - seed
+
+- name: 'Assign user jane to group Manager'
+  shell: "{{ data_users_hammer }} user add-role --login jane --role Viewer"
+  when: data_users_jane.stderr.find('not found') != -1
+  tags:
+    - seed
+
+# jack with no roles
+- name: 'Create user jack'
+  shell: >
+    {{ data_users_hammer }} --output=silent user info --login "jack" ||
+    {{ data_users_hammer }} user create
+    --login jack
+    --admin false
+    --auth-source-id 1
+    --firstname Jack
+    --lastname 'No Role'
+    --mail jack.no_role@example.com
+    --password jack
+    {{ data_users_hammer_taxonomy_params }}
+  tags:
+    - seed

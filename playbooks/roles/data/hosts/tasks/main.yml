@@ -1,0 +1,12 @@
+---
+- name: 'Create hosts'
+  shell: >
+    {{ data_hosts_hammer }} host create
+    --hostgroup '{{ data_hosts_hostgroup }}'
+    --organization '{{ data_hosts_organization }}'
+    --location '{{ data_hosts_location }}'
+    --name '{{ item }}'
+    --mac $(echo -n 52:54:00:; openssl rand -hex 3 | sed 's/\(..\)/\1:/g; s/.$//')
+  with_items: '{{ data_hosts_names }}'
+  tags:
+    - seed

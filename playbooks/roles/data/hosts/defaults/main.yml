@@ -1,0 +1,9 @@
+---
+data_hosts_hammer: hammer -u admin -p changeme
+data_hosts_organization: Default Organization
+data_hosts_location: Default Location
+data_hosts_hostgroup: Forklift CentOS 7 Mirror
+data_hosts_names:
+  - host1
+  - host2
+  - host3
