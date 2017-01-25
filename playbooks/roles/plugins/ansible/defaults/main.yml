@@ -1,0 +1,4 @@
+---
+plugin_ansible_password: changeme
+plugin_ansible_roles:
+  - jtyr.motd

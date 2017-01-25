@@ -1,0 +1,3 @@
+---
+openscap_hammer: hammer -u admin -p changeme
+openscap_proxy_name: False
