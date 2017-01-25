@@ -22,6 +22,10 @@
 - name: 'restart libvirt'
   service: name=libvirtd state=restarted
 
+- name: 'install libvirt-python dependency'
+  yum:
+    name: libvirt-python
+
 - name: 'create the provisioning libvirt network'
   virt_net:
     command: define

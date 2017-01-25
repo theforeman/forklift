@@ -4,20 +4,28 @@
     name: '*'
     update_cache: yes
     state: latest
+  tags:
+    - packages
 
 - name: 'Install foreman-release-scl'
   yum:
     name: foreman-release-scl
     update_cache: yes
     state: latest
+  tags:
+    - packages
 
 - name: 'Install foreman-installer'
   yum:
     name: foreman-installer
     state: latest
+  tags:
+    - packages
 
 - name: 'Install additional packages'
   yum:
     name: "{{ item }}"
     state: latest
   with_items: "{{ foreman_installer_additional_packages }}"
+  tags:
+    - packages

@@ -3,8 +3,12 @@
   yum:
     name: 'libselinux-python'
     state: installed
+  tags:
+    - env_setup
 
 - name: 'Set selinux state'
   selinux:
     policy: targeted
     state: "{{ selinux_state }}"
+  tags:
+    - env_setup
