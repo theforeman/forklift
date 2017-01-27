@@ -1,8 +1,4 @@
 shells:
-  install_shell: &install_shell
-    shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
-  bats_shell: &bats_shell
-    shell: '/vagrant/bats/bootstrap_vagrant.sh'
   runcible_shell: &runcible_shell
     shell: '/vagrant/shells/runcible.sh'
 
@@ -45,11 +41,15 @@ boxes:
 
   centos6-bats:
     box: centos6
-    <<: *bats_shell
+    ansible:
+      playbook: 'playbooks/bats_pipeline_nightly.yml'
+      group: 'bats'
 
   centos7-bats:
     box: centos7
-    <<: *bats_shell
+    ansible:
+      playbook: 'playbooks/bats_pipeline_nightly.yml'
+      group: 'bats'
 
   runcible:
     box: centos7

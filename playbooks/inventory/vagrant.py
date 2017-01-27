@@ -17,9 +17,15 @@ def parse_args():
 
 
 def list_running_hosts():
+    hosts = {}
+
+    try:
+        status = subprocess.check_call(["which","vagrant"])
+    except:
+        return hosts
+
     cmd = "vagrant status --machine-readable"
     status = subprocess.check_output(cmd.split()).rstrip()
-    hosts = {}
     for line in status.split('\n'):
         if len(line.split(',')) == 4:
             (_, host, key, value) = line.split(',')
@@ -33,6 +39,11 @@ def list_running_hosts():
 
 def get_host_details(host):
     cmd = "vagrant ssh-config {}".format(host)
+    try:
+        saubprocess.check_call(cmd.split()).rstrip()
+    except:
+        return {}
+
     p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
     config = paramiko.SSHConfig()
     config.parse(p.stdout)

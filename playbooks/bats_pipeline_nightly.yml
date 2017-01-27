@@ -1,0 +1,18 @@
+- hosts: all
+  become: true
+  vars:
+    katello_version: nightly
+    katello_repositories_use_koji: true
+    puppet_repositories_puppet_version: 4
+    foreman_installer_skip_installer: true
+    foreman_installer_additional_packages:
+      - katello
+  roles:
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer
+    - bats

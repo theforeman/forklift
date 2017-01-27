@@ -68,7 +68,6 @@ Options:
 ```
 box -- the ':name' one of the defined boxes in the Vagrantfile
 installer -- options that you would like passed to the installer
-options -- options that setup.rb accepts, e.g. --skip-installer
 shell -- customize the shell script run
 bridged -- deploy on Libvirt with a bridged networking configuration, value of this parameter should be the interface of the host (e.g. em1)
 memory -- set the amount of memory (in megabytes) this box will consume
@@ -100,16 +99,6 @@ static:
         ip: 192.168.150.3
         libvirt__network_name: lab-private
         libvirt__iface_name: vnet2
-```
-
-### Post Install Scripts
-
-User defined scripts can be run after a successful installation to facilitate common per user actions. For example, if there are common setup tasks run on every devel box for a user these can be setup to run for every run of `setup.rb`. This also translates to running on every up/provision when using Vagrant. To define a script to be run, create a `scripts/` directory and then place the script inside. For example, if you wanted to have `vim` installed on every box, make a file `scripts/vim.sh`:
-
-```
-#!/bin/bash
-
-yum -y install vim
 ```
 
 ### Post Install Playbooks
