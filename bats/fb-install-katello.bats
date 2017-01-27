@@ -55,27 +55,8 @@ setup() {
   fi
 }
 
-
 @test "run the installer" {
-  if [ -e "/vagrant/setup.rb" ]; then
-    cd /vagrant
-  else
-    wget https://github.com/Katello/katello-deploy/archive/master.zip
-    unzip master.zip
-    cd katello-deploy-master
-  fi
-
-  cmd=(ruby setup.rb --install-options="-v --foreman-admin-password=changeme --disable-system-checks" --scenario katello)
-
-  if [ $USE_KOJI_REPOS ]; then
-  cmd[${#cmd[@]}]="--koji-repos"
-  fi
-
-  if [ $USE_PUPPET_FOUR ]; then
-  cmd[${#cmd[@]}]="--puppet-four"
-  fi
-
-  "${cmd[@]}"
+  foreman-installer --scenario katello --no-colors -v --disable-system-checks --foreman-admin-password=changeme 
 }
 
 @test "run the installer once again" {

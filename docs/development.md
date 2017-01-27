@@ -29,9 +29,12 @@ For example, if I wanted my upstream remotes to be origin and to install the rem
 ```
 centos7-devel:
   box: centos7
-  shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
-  options: --scenario=katello-devel
-  installer: --katello-devel-github-username myname --katello-devel-upstream-remote-name origin --katello-devel-extra-plugins theforeman/foreman_remote_execution --katello-devel-extra-plugins theforeman/foreman_discovery
+  ansible:
+    playbook: 'playbooks/devel.yml'
+    group: 'devel'
+    variables:
+      katello_devel_github_username: <REPLACE ME>
+      foreman_installer_options_internal_use_only: "--katello-devel-github-username myname --katello-devel-upstream-remote-name origin --katello-devel-extra-plugins theforeman/foreman_remote_execution --katello-devel-extra-plugins theforeman/foreman_discovery"
 ```
 
 Lastly, spin up the box:
@@ -50,26 +53,8 @@ The box can now be accessed via ssh and the Rails server started directly (this 
 
 ## Koji Scratch Builds
 
-The setup.rb script supports using Koji scratch builds to make RPMs available for testing purposes. For example, if you want to test a change to nightly, with a scratch build of rubygem-katello. This is done by fetching the scratch builds, and deploying a local yum repo to the box you are deploying on. Multiple scratch builds are also supported for testing changes to multiple components at once (e.g. the installer and the rubygem), see examples below. Also, this option may be specified from within boxes.yaml via the `options:` option.
+Forklift supports using Koji scratch builds to make RPMs available for testing purposes. For example, if you want to test a change to nightly, with a scratch build of rubygem-katello. This is done by fetching the scratch builds, and deploying a local yum repo to the box you are deploying on. Multiple scratch builds are also supported for testing changes to multiple components at once (e.g. the installer and the rubygem), see examples below. Also, this option may be specified from within boxes.yaml via the `options:` option.
 
-Single Scratch Build
-
-```
-./setup.rb --koji-task 214567
-```
-
-Multiple Scratch Builds
-
-```
-./setup.rb --koji-task 214567,879567,2747127
-```
-
-Custom Box
-```
-koji:
-  box: centos6
-  options: --koji-task 214567,879567
-```
 
 An Ansible role is provided that can setup and configure a Koji scratch build for testing. If you had an existing playbook such as:
 
@@ -174,14 +159,6 @@ changing the hostnames as needed
 * setup boxes.yaml
 
 ```
-foo:
-  box: centos7
-  shell: 'yum -y install ruby && cd /vagrant && ./setup.rb'
-  options: --scenario=katello-devel
-  installer: --katello-devel-github-username <your-github-name>
-  ansible:
-    group: 'server'
-
 capsule-dev:
   box: centos7
   ansible:
