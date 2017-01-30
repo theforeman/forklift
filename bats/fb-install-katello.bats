@@ -96,6 +96,7 @@ setup() {
 }
 
 @test "wake up puppet agent" {
+  source ~/.bashrc
   puppet agent -t -v
 }
 
