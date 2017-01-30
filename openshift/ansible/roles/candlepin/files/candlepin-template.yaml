@@ -1,0 +1,136 @@
+---
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "candlepin"
+  annotations:
+    description: "Candlepin application"
+    tags: "quickstart,candlepin"
+labels:
+  template: "candlepin"
+parameters: 
+  - name: "CONTEXT_DIR"
+    displayName: "Context Directory"
+    description: "Set this to the relative path to your project if it is not in the root of your repository."
+  - name: "DATABASE_SERVICE_NAME"
+    required: true
+    displayName: "Database Service Name"
+    value: "postgresql"
+  - name: "DATABASE_USER"
+    displayName: "Database Username"
+    generate: "expression"
+    from: "user[A-Z0-9]{3}"
+  - name: "DATABASE_PASSWORD"
+    displayName: "Database Password"
+    generate: "expression"
+    from: "[a-zA-Z0-9]{8}"
+  - name: "DATABASE_NAME"
+    required: true
+    displayName: "Database Name"
+    value: "root"
+  - name: "MEMORY_LIMIT"
+    displayName: "Memory Limit"
+    required: true
+    description: "Maximum amount of memory the Rails container can use."
+    value: "512Mi"
+objects:
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "candlepin"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "Service"
+    apiVersion: "v1"
+    metadata: 
+      name: "candlepin"
+      annotations: 
+        description: "Exposes and load balances the application pods"
+    spec: 
+      ports: 
+        - name: "web"
+          port: 8080
+          targetPort: 8080
+      selector: 
+        name: "candlepin"
+
+  - kind: "ConfigMap"
+    apiVersion: "v1"
+    metadata:
+      name: "candlepin"
+    data:
+      "candlepin.conf": |
+
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "candlepin"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/foreman-docker-compose.git"
+          ref: "compose-to-openshift"
+        contextDir: "candlepin/"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "candlepin:latest"
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "candlepin"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "candlepin"
+            from:
+              kind: "ImageStreamTag"
+              name: "candlepin:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "candlepin"
+      replicas: 1
+      template:
+        metadata:
+          name: "candlepin"
+          labels:
+            name: "candlepin"
+        spec:
+          restartPolicy: Always
+          containers:
+            - name: "candlepin"
+              image: "candlepin:latest"
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              args:
+                - sh 
+                - setup.sh
+              resources: {}
+              env:
+                - name: DATABASE_SERVICE_NAME
+                  value: "${DATABASE_SERVICE_NAME}"
+                - name: DATABASE_NAME
+                  value: "${DATABASE_NAME}"
+                - name: DATABASE_USER
+                  value: "${DATABASE_USER}"
+                - name: DATABASE_PASSWORD
+                  value: "${DATABASE_USER}"

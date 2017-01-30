@@ -1,0 +1,12 @@
+---
+- name: 'Create Postgres application'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  shell: >
+    oc process -f {{ role_path }}/files/postgresql-template.yaml
+    POSTGRESQL_USER={{ postgresql_user }}
+    POSTGRESQL_PASSWORD={{ postgresql_password }}
+    POSTGRESQL_DATABASE={{ postgresql_database }}
+    VOLUME_CLAIM_NAME={{ postgresql_volume_claim }}
+    | oc create -f -

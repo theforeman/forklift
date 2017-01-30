@@ -1,0 +1,143 @@
+---
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "foreman-proxy"
+  annotations:
+    description: "Foreman Proxy Application"
+    tags: "quickstart,foreman-proxy"
+labels:
+  template: "foreman-proxy"
+objects:
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/foreman-docker-compose.git"
+          ref: "compose-to-openshift"
+        contextDir: "foreman-proxy/"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "${NAME}:latest"
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+        recreateParams:
+          post:
+            failurePolicy: "Abort"
+            execNewPod:
+              containerName: "${NAME}"
+              command:
+                - sh
+                - register.sh
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "${NAME}"
+      replicas: 1
+      template:
+        metadata:
+          name: "${NAME}"
+          labels:
+            name: "${NAME}"
+        spec:
+          restartPolicy: "Always"
+          hostname: "foreman-proxy"
+          containers:
+            - name: "foreman-proxy"
+              image: "${NAME}:latest"
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              args:
+                - sh
+                - start.sh
+              resources: {}
+              env:
+
+  - kind: "Service"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+      annotations: 
+        description: "Exposes and load balances the application pods"
+    spec: 
+      ports: 
+        - name: "web"
+          port: 8080
+          targetPort: 8080
+      selector: 
+        name: "${NAME}"
+
+  - kind: "Route"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+    spec: 
+      host: ""
+      to: 
+        kind: "Service"
+        name: "${NAME}"
+
+parameters: 
+  - name: "NAME"
+    displayName: "Name"
+    description: "The name assigned to all of the frontend objects defined in this template."
+    required: true
+    value: "foreman-proxy"
+
+  - name: "NAMESPACE"
+    displayName: "Namespace"
+    required: true
+    description: "The OpenShift Namespace where the ImageStream resides."
+    value: "openshift"
+
+  - name: "SOURCE_REPOSITORY_URL"
+    displayName: "Git Repository URL"
+    required: true
+    description: "The URL of the repository with your application source code."
+    value: "https://github.com/theforeman/foreman-proxy.git"
+
+  - name: "CONTEXT_DIR"
+    displayName: "Context Directory"
+    description: "Set this to the relative path to your project if it is not in the root of your repository."
+
+  - name: "MEMORY_LIMIT"
+    displayName: "Memory Limit"
+    required: true
+    description: "Maximum amount of memory the Rails container can use."
+    value: "512Mi"

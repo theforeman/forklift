@@ -1,0 +1,40 @@
+---
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "persistent-volume"
+labels:
+  template: "persistent-volume-template"
+parameters:
+  - name: "NAME"
+    displayName: "Name"
+    description: "Name for the volume"
+    value: "pv0001"
+  - name: "TYPE"
+    displayName: "Type"
+    description: "Type for the volume"
+    value: "local"
+  - name: "CAPACITY"
+    displayName: "Capacity"
+    description: "Capacity for the volume"
+    value: "10Gi"
+  - name: "VOLUME_PATH"
+    displayName: "Volume Path"
+    description: "Volume path on disk"
+    value: "/tmp/data01"
+objects:
+  - kind: "PersistentVolume"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}"
+      labels:
+        type: "${TYPE}"
+    spec:
+      capacity:
+        storage: "${CAPACITY}"
+      accessModes:
+        - ReadWriteOnce
+      hostPath:
+        path: "${VOLUME_PATH}"
+      ClaimRef:
+        name: "local-data"

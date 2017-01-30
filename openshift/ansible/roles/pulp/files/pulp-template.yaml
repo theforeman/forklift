@@ -1,0 +1,459 @@
+---
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "pulp"
+  annotations:
+    description: "Pulp application"
+    tags: "quickstart,pulp"
+labels:
+  template: "pulp"
+parameters: 
+  - name: "NAME"
+    displayName: "Name"
+    description: "The name assigned to all of the frontend objects defined in this template."
+    required: true
+    value: "pulp"
+  - name: "NAMESPACE"
+    displayName: "Namespace"
+    required: true
+    description: "The OpenShift Namespace where the ImageStream resides."
+    value: "openshift"
+  - name: "CONTEXT_DIR"
+    displayName: "Context Directory"
+    description: "Set this to the relative path to your project if it is not in the root of your repository."
+    value: "openshift/docker"
+  - name: "APPLICATION_USER"
+    displayName: "Application Username"
+    required: true
+    description: "The application user that is used within the sample application to authorize access on pages."
+    value: "admin"
+  - name: "APPLICATION_PASSWORD"
+    displayName: "Application Password"
+    required: true
+    description: "The application password that is used within the sample application to authorize access on pages."
+    value: "changeme"
+  - name: "DATABASE_SERVICE_NAME"
+    required: true
+    displayName: "Database Service Name"
+    value: "mongodb"
+  - name: "DATABASE_USER"
+    displayName: "Database Username"
+    generate: "expression"
+    from: "user[A-Z0-9]{3}"
+  - name: "DATABASE_PASSWORD"
+    displayName: "Database Password"
+    generate: "expression"
+    from: "[a-zA-Z0-9]{8}"
+  - name: "DATABASE_NAME"
+    required: true
+    displayName: "Database Name"
+    value: "root"
+  - name: "MEMORY_LIMIT"
+    displayName: "Memory Limit"
+    required: true
+    description: "Maximum amount of memory the Rails container can use."
+    value: "512Mi"
+  - name: "PULP_CONTENT_VOLUME_CLAIM"
+    displayName: "Pulp Content Volume Claim"
+    description: "The name of the persistent volume claim to use for storing Pulp content"
+    value: "local-data"
+    required: true
+objects:
+  - kind: "Service"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+      annotations: 
+        description: "Exposes and load balances the application pods"
+    spec: 
+      ports: 
+        - name: "web"
+          port: 8080
+          targetPort: 8080
+      selector: 
+        name: "${NAME}"
+
+  - kind: "Route"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}"
+    spec: 
+      host: ""
+      to: 
+        kind: "Service"
+        name: "${NAME}"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}-base"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}-apache"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}-worker"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}-beat"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata: 
+      name: "${NAME}-resource-manager"
+      annotations: 
+        description: "Keeps track of changes in the application image"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-base"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/pulp/base"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "${NAME}-base:latest"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-worker"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/pulp/worker"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+          from:
+            kind: "ImageStreamTag"
+            name: "pulp-base:latest"
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "${NAME}-worker:latest"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-beat"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/pulp/beat"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+          from:
+            kind: "ImageStreamTag"
+            name: "pulp-base:latest"
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "${NAME}-beat:latest"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-resource-manager"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/pulp/resource_manager"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+          from:
+            kind: "ImageStreamTag"
+            name: "pulp-base:latest"
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "${NAME}-resource-manager:latest"
+  
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-apache"
+    spec: 
+      source: 
+        type: "Git"
+        git:
+          uri: "https://github.com/ehelms/forklift.git"
+          ref: "openshift"
+        contextDir: "${CONTEXT_DIR}/pulp/apache"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+          from:
+            kind: "ImageStreamTag"
+            name: "pulp-base:latest"
+      triggers: 
+        - type: "ImageChange"
+        - type: "ConfigChange"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "${NAME}-apache:latest"
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-worker"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}-worker"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}-worker:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "${NAME}-worker"
+      replicas: 4
+      template:
+        metadata:
+          name: "${NAME}-worker"
+          labels:
+            name: "${NAME}-worker"
+        spec:
+          restartPolicy: Always
+          containers:
+            - name: "pulp-worker"
+              image: "${NAME}-worker:latest"
+              ports:
+                - containerPort: 5672
+                  protocol: TCP
+              resources: {}
+              env: []
+              volumeMounts:
+                #- name: dev-log
+                #mountPath: /dev/log
+                - name: local-data
+                  mountPath: /var/lib/pulp
+                  subPath: pulp
+                - name: local-data
+                  mountPath: /etc/puppet
+                  subPath: puppet
+          volumes:
+            #- name: dev-log
+            #emptyDir:
+            #path: /dev/log
+            - name: local-data
+              persistentVolumeClaim:
+                claimName: "${PULP_CONTENT_VOLUME_CLAIM}"
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+        recreateParams:
+          pre:
+            failurePolicy: "Abort"
+            execNewPod:
+              containerName: "${NAME}-apache"
+              command:
+                - runuser
+                - -u
+                - apache
+                - pulp-manage-db
+              volumes:
+                #- dev-log
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}-apache"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}-apache:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "${NAME}"
+      replicas: 1
+      template:
+        metadata:
+          name: "${NAME}"
+          labels:
+            name: "${NAME}"
+        spec:
+          restartPolicy: Always
+          containers:
+            - name: "pulp-apache"
+              image: "${NAME}-apache:latest"
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              args:
+                - httpd
+                - "-D"
+                - FOREGROUND
+              resources: {}
+              env: []
+              volumeMounts:
+                #- name: dev-log
+                #mountPath: /dev/log
+                - name: local-data
+                  mountPath: /var/lib/pulp
+                  subPath: pulp
+          volumes:
+            #- name: dev-log
+            #emptyDir:
+            #path: /dev/log
+            - name: local-data
+              persistentVolumeClaim:
+                claimName: "${PULP_CONTENT_VOLUME_CLAIM}"
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-resource-manager"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}-resource-manager"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}-resource-manager:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "${NAME}-resource-manager"
+      replicas: 1
+      template:
+        metadata:
+          name: "${NAME}-resource-manager"
+          labels:
+            name: "${NAME}-resource-manager"
+        spec:
+          restartPolicy: Always
+          containers:
+            - name: "pulp-resource-manager"
+              image: "${NAME}-resource-manager:latest"
+              ports:
+                - containerPort: 5672
+                  protocol: TCP
+              resources: {}
+              env: []
+              #volumeMounts:
+              #- name: dev-log
+              #mountPath: /dev/log
+          volumes:
+            #- name: dev-log
+            #emptyDir:
+            #path: /dev/log
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${NAME}-beat"
+      annotations:
+        description: "Defines how to deploy the application server"
+    spec:
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${NAME}-beat"
+            from:
+              kind: "ImageStreamTag"
+              name: "${NAME}-beat:latest"
+        - type: "ConfigChange"
+      selector:
+        name: "${NAME}-beat"
+      replicas: 1
+      template:
+        metadata:
+          name: "${NAME}-beat"
+          labels:
+            name: "${NAME}-beat"
+        spec:
+          restartPolicy: Always
+          containers:
+            - name: "pulp-beat"
+              image: "${NAME}-beat:latest"
+              ports:
+                - containerPort: 5672
+                  protocol: TCP
+              resources: {}
+              env: []
+              #volumeMounts:
+              #- name: dev-log
+              #mountPath: /dev/log
+          volumes:
+            #- name: dev-log
+            #emptyDir:
+            #path: /dev/log
+

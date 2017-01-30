@@ -1,0 +1,4 @@
+---
+candlepin_database_user: candlepin
+candlepin_database_password: candlepin
+candlepin_database: candlepin

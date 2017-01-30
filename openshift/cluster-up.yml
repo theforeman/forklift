@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  tasks:
+    - name: "Spin cluster up"
+      command: oc cluster up
+
+    - name: "Login as system admin to OpenShift"
+      command: oc login -u system:admin
+
+    - name: 'Set security context'
+      command: oadm policy add-scc-to-group anyuid system:authenticated
+
+    - name: 'Give developer cluster-admin'
+      command: oadm policy add-cluster-role-to-user cluster-admin developer
+
+    - name: "Login back in as developer"
+      command: oc login -u developer -p a
+
+    - name: "Delete initial project"
+      command: oc delete project myproject
+    
+    - name: 'Create .tmp directory'
+      file:
+        path: .tmp
+        state: directory
+
+    - name: 'Clone templates repository'
+      git:
+        repo: https://github.com/openshift/openshift-ansible.git
+        dest: .tmp/openshift-ansible

@@ -5,6 +5,7 @@ AllCops:
     - 'test/**/*.rb'
   Exclude:
     - !ruby/regexp /katello-installer/
+    - openshift/**/*.rb
     - '**/setup.rb'
 
 Metrics/LineLength:

@@ -1,0 +1,9 @@
+---
+- name: 'Create Puppetserver application'
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  shell: >
+    oc process -f {{ role_path }}/files/puppet-template.yaml
+    VOLUME_CLAIM_NAME={{ puppet_volume_claim }}
+    | oc create -f -

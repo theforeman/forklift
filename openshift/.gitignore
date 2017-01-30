@@ -1,0 +1,4 @@
+*.retry
+.tmp/
+*.pyc
+plantuml.jar

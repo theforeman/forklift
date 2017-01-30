@@ -1,0 +1,39 @@
+---
+- name: "Create local volume"
+  file:
+    path: "{{ local_volume_path }}"
+    state: directory
+    owner: apache
+    group: apache
+
+- name: "Create Pulp sub-path"
+  file:
+    path: "{{ local_volume_path }}/pulp"
+    state: directory
+    mode: 0777
+
+- name: "Create Puppet sub-path"
+  file:
+    path: "{{ local_volume_path }}/puppet"
+    state: directory
+    mode: 0777
+
+- name: "Create Postgresql sub-path"
+  file:
+    path: "{{ local_volume_path }}/postgresql"
+    state: directory
+    mode: 0777
+
+- name: "Create MongoDB sub-path"
+  file:
+    path: "{{ local_volume_path }}/mongodb"
+    state: directory
+    mode: 0777
+
+- name: "Create persistent volume"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+  shell: >
+    oc process -f {{ role_path }}/files/volume-template.yaml
+    | oc create -f -

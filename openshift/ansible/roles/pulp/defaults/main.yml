@@ -1,0 +1,5 @@
+---
+pulp_database: pulp_database
+pulp_database_password: admin
+pulp_database_user: admin
+pulp_content_volume_claim: local-data

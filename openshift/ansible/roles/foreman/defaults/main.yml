@@ -1,0 +1,12 @@
+---
+foreman_enable_katello: false
+foreman_enable_foreman_discovery: false
+foreman_enable_foreman_docker: false
+foreman_enable_foreman_remote_execution: false
+foreman_enable_foreman_ansible: false
+foreman_enable_foreman_hooks: false
+foreman_enable_foreman_openscap: false
+
+foreman_database: foreman
+foreman_database_user: foreman
+foreman_database_password: foreman

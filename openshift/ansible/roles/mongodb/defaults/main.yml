@@ -1,0 +1,6 @@
+---
+mongodb_user: admin
+mongodb_password: admin
+mongodb_admin_password: admin
+mongodb_database: mongodb
+mongodb_volume_claim: local-data
