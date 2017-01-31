@@ -2,4 +2,4 @@
 bats_git_dir: "/root/bats"
 bats_forklift_dir: "/root/forklift"
 bats_update_forklift: "yes"
-bats_tests: "fb-install-katello.bats fb-content-katello.bats fb-proxy.bats fb-finish-katello.bats"
+bats_tests: "fb-install-katello.bats fb-content-katello.bats fb-finish-katello.bats"
