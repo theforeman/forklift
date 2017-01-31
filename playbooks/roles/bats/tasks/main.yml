@@ -21,7 +21,13 @@
     dest: "{{ bats_forklift_dir }}"
     update: "{{ bats_update_forklift }}"
 
+- name: "Bats output directory"
+  file:
+    state: "directory"
+    path: "{{ bats_output_dir }}"
+
 - name: "Run bats"
-  shell: "bats {{ bats_tests }}"
+  shell: "bats --tap {{ item }} > {{ bats_output_dir }}/{{ item }}.tap"
   args:
     chdir: "{{ bats_forklift_dir }}/bats"
+  with_items: "{{ bats_tests }}"
