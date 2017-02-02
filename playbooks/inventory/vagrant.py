@@ -6,7 +6,7 @@ import json
 import paramiko
 import subprocess
 import sys
-
+import os
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Vagrant inventory script")
@@ -19,10 +19,11 @@ def parse_args():
 def list_running_hosts():
     hosts = {}
 
-    try:
-        status = subprocess.check_call(["which","vagrant"])
-    except:
-        return hosts
+    with open(os.devnull, 'w') as FNULL:
+        try:
+            subprocess.check_call(["which","vagrant"], stdout=FNULL)
+        except subprocess.CalledProcessError as e:
+            return hosts
 
     cmd = "vagrant status --machine-readable"
     status = subprocess.check_output(cmd.split()).rstrip()
@@ -34,15 +35,16 @@ def list_running_hosts():
 
         if key == 'state' and value == 'running':
             hosts[host] = get_host_details(host)
-    return hosts
+    return {}
 
 
 def get_host_details(host):
     cmd = "vagrant ssh-config {}".format(host)
-    try:
-        saubprocess.check_call(cmd.split()).rstrip()
-    except:
-        return {}
+    with open(os.devnull, 'w') as FNULL:
+        try:
+            subprocess.check_call(cmd.split(), stdout=FNULL, stderr=FNULL)
+        except subprocess.CalledProcessError as e:
+            return {}
 
     p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
     config = paramiko.SSHConfig()
@@ -59,7 +61,7 @@ def main():
     if args.list:
         hosts = list_running_hosts()
         json.dump(hosts, sys.stdout)
-    else:
+    elif args.host:
         details = get_host_details(args.host)
         json.dump(details, sys.stdout)
 
