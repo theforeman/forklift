@@ -31,3 +31,20 @@
   args:
     chdir: "{{ bats_forklift_dir }}/bats"
   with_items: "{{ bats_tests }}"
+  register: "test_output"
+  ignore_errors: true
+
+- name: "Read results"
+  shell: "cat {{ bats_output_dir }}/{{ item }}.tap"
+  register: "test_results"
+  with_items: "{{ bats_tests }}"
+
+- name: "Output test results"
+  debug:
+    msg: "{{ test_results.results | join('\n', attribute='stdout') }}"
+
+- name: "Fail if tests didn't pass"
+  fail:
+    msg: "Test failed, please see {{ bats_output_dir }}/ for more information"
+  when: item.rc != 0
+  with_items: "{{ test_output.results }}"
