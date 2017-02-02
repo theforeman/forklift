@@ -35,7 +35,7 @@ def list_running_hosts():
 
         if key == 'state' and value == 'running':
             hosts[host] = get_host_details(host)
-    return {}
+    return hosts
 
 
 def get_host_details(host):
