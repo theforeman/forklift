@@ -2,6 +2,8 @@ sudo: false
 language: python
 python:
   - 2.7
+before_install:
+  - cd vagrant
 install:
   - pip install ansible-lint
   - rvm install 2.2.4
