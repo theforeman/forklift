@@ -25,3 +25,14 @@ katello-client:
     group: 'client'
     server: 'centos7-devel'
 
+centos7-bats-ci:
+  box: centos7-bats
+  ansible:
+    playbook: 'playbooks/bats_pipeline_nightly.yml'
+    group: 'bats'
+    variables:
+      bats_tests:
+        - "swapfile.bats"
+        - "fb-install-katello.bats"
+        - "fb-content-katello.bats"
+        - "fb-finish-katello.bats"
