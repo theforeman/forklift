@@ -1,0 +1,21 @@
+---
+- hosts: pipeline-katello-3.2-3.3-centos7
+  become: yes
+  vars:
+    puppet_repositories_version: 3
+    katello_version: 3.2
+    foreman_version: 1.13
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+      - "--disable-system-checks"
+    foreman_installer_additional_packages:
+      - katello
+  roles:
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer

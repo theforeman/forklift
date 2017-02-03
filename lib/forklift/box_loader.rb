@@ -10,15 +10,17 @@ module Forklift
       @shells = {}
     end
 
-    def add_boxes(box_file, version_file)
-      config = YAML.load_file(box_file)
+    def add_boxes(boxes, version_file)
+      if boxes.is_a?(String) && File.exist?(boxes)
+        config = YAML.load_file(boxes)
+      else
+        config = boxes
+      end
       return @boxes unless config
 
       versions = YAML.load_file(version_file)
 
-      process_shells(config['shells']) if config.key?('shells')
-
-      if config.key?('boxes')
+      if config.is_a?(Hash) && config.key?('boxes')
         process_versions(config, versions)
         process_boxes(config['boxes'])
       else

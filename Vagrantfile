@@ -11,16 +11,26 @@ SUPPORT_BOX_CHECK_UPDATE = Gem.loaded_specs['vagrant'].version >= Gem::Version.c
 VAGRANTFILE_DIR = File.dirname(__FILE__)
 
 module Forklift
+    
+  CURRENT_FILE = File.dirname(__FILE__)
 
   def self.plugin_base_boxes
-    current = File.dirname(__FILE__)
-    base_boxes = Dir.glob "#{current}/plugins/*/base_boxes.yaml"
+    base_boxes = Dir.glob "#{CURRENT_FILE}/plugins/*/base_boxes.yaml"
     base_boxes.each { |boxes| add_boxes(boxes) }
   end
 
+  def self.pipeline_boxes
+    loader = PipelineLoader.new("#{CURRENT_FILE}/pipelines")
+    loader.boxes.each { |boxes| add_boxes(boxes) }
+  end
+
+  def self.plugin_pipeline_boxes
+    loader = PipelineLoader.new("#{CURRENT_FILE}/plugins/*/pipelines")
+    loader.boxes.each { |boxes| add_boxes(boxes) }
+  end
+
   def self.plugin_vagrantfiles
-    current = File.dirname(__FILE__)
-    Dir.glob "#{current}/plugins/*/Vagrantfile"
+    Dir.glob "#{CURRENT_FILE}/plugins/*/Vagrantfile"
   end
 
   def self.add_boxes(boxes)
@@ -125,6 +135,8 @@ module Forklift
   @boxes = @box_loader.add_boxes("#{VAGRANTFILE_DIR}/config/base_boxes.yaml", "#{VAGRANTFILE_DIR}/config/versions.yaml")
   plugin_vagrantfiles.each { |f| load f }
   plugin_base_boxes
+  pipeline_boxes
+  plugin_pipeline_boxes
   @boxes = @box_loader.add_boxes("#{VAGRANTFILE_DIR}/boxes.yaml", "#{VAGRANTFILE_DIR}/config/versions.yaml") if File.exists?("#{VAGRANTFILE_DIR}/boxes.yaml")
   @boxes  = @boxes.keys.sort.inject({}) do |hash, key|
     hash[key] = @boxes[key]

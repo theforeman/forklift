@@ -1,0 +1,5 @@
+---
+puppet_repositories_version: 4
+katello_version: 3.3
+foreman_version: 1.14
+katello_repositories_use_koji: true

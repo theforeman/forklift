@@ -1,0 +1,15 @@
+---
+name: install_33
+description: "Install Katello 3.3 with a Proxy and run bats tests"
+boxes:
+  pipeline-katello-3.3-centos7:
+    box: centos7
+    memory: 4680
+  pipeline-proxy-3.3-centos7:
+    box: centos7
+    memory: 3072
+playbooks:
+  - install_katello.yml
+  - install_proxy.yml
+  - bats_on_katello.yml
+  - bats_on_proxy.yml

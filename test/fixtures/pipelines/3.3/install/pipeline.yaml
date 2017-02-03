@@ -1,0 +1,9 @@
+---
+name: "Katello 3.3 installation"
+boxes:
+  pipeline-katello-centos7:
+    box: centos7
+    memory: 4680
+  pipeline-capsule-centos7:
+    box: centos7
+    memory: 3072

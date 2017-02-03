@@ -2,7 +2,7 @@
 foreman_installer_additional_packages: []
 foreman_installer_admin_password: changeme
 foreman_installer_skip_installer: False
-foreman_installer_verbose: True
+foreman_installer_verbose: False
 foreman_installer_scenario: foreman
 
 # Comma-separated list of "organization/module/pr_number", e.g. "katello/foreman_proxy_content/37,katello/certs/34"

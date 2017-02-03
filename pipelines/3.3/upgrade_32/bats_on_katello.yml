@@ -1,0 +1,5 @@
+---
+- hosts: pipeline-katello-3.2-3.3-centos7
+  become: true
+  roles:
+    - bats

@@ -5,7 +5,7 @@ centos7-devel:
     playbook: 'playbooks/devel.yml'
     group: 'devel'
     variables:
-      katello_devel_github_username: <REPLACE ME>
+      katello_devel_github_username: ehelms
 
 katello-remote-execution:
   box: centos7-katello-nightly

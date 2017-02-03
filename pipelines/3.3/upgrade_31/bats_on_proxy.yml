@@ -1,0 +1,8 @@
+---
+- hosts: pipeline-proxy-3.3-centos7
+  become: true
+  vars:
+    bats_tests:
+      - fb-proxy.bats
+  roles:
+    - bats
