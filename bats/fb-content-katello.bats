@@ -55,18 +55,13 @@ setup() {
 }
 
 @test "add repo to content view" {
-  repo_id=$(hammer -u admin -p changeme repository list --organization="Default Organization" \
-    | grep Zoo | cut -d\| -f1 | egrep -i '[0-9]+')
   hammer -u admin -p changeme content-view add-repository --organization="Default Organization" \
-    --name="Test CV" --repository-id=$repo_id | grep -q "The repository has been associated"
+    --name="Test CV" --product="Test Product" --repository=Zoo | grep -q "The repository has been associated"
 }
 
 @test "add puppet module to content view" {
-  repo_id=$(hammer -u admin -p changeme repository list --organization="Default Organization" \
-    | grep Puppet | cut -d\| -f1 | egrep -i '[0-9]+')
-  module_id=$(hammer -u admin -p changeme puppet-module list --repository-id=$repo_id | grep dummy | cut -d\| -f1)
   hammer -u admin -p changeme content-view puppet-module add --organization="Default Organization" \
-    --content-view="Test CV" --id=$module_id | grep -q "Puppet module added to content view"
+    --content-view="Test CV" --author=stbenjam --name=dummy | grep -q "Puppet module added to content view"
 }
 
 @test "publish content view" {
@@ -82,7 +77,7 @@ setup() {
 @test "create activation key" {
   hammer -u admin -p changeme activation-key create --organization="Default Organization" \
     --name="Test AK" --content-view="Test CV" --lifecycle-environment="Test" \
-    --unlimited-hosts | grep -q "Activation key created"
+    --unlimited-content-hosts | grep -q "Activation key created"
 }
 
 @test "disable auto-attach" {
