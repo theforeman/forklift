@@ -21,12 +21,12 @@ The Vagrantfile provides default setup and boxes for use with the `vagrant-libvi
 
 1. Ensure you have Vagrant installed
    * For **libvirt**:
-     1. Ensure you have the prerequisites installed `sudo yum install ruby rubygems ruby-devel gcc`
+     1. Ensure you have the prerequisites installed `sudo yum install ruby rubygems ruby-devel gcc gcc-c++`
 1. Install libvirt. On CentOS/Fedora/RHEL, run `sudo yum install @virtualization libvirt-devel`
 1. Install the libvirt plugin for Vagrant (see [vagrant-libvirt page](https://github.com/vagrant-libvirt/vagrant-libvirt) for more information) `vagrant plugin install vagrant-libvirt`
 1. Make sure your user is in the `qemu` group. (e.g. `[[ ! "$(groups $(whoami))" =~ "qemu" ]] && sudo usermod -aG qemu $(whoami)`)
 1. Set the libvirt environment variable in your `.bashrc` or for your current session - `export VAGRANT_DEFAULT_PROVIDER=libvirt`
-1. If you are asked to provide your password for every command, follow [these policykit steps](http://fedoramagazine.org/running-vagrant-fedora-22/).
+1. If you are asked to provide your password for every command, follow [these policykit steps](https://developer.fedoraproject.org/tools/vagrant/vagrant-libvirt.html).
 
 ### Vagrant Box Installation
 
