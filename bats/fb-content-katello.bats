@@ -132,7 +132,7 @@ EOF
   fi
 
   rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm || true
-  subscription-manager register --force --org="Default_Organization" --activationkey="Test AK" || true
+  subscription-manager register --force --org="Test_Organization" --activationkey="Test AK" || true
   subscription-manager status | grep -q "Current"
 }
 
@@ -141,7 +141,7 @@ EOF
 }
 
 @test "enable content view repo" {
-  subscription-manager repos --enable="Default_Organization_Test_Product_Zoo" | grep -q "is enabled for this system"
+  subscription-manager repos --enable="Test_Organization_Test_Product_Zoo" | grep -q "is enabled for this system"
 }
 
 @test "install katello-agent" {
@@ -189,7 +189,7 @@ EOF
   # FIXME: If katello host is subscribed to itself, should it's puppet env also be updated? #7364
   # Skipping because of http://projects.theforeman.org/issues/8244
   skip
-  target_env=$(hammer -u admin -p changeme environment list | grep KT_Default_Organization_Test_Test_CV | cut -d\| -f1)
+  target_env=$(hammer -u admin -p changeme environment list | grep KT_Test_Organization_Test_Test_CV | cut -d\| -f1)
   hammer -u admin -p changeme host update --name $(hostname -f) --environment-id=$target_env \
     --puppetclass-ids=1 | grep -q "Host updated"
 }
