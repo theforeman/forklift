@@ -74,5 +74,5 @@ boxes:
 
   runcible:
     box: centos7
-    shell: '/vagrant/shells/runcible.sh'
-    privileged: false
+    ansible:
+      playbook: 'playbooks/runcible.yml'
