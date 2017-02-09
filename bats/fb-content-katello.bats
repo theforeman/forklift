@@ -84,7 +84,7 @@ setup() {
 
 @test "promote content view" {
   hammer -u admin -p changeme content-view version promote  --organization="Test Organization" \
-    --content-view="Test CV" --to-lifecycle-environment="Test" --version 1
+    --content-view="Test CV" --to-lifecycle-environment="Test" --from-lifecycle-environment="Library"
 }
 
 @test "create activation key" {
@@ -182,7 +182,7 @@ EOF
 
 @test "promote content view" {
   hammer -u admin -p changeme content-view version promote  --organization="Test Organization" \
-    --content-view="Test CV" --to-lifecycle-environment="Test" --version 1
+    --content-view="Test CV" --to-lifecycle-environment="Test" --from-lifecycle-environment="Library"
 }
 
 @test "add puppetclass to host" {
