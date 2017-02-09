@@ -1,3 +1,4 @@
+---
 - name: 'get existing rails server pid'
   command: cat {{ base_foreman_directory }}tmp/pids/server.pid
   register: existing_rails_server
