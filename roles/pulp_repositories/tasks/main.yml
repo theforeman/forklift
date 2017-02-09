@@ -1,0 +1,8 @@
+---
+- name: Add Pulp repository
+  yum_repository:
+    name: pulp-repository
+    description: Pulp release repository
+    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/{{ pulp_repositories_release }}/{{ pulp_repositories_version }}/7Server/x86_64/"
+    gpgcheck: no
+    enabled: yes

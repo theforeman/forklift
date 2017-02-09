@@ -1,0 +1,104 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - puppet_repositories
+    - pulp_repositories
+    - epel_repositories
+
+- hosts: all
+  tasks:
+    - name: 'Add OSTree repo'
+      yum_repository:
+        name: atomic7-testing
+        description: "Atomic testing repository"
+        baseurl: http://cbs.centos.org/repos/atomic7-testing/x86_64/os/
+        gpgcheck: no
+        enabled: yes
+      become: true
+
+    - name: 'Install packages'
+      yum:
+        name: "{{ item }}"
+        state: "present"
+      become: true
+      with_items:
+        - ruby-devel
+        - rubygem-bundler
+        - libxml2-devel
+        - ruby
+        - rake
+        - gcc
+        - wget
+        - git
+        - nss
+        - puppet
+        - glib2
+        - ostree
+
+    - name: "Install RVM gpg key"
+      shell: "gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3"
+
+    - name: "Install RVM"
+      shell: "curl -sSL https://get.rvm.io | bash -s stable --ruby"
+
+    - name: "Install librarian-puppet"
+      gem:
+        name: librarian-puppet
+        state: present
+
+    - name: "Clone puppet-pulp"
+      git:
+        repo: https://github.com/katello/puppet-pulp.git
+        dest: "/home/vagrant/puppet-pulp"
+
+    - name: "Deploy Puppetfile"
+      copy:
+        content: "forge \"https://forgeapi.puppetlabs.com\"\nmetadata"
+        dest: "/home/vagrant/puppet-pulp/Puppetfile"
+
+    - name: "Install Puppet modules"
+      shell: "/home/vagrant/bin/librarian-puppet install"
+      args:
+        chdir: "/home/vagrant/puppet-pulp"
+      remote_user: "vagrant"
+
+    - name: "Link pulp puppet module"
+      file:
+        state: link
+        src: "/home/vagrant/puppet-pulp"
+        dest: "/home/vagrant/puppet-pulp/modules/pulp"
+
+    - name: "Deploy test.pp"
+      copy:
+        content: "class { pulp:\nenable_rpm => true,\nenable_docker => true,\nenable_puppet => true,\nenable_ostree => true,\nenable_deb => true,\nenable_python => true\n}"
+        dest: "/home/vagrant/test.pp"
+
+    - name: "Run puppet apply"
+      become: true
+      shell: "/opt/puppetlabs/bin/puppet apply --modulepath=/home/vagrant/puppet-pulp/modules /home/vagrant/test.pp"
+
+    - name: "Open up permissions on server.conf"
+      become: true
+      file:
+        state: file
+        path: /etc/pulp/server.conf
+        mode: "0644"
+
+    - name: "Clone runcible"
+      git:
+        repo: https://github.com/katello/runcible.git
+        dest: "/home/vagrant/runcible"
+
+    - name: "Install bundler"
+      command: "gem install bundler"
+
+    - name: "Bundle install"
+      bundler:
+        state: latest
+        chdir: "/home/vagrant/runcible"
+
+    - name: "Run tests"
+      shell: "rake test mode=all"
+      args:
+        chdir: "/home/vagrant/runcible"
