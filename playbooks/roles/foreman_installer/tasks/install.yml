@@ -6,3 +6,5 @@
       {{ foreman_installer_options }}
       {{ foreman_installer_options_internal_use_only | join(" ") }}
   when: not foreman_installer_skip_installer
+  tags:
+    - installation

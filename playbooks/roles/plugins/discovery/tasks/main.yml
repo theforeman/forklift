@@ -1,0 +1,6 @@
+- name: 'Install discovery plugin'
+  shell: >
+    foreman-installer
+    --enable-foreman-plugin-discovery
+  tags:
+    - installation
