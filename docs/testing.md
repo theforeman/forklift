@@ -21,6 +21,16 @@ To execute the bats framework:
   1.  ./bats/bootstrap.sh
   2.  katello-bats
 
+## Pipeline Testing
+
+Under `playbooks/pipelines` are a series of playbooks designed around testing scenarios for various version of the Foreman and Katello stack. To run one:
+
+    ansible-playbook playbooks/pipelines/pipeline_katello_nightly -e "forklift_state=up"
+
+When you are finished with the test, you can tear down the associated infrastructure:
+    
+    ansible-playbook playbooks/pipelines/pipeline_katello_nightly -e "forklift_state=destroy"
+
 ## Client Testing With Docker
 
 The docker/clients directory contains setup and configuration to register clients via subscription-manager using an activation key and start katello-agent. Before using the client containers, Docker and docker-compose need to be installed and setup. On a Fedora based system (Fedora 23 or greater):

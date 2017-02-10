@@ -1,22 +1,25 @@
 - hosts: localhost
-  tasks:
-    - name: 'Bring up box for Katello'
-      command: vagrant up pipeline-katello-3.1-centos7
+  vars:
+    forklift_name: pipeline-katello-3.0
+    forklift_boxes:
+      pipeline-katello-3.0-centos7:
+        box: centos7
+        memory: 4680
+      pipeline-proxy-3.0-centos7:
+        box: centos7
+        memory: 3072
+  roles:
+    - forklift
 
-    - name: 'Bring up box for Capsule'
-      command: vagrant up pipeline-capsule-3.1-centos7
-
-    - name: 'Refresh inventory'
-      meta: refresh_inventory
-
-- hosts: pipeline-katello-3.1-centos7
+- hosts: pipeline-katello-3.0-centos7
   become: yes
   vars:
-    katello_version: 3.1
-    foreman_version: 1.12
+    katello_version: 3.0
+    foreman_version: 1.11
     katello_repositories_use_koji: true
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
     foreman_installer_additional_packages:
       - katello
@@ -28,16 +31,17 @@
     - katello_repositories
     - foreman_installer
 
-- hosts: pipeline-capsule-3.1-centos7
+- hosts: pipeline-capsule-3.0-centos7
   become: yes
   vars:
-    capsule_server: pipeline-katello-3.1-centos7
-    katello_version: 3.1
-    foreman_version: 1.12
+    capsule_server: pipeline-katello-3.0-centos7
+    katello_version: 3.0
+    foreman_version: 1.11
     katello_repositories_use_koji: true
     foreman_installer_scenario: capsule
     foreman_installer_options_internal_use_only:
-      - '--foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
+      - '--disable-system-checks
+        --foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
         --foreman-proxy-trusted-hosts "{{ ansible_nodename }}"
         --foreman-proxy-foreman-base-url "https://{{ server_fqdn.stdout }}"
         --foreman-proxy-register-in-foreman true
@@ -57,12 +61,12 @@
     - capsule
     - foreman_installer
 
-- hosts: pipeline-katello-3.1-centos7
+- hosts: pipeline-katello-3.0-centos7
   become: true
   roles:
     - bats
 
-- hosts: pipeline-capsule-3.1-centos7
+- hosts: pipeline-capsule-3.0-centos7
   become: true
   vars:
     bats_tests:

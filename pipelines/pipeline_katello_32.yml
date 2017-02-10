@@ -1,19 +1,21 @@
 - hosts: localhost
-  tasks:
-    - name: 'Bring up box for Katello'
-      command: vagrant up pipeline-katello-3.0-centos7
+  vars:
+    forklift_name: pipeline-katello-3.2
+    forklift_boxes:
+      pipeline-katello-3.2-centos7:
+        box: centos7
+        memory: 4680
+      pipeline-proxy-3.2-centos7:
+        box: centos7
+        memory: 3072
+  roles:
+    - forklift
 
-    - name: 'Bring up box for Capsule'
-      command: vagrant up pipeline-capsule-3.0-centos7
-
-    - name: 'Refresh inventory'
-      meta: refresh_inventory
-
-- hosts: pipeline-katello-3.0-centos7
+- hosts: pipeline-katello-3.2-centos7
   become: yes
   vars:
-    katello_version: 3.0
-    foreman_version: 1.11
+    katello_version: 3.2
+    foreman_version: 1.13
     katello_repositories_use_koji: true
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
@@ -22,6 +24,7 @@
     foreman_installer_additional_packages:
       - katello
   roles:
+    - selinux
     - etc_hosts
     - epel_repositories
     - puppet_repositories
@@ -29,12 +32,12 @@
     - katello_repositories
     - foreman_installer
 
-- hosts: pipeline-capsule-3.0-centos7
+- hosts: pipeline-proxy-3.2-centos7
   become: yes
   vars:
-    capsule_server: pipeline-katello-3.0-centos7
-    katello_version: 3.0
-    foreman_version: 1.11
+    foreman_proxy_content_server: pipeline-katello-3.2-centos7
+    katello_version: 3.2
+    foreman_version: 1.13
     katello_repositories_use_koji: true
     foreman_installer_scenario: capsule
     foreman_installer_options_internal_use_only:
@@ -45,26 +48,27 @@
         --foreman-proxy-register-in-foreman true
         --foreman-proxy-oauth-consumer-key "{{ oauth_consumer_key.stdout }}"
         --foreman-proxy-oauth-consumer-secret "{{ oauth_consumer_secret.stdout }}"
-        --capsule-certs-tar "{{ capsule_certs_tar }}"
+        --capsule-certs-tar "{{ foreman_proxy_content_certs_tar }}"
         --capsule-parent-fqdn "{{ server_fqdn.stdout }}"
         --capsule-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"'
     foreman_installer_additional_packages:
       - foreman-installer-katello
   roles:
+    - selinux
     - etc_hosts
     - epel_repositories
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
-    - capsule
+    - foreman_proxy_content
     - foreman_installer
 
-- hosts: pipeline-katello-3.0-centos7
+- hosts: pipeline-katello-3.2-centos7
   become: true
   roles:
     - bats
 
-- hosts: pipeline-capsule-3.0-centos7
+- hosts: pipeline-proxy-3.2-centos7
   become: true
   vars:
     bats_tests:
