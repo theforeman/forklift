@@ -59,7 +59,7 @@ module Forklift
             config['boxes']["#{base_box}-#{scenario}-#{version[scenario]}"] = installer_box
           end
 
-          foreman_proxy_box = build_box(config['boxes'][base_box], 'foreman_proxy_content',
+          foreman_proxy_box = build_box(config['boxes'][base_box], 'foreman-proxy-content',
                                         'playbooks/foreman_proxy_content.yml', version)
           foreman_proxy_box['ansible']['server'] = "#{base_box}-katello-#{version['katello']}"
           config['boxes']["#{base_box}-foreman-proxy-#{version['katello']}"] = foreman_proxy_box
