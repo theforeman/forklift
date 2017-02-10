@@ -1,13 +1,15 @@
 - hosts: localhost
-  tasks:
-    - name: 'Bring up box for Katello'
-      command: vagrant up pipeline-katello-3.3-centos7
-
-    - name: 'Bring up box for Capsule'
-      command: vagrant up pipeline-proxy-3.3-centos7
-
-    - name: 'Refresh inventory'
-      meta: refresh_inventory
+  vars:
+    forklift_name: pipeline-katello-3.3
+    forklift_boxes:
+      pipeline-katello-3.3-centos7:
+        box: centos7
+        memory: 4680
+      pipeline-proxy-3.3-centos7:
+        box: centos7
+        memory: 3072
+  roles:
+    - forklift
 
 - hosts: pipeline-katello-3.3-centos7
   become: yes

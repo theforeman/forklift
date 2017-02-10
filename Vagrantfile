@@ -27,6 +27,15 @@ module Forklift
     @boxes = @box_loader.add_boxes(boxes, "#{VAGRANTFILE_DIR}/config/versions.yaml")
   end
 
+  def self.user_boxes
+    @boxes = @box_loader.add_boxes("#{VAGRANTFILE_DIR}/boxes.yaml", "#{VAGRANTFILE_DIR}/config/versions.yaml") if File.exists?("#{VAGRANTFILE_DIR}/boxes.yaml")
+  end
+
+  def self.tmp_boxes
+    boxes = Dir.glob "#{VAGRANTFILE_DIR}/.tmp_boxes/*.yaml"
+    boxes.each { |boxes| add_boxes(boxes) }
+  end
+
   def self.define_vm(config, box = {})
     config.vm.define box.fetch('name'), primary: box.fetch('default', false) do |machine|
       machine.vm.box = box.fetch('box_name')
@@ -125,7 +134,8 @@ module Forklift
   @boxes = @box_loader.add_boxes("#{VAGRANTFILE_DIR}/config/base_boxes.yaml", "#{VAGRANTFILE_DIR}/config/versions.yaml")
   plugin_vagrantfiles.each { |f| load f }
   plugin_base_boxes
-  @boxes = @box_loader.add_boxes("#{VAGRANTFILE_DIR}/boxes.yaml", "#{VAGRANTFILE_DIR}/config/versions.yaml") if File.exists?("#{VAGRANTFILE_DIR}/boxes.yaml")
+  user_boxes
+  tmp_boxes
   @boxes  = @boxes.keys.sort.inject({}) do |hash, key|
     hash[key] = @boxes[key]
     hash
