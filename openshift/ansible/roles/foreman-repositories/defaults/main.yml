@@ -1,0 +1,4 @@
+---
+foreman_version: nightly
+foreman_repositories_use_release: True
+foreman_repositories_use_koji: False

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+CERTS_HOME=/etc/candlepin/certs
+UPSTREAM_CERTS_HOME=$CERTS_HOME/upstream
+CA_KEY=$CERTS_HOME/candlepin-ca.key
+CA_REDHAT_CERT=conf/candlepin-redhat-ca.crt
+CA_UPSTREAM_CERT=$UPSTREAM_CERTS_HOME/candlepin-redhat-ca.crt
+CA_PUB_KEY=$CERTS_HOME/candlepin-ca-pub.key
+CA_CERT=$CERTS_HOME/candlepin-ca.crt
+
+if [ -z "$CA_CERT_DAYS" ]; then
+    CA_CERT_DAYS=365
+fi
+
+while getopts ":f" opt; do
+    case $opt in
+        f  ) FORCECERT="1" ;;
+    esac
+done
+
+shift $(($OPTIND - 1))
+
+rpm -q openssl > /dev/null
+if [ "$?" -ne 0 ]; then
+    echo "Certificate generation failed - please install openssl."
+    exit 1
+fi
+
+if [ ! -d $CERTS_HOME ]; then
+    echo "Creating $CERTS_HOME"
+    $SUDO mkdir -p $CERTS_HOME
+fi
+if [ ! -d $UPSTREAM_CERTS_HOME ]; then
+    echo "Creating $UPSTREAM_CERTS_HOME"
+    $SUDO mkdir -p $UPSTREAM_CERTS_HOME
+fi
+
+HOSTNAME=${HOSTNAME:-$(hostname)}
+
+if [ -f $CA_KEY ] && [ -f $CA_CERT ] && [ "$FORCECERT" != "1" ]; then
+    echo "Certificates are already present."
+else
+    echo "Creating CA private key"
+    $SUDO openssl genrsa -out $CA_KEY 1024
+    echo "Creating CA public key"
+    $SUDO openssl rsa -pubout -in $CA_KEY -out $CA_PUB_KEY
+    echo "Creating CA certificate"
+    $SUDO openssl req -new -x509 -days $CA_CERT_DAYS -key $CA_KEY -out $CA_CERT -subj "/CN=$HOSTNAME/C=US/L=Raleigh/"
+    $SUDO cp $CA_REDHAT_CERT $CA_UPSTREAM_CERT
+fi

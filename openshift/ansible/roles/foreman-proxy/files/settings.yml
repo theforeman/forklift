@@ -1,0 +1,66 @@
+---
+# SSL Setup
+# If enabled, all communication would be verified via SSL
+# NOTE that both certificates need to be signed by the same CA in order for this to work
+# see http://theforeman.org/projects/smart-proxy/wiki/SSL for more information
+#:ssl_certificate: ssl/certs/fqdn.pem
+#:ssl_ca_file: ssl/certs/ca.pem
+#:ssl_private_key: ssl/private_keys/fqdn.key
+
+# Use this option only if you need to disable certain cipher suites.
+# Note: we use the OpenSSL suite name, take a look at:
+# https://www.openssl.org/docs/manmaster/apps/ciphers.html#CIPHER-SUITE-NAMES
+# for more information.
+#:ssl_disabled_ciphers: [CIPHER-SUITE-1, CIPHER-SUITE-2]
+
+# Hosts which the proxy accepts connections from
+# commenting the following lines would mean every verified SSL connection allowed
+# HTTPS: test the certificate CN
+# HTTP: test the reverse DNS entry of the remote IP
+#:trusted_hosts:
+#- foreman.prod.domain
+#- foreman.dev.domain
+#to deny access to all hosts use:
+#:trusted_hosts: []
+
+# verify a DNS reverse lookup against it's forward lookup
+# 1.1.1.1 -> foreman.mycompany.com -> 1.1.1.1
+# (default: true)
+#:forward_verify: true
+
+:foreman_url: http://foreman:8080
+
+# SSL settings for client authentication against Foreman. If undefined, the values
+# from general SSL options are used instead. Mainly useful when Foreman uses
+# different certificates for its web UI and for smart-proxy requests.
+#:foreman_ssl_ca: ssl/certs/ca.pem
+#:foreman_ssl_cert: ssl/certs/fqdn.pem
+#:foreman_ssl_key: ssl/private_keys/fqdn.pem
+
+# by default smart_proxy runs in the foreground. To enable running as a daemon, uncomment 'daemon' setting
+#:daemon: true
+# Only used when 'daemon' is set to true.
+# Uncomment and modify if you want to change the default pid file '/var/run/foreman-proxy/foreman-proxy.pid'
+#:daemon_pid: /var/run/foreman-proxy/foreman-proxy.pid
+
+# host and ports configuration
+# host to bind ports to (possible values: *, localhost, 0.0.0.0)
+:bind_host: '0.0.0.0'
+# http is disabled by default. To enable, uncomment 'http_port' setting
+:http_port: 8080
+# https is enabled if certificate, CA certificate, and private key are present in locations specifed by
+# ssl_certificate, ssl_ca_file, and ssl_private_key correspondingly
+# default values for https_port is 8443
+#:https_port: 8443
+
+# Log configuration
+# Uncomment and modify if you want to change the location of the log file or use STDOUT or SYSLOG values
+:log_file: STDOUT
+# Uncomment and modify if you want to change the log level
+# WARN, DEBUG, ERROR, FATAL, INFO, UNKNOWN
+:log_level: DEBUG
+
+# Log buffer size and extra buffer size (for errors). Defaults to 3000 messages in total,
+# which is about 500 kB request.
+#:log_buffer: 2000
+#:log_buffer_errors: 1000

@@ -1,0 +1,41 @@
+---
+- name: 'Install foreman-proxy'
+  package:
+    name: "foreman-proxy"
+    state: 'present'
+
+- name: 'Install smart_proxy_pulp'
+  package:
+    name: "rubygem-smart_proxy_pulp"
+    state: 'present'
+
+- name: 'Deploy plugin config files'
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/etc/foreman-proxy/settings.d/{{ item }}"
+  with_items:
+    - pulp.yml
+    - puppet.yml
+    - puppet_proxy_puppet_api.yml
+
+- name: 'Deploy settings files'
+  copy:
+    src: "{{ role_path }}/files/settings.yml"
+    dest: "/etc/foreman-proxy/settings.yml"
+
+- name: 'Create plugin settings symlink'
+  file:
+    state: 'link'
+    src: '/etc/foreman-proxy/settings.d'
+    dest: '/usr/share/foreman-proxy/config/settings.d'
+
+- name: Copy entrypoint
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - start-foreman-proxy.sh
+    - register.sh

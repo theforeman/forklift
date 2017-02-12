@@ -1,0 +1,6 @@
+*.retry
+.tmp/
+*.pyc
+plantuml.jar
+ansible/roles/openshift-openshift
+ansible/ansible-container.log
