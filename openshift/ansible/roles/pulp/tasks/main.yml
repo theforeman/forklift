@@ -1,0 +1,69 @@
+---
+- name: 'Install packages'
+  yum:
+    name: "{{ item }}"
+    state: "latest"
+    update_cache: yes
+  with_items:
+    - pulp-server
+    - python-qpid
+    - python-qpid-qmf
+    - qpid-tools
+    - python-gofer-qpid
+    - pulp-rpm-plugins
+    - pulp-puppet-plugins
+    - pulp-docker-plugins
+    - pulp-katello
+
+- name: 'Add logs.py patch'
+  get_url:
+    url: https://raw.githubusercontent.com/ehelms/pulp/log-to-file/server/pulp/server/logs.py
+    dest: /usr/lib/python2.7/site-packages/pulp/server/logs.py
+    force: yes
+
+- name: 'Add settings.py patch'
+  get_url:
+    url: https://raw.githubusercontent.com/ehelms/pulp/log-to-file/server/pulp/server/content/web/settings.py
+    dest: /usr/lib/python2.7/site-packages/pulp/server/content/web/settings.py
+    force: yes
+
+- name: 'Copy Pulp Apache config'
+  copy:
+    src: "{{ role_path }}/files/pulp.conf"
+    dest: "/etc/httpd/conf.d/pulp.conf"
+    owner: "apache"
+    group: "apache"
+
+- name: 'Update Port'
+  replace:
+    dest: '/etc/httpd/conf/httpd.conf'
+    regexp: '^Listen 80'
+    replace: 'Listen 0.0.0.0:8080'
+
+- name: 'Update Pulp port'
+  replace:
+    dest: '/etc/httpd/conf.d/pulp.conf'
+    regexp: ':80'
+    replace: ':8080'
+
+- name: 'Remove ssl.conf'
+  file:
+    path: '/etc/httpd/conf.d/ssl.conf'
+    state: 'absent'
+
+- name: 'Deploy server.conf'
+  template:
+    src: "server.conf.j2"
+    dest: "/etc/pulp/server.conf"
+
+- name: Copy entrypoint
+  copy:
+    src: "{{ role_path }}/files/{{ item }}" 
+    dest: "/usr/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - entrypoint.sh
+    - start_httpd.sh
+    - wait_on_mongodb.py

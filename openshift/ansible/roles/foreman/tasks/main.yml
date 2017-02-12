@@ -1,0 +1,61 @@
+---
+- name: 'Install foreman-release-scl'
+  yum:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - foreman-release-scl
+
+- name: 'Ensure nodocs is not set in yum.conf'
+  lineinfile:
+    dest: '/etc/yum.conf'
+    regexp: 'tsflags=nodocs'
+    line: '#tsflags=nodocs'
+
+- name: 'Install foreman'
+  yum:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - foreman
+    - katello
+    - tfm-rubygem-foreman_discovery
+    - tfm-rubygem-foreman_remote_execution
+    - tfm-rubygem-foreman_openscap
+    - tfm-rubygem-foreman_ansible
+    - tfm-rubygem-foreman_hooks
+
+- name: 'Remove bin/spring'
+  file:
+    state: absent
+    path: '/usr/share/foreman/bin/spring'
+
+- name: 'Deploy database.yml'
+  copy:
+    src: "{{ role_path }}/files/database.yml"
+    dest: "/etc/foreman/database.yml"
+
+- name: 'Deploy settings.yaml'
+  copy:
+    src: "{{ role_path }}/files/settings.yaml"
+    dest: "/etc/foreman/settings.yaml"
+
+- name: 'Deploy katello.yaml'
+  copy:
+    src: "{{ role_path }}/files/katello.yaml"
+    dest: "/etc/foreman/plugins/katello.yaml"
+
+- include: hacks.yml
+
+- name: Copy entrypoint
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - entrypoint.sh
+    - start-foreman.sh
+    - wait_on_postgres.py
+    - create_qpid_queue.sh

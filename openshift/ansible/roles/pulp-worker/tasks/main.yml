@@ -1,0 +1,10 @@
+---
+- name: Copy entrypoint
+  copy:
+    src: "{{ role_path }}/files/{{ item }}" 
+    dest: "/usr/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - entrypoint.sh

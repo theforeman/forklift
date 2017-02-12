@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+
+candlepin.consumer_system_name_pattern=.+
+candlepin.environment_content_filtering=true
+candlepin.auth.basic.enable=false
+candlepin.auth.trusted.enable=false
+
+# Oauth Settings
+candlepin.auth.oauth.enable=true
+candlepin.auth.oauth.consumer.katello.secret=katello
+
+module.config.adapter_module=org.candlepin.katello.KatelloModule
+
+jpa.config.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+jpa.config.hibernate.connection.driver_class=org.postgresql.Driver
+jpa.config.hibernate.connection.url=jdbc:postgresql://postgres:5432/foreman
+jpa.config.hibernate.hbm2ddl.auto=validate
+jpa.config.hibernate.connection.username=foreman
+jpa.config.hibernate.connection.password=foreman
+
+# enable events via AMQP
+candlepin.amqp.enable=true
+candlepin.amqp.connect=tcp://qpid:5672

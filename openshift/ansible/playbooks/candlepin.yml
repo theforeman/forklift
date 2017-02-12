@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  vars:
+    project_name: 'candlepin'
+    project_display_name: 'Candlepin'
+    claim_name: 'local-data'
+    postgresql_volume_claim: "{{ claim_name }}"
+    postgresql_database: "candlepin"
+    postgresql_user: "candlepin"
+    postgresql_password: "candlepin"
+    candlepin_database_user: "{{ postgresql_user }}"
+    candlepin_database_password: "{{ postgresql_password }}"
+    candlepin_database: "{{ postgresql_database }}"
+  roles:
+    - volume

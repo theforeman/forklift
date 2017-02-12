@@ -1,0 +1,43 @@
+---
+- name: 'Install dependencies'
+  yum:
+    name: "{{ item }}"
+    state: 'present'
+    update_cache: yes
+  with_items:
+    - git
+    - wget
+    - foreman-release-scl
+
+- name: 'Install CLI'
+  yum:
+    name: 'tfm-rubygem-hammer_cli_katello'
+    state: 'present'
+
+- name: "Get /usr/bin/bats stat"
+  stat:
+    path: "/usr/bin/bats"
+  register: bats_bin
+
+- name: "Clone bats"
+  git:
+    repo: "https://github.com/sstephenson/bats.git"
+    dest: "{{ bats_git_dir }}"
+  when: bats_bin.stat.exists == False
+
+- name: "Install bats"
+  shell: "{{ bats_git_dir }}/install.sh /usr"
+  args:
+    creates: "/usr/bin/bats"
+
+- name: "Clone forklift"
+  git:
+    repo: "https://github.com/katello/forklift.git"
+    dest: "{{ bats_forklift_dir }}"
+    update: "{{ bats_update_forklift }}"
+
+- name: 'Install run.sh'
+  copy:
+    src: "{{ role_path }}/files/run_bats.sh"
+    dest: "/usr/bin/run_bats.sh"
+    mode: 0775

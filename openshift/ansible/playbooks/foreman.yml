@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  vars:
+    project_name: 'foreman'
+    project_display_name: 'Foreman'
+    claim_name: 'local-data'
+    postgresql_database: "candlepin"
+    postgresql_user: "candlepin"
+    postgresql_password: "candlepin"
+    postgresql_volume_claim: "{{ claim_name }}"
+    foreman_database: "{{ postgresql_database }}"
+    foreman_database_user: "{{ postgresql_user }}"
+    foreman_database_password: "{{ postgresql_password }}"
+    foreman_enable_katello: true
+    puppet_volume_claim: "{{ claim_name }}"
+  roles:
+    - project
+    - volume
+    - claim
+    - postgresql
+    - foreman
+    - puppet
+    - foreman_proxy

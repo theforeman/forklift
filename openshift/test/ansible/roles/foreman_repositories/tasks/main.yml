@@ -1,0 +1,6 @@
+---
+- include: release_repos.yml
+  when: foreman_repositories_use_release and not foreman_repositories_use_koji
+
+- include: koji_repos.yml
+  when: foreman_repositories_use_koji

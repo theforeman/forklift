@@ -1,0 +1,52 @@
+---
+- hosts: localhost
+  vars:
+    openshift_data_dir: /home/origin
+  tasks:
+    - name: 'Check  cluster status'
+      command: 'oc cluster status'
+      register: cluster_status
+      ignore_errors: true
+
+    - name: "Spin cluster up"
+      command: "oc cluster up --host-pv-dir='{{ openshift_data_dir }}/local.openshift.volumes'"
+      when: cluster_status.rc != 0
+
+    - name: 'Wait for volumes to be created'
+      wait_for:
+        path: "{{ openshift_data_dir }}/local.openshift.volumes/pv0100"
+
+    # mongodb needs write permissions on the volume it uses
+    - name: 'Set volume permissions'
+      file:
+        state: directory
+        path: "{{ openshift_data_dir }}/local.openshift.volumes"
+        mode: 0777
+        recurse: yes
+      #command: "chmod 0777 -R {{ openshift_data_dir }}/local.openshift.volumes"
+      become: yes
+
+    - name: "Login as system admin to OpenShift"
+      command: oc login -u system:admin
+
+    - name: 'Set security context'
+      command: oadm policy add-scc-to-group anyuid system:authenticated
+
+    - name: 'Give developer cluster-admin'
+      command: oadm policy add-cluster-role-to-user cluster-admin developer
+
+    - name: "Login back in as developer"
+      command: oc login -u developer -p a
+    
+    - name: 'Create Foreman project'
+      command: oc new-project foreman
+
+    - name: 'Create .tmp directory'
+      file:
+        path: .tmp
+        state: directory
+
+    - name: 'Clone templates repository'
+      git:
+        repo: https://github.com/openshift/openshift-ansible.git
+        dest: .tmp/openshift-ansible

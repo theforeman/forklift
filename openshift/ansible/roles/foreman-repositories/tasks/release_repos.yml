@@ -1,0 +1,5 @@
+---
+- name: 'Setup Foreman Repository'
+  yum:
+    name: http://yum.theforeman.org/{{ "releases/" if foreman_version != 'nightly' else '' }}{{ foreman_version }}/el{{ ansible_distribution_major_version }}/x86_64/foreman-release.rpm
+    state: present

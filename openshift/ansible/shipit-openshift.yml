@@ -1,0 +1,7 @@
+- name: Deploy openshift to  openshift
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  roles:
+  - role: openshift-openshift
+    playbook_debug: false

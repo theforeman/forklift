@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  tasks:
+    - name: 'Create .tmp directory'
+      file:
+        path: .tmp
+        state: directory
+
+    - name: 'Clone ansible-container'
+      git:
+        repo: https://github.com/ansible/ansible-container.git
+        dest: .tmp/ansible-container
+
+    - name: 'Install ansible-container'
+      become: true
+      command: 'python ./setup.py install'
+      args:
+        chdir: .tmp/ansible-container

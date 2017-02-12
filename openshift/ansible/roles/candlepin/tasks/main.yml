@@ -1,0 +1,34 @@
+---
+- name: 'Install Candlepin'
+  yum:
+    name: 'candlepin'
+
+- name: 'Deploy Candlepin configuration file'
+  template:
+    src: candlepin.conf.j2
+    dest: /etc/candlepin/candlepin.conf
+    mode: 0640
+    owner: tomcat
+    group: tomcat
+
+- name: 'Install Openssl'
+  yum:
+    name: 'openssl'
+
+- name: 'Install qpid-config'
+  yum:
+    name: "qpid-tools"
+    state: 'present'
+
+- name: Copy entrypoint
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - entrypoint.sh
+    - start_candlepin.sh
+    - wait_on_postgres.py
+    - gen-certs

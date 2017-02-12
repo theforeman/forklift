@@ -1,0 +1,20 @@
+---
+- name: 'Install Qpid packages'
+  yum:
+    name: "{{ item }}"
+    state: "latest"
+    update_cache: yes
+  with_items:
+    - qpid-cpp-server
+    - python-qpid-qmf
+    - python-qpid
+
+- name: 'Deploy startup script'
+  copy:
+    src: "{{ role_path }}/files/{{ item }}" 
+    dest: "/usr/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - startup.sh
