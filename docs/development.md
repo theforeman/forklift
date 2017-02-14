@@ -138,16 +138,16 @@ such as [Foreman Tasks](https://github.com/theforeman/hammer-cli-foreman-tasks) 
 importing/exporting data via [CSV](https://github.com/Katello/hammer-cli-csv).
 The CLI can be configured to work with any version of Foreman. To facilitate
 development in Hammer or any of its plugins, a lightweight vagrant box is
-provided in this repository:
+provided in the `boxes.yaml.example` file. To use this functionality, copy the
+centos7-hammer-devel configuration from the example file into your `boxes.yaml`
+file, changing options as necessary. Then run the following:
 
 ```sh
 vagrant up centos7-hammer-devel
 ```
 
 In the vagrant box, find the Hammer repositories at `/home/vagrant/` and the
-configuration at `/home/vagrant/.hammer`. Specifically, to change the Foreman
-instance Hammer points to, update
-`/home/vagrant/.hammer/cli.modules.d/foreman.yml`.
+configuration at `/home/vagrant/.hammer`.
 
 ## Capsule Development
 

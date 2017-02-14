@@ -101,10 +101,3 @@ boxes:
   pipeline-proxy-3.3-centos7:
     box: centos7
     memory: 3072
-
-  centos7-hammer-devel:
-    box: centos7
-    memory: 512
-    ansible:
-      playbook: 'playbooks/hammer_devel.yml'
-      group: 'hammer_devel'
