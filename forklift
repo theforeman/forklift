@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require 'clamp'
+
+require File.join(File.dirname(__FILE__), 'lib/forklift/command')
+
+class MainCommand < Clamp::Command
+  subcommand "pipeline", "Setup release environment for a given configuration", Forklift::Command::PipelineCommand
+end
+
+MainCommand.run

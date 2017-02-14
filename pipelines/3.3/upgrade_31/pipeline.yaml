@@ -1,0 +1,16 @@
+---
+name: upgrade_31_to_33
+description: "Installs Katello and Proxy 3.1 and then upgrades to 3.3"
+boxes:
+  pipeline-katello-3.3-centos7:
+    box: centos7
+    memory: 4680
+  pipeline-proxy-3.3-centos7:
+    box: centos7
+    memory: 3072
+playbooks:
+  - install_katello_31.yml
+  - install_proxy_31.yml
+  - bats_on_katello.yml
+  - bats_on_proxy.yml
+  - upgrade_katello.yml

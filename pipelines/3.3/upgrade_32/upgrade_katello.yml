@@ -1,0 +1,17 @@
+---
+- hosts: pipeline-katello-3.2-3.3-centos7
+  become: true
+  vars:
+    foreman_version: 1.14
+    katello_version: 3.3
+    foreman_installer_upgrade: True
+    foreman_repositories_use_koji: True
+    katello_repositories_use_koji: True
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+  roles:
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer
