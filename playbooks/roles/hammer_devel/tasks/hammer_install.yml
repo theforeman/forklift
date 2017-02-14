@@ -7,6 +7,21 @@
     remote: upstream
   with_items: "{{ hammer_devel_repositories }}"
 
+- name: 'Check if the fork remotes exist'
+  shell: "git remote | grep ^{{ hammer_devel_github_fork_remote_name }}$"
+  args:
+    chdir: ~/{{ item.split('/')[1] }}
+  ignore_errors: yes
+  with_items: "{{ hammer_devel_repositories }}"
+  register: fork_remotes_exist
+
+- name: 'Add fork remotes to cloned repositories'
+  command: "git remote add {{ hammer_devel_github_fork_remote_name }} git@github.com:{{ hammer_devel_github_username }}/{{ item.item.split('/')[1] }}.git"
+  when: item.rc != 0
+  args:
+    chdir: ~/{{ item.item.split('/')[1] }}
+  with_items: "{{ fork_remotes_exist.results }}"
+
 - name: 'Add local gems to Gemfile.local'
   blockinfile:
     dest: ~/hammer-cli-katello/Gemfile.local

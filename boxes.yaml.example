@@ -7,6 +7,16 @@ centos7-devel:
     variables:
       katello_devel_github_username: <REPLACE ME>
 
+centos7-hammer-devel:
+  box: centos7
+  memory: 512
+  ansible:
+    playbook: 'playbooks/hammer_devel.yml'
+    group: 'hammer-devel'
+    variables:
+      hammer_devel_github_username: '<REPLACE ME>'
+      hammer_devel_github_fork_remote_name: 'origin'
+
 katello-remote-execution:
   box: centos7-katello-nightly
   installer: --enable-foreman-remote-execution
