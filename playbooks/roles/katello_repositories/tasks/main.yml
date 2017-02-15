@@ -6,4 +6,4 @@
   when: katello_repositories_use_koji
 
 - include: qpid.yml
-  when: ansible_distribution_major_version == "6" and katello_version == 3.2
+  when: ansible_distribution_major_version == "6" and katello_repositories_version == 3.2

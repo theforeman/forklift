@@ -1,8 +1,8 @@
 - hosts: all
   become: true
   vars:
-    foreman_version: nightly
-    katello_version: nightly
+    foreman_repositories_version: nightly
+    katello_repositories_version: nightly
     foreman_installer_upgrade: True
     foreman_repositories_use_koji: True
     katello_repositories_use_koji: True

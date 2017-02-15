@@ -7,15 +7,15 @@
 - name: 'Foreman Koji repository'
   yum_repository:
     name: foreman-koji
-    description: "Foreman {{ foreman_version }} Koji Repository"
-    baseurl: "http://koji.katello.org/releases/yum/foreman-{{ foreman_version }}/RHEL/{{ ansible_distribution_major_version }}/x86_64/"
+    description: "Foreman {{ foreman_repositories_version }} Koji Repository"
+    baseurl: "http://koji.katello.org/releases/yum/foreman-{{ foreman_repositories_version }}/RHEL/{{ ansible_distribution_major_version }}/x86_64/"
     priority: 1
     gpgcheck: 0
 
 - name: 'Foreman Plugins Koji repository'
   yum_repository:
     name: foreman-plugins-koji
-    description: "Foreman Plugins {{ foreman_version }} Koji Repository"
-    baseurl: "http://koji.katello.org/releases/yum/foreman-plugins-{{ foreman_version }}/RHEL/{{ ansible_distribution_major_version }}/x86_64/"
+    description: "Foreman Plugins {{ foreman_repositories_version }} Koji Repository"
+    baseurl: "http://koji.katello.org/releases/yum/foreman-plugins-{{ foreman_repositories_version }}/RHEL/{{ ansible_distribution_major_version }}/x86_64/"
     priority: 1
     gpgcheck: 0
