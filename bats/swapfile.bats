@@ -4,7 +4,7 @@
 set -o pipefail
 
 @test "create swap file" {
-  swapsize=4096 # in MB
+  swapsize=5120 # in MB
   dd if=/dev/zero of=/swapfile bs=1048576 count=$swapsize
   chmod 600 /swapfile
   mkswap /swapfile
