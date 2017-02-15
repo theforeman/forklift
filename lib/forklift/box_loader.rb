@@ -84,9 +84,9 @@ module Forklift
         'playbook' => playbook,
         'group'    => group,
         'variables' => {
-          'foreman_version'             => version['foreman'],
-          'katello_version'             => version['katello'],
-          'puppet_repositories_version' => version['puppet']
+          'foreman_repositories_version' => version['foreman'],
+          'katello_repositories_version' => version['katello'],
+          'puppet_repositories_version'  => version['puppet']
         }
       }
 
