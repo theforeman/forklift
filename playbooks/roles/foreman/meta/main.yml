@@ -1,0 +1,8 @@
+---
+dependencies:
+  - role: selinux
+  - role: etc_hosts
+  - role: epel_repositories
+  - role: puppet_repositories
+  - role: foreman_repositories
+  - role: foreman_installer

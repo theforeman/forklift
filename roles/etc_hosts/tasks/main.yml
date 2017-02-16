@@ -8,3 +8,5 @@
   when: hostvars[item].ansible_ssh_host is defined
   become: yes
   with_items: "{{ groups['all'] }}"
+  tags:
+    - env_setup
