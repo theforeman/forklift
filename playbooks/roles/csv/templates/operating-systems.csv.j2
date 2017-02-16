@@ -1,0 +1,4 @@
+Name,Description,Family,Password Hash,Partition Tables,Architectures,Media,Provisioning Templates,Parameters
+{% for line in csv_operating_systems %}
+{{ line.name }},{{ line.description }},{{ line.family }},{{ line.password_hash }},{{ line.partition_tables }},{{ line.architectures }},{{ line.media }},{{ line.provisioning_templates }},{{ line.parameters }}
+{% endfor %}

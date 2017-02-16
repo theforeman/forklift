@@ -1,0 +1,23 @@
+---
+csv_hammer: hammer --server https://localhost --username admin --password changeme
+
+csv_operating_systems:
+  - name: SpecialOS 7.2
+    description: SpecialOS 7.2
+    family: Redhat
+    password_hash: SHA256
+    partition_tables: Kickstart default
+    architectures: x86_64
+    media: ""
+    provisioning_templates: Kickstart default
+    parameters: flavor|spicy
+
+  - name: SpecialOS 7.1
+    description: SpecialOS 7.1
+    family: Redhat
+    password_hash: SHA256
+    partition_tables: Kickstart default
+    architectures: x86_64
+    media: ""
+    provisioning_templates: Kickstart default
+    parameters: "flavor|spicy,style|cruncy"
