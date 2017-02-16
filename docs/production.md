@@ -73,7 +73,7 @@ This use case assumes that you are on a box that has SSH access to the target bo
 
 For a release version in production:
 
-    ansible-playbook -l <target-host> playbooks/katello_31.yml
+    ansible-playbook -l <target-host> playbooks/katello.yml
 
 For nightly production:
 
@@ -82,7 +82,7 @@ For nightly production:
 
 After installing a Katello server, you could then spin up a Capsule with the assumption the Katello server can talk to the Capsule and vice versa.
 
-    ansible-playbook -l <target-capsule-host> playbooks/capsule_31.yml
+    ansible-playbook -l <target-capsule-host> playbooks/capsule.yml
 
 ### Local Deployment
 
@@ -93,8 +93,8 @@ After installing a Katello server, you could then spin up a Capsule with the ass
 
 For a release version in production:
 
-    ansible-playbook -l localhost playbooks/katello_31.yml
+    ansible-playbook -i "localhost," -c local playbooks/katello.yml
 
 For nightly production:
 
-    ansible-playbook -l localhost playbooks/katello_nightly.yml
+    ansible-playbook -i "localhost," -c local playbooks/katello_nightly.yml
