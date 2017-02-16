@@ -1,0 +1,139 @@
+---
+#testing both --name and --title for backward compatibility
+- name: 'Create operating systems'
+  shell: >
+    {% if 'minor' in item %}
+    {% set title = item.name +' '+ item.major +'.'+ item.minor %}
+    {% else %}
+    {% set title = item.name +' '+ item.major %}
+    {% endif %}
+    {{ data_hosts_hammer }} --output=silent os info --name "{{ title }}" ||
+    {{ data_hosts_hammer }} --output=silent os info --title "{{ title }}" ||
+    {{ data_hosts_hammer }} os create
+    --name {{ item.name }}
+    --major '{{ item.major }}'
+    {% if 'minor' in item %}
+    --minor '{{ item.minor }}'
+    {% endif %}
+    {% if 'release_name' in item %}
+    --release-name '{{ item.release_name }}'
+    {% endif %}
+    --architectures x86_64
+    --family '{{ item.family }}'
+    --media '{{ item.medium }}'
+    --partition-tables '{{ (item.family  == "Redhat") | ternary('Kickstart default', 'Preseed default') }}'
+  with_items: '{{ data_operating_systems }}'
+  tags:
+    - seed
+
+# TODO: fix: Locations you cannot remove locations that are used by hosts or inherited.
+# - name: 'Add media to organizations'
+#   shell: >
+#     {{ data_hosts_hammer }} organization add-medium --name '{{ data_hosts_organization }}' --medium '{{ item.medium }}'
+#   with_items: '{{ data_operating_systems }}'
+#   tags:
+#     - seed
+#
+# - name: 'Add media to locations'
+#   shell: >
+#     {{ data_hosts_hammer }} location add-medium --name '{{ data_hosts_location }}' --medium '{{ item.medium }}'
+#   with_items: '{{ data_operating_systems }}'
+#   tags:
+#     - seed
+
+- name: 'Find kickstart templates'
+  shell: >
+    {{ data_hosts_hammer }} --output=json template list
+    --search 'name ~ "Kickstart default"'
+  register: kickstart_templates_json
+  tags:
+    - seed
+
+- name: 'Set kickstart templates'
+  set_fact:
+    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+  tags:
+    - seed
+
+- name: 'Find preseed templates'
+  shell: >
+    {{ data_hosts_hammer }} --output=json template list
+    --search 'name ~ "Preseed default"'
+  register: preseed_templates_json
+  tags:
+    - seed
+
+- name: 'Set preseed templates'
+  set_fact:
+    preseed_templates: "{{ preseed_templates_json.stdout|from_json }}"
+  tags:
+    - seed
+
+- name: 'Associate kickstart templates to operating systems'
+  shell: >
+    {% if 'minor' in item[0] %}
+    {% set title = item[0].name +' '+ item[0].major +'.'+ item[0].minor %}
+    {% else %}
+    {% set title = item[0].name +' '+ item[0].major %}
+    {% endif %}
+    {% if item[0].family == 'Redhat' %}
+        {{ data_hosts_hammer }} template add-operatingsystem --id {{ item[1].Id }} --operatingsystem '{{ title }}'
+    {% else %}
+        echo "Skipping {{ title }}"
+    {% endif %}
+  with_nested:
+    - "{{ data_operating_systems }}"
+    - "{{ kickstart_templates }}"
+  tags:
+    - seed
+
+- name: 'Associate preseed templates to operating systems'
+  shell: >
+    {% if 'minor' in item[0] %}
+    {% set title = item[0].name +' '+ item[0].major +'.'+ item[0].minor %}
+    {% else %}
+    {% set title = item[0].name +' '+ item[0].major %}
+    {% endif %}
+    {% if item[0].family == 'Debian' %}
+        {{ data_hosts_hammer }} template add-operatingsystem --id {{ item[1].Id }} --operatingsystem '{{ title }}'
+    {% else %}
+        echo "Skipping {{ title }}"
+    {% endif %}
+  with_nested:
+    - "{{ data_operating_systems }}"
+    - "{{ preseed_templates }}"
+  tags:
+    - seed
+
+- name: 'Create hostgroups'
+  shell: >
+    {% if 'minor' in item %}
+    {% set os_title = item.name +' '+ item.major +'.'+ item.minor %}
+    {% else %}
+    {% set os_title = item.name +' '+ item.major %}
+    {% endif %}
+    {% set name = 'Forklift '+ os_title %}
+    {{ data_hosts_hammer }} --output=silent hostgroup info --name "{{ name }}" ||
+    {{ data_hosts_hammer }} hostgroup create
+    --name '{{ name }}'
+    --operatingsystem '{{ os_title }}'
+    --medium '{{ item.medium }}'
+    --partition-table '{{ (item.family  == "Redhat") | ternary('Kickstart default', 'Preseed default') }}'
+    --parent '{{ data_hosts_parent_hostgroup }}'
+    --organizations '{{ data_hosts_organization }}'
+    --locations '{{ data_hosts_location }}'
+  with_items: '{{ data_operating_systems }}'
+  tags:
+    - seed
+
+- name: 'Create hosts'
+  shell: >
+    {{ data_hosts_hammer }} host create
+    --hostgroup '{{ item.hostgroup }}'
+    --organization '{{ data_hosts_organization }}'
+    --location '{{ data_hosts_location }}'
+    --name '{{ item.name }}'
+    --mac $(echo -n 52:54:00:; openssl rand -hex 3 | sed 's/\(..\)/\1:/g; s/.$//')
+  with_items: '{{ data_hosts }}'
+  tags:
+    - seed
