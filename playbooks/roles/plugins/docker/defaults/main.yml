@@ -1,0 +1,5 @@
+---
+docker_hammer: hammer -u admin -p changeme
+docker_use_taxonomies: False
+docker_organization: Default Organization
+docker_location: Default Location
