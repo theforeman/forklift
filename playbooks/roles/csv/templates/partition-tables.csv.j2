@@ -1,0 +1,4 @@
+Name,Organizations,Locations,OS Family,Operating Systems,Layout
+{% for line in csv_partition_tables %}
+{{ line.name }},{{ line.organizations }},{{ line.locations }},{{ line.os_family }},{{ line.operating_systems }},{{ line.layout }}
+{% endfor %}

@@ -1,0 +1,4 @@
+Name,Parent Host Group,Organizations,Locations,Subnet,Domain,Operating System,Puppet Environment,Compute Profile,Partition Table,Medium,Architecture,Realm,Puppet Proxy,Puppet CA Proxy,Content Source,Password,Puppet Classes
+{% for line in csv_host_groups %}
+{{ line.name }},{{ line.parent_host_group }},{{ line.organizations }},{{ line.locations }},{{ line.subnet }},{{ line.domain }},{{ line.operating_system }},{{ line.puppet_environment }},{{ line.compute_profile }},{{ line.partition_table }},{{ line.medium }},{{ line.architecture }},{{ line.realm }},{{ line.puppet_proxy }},{{ line.puppet_ca_proxy }},{{ line.content_source }},{{ line.password }},{{ line.puppet_classes }}
+{% endfor %}

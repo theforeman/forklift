@@ -1,0 +1,4 @@
+Name,Label,Organization,Composite,Repositories or Composites,Lifecycle Environments
+{% for line in csv_content_views %}
+{{ line.name }},{{ line.label }},{{ line.organization }},{{ line.composite }},{{ line.repositories_or_composites }}, {{ line.lifecycle_environments }}
+{% endfor %}

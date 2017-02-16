@@ -1,0 +1,4 @@
+Name,Organizations,Locations,URL,Lifecycle Environments
+{% for line in csv_smart_proxies %}
+{{ line.name }},{{ line.organizations }},{{ line.locations }},{{ line.url }},{{ line.lifecycle_environments }}
+{% endfor %}

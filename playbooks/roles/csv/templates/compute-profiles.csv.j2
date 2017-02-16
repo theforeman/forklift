@@ -1,0 +1,4 @@
+Name,Organizations,Locations,Description,Provider,URL
+{% for line in csv_compute_profiles %}
+{{ line.name }},{{ line.organizations }},{{ line.locations }},{{ line.description }},{{ line.provider }},{{ line.url }}
+{% endfor %}

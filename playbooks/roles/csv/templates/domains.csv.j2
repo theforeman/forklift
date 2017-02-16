@@ -1,0 +1,4 @@
+Name,Organizations,Locations,Description,DNS Smart Proxy,Parameters
+{% for line in csv_domains %}
+{{ line.name }},{{ line.organizations }},{{ line.locations }},{{ line.description }},{{ line.dns_smart_proxy }},{{ line.parameters }}
+{% endfor %}

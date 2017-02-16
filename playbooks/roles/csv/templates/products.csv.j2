@@ -1,0 +1,4 @@
+Name,Label,Organization,Description,Repository,Repository Type,Content Set,Release,Repository Url,Verify SSL,Publish via HTTP,Mirror on Sync,Download Policy,Username,Password
+{% for line in csv_products %}
+{{ line.name }},{{ line.label }},{{ line.organization }},{{ line.description }},{{ line.repository }},{{ line.repository_type }},{{ line.content_set }},{{ line.release }},{{ line.repository_url }},{{ line.verify_ssl }},{{ line.publish_via_http }},{{ line.mirror_on_sync }},{{ line.download_policy }},{{ line.username }},{{ line.password }}
+{% endfor %}

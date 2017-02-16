@@ -1,0 +1,4 @@
+Name,Organizations,Locations,Path,OS Family,Operating Systems
+{% for line in csv_installation_media %}
+{{ line.name }},{{ line.organizations }},{{ line.locations }},{{ line.path }},{{ line.os_family }},{{ line.operating_systems }}
+{% endfor %}

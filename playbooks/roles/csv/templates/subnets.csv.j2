@@ -1,0 +1,4 @@
+Name,Organizations,Locations,Network,Network Mask,Network Prefix,From,To,Domains,Gateway,DHCP Proxy,TFTP Proxy,DNS Proxy,DNS Primary,DNS Secondary,VLAN ID
+{% for line in csv_subnets %}
+{{ line.name }},{{ line.organizations }},{{ line.locations }},{{ line.network }},{{ line.network_mask }},{{ line.network_prefix }},{{ line.from }},{{ line.to }},{{ line.domains }},{{ line.gateway }},{{ line.dhcp_proxy }},{{ line.tftp_proxy }},{{ line.dns_proxy }},{{ line.dns_primary }},{{ line.dns_secondary }},{{ line.vlan_id }}
+{% endfor %}

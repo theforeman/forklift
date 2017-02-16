@@ -1,0 +1,5 @@
+Name,Organization,Description,Limit,Environment,Content View,Host Collections,Auto-Attach,Service Level,Release Version,Subscriptions
+{% for line in csv_activation_keys %}
+{{ line.name }},{{ line.organization }},{{ line.description }},{{ line.limit }},{{ line.environment }},{{ line.content_view }},{{ line.host_collections }},{{ line.auto-attach }},{{ line.service_level }},{{ line.release_version }},{{ line.subscriptions }}
+{% endfor %}
+
