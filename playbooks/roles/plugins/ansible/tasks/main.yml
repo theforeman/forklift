@@ -1,0 +1,55 @@
+- name: 'Install ansible'
+  yum:
+    name: ansible
+    state: present
+  tags:
+    - installation
+
+- name: 'Install ansible plugin'
+  shell: >
+    foreman-installer
+    --enable-foreman-plugin-ansible
+    --enable-foreman-proxy-plugin-ansible
+  tags:
+    - installation
+
+- name: 'Create ~foreman-proxy/.ansible/'
+  file:
+    path: ~foreman-proxy/.ansible/
+    state: directory
+    owner: foreman-proxy
+    group: foreman-proxy
+  tags:
+    - env_setup
+
+- name: 'Create ~foreman-proxy/.ssh/'
+  file:
+    path: ~foreman-proxy/.ssh/
+    state: directory
+    owner: foreman-proxy
+    group: foreman-proxy
+  tags:
+    - env_setup
+
+- name: 'Setup ssh'
+  template:
+    src: ../templates/ssh_config
+    dest: ~foreman-proxy/.ssh/config
+    owner: foreman-proxy
+    group: foreman-proxy
+    mode: "u=rw,g=,o="
+  tags:
+    - env_setup
+
+- name: 'Install ansible roles'
+  shell: >
+    ansible-galaxy install {{ item }}
+  with_items: '{{ plugin_ansible_roles }}'
+  tags:
+    - seed
+
+- name: 'Setup default ssh password'
+  shell: >
+    foreman-rake config -- -k ansible_ssh_pass -v {{ plugin_ansible_password }}
+  tags:
+    - env_setup
