@@ -1,0 +1,8 @@
+---
+data_puppet_modules_hammer: hammer
+data_puppet_modules:
+ - puppetlabs-mysql
+ - puppetlabs-motd
+ - puppetlabs-ntp
+ - puppetlabs-apache
+data_puppet_modules_proxy_name: False
