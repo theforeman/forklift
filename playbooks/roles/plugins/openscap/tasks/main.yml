@@ -1,0 +1,48 @@
+- name: 'Install openscap plugin'
+  shell: >
+    foreman-installer
+    --enable-foreman-plugin-openscap
+    --enable-foreman-proxy-plugin-openscap
+  tags:
+    - installation
+
+- name: 'Install foreman openscap hammer plugin'
+  yum:
+    name: 'tfm-rubygem-hammer_cli_foreman_openscap'
+    state: 'present'
+  tags:
+    - installation
+
+- name: 'Install foreman openscap puppet module'
+  yum:
+    name: 'puppet-foreman_scap_client'
+    state: 'present'
+  tags:
+    - seed
+
+- name: 'restart foreman-proxy'
+  service: name=foreman-proxy state=restarted
+
+- name: 'Import puppet classes'
+  shell: >
+    {{ openscap_hammer }} proxy import-classes --name {{ openscap_proxy_name }}
+  tags:
+    - seed
+  when: '{{ openscap_proxy_name != False }}'
+
+- name: 'Import default scap content'
+  shell: >
+    foreman-rake foreman_openscap:bulk_upload:default
+  tags:
+    - seed
+  when: '{{ openscap_proxy_name != False }}'
+
+# TODO: disabled until cli is fixed
+# - name: 'Create example policy'
+#   shell: >
+#     {{ openscap_hammer }} policy create --name 'Example policy'
+#      --period weekly --weekday monday
+#      --scap-content 'Red Hat centos6 default content'
+#      --scap-content-profile-id TODO
+#   tags:
+#     - seed
