@@ -1,0 +1,14 @@
+- name: 'Install templates plugin'
+  shell: >
+    foreman-installer
+    --enable-foreman-plugin-templates
+  tags:
+    - installation
+
+- name: 'Fetch community templates'
+  shell: >
+    foreman-rake templates:sync {{ templates_sync_params }}
+  when: sync_templates
+  tags:
+    - seed
+
