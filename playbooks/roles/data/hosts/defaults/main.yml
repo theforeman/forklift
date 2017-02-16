@@ -1,0 +1,39 @@
+---
+data_hosts_hammer: hammer
+data_hosts_organization: Default Organization
+data_hosts_location: Default Location
+data_hosts_parent_hostgroup: Forklift Base
+data_hosts:
+  - name: host1
+    hostgroup: Forklift CentOS 7
+  - name: host2
+    hostgroup: Forklift Fedora 25
+  - name: host3
+    hostgroup: Forklift Debian 8.7
+  - name: host4
+    hostgroup: Forklift Ubuntu 16.04
+
+data_operating_systems:
+  - name: CentOS
+    major: '7'
+    family: Redhat
+    medium: CentOS mirror
+
+  - name: Fedora
+    major: '25'
+    family: Redhat
+    medium: Fedora mirror
+
+  - name: Debian
+    major: '8'
+    minor: '7'
+    family: Debian
+    medium: Debian mirror
+    release_name: jessie
+
+  - name: Ubuntu
+    major: '16'
+    minor: '04'
+    family: Debian
+    medium: Ubuntu mirror
+    release_name: xenial
