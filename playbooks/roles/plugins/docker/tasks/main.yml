@@ -1,0 +1,57 @@
+- name: 'Prepare hammer taxonomy options'
+  set_fact:
+    docker_hammer_taxonomy_params: "--organizations '{{ docker_organization }}' --locations '{{ docker_location }}'"
+  when: docker_use_taxonomies
+
+- name: 'Prepare blank hammer taxonomy options'
+  set_fact:
+    docker_hammer_taxonomy_params: ""
+  when: not docker_use_taxonomies
+
+- name: "Install foreman docker plugin"
+  yum:
+    name: 'tfm-rubygem-foreman_docker'
+    state: 'present'
+  tags:
+    - installation
+
+- name: "Install docker"
+  yum:
+    name: 'docker'
+    state: 'present'
+  tags:
+    - installation
+
+- name: "Add usergroup docker"
+  group:
+    name: docker
+    state: present
+  tags:
+    - env_setup
+
+- name: "Add user foreman to group docker"
+  user:
+    name: foreman
+    groups: docker
+    append: yes
+  tags:
+    - env_setup
+
+- name: "Configure docker"
+  lineinfile:
+    dest: /etc/sysconfig/docker
+    regexp: '^OPTIONS='
+    line: "OPTIONS='--selinux-enabled -G docker'"
+  tags:
+    - env_setup
+
+- name: 'Create docker compute resource'
+  shell: >
+    {{ docker_hammer }} --output=silent compute-resource info --name "docker" ||
+    {{ docker_hammer }} compute-resource create
+    --name docker
+    --url 'unix://var/run/docker.sock'
+    --provider Docker
+    {{ docker_hammer_taxonomy_params }}
+  tags:
+    - seed
