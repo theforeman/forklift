@@ -13,6 +13,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
  * [Testing Environments](docs/testing.md)
  * [Provisioning environment](docs/provision.md)
  * [Plugins](docs/plugins.md)
+ * [Advanced Uses](docs/advanced_uses.md)
  * [Troubleshooting](docs/troubleshooting.md)
 
 ## Using Forklift
