@@ -1,0 +1,3 @@
+---
+katello_client_repositories_version: nightly
+katello_client_repositories_use_koji: False

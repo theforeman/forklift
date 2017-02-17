@@ -35,15 +35,21 @@
   delegate_to: "{{ foreman_proxy_content_server }}"
   register: pulp_oauth_secret
 
+- name: 'Detect certs generate'
+  command: "which foreman-proxy-certs-generate"
+  ignore_errors: true
+  register: foreman_proxy_certs_generate_exists
+  delegate_to: "{{ foreman_proxy_content_server }}"
+
 - name: 'Generate Certs'
   command: foreman-proxy-certs-generate --foreman-proxy-fqdn {{ ansible_nodename }} --certs-tar {{ foreman_proxy_content_certs_tar }}
   delegate_to: "{{ foreman_proxy_content_server }}"
-  when: katello_version != 3.2 and katello_version != 3.1 and katello_version != 3.0
+  when: foreman_proxy_certs_generate_exists.rc == 0
 
 - name: 'Generate Certs'
   command: capsule-certs-generate --capsule-fqdn {{ ansible_nodename }} --certs-tar {{ foreman_proxy_content_certs_tar }}
   delegate_to: "{{ foreman_proxy_content_server }}"
-  when: katello_version == 3.2 or katello_version == 3.1 or katello_version == 3.0
+  when: foreman_proxy_certs_generate_exists.rc != 0
 
 - name: 'Fetch Certs'
   delegate_to: "{{ foreman_proxy_content_server }}"
