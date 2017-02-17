@@ -1,23 +1,43 @@
 ---
 csv_hammer: hammer --server https://localhost --username admin --password changeme
 
-csv_operating_systems:
-  - name: SpecialOS 7.2
-    description: SpecialOS 7.2
-    family: Redhat
-    password_hash: SHA256
-    partition_tables: Kickstart default
-    architectures: x86_64
-    media: ""
-    provisioning_templates: Kickstart default
-    parameters: flavor|spicy
+# activation-keys
+# architectures
+# compute-profiles
+# content-hosts
+# content-view-filters
+# content-views
+# domains
+# host-collections
+# host-groups
+# hosts
+# installation-media
+# job-templates
+# lifecycle-environments
+# locations
 
-  - name: SpecialOS 7.1
-    description: SpecialOS 7.1
-    family: Redhat
-    password_hash: SHA256
-    partition_tables: Kickstart default
-    architectures: x86_64
-    media: ""
-    provisioning_templates: Kickstart default
-    parameters: "flavor|spicy,style|cruncy"
+csv_operating_systems:
+  - name: "# name"
+    description: "description"
+    family: "family"
+    password_hash: "password_hash"
+    partition_tables: "comman separated list of partition tables"
+    architectures: "comma separated list of architectures"
+    media: "media"
+    provisioning_templates: "comma separated list of provisioning templates"
+    parameters: "comma separated list of paramaters of formant <name>|<value>"
+
+# operating-systems
+# organizations
+# partition-tables
+# products
+# provisioning-templates
+# puppet-environments
+# roles
+csv_settings:
+  - name: "# name"
+    value: "value"
+
+# smart-proxies
+# subnets
+# sync-plans

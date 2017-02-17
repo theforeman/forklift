@@ -1,0 +1,15 @@
+---
+
+- name: Create {{ csv_resource }}.csv
+  template:
+    src: templates/{{csv_resource}}.csv.j2
+    dest: /home/vagrant/csv/{{ csv_resource }}.csv
+    owner: vagrant
+
+- name: Run hammer csv {{ csv_resource }}
+  shell: >
+    BUNDLE_GEMFILE=~/hammer-cli-katello/Gemfile bundle exec {{ csv_hammer }}
+    csv operating-systems
+    --verbose
+    --file /home/vagrant/csv/{{ csv_resource }}.csv
+    > /home/vagrant/csv/{{ csv_resource }}.log

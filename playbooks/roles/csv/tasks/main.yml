@@ -5,17 +5,8 @@
     state: directory
     owner: vagrant
 
-- name: Create operating-systems.csv
-  template:
-    src: templates/operating-systems.csv.j2
-    dest: /home/vagrant/csv/operating-systems.csv
-    owner: vagrant
-
-- name: Run hammer csv operating-systems
-  shell: >
-    BUNDLE_GEMFILE=~/hammer-cli-katello/Gemfile bundle exec {{ csv_hammer }}
-    csv operating-systems
-    --verbose
-    --file /home/vagrant/csv/operating-systems.csv
-    > /home/vagrant/csv/operating-systems.log
-
+- name: Import resources
+  include: import-csv.yml csv_resource={{ item }}
+  with_items:
+  - settings
+  - operating-systems
