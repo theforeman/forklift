@@ -11,7 +11,7 @@
   roles:
     - forklift
 
-- hosts: pipeline-katello-centos7
+- hosts: pipeline-katello-nightly-centos7
   become: yes
   vars:
     katello_version: nightly
@@ -32,10 +32,10 @@
     - katello_repositories
     - foreman_installer
 
-- hosts: pipeline-proxy-centos7
+- hosts: pipeline-proxy-nightly-centos7
   become: yes
   vars:
-    foreman_proxy_content_server: pipeline-katello-centos7
+    foreman_proxy_content_server: pipeline-katello-nightly-centos7
     katello_version: nightly
     foreman_version: nightly
     katello_repositories_use_koji: true
@@ -63,12 +63,12 @@
     - foreman_proxy_content
     - foreman_installer
 
-- hosts: pipeline-katello-centos7
+- hosts: pipeline-katello-nightly-centos7
   become: true
   roles:
     - bats
 
-- hosts: pipeline-proxy-centos7
+- hosts: pipeline-proxy-nightly-centos7
   become: true
   vars:
     bats_tests:
