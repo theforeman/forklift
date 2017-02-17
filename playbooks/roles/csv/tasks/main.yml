@@ -9,4 +9,6 @@
   include: import-csv.yml csv_resource={{ item }}
   with_items:
   - settings
+  - organizations
+  - locations
   - operating-systems
