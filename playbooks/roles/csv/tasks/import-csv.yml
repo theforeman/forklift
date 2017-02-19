@@ -1,10 +1,5 @@
 ---
 
-# - name: Copy {{ csv_resource }}.csv, if specified
-#   template:
-#     src: {{ csv_resource }}
-#     when: csv_data_exists
-
 - name: Create {{ csv_resource }}.csv, if resource defined and file doesn't already exist
   template:
     src: "{{ template_src }}"
