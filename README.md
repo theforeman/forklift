@@ -69,12 +69,15 @@ Options:
 box -- the ':name' one of the defined boxes in the Vagrantfile
 installer -- options that you would like passed to the installer
 shell -- customize the shell script run
-bridged -- deploy on Libvirt with a bridged networking configuration, value of this parameter should be the interface of the host (e.g. em1)
+bridged -- deploy on Libvirt with a bridged networking configuration, value
+           of this parameter should be the interface of the host (e.g. em1)
 memory -- set the amount of memory (in megabytes) this box will consume
 cpus -- set the number of cpus this box will use
 hostname -- hostname to set on the box
 networks -- custom networks to use in addition to the management network
-disk_size -- specify the size (in gigabytes) of the box's virtual disk. This only sets the virtual disk size, so you will still need to resize partitions and filesystems manually.
+disk_size -- specify the size (in gigabytes) of the box's virtual disk. This
+             only sets the virtual disk size, so you will still need to
+             resize partitions and filesystems manually.
 ```
 
 Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
