@@ -1,0 +1,6 @@
+---
+custom_certificates_ca_directory: /root/custom_certificates
+custom_certificates_ca_directory_keys: "{{ custom_certificates_ca_directory }}/private"
+custom_certificates_ca_directory_certs: "{{ custom_certificates_ca_directory }}/certs"
+custom_certificates_ca_directory_requests: "{{ custom_certificates_ca_directory }}/requests"
+custom_certificates_server: "{{ ansible_fqdn }}"
