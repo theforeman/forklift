@@ -22,10 +22,6 @@ setup() {
     fi
   fi
 
-  #disable ipv6 for issue #12386
-  sysctl -w net.ipv6.conf.default.disable_ipv6=1
-  sysctl -w net.ipv6.conf.all.disable_ipv6=1
-
   tPackageExists curl || tPackageInstall curl
   if tIsRedHatCompatible; then
     tPackageExists yum-utils || tPackageInstall yum-utils
