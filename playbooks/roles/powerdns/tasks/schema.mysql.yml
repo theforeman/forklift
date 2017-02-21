@@ -1,0 +1,19 @@
+---
+- name: Check if DB tables exist
+  command: >
+           mysql
+           -u {{ powerdns_db_user }}
+           --password={{ powerdns_db_pass }}
+           -h {{ powerdns_db_host }}
+           -e "show tables from {{ powerdns_db_name }};"
+  register: "powerdns_tables"
+
+- name: "Import DB schema"
+  shell: >
+         cat /usr/share/doc/pdns-backend-mysql-*/schema.mysql.sql |
+         mysql
+         -u {{ powerdns_db_user }}
+         --password={{ powerdns_db_pass }}
+         -h {{ powerdns_db_host }}
+         {{ powerdns_db_name }}
+  when: ('domains' not in powerdns_tables.stdout_lines)

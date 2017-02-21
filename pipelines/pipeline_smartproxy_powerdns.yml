@@ -1,0 +1,45 @@
+- hosts: localhost
+  vars:
+    forklift_name: pipeline-smartproxy-powerdns
+    forklift_boxes:
+      pipeline-smartproxy-powerdns:
+        box: centos7
+        memory: 1024
+  roles:
+    - forklift
+
+- hosts: pipeline-smartproxy-powerdns
+  become: yes
+  vars:
+    bats_forklift_dir: /vagrant
+    bats_update_forklift: "no"
+    bats_tests:
+      - "fb-proxy-dns.bats"
+    foreman_installer_options: "
+       --no-enable-foreman
+       --no-enable-foreman-cli
+       --no-enable-foreman-plugin-setup
+       --foreman-proxy-register-in-foreman=false
+       --foreman-proxy-dns=true
+       --foreman-proxy-dns-managed=false
+       --foreman-proxy-dns-provider=powerdns
+       --enable-foreman-proxy-plugin-dns-powerdns
+       --foreman-proxy-plugin-dns-powerdns-backend=mysql
+       --foreman-proxy-plugin-dns-powerdns-manage-database=true
+       --foreman-proxy-plugin-dns-powerdns-mysql-password=ajooy7HeeCh8loo
+       --foreman-proxy-plugin-dns-powerdns-pdnssec=pdnsutil"
+    powerdns_db_pass: "ajooy7HeeCh8loo"
+    powerdns_conf_mode: "0644"
+    powerdns_zones:
+      - "example.com"
+      - "121.168.192.in-addr.arpa"
+      - "8.b.d.0.1.0.0.2.ip6.arpa"
+  roles:
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - foreman_installer
+    - powerdns
+    - bats

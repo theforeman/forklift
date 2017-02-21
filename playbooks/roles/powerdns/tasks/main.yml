@@ -1,0 +1,44 @@
+---
+- name: "Add PowerDNS repository"
+  yum_repository:
+    name: "powerdns-auth-40"
+    description: "PowerDNS repository for PowerDNS Authoritative Server - version 4.0.X"
+    baseurl: "http://repo.powerdns.com/centos/$basearch/$releasever/auth-40"
+    gpgkey: "https://repo.powerdns.com/FD380FBB-pub.asc"
+    gpgcheck: "1"
+    enabled: "1"
+
+- name: "Install PowerDNS"
+  yum:
+    name: "{{ item }}"
+    state: "installed"
+  with_items:
+    - "pdns"
+    - "pdns-backend-mysql"
+
+- name: "Configure PowerDNS"
+  template:
+    src: "pdns.conf.j2"
+    dest: "/etc/pdns/pdns.conf"
+    owner: "root"
+    group: "root"
+    mode: "{{ powerdns_conf_mode }}"
+  register: "pdns_configured"
+
+- name: "Enable PowerDNS"
+  service:
+    name: "pdns"
+    state: "started"
+    enabled: yes
+
+- name: "Restart PowerDNS"
+  service:
+    name: "pdns"
+    state: "restarted"
+  when: pdns_configured.changed
+
+- include: "schema.mysql.yml"
+  when: powerdns_db_backend == "gmysql"
+
+- include: "zones.yml"
+  when: powerdns_zones

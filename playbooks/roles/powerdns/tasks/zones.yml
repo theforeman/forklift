@@ -1,0 +1,12 @@
+---
+- name: "Check if zones exist"
+  command: "pdnsutil show-zone {{ item }}"
+  register: powerdns_zones_result
+  ignore_errors: true
+  no_log: true
+  with_items: "{{ powerdns_zones }}"
+
+- name: "Create zones"
+  command: "pdnsutil create-zone {{ item.item }} {{ ansible_hostname }}"
+  when: item.rc != 0
+  with_items: "{{ powerdns_zones_result.results }}"
