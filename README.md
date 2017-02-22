@@ -12,6 +12,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
  * [Development Environments](docs/development.md)
  * [Testing Environments](docs/testing.md)
  * [Provisioning environment](docs/provision.md)
+ * [Plugins](docs/plugins.md)
  * [Troubleshooting](docs/troubleshooting.md)
 
 ## Using Forklift
@@ -31,12 +32,13 @@ cd forklift
 vagrant up centos7-foreman-nightly
 ```
 
-The same can be quickly done for a development environment:
+The same can be quickly done for a development environment where GITHUB_NICK is your GitHub username:
 
 ```
 git clone https://github.com/theforeman/forklift.git
 cd forklift
 cp boxes.yaml.example boxes.yaml
+sed -i "s/<REPLACE ME>/GITHUB_NICK/g" boxes.yaml
 vagrant up centos7-devel
 ```
 
@@ -58,17 +60,18 @@ By default, the boxes are set with `example.com` domain.
 Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `boxes.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
 
 ```
-my-nightly-test:
+my-nightly-koji:
   box: centos7
-  installer: '--reset'
+  ansible:
+    playbook: playbook/katello.yml
+    variables:
+      katello_repositories_use_koji: True
 ```
 
 Options:
 
 ```
 box -- the ':name' one of the defined boxes in the Vagrantfile
-installer -- options that you would like passed to the installer
-shell -- customize the shell script run
 bridged -- deploy on Libvirt with a bridged networking configuration, value
            of this parameter should be the interface of the host (e.g. em1)
 memory -- set the amount of memory (in megabytes) this box will consume
@@ -78,6 +81,8 @@ networks -- custom networks to use in addition to the management network
 disk_size -- specify the size (in gigabytes) of the box's virtual disk. This
              only sets the virtual disk size, so you will still need to
              resize partitions and filesystems manually.
+ansible -- updates the Ansible provisioner configuration including the
+           playbook to be ran or any variables to set
 ```
 
 Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
@@ -117,84 +122,4 @@ ansible:
     playbook:
       - 'user_playbooks/vim.yml'
       - 'user_playbooks/zsh.yml'
-```
-
-### Plugins
-
-Any file on path `./plugins/*/Vagrantfile` will be loaded on `./Vagrantfile` evaluation. `plugins` directory is ignored by git therefore other git repositories can be cloned into `plugins` to add custom machines.
-
-Example of a plugin's `Vagrantfile`:
-
-```ruby
-module APlugin
-
-  Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
-    DB           = 'db'
-    WEB          = 'web'
-    PARENT_NAME  = 'centos6-devel'
-    PROJECT_PATH = "#{Forklift::ROOT}/../a_repo"
-
-    Forklift.define_vm config, Forklift.new_box(PARENT_NAME, DB) do |machine|
-      machine.vm.provision :shell do |shell|
-        shell.inline = 'echo doing DB box provisioning'
-        config.vm.synced_folder PROJECT_PATH, "/home/vagrant/a_repo"
-        config.vm.provider :virtualbox do |domain|
-          domain.memory = 1024
-        end
-      end
-    end
-
-    Forklift.define_vm config, Forklift.new_box(PARENT_NAME, WEB) do |machine|
-      machine.vm.provision :shell do |shell|
-        shell.inline = 'echo doing WEB box provisioning'
-        shell.inline = 'echo doing another WEB box provisioning'
-        config.vm.synced_folder PROJECT_PATH, "/home/vagrant/a_repo"
-        config.vm.provider :virtualbox do |domain|
-          domain.memory = 512
-        end
-      end
-    end
-  end
-end
-```
-
-If you would like to inject hostname management and package caching without
-updating the base Vagrantfile,  you can install the `vagrant-hostname` and
-`vagrant-cachier` plugins and then create
-`./plugins/my-custom-plugins/Vagrantfile` with the following content:
-
-```ruby
-
-# this enables some customizations that should not be used until after you have a
-# working basic install.
-
-module MyCustomPlugins
-  Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
-    # set up some shared dirs
-    config.vm.synced_folder "/path/to/local/checkout/katello", "/home/vagrant/share/katello", type: "nfs"
-    config.vm.synced_folder "/path/to/local/checkout/foreman", "/home/vagrant/share/foreman", type: "nfs"
-    config.vm.synced_folder "/path/to/local/checkout/foreman-gutterball", "/home/vagrant/share/foreman-gutterball", type: "nfs"
-
-    if Vagrant.has_plugin?("vagrant-hostmanager")
-      config.hostmanager.enabled = true
-      config.hostmanager.manage_host = true
-    end
-
-    if Vagrant.has_plugin?("vagrant-cachier")
-      # Configure cached packages to be shared between instances of the same base box.
-      # More info on http://fgrehm.viewdocs.io/vagrant-cachier/usage
-      config.cache.scope = :box
-      # disable gem caching for now, due to permissions issue
-      config.cache.auto_detect = false
-      config.cache.enable :yum
-
-      config.cache.synced_folder_opts = {
-        type: :nfs,
-        mount_options: ['rw', 'vers=4', 'tcp', 'nolock']
-      }
-    end
-  end
-end
 ```
