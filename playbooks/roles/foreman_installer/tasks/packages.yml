@@ -8,7 +8,6 @@
 - name: 'Install foreman-release-scl'
   yum:
     name: foreman-release-scl
-    update_cache: yes
     state: latest
 
 - name: 'Install foreman-installer'

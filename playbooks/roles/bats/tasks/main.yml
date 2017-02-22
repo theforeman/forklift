@@ -1,4 +1,9 @@
 ---
+- name: "Install git"
+  yum:
+    name: "git"
+    state: "installed"
+
 - name: "Get /usr/bin/bats stat"
   stat:
     path: "/usr/bin/bats"
