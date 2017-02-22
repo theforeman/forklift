@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/katello/forklift/master/docs/forklift.png" height="100px">
+<img src="https://raw.githubusercontent.com/theforeman/forklift/master/docs/forklift.png" height="100px">
 
 # Forklift: lifting Foreman into your environment
 
@@ -26,7 +26,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
 This will walk through the simplest path of spinning up a production test environment of a bleeding edge nightly installation assuming Vagrant and Libvirt are installed and configured.
 
 ```
-git clone https://github.com/katello/forklift.git
+git clone https://github.com/theforeman/forklift.git
 cd forklift
 vagrant up centos7-foreman-nightly
 ```
@@ -34,7 +34,7 @@ vagrant up centos7-foreman-nightly
 The same can be quickly done for a development environment:
 
 ```
-git clone https://github.com/katello/forklift.git
+git clone https://github.com/theforeman/forklift.git
 cd forklift
 cp boxes.yaml.example boxes.yaml
 vagrant up centos7-devel
