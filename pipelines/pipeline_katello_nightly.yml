@@ -14,8 +14,8 @@
 - hosts: pipeline-katello-nightly-centos7
   become: yes
   vars:
-    katello_version: nightly
-    foreman_version: nightly
+    katello_repositories_version: nightly
+    foreman_repositories_version: nightly
     katello_repositories_use_koji: true
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
@@ -37,8 +37,8 @@
   become: yes
   vars:
     foreman_proxy_content_server: pipeline-katello-nightly-centos7
-    katello_version: nightly
-    foreman_version: nightly
+    katello_repositories_version: nightly
+    foreman_repositories_version: nightly
     katello_repositories_use_koji: true
     foreman_installer_scenario: foreman-proxy-content
     foreman_installer_options_internal_use_only:

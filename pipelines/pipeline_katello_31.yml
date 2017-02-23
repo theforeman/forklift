@@ -14,8 +14,8 @@
 - hosts: pipeline-katello-3.1-centos7
   become: yes
   vars:
-    katello_version: 3.1
-    foreman_version: 1.12
+    katello_repositories_version: 3.1
+    foreman_repositories_version: 1.12
     katello_repositories_use_koji: true
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
@@ -34,8 +34,8 @@
   become: yes
   vars:
     capsule_server: pipeline-katello-3.1-centos7
-    katello_version: 3.1
-    foreman_version: 1.12
+    katello_repositories_version: 3.1
+    foreman_repositories_version: 1.12
     katello_repositories_use_koji: true
     foreman_installer_scenario: capsule
     foreman_installer_options_internal_use_only:
