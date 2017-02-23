@@ -15,8 +15,8 @@
   become: yes
   vars:
     puppet_repositories_version: 3
-    katello_version: 3.1
-    foreman_version: 1.12
+    katello_repositories_version: 3.1
+    foreman_repositories_version: 1.12
     foreman_repositories_use_koji: true
     katello_repositories_use_koji: true
     foreman_installer_scenario: katello
@@ -38,8 +38,8 @@
   vars:
     puppet_repositories_version: 3
     foreman_proxy_content_server: pipeline-katello-3.1-3.3-centos7
-    katello_version: 3.1
-    foreman_version: 1.12
+    katello_repositories_version: 3.1
+    foreman_repositories_version: 1.12
     foreman_repositories_use_koji: true
     katello_repositories_use_koji: true
     foreman_installer_scenario: capsule
@@ -68,12 +68,14 @@
 - hosts: pipeline-katello-3.1-3.3-centos7
   become: true
   vars:
-    foreman_version: 1.14
-    katello_version: 3.3
+    katello_repositories_version: 3.3
+    foreman_repositories_version: 1.14
     foreman_installer_upgrade: True
     foreman_repositories_use_koji: True
     katello_repositories_use_koji: True
     foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+        - "{{ '--disable-system-checks' if katello_repositories_version != '3.1' else '' }}"
   roles:
     - puppet_repositories
     - foreman_repositories

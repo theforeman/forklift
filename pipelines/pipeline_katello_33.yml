@@ -14,9 +14,9 @@
 - hosts: pipeline-katello-3.3-centos7
   become: yes
   vars:
-    puppet_repositories_version: 3
-    katello_version: 3.3
-    foreman_version: 1.14
+    puppet_repositories_version: 4
+    katello_repositories_version: 3.3
+    foreman_repositories_version: 1.14
     foreman_repositories_use_koji: true
     katello_repositories_use_koji: true
     foreman_installer_scenario: katello
@@ -37,10 +37,10 @@
 - hosts: pipeline-proxy-3.3-centos7
   become: yes
   vars:
-    puppet_repositories_version: 3
+    puppet_repositories_version: 4
     foreman_proxy_content_server: pipeline-katello-3.3-centos7
-    katello_version: 3.3
-    foreman_version: 1.14
+    katello_repositories_version: 3.3
+    foreman_repositories_version: 1.14
     foreman_repositories_use_koji: true
     katello_repositories_use_koji: true
     foreman_installer_scenario: foreman-proxy-content
