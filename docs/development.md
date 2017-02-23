@@ -198,14 +198,19 @@ In boxes.yaml:
 Add your client, replacing 'your-katello-server-name' with your main katello development server name
 
 ```
-client1:
+awesome-client:
   box: centos7
   ansible:
-    playbook: 'playbooks/katello_client.yml'
     group: 'client'
-    server: 'your-katello-server-name'
-```
+    playbook: 'playbooks/katello_client.yml'
+    variables:
+      katello_client_server: 'your-katello-server-name'
+      katello_client_organization: 'Default_Organization'
+      katello_client_environment: 'Library'
+      katello_client_username: 'admin'
+      katello_client_password: 'changeme'
 
+```
 then add
 
 ```
