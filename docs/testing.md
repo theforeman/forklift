@@ -28,7 +28,7 @@ Under `playbooks/pipelines` are a series of playbooks designed around testing sc
     ansible-playbook playbooks/pipelines/pipeline_katello_nightly -e "forklift_state=up"
 
 When you are finished with the test, you can tear down the associated infrastructure:
-    
+
     ansible-playbook playbooks/pipelines/pipeline_katello_nightly -e "forklift_state=destroy"
 
 ## Client Testing With Docker

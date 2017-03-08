@@ -26,7 +26,7 @@ A Katello development environment can be deployed on CentOS 6 or 7. Ensure that 
 
 For example, if I wanted my upstream remotes to be origin and to install the remote execution and discovery plugins:
 
-```
+```yaml
 centos7-devel:
   box: centos7
   ansible:
@@ -58,7 +58,7 @@ Forklift supports using Koji scratch builds to make RPMs available for testing p
 
 An Ansible role is provided that can setup and configure a Koji scratch build for testing. If you had an existing playbook such as:
 
-```
+```yaml
 - hosts: server
   roles:
     - etc_hosts
@@ -69,7 +69,7 @@ An Ansible role is provided that can setup and configure a Koji scratch build fo
 
 The Koji role and task ID variable can be added to download and configure a repository with priority:
 
-```
+```yaml
 - hosts: server
   vars:
     koji_task_id: 321231
@@ -158,7 +158,7 @@ changing the hostnames as needed
 
 * setup boxes.yaml
 
-```
+```yaml
 capsule-dev:
   box: centos7
   ansible:
@@ -174,13 +174,13 @@ capsule-dev:
 ### To setup a capsule with an existing development environment
 
 * Add the following to the existing Katello development server's configuration in boxes.yaml
-```
+```yaml
   ansible:
     group: 'server'
 ```
 * Add a box for a capsule, using the katello server's name in the "server" field:
 
-```
+```yaml
 capsule-dev:
   box: centos7
   ansible:
@@ -197,7 +197,7 @@ In boxes.yaml:
 
 Add your client, replacing 'your-katello-server-name' with your main katello development server name
 
-```
+```yaml
 awesome-client:
   box: centos7
   ansible:
@@ -213,7 +213,7 @@ awesome-client:
 ```
 then add
 
-```
+```yaml
   ansible:
     group: 'server'
 ```
@@ -226,7 +226,7 @@ Forklift creates a reverse proxy between localhost:3000 (Rails development defau
 
 To work with webpack-dev-server, ensure the following lines are in your `~/foreman/config/settings.yaml`:
 
-```
+```yaml
 :webpack_dev_server: true
 :webpack_dev_server_https: true
 ```

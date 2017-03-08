@@ -68,16 +68,16 @@ This setup assumes you are either deploying on a non-VM environment or you alrea
 This use case assumes that you are on a box that has SSH access to the target box for installation and that Ansible can properly realize the target host via an inventory script.
 
 1. Ensure Ansible is installed
-2. Clone this repository - `git clone https://github.com/Katello/forklift.git`
+2. Clone this repository - `git clone https://github.com/theforeman/forklift.git`
 3. Enter the repository - `cd forklift`
 
 For a release version in production:
 
-    ansible-playbook -l <target-host> playbooks/katello_31.yml
+    ansible-playbook -l <target-host> playbooks/katello.yml -e foreman_repositories_version=1.14 -e katello_repositories_version=3.3
 
 For nightly production:
 
-    ansible-playbook -l <target-host> playbooks/katello_nightly.yml
+    ansible-playbook -l <target-host> playbooks/katello.yml
 
 
 After installing a Katello server, you could then spin up a Capsule with the assumption the Katello server can talk to the Capsule and vice versa.
@@ -88,13 +88,13 @@ After installing a Katello server, you could then spin up a Capsule with the ass
 
 1. ssh to target machine **as root**
 2. Install Ansible -- `yum install ansible`
-3. Clone this repository - `git clone https://github.com/Katello/forklift.git`
+3. Clone this repository - `git clone https://github.com/theforeman/forklift.git`
 4. Enter the repository - `cd forklift`
 
 For a release version in production:
 
-    ansible-playbook -l localhost playbooks/katello_31.yml
+    ansible-playbook -l localhost playbooks/katello.yml -e foreman_repositories_version=1.14 -e katello_repositories_version=3.3
 
 For nightly production:
 
-    ansible-playbook -l localhost playbooks/katello_nightly.yml
+    ansible-playbook -l localhost playbooks/katello.yml
