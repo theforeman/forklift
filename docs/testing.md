@@ -10,16 +10,27 @@ This section covers test infrastructure and environments that can be spun up usi
 Included with forklift is a small live test suite.  The current tests are:
 
   * fb-install-katello.bats - Installs katello and runs a few simple tests
+  * fb-content-katello.bats - Runs tests against content features
+  * fb-finish.bats - Collects logs pertinent to the bats run
 
 To execute the bats framework:
 
  * Using vagrant (after configuring vagrant according to this document):
-  1.  vagrant up centos6-bats
-  2.  vagrant ssh centos6-bats -c 'sudo fb-install-katello.bats'
 
- * On a fresh system you've manually installed:
-  1.  ./bats/bootstrap.sh
-  2.  katello-bats
+    vagrant up centos7-pipeline-bats
+
+To run the same setup run by CI system:
+
+    cp boxes.yaml.example boxes.yaml
+    vagrant up centos7-bats-ci
+
+If you are making changes to bats tests and want to test your updates, edit `centos7-bats-ci` to include:
+
+    ansible:
+      ....
+      variables:
+        bats_forklift_dir: /vagrant
+        bats_update_forklift: "no" 
 
 ## Pipeline Testing
 
