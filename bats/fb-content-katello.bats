@@ -5,6 +5,7 @@ set -o pipefail
 
 load os_helper
 load foreman_helper
+load fixtures/content
 
 setup() {
   tSetOSVersion
@@ -21,82 +22,86 @@ setup() {
 }
 
 @test "create an Organization" {
-  hammer organization create --name="Test Organization" | grep -q "Organization created"
+  hammer organization create --name="${ORGANIZATION}" | grep -q "Organization created"
 }
 
 @test "create a product" {
-  hammer product create --organization="Test Organization" --name="Test Product" | grep -q "Product created"
+  hammer product create --organization="${ORGANIZATION}" --name="${PRODUCT}" | grep -q "Product created"
 }
 
 @test "create package repository" {
-  hammer repository create --organization="Test Organization" \
-    --product="Test Product" --content-type="yum" --name "Zoo" \
+  hammer repository create --organization="${ORGANIZATION}" \
+    --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY}" \
     --url https://repos.fedorapeople.org/repos/pulp/pulp/demo_repos/zoo/ | grep -q "Repository created"
 }
 
 @test "upload package" {
   wget https://repos.fedorapeople.org/repos/pulp/pulp/demo_repos/test_errata_install/animaniacs-0.1-1.noarch.rpm -P /tmp
-  hammer repository upload-content --organization="Test Organization"\
-    --product="Test Product" --name="Zoo" --path="/tmp/animaniacs-0.1-1.noarch.rpm" | grep -q "Successfully uploaded"
+  hammer repository upload-content --organization="${ORGANIZATION}"\
+    --product="${PRODUCT}" --name="${YUM_REPOSITORY}" --path="/tmp/animaniacs-0.1-1.noarch.rpm" | grep -q "Successfully uploaded"
 }
 
 @test "sync repository" {
-  hammer repository synchronize --organization="Test Organization" --product="Test Product" --name="Zoo"
+  hammer repository synchronize --organization="${ORGANIZATION}" \
+    --product="${PRODUCT}" --name="${YUM_REPOSITORY}"
 }
 
 @test "create puppet repository" {
-  hammer repository create --organization="Test Organization" \
-    --product="Test Product" --content-type="puppet" --name "Puppet Modules" | grep -q "Repository created"
+  hammer repository create --organization="${ORGANIZATION}" \
+    --product="${PRODUCT}" --content-type="puppet" --name "${PUPPET_REPOSITORY}" | grep -q "Repository created"
 }
 
 @test "upload puppet module" {
   curl -o /tmp/stbenjam-dummy-0.2.0.tar.gz https://forgeapi.puppetlabs.com/v3/files/stbenjam-dummy-0.2.0.tar.gz
   tFileExists /tmp/stbenjam-dummy-0.2.0.tar.gz && hammer repository upload-content \
-    --organization="Test Organization" --product="Test Product" --name="Puppet Modules" \
+    --organization="${ORGANIZATION}" --product="${PRODUCT}" --name="${PUPPET_REPOSITORY}" \
     --path="/tmp/stbenjam-dummy-0.2.0.tar.gz" | grep -q "Successfully uploaded"
 }
 
 @test "create lifecycle environment" {
-  hammer lifecycle-environment create --organization="Test Organization" \
-    --prior="Library" --name="Test" | grep -q "Environment created"
+  hammer lifecycle-environment create --organization="${ORGANIZATION}" \
+    --prior="Library" --name="${LIFECYCLE_ENVIRONMENT}" | grep -q "Environment created"
 }
 
 @test "create content view" {
-  hammer content-view create --organization="Test Organization" --name="Test CV" | grep -q "Content view created"
+  hammer content-view create --organization="${ORGANIZATION}" \
+    --name="${CONTENT_VIEW}" | grep -q "Content view created"
 }
 
 @test "add repo to content view" {
-  repo_id=$(hammer repository list --organization="Test Organization" | grep Zoo | cut -d\| -f1 | egrep -i '[0-9]+')
-  hammer content-view add-repository --organization="Test Organization" \
-    --name="Test CV" --repository-id=$repo_id | grep -q "The repository has been associated"
+  repo_id=$(hammer repository list --organization="${ORGANIZATION}" \
+    | grep ${YUM_REPOSITORY} | cut -d\| -f1 | egrep -i '[0-9]+')
+  hammer content-view add-repository --organization="${ORGANIZATION}" \
+    --name="${CONTENT_VIEW}" --repository-id=$repo_id | grep -q "The repository has been associated"
 }
 
 @test "publish content view" {
-  hammer content-view publish --organization="Test Organization" --name="Test CV"
+  hammer content-view publish --organization="${ORGANIZATION}" \
+    --name="${CONTENT_VIEW}"
 }
 
 @test "promote content view" {
-  hammer content-view version promote  --organization="Test Organization" \
-    --content-view="Test CV" --to-lifecycle-environment="Test" --from-lifecycle-environment="Library"
+  hammer content-view version promote  --organization="${ORGANIZATION}" \
+    --content-view="${CONTENT_VIEW}" --to-lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" --from-lifecycle-environment="Library"
 }
 
 @test "create activation key" {
-  hammer activation-key create --organization="Test Organization" \
-    --name="Test AK" --content-view="Test CV" --lifecycle-environment="Test" \
+  hammer activation-key create --organization="${ORGANIZATION}" \
+    --name="${ACTIVATION_KEY}" --content-view="${CONTENT_VIEW}" --lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" \
     --unlimited-hosts | grep -q "Activation key created"
 }
 
 @test "disable auto-attach" {
-  hammer activation-key update --organization="Test Organization" \
-    --name="Test AK" --auto-attach=false
+  hammer activation-key update --organization="${ORGANIZATION}" \
+    --name="${ACTIVATION_KEY}" --auto-attach=false
 }
 
 @test "add subscription to activation key" {
   sleep 10
-  activation_key_id=$(hammer activation-key info --organization="Test Organization" \
-    --name="Test AK" | grep ID | tr -d ' ' | cut -d':' -f2)
-  subscription_id=$(hammer subscription list --organization="Test Organization" \
-    | grep "Test Product" | cut -d\| -f1 | tr -d ' ')
+  activation_key_id=$(hammer activation-key info --organization="${ORGANIZATION}" \
+    --name="${ACTIVATION_KEY}" | grep ID | tr -d ' ' | cut -d':' -f2)
+  subscription_id=$(hammer subscription list --organization="${ORGANIZATION}" \
+    | grep "${PRODUCT}" | cut -d\| -f1 | tr -d ' ')
   hammer activation-key add-subscription --id=$activation_key_id \
     --subscription-id=$subscription_id | grep -q "Subscription added to activation key"
 }
@@ -123,8 +128,8 @@ EOF
 
   run yum erase -y 'katello-ca-consumer-*'
   run rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm
-  run subscription-manager register --force --org="Test_Organization" --activationkey="Test AK"
-  subscription-manager list --consumed | grep "Test Product"
+  run subscription-manager register --force --org="${ORGANIZATION_LABEL}" --activationkey="${ACTIVATION_KEY}"
+  subscription-manager list --consumed | grep "${PRODUCT}"
 }
 
 @test "check content host is registered" {
@@ -132,7 +137,7 @@ EOF
 }
 
 @test "enable content view repo" {
-  subscription-manager repos --enable="Test_Organization_Test_Product_Zoo" | grep -q "is enabled for this system"
+  subscription-manager repos --enable="${ORGANIZATION_LABEL}_${PRODUCT_LABEL}_${YUM_REPOSITORY_LABEL}" | grep -q "is enabled for this system"
 }
 
 @test "install katello-agent" {
@@ -158,26 +163,28 @@ EOF
 }
 
 @test "add puppet module to content view" {
-  repo_id=$(hammer repository list --organization="Test Organization" | grep Puppet | cut -d\| -f1 | egrep -i '[0-9]+')
+  repo_id=$(hammer repository list --organization="${ORGANIZATION}" \
+    | grep Puppet | cut -d\| -f1 | egrep -i '[0-9]+')
   module_id=$(hammer puppet-module list --repository-id=$repo_id | grep dummy | cut -d\| -f1)
-  hammer content-view puppet-module add --organization="Test Organization" \
-    --content-view="Test CV" --id=$module_id | grep -q "Puppet module added to content view"
+  hammer content-view puppet-module add --organization="${ORGANIZATION}" \
+    --content-view="${CONTENT_VIEW}" --id=$module_id | grep -q "Puppet module added to content view"
 }
 
 @test "publish content view" {
-  hammer content-view publish --organization="Test Organization" --name="Test CV"
+  hammer content-view publish --organization="${ORGANIZATION}" \
+    --name="${CONTENT_VIEW}"
 }
 
 @test "promote content view" {
-  hammer content-view version promote  --organization="Test Organization" \
-    --content-view="Test CV" --to-lifecycle-environment="Test" --from-lifecycle-environment="Library"
+  hammer content-view version promote  --organization="${ORGANIZATION}" \
+    --content-view="${CONTENT_VIEW}" --to-lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" --from-lifecycle-environment="Library"
 }
 
 @test "add puppetclass to host" {
   # FIXME: If katello host is subscribed to itself, should it's puppet env also be updated? #7364
   # Skipping because of http://projects.theforeman.org/issues/8244
   skip
-  target_env=$(hammer environment list | grep KT_Test_Organization_Test_Test_CV | cut -d\| -f1)
+  target_env=$(hammer environment list | grep KT_${ORGANIZATION_LABEL}_${LIFECYCLE_ENVIRONMENT_LABEL}_${CONTENT_VIEW_LABEL} | cut -d\| -f1)
   hammer host update --name $(hostname -f) --environment-id=$target_env \
     --puppetclass-ids=1 | grep -q "Host updated"
 }
@@ -185,12 +192,4 @@ EOF
 @test "puppet run applies dummy module" {
   skip # because of above
   puppet agent --test && grep -q Lorem /tmp/dummy
-}
-
-@test "Delete an Organization" {
-  hammer organization delete --name="Test Organization"
-}
-
-@test "Clean subscriptions" {
-  subscription-manager clean
 }
