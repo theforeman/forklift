@@ -45,6 +45,7 @@ centos7-bats-ci:
         - "swapfile.bats"
         - "fb-test-katello.bats"
         - "fb-content-katello.bats"
+        - "fb-destroy-organization.bats"
         - "fb-finish-katello.bats"
 centos7-dynflow-devel:
   box: centos7
