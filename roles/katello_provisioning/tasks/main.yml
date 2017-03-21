@@ -148,7 +148,7 @@
 - name: 'set enable-puppet4 parameter'
   shell: >
       {{ katello_provisioning_hammer }} hostgroup set-parameter
-      --hostgroup "Forklift CentOS 7"
+      --hostgroup "Forklift Katello CentOS 7"
       --name enable-puppet4
       --value true
 

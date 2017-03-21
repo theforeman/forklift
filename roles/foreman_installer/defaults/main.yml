@@ -17,3 +17,4 @@ foreman_installer_module_prs: ""
 # pass structured data through via the host variables interface.
 foreman_installer_options: ""
 foreman_installer_options_internal_use_only: []
+  - "--foreman-admin-password {{ foreman_installer_admin_password }}"

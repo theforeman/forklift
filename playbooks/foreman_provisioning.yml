@@ -1,6 +1,6 @@
 - hosts: all
   become: true
   roles:
-    - katello
+    - foreman
     - libvirt_setup
-    - katello_provisioning
+    - foreman_provisioning
