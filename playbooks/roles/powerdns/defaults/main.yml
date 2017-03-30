@@ -1,0 +1,11 @@
+---
+powerdns_api: "yes"
+powerdns_api_key: "changeme"
+powerdns_db_backend: "gmysql"
+powerdns_db_host: "localhost"
+powerdns_db_name: "pdns"
+powerdns_db_pass: ""
+powerdns_db_user: "pdns"
+powerdns_conf_mode: "0600"
+powerdns_webserver: "yes"
+powerdns_zones: []
