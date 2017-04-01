@@ -1,6 +1,9 @@
 ---
-- include: release_repos.yml
-  when: foreman_repositories_use_release and not foreman_repositories_use_koji
+- include: debian_release_repos.yml
+  when: ansible_os_family == 'Debian' and foreman_repositories_use_release
+
+- include: redhat_release_repos.yml
+  when: ansible_os_family == 'RedHat' and foreman_repositories_use_release and not foreman_repositories_use_koji
 
 - include: koji_repos.yml
   when: foreman_repositories_use_koji
@@ -11,3 +14,4 @@
     state: latest
   tags:
     - packages
+  when: ansible_os_family == 'RedHat'

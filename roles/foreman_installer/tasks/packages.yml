@@ -1,13 +1,13 @@
 ---
 - name: 'Install foreman-installer'
-  yum:
+  package:
     name: foreman-installer
     state: latest
   tags:
     - packages
 
 - name: 'Install additional packages'
-  yum:
+  package:
     name: "{{ item }}"
     state: latest
   with_items: "{{ foreman_installer_additional_packages }}"

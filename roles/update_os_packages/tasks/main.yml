@@ -1,8 +1,17 @@
 ---
-- name: 'Update packages'
+- name: 'RedHat | Update packages'
   yum:
     name: '*'
     update_cache: yes
     state: latest
   tags:
     - packages
+  when: ansible_os_family == 'RedHat'
+
+- name: 'Debian | Update packages'
+  apt:
+    upgrade: dist
+    update_cache: yes
+  tags:
+    - packages
+  when: ansible_os_family == 'Debian'

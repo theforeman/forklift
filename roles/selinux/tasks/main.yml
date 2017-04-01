@@ -5,6 +5,7 @@
     state: installed
   tags:
     - env_setup
+  when: ansible_os_family == 'RedHat'
 
 - name: 'Set selinux state'
   selinux:
@@ -12,3 +13,4 @@
     state: "{{ selinux_state }}"
   tags:
     - env_setup
+  when: ansible_os_family == 'RedHat'

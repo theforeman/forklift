@@ -3,6 +3,18 @@ shells:
     shell: '/vagrant/shells/runcible.sh'
 
 boxes:
+  debian8:
+    box_name:   'debian/jessie64'
+    image_name: !ruby/regexp '/Debian.*Jessie/'
+    default:    true
+    pty:        true
+
+  debian9:
+    box_name:   'debian/stretch64'
+    image_name: !ruby/regexp '/Debian.*Stretch/'
+    default:    true
+    pty:        true
+
   centos6:
     box_name:   'centos/6'
     image_name: !ruby/regexp '/CentOS 6.*PV/'

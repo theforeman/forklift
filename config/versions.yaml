@@ -24,15 +24,19 @@ installers:
     puppet: 4
     boxes:
       - 'centos7'
+      - 'debian8'
 
   - foreman: '1.15'
     katello: '3.4'
     puppet: 4
     boxes:
       - 'centos7'
+      - 'debian8'
 
   - foreman: 'nightly'
     katello: 'nightly'
     puppet: 4
     boxes:
       - 'centos7'
+      - 'debian8'
+      - 'debian9'

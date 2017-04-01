@@ -1,6 +1,9 @@
 ---
 - include: packages.yml
 
+- include: locales.yml
+  when: ansible_os_family == 'Debian'
+
 - include: module_pr.yml
   when: foreman_installer_module_prs != ""
 

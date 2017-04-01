@@ -1,0 +1,17 @@
+---
+- name: 'Install locales'
+  package:
+    name: locales
+    state: latest
+
+- name: 'Ensure en_US.UTF-8 locale is available'
+  locale_gen:
+    name: en_US.UTF-8
+
+- name: configure /etc/default/locale
+  copy:
+    dest: /etc/default/locale
+    content: |
+      LC_ALL="en_US.UTF-8"
+      LANG="en_US.UTF-8"
+      LANGUAGE="en_US.UTF-8"
