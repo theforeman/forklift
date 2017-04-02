@@ -1,9 +1,10 @@
+# rubocop:disable Style/FileName
 source 'https://rubygems.org'
 
 group :test do
   gem 'minitest'
-  gem 'rake'
   gem 'mocha'
+  gem 'rake'
   gem 'rubocop'
 end
 

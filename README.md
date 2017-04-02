@@ -6,6 +6,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
 
  * [Using Forklift](#using-forklift)
    - [Adding Custom Boxes](#adding-custom-boxes)
+   - [Customize Deployment Settings](#customize-deployment-settings)
    - [Post Provisioning Playbooks & Scripts](#post-install-playbooks)
    - [Customize with Plugins](#plugins)
  * [Production Environments](docs/production.md)
@@ -13,6 +14,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
  * [Testing Environments](docs/testing.md)
  * [Provisioning environment](docs/provision.md)
  * [Plugins](docs/plugins.md)
+ * [Using Forklift as a Library](library.md)
  * [Troubleshooting](docs/troubleshooting.md)
 
 ## Using Forklift
@@ -21,7 +23,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
 
 * Vagrant - 1.8+ - Both the VirtualBox and Libvirt providers are tested
 * Ansible - 2.1+
-* [Vagrant Libvirt provider plugin](https://github.com/vagrant-libvirt/vagrant-libvirt) (if using Libvirt) 
+* [Vagrant Libvirt provider plugin](https://github.com/vagrant-libvirt/vagrant-libvirt) (if using Libvirt)
 
 ### Quickstart
 
@@ -109,6 +111,17 @@ static:
         libvirt__network_name: lab-private
         libvirt__iface_name: vnet2
 ```
+
+### Customize Deployment Settings
+
+Some settings can be customized for the entirety of the deployment, they are:
+
+ * default_memory: Memory to give boxes by default unless specified by a box
+ * default_cpus: Number of CPUs to give boxes by default unless specified by a box
+ * sync_type: type of sync to use for transfer to the Vagrant box
+ * mount_options: options for the vagrant-cachier plugin
+
+To customize any of these, copy `settings.yaml.example` to `settings.yaml` and add, remove or update the ones you wish to change'
 
 ### Post Install Playbooks
 
