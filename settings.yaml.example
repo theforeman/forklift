@@ -1,0 +1,7 @@
+---
+default_memory: 4608
+default_cpus: 2
+sync_type: 'rsync'
+
+cachier:
+  mount_options: ['rw', 'vers=3', 'tcp', 'nolock']

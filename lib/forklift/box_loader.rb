@@ -1,96 +1,47 @@
-require 'json'
-
 module Forklift
   class BoxLoader
 
-    attr_accessor :boxes, :shells
+    attr_reader :boxes
 
     def initialize
+      @box_factory = BoxFactory.new
+      @root_dir = "#{File.dirname(__FILE__)}/../../"
       @boxes = {}
-      @shells = {}
     end
 
-    def add_boxes(box_file, version_file)
-      config = YAML.load_file(box_file)
-      return @boxes unless config
+    def load
+      add_base_boxes
+      plugin_vagrantfiles
+      add_plugin_base_boxes
+      add_user_boxes
+    end
 
-      versions = YAML.load_file(version_file)
+    def add_base_boxes
+      @boxes = @box_factory.add_boxes("#{@root_dir}/config/base_boxes.yaml", "#{@root_dir}/config/versions.yaml")
+    end
 
-      process_shells(config['shells']) if config.key?('shells')
+    def add_user_boxes
+      return unless File.exist?("#{@root_dir}/boxes.yaml")
+      @boxes = @box_factory.add_boxes("#{@root_dir}/boxes.yaml", "#{@root_dir}/config/versions.yaml")
+    end
 
-      if config.key?('boxes')
-        process_versions(config, versions)
-        process_boxes(config['boxes'])
-      else
-        process_boxes(config)
-      end
+    def add_boxes(boxes)
+      @boxes = @box_factory.add_boxes(boxes, "#{@root_dir}/config/versions.yaml")
+    end
 
+    def boxes
+      box_files = Dir.glob "#{Dir.pwd}/.tmp_boxes/*.yaml"
+      box_files.each { |tmp_boxes| add_boxes(tmp_boxes) }
       @boxes
     end
 
-    private
-
-    def process_shells(shells)
-      @shells.merge!(shells)
+    def add_plugin_base_boxes
+      base_boxes = Dir.glob "#{@root_dir}/plugins/*/base_boxes.yaml"
+      base_boxes.each { |boxes| add_boxes(boxes) }
     end
 
-    def process_boxes(boxes)
-      boxes.each do |name, box|
-        box['name'] = name
-        box = layer_base_box(box)
-        box['shell'] += " #{box['options']} " if box['shell'] && box['options']
-        box['shell'] += " --installer-options='#{box['installer']}' " if box['shell'] && box['installer']
-
-        if @boxes[name]
-          @boxes[name].merge!(box)
-        else
-          @boxes[name] = box
-        end
-      end
-
-      @boxes
-    end
-
-    def process_versions(config, versions)
-      versions['installers'].each do |version|
-        version['boxes'].each do |base_box|
-          %w(foreman katello).each do |scenario|
-            installer_box = build_box(config['boxes'][base_box], 'server', "playbooks/#{scenario}.yml", version)
-            config['boxes']["#{base_box}-#{scenario}-#{version[scenario]}"] = installer_box
-          end
-
-          foreman_proxy_box = build_box(config['boxes'][base_box], 'foreman-proxy-content',
-                                        'playbooks/foreman_proxy_content.yml', version)
-          foreman_proxy_box['ansible']['server'] = "#{base_box}-katello-#{version['katello']}"
-          config['boxes']["#{base_box}-foreman-proxy-#{version['katello']}"] = foreman_proxy_box
-        end
-      end
-    end
-
-    def layer_base_box(box)
-      return box unless (base_box = find_base_box(box['box']))
-      base_box.merge(box)
-    end
-
-    def find_base_box(name)
-      return false if name.nil?
-      @boxes[name]
-    end
-
-    def build_box(base_box, group, playbook, version)
-      box = JSON.parse(JSON.dump(base_box))
-
-      box['ansible'] = {
-        'playbook' => playbook,
-        'group'    => group,
-        'variables' => {
-          'foreman_repositories_version' => version['foreman'],
-          'katello_repositories_version' => version['katello'],
-          'puppet_repositories_version'  => version['puppet']
-        }
-      }
-
-      box
+    def plugin_vagrantfiles
+      Dir.glob "#{@root_dir}/plugins/*/Vagrantfile"
     end
 
   end
