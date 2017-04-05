@@ -1,0 +1,4 @@
+---
+hammer_connection_username: admin
+hammer_connection_password: "{{ foreman_installer_admin_password | default('changeme') }}"
+hammer_connection_host: https://localhost
