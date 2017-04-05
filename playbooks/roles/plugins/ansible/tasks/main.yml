@@ -10,6 +10,7 @@
     foreman-installer
     --enable-foreman-plugin-ansible
     --enable-foreman-proxy-plugin-ansible
+    {{ plugin_ansible_installer_options }}
   tags:
     - installation
 

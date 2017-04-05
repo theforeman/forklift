@@ -2,6 +2,7 @@
   shell: >
     foreman-installer
     --enable-foreman-plugin-templates
+    {{ templates_installer_options }}
   tags:
     - installation
 
