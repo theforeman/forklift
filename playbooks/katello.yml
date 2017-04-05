@@ -4,6 +4,7 @@
     - selinux
     - etc_hosts
     - epel_repositories
+    - ostree_repositories
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
@@ -12,5 +13,6 @@
       foreman_installer_options_internal_use_only:
           - "{{ '--disable-system-checks' if katello_repositories_version != '3.1' else '' }}"
           - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+          - "--katello-enable-ostree=true"
       foreman_installer_additional_packages:
           - katello
