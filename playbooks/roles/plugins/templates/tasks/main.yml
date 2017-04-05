@@ -8,7 +8,7 @@
 - name: 'Fetch community templates'
   shell: >
     foreman-rake templates:sync {{ templates_sync_params }}
-  when: sync_templates
+  when: templates_sync
   tags:
     - seed
 
