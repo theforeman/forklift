@@ -34,6 +34,7 @@
     --foreman-proxy-tftp-servername {{ foreman_provisioning_ip_address }}
     --foreman-proxy-tftp true
     --foreman-proxy-tftp-managed false
+    {{ foreman_provisioning_installer_options | join(" ") }}
 
 - name: 'restart foreman-proxy'
   service: name=foreman-proxy state=restarted
