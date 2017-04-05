@@ -21,7 +21,9 @@
     - seed
 
 - name: 'restart foreman-proxy'
-  service: name=foreman-proxy state=restarted
+  service:
+    name: foreman-proxy
+    state: restarted
 
 - name: 'Import puppet classes'
   shell: >
