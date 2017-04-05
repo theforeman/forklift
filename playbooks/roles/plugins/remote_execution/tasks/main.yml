@@ -3,5 +3,6 @@
     foreman-installer
     --enable-foreman-plugin-remote-execution
     --enable-foreman-proxy-plugin-remote-execution-ssh
+    {{ remote_execution_installer_options }}
   tags:
     - installation

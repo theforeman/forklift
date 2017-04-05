@@ -3,6 +3,7 @@
     foreman-installer
     --enable-foreman-plugin-openscap
     --enable-foreman-proxy-plugin-openscap
+    {{ openscap_installer_options }}
   tags:
     - installation
 

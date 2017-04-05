@@ -4,3 +4,4 @@ plugin_ansible_roles:
   - jtyr.motd
   - geerlingguy.ntp
   - geerlingguy.mysql
+plugin_ansible_installer_options: ""

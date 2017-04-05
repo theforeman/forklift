@@ -1,3 +1,4 @@
 ---
 openscap_hammer: hammer
 openscap_proxy_name: False
+openscap_installer_options: ""

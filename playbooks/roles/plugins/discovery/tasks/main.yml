@@ -2,5 +2,6 @@
   shell: >
     foreman-installer
     --enable-foreman-plugin-discovery
+    {{ discovery_installer_options }}
   tags:
     - installation
