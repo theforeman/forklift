@@ -157,9 +157,13 @@ module Forklift
         p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
         p.memory = box.fetch('memory') if box.fetch('memory', false)
 
-        if box.fetch('name').to_s.include?('devel')
-          override.vm.network :forwarded_port, guest: 3000, host: 3330
-          override.vm.network :forwarded_port, guest: 443, host: 4430
+        bridged = box.fetch('bridged', false)
+
+        if bridged
+          override.vm.network :public_network, bridge: bridged
+        elsif box.fetch('name').to_s.include?('devel')
+          config.vm.network :forwarded_port, guest: 3000, host: 3330
+          config.vm.network :forwarded_port, guest: 443, host: 4430
         else
           override.vm.network :forwarded_port, guest: 80, host: 8080
           override.vm.network :forwarded_port, guest: 443, host: 4433
