@@ -1,4 +1,5 @@
 require 'json'
+require 'yaml'
 
 module Forklift
   class BoxFactory
