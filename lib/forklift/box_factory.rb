@@ -1,4 +1,5 @@
 require 'json'
+require 'erb'
 require 'yaml'
 
 module Forklift
@@ -12,7 +13,7 @@ module Forklift
     end
 
     def add_boxes(box_file, version_file)
-      config = YAML.load_file(box_file)
+      config = load_box_file(box_file)
       return @boxes unless config
 
       versions = YAML.load_file(version_file)
@@ -30,6 +31,11 @@ module Forklift
     end
 
     private
+
+    def load_box_file(file)
+      file = File.read(file)
+      YAML.safe_load(ERB.new(file).result, [Regexp], [], true)
+    end
 
     def process_shells(shells)
       @shells.merge!(shells)

@@ -79,6 +79,7 @@ module Forklift
         configure_libvirt(machine, box, networks)
         configure_virtualbox(machine, box)
         configure_rackspace(machine, box)
+        configure_synced_folders(machine, box)
 
         yield machine if block_given?
       end
@@ -104,8 +105,7 @@ module Forklift
     def configure_networks(networks)
       return [] if networks.empty?
       networks.map do |network|
-        symbolized_options = network['options'].inject({}) { |memo, (k, v)| memo.update(k.to_sym => v) }
-        network.update('options' => symbolized_options)
+        network.update('options' => symbolized_options(network['options']))
       end
     end
 
@@ -139,6 +139,28 @@ module Forklift
         shell.inline = box.fetch('shell')
         shell.privileged = false if box.key?('privileged')
       end
+    end
+
+    # Configures synced folders defined for the box
+    # and the private network required for them
+    def configure_synced_folders(machine, box)
+      configure_private_network(machine, box)
+
+      box.fetch('synced_folders', []).each do |folder|
+        machine.vm.synced_folder folder['path'], folder['mount_point'], symbolized_options(folder['options'])
+      end
+    end
+
+    def configure_private_network(machine, box)
+      ip = box.fetch('private_ip', nil)
+      options = {}.tap do |hash|
+        if ip
+          hash[:ip] = ip
+        else
+          hash[:type] = 'dhcp'
+        end
+      end
+      machine.vm.network :private_network, options
     end
 
     def configure_libvirt(machine, box, networks = [])
@@ -187,6 +209,12 @@ module Forklift
         p.image          = box.fetch('image_name')
         override.ssh.pty = true if box.fetch('pty')
       end
+    end
+
+    private
+
+    def symbolized_options(hash)
+      hash.inject({}) { |memo, (k, v)| memo.update(k.to_sym => v) }
     end
 
   end
