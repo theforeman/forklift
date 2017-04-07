@@ -39,3 +39,6 @@ Metrics/PerceivedComplexity:
 
 Metrics/CyclomaticComplexity:
   Max: 10
+
+Security/YAMLLoad:
+  Enabled: false
