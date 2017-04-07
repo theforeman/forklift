@@ -34,7 +34,7 @@ module Forklift
 
     def load_box_file(file)
       file = File.read(file)
-      YAML.safe_load(ERB.new(file).result, [Regexp], [], true)
+      YAML.load(ERB.new(file).result)
     end
 
     def process_shells(shells)
