@@ -144,9 +144,11 @@ module Forklift
     # Configures synced folders defined for the box
     # and the private network required for them
     def configure_synced_folders(machine, box)
+      synced_folders = box.fetch('synced_folders', [])
+      return if synced_folders.empty?
       configure_private_network(machine, box)
 
-      box.fetch('synced_folders', []).each do |folder|
+      synced_folders.each do |folder|
         machine.vm.synced_folder folder['path'], folder['mount_point'], symbolized_options(folder['options'])
       end
     end
