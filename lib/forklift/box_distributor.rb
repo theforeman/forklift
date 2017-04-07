@@ -3,6 +3,12 @@ module Forklift
 
     VAGRANTFILE_API_VERSION = '2'.freeze
 
+    if Gem.loaded_specs['vagrant']
+      SUPPORT_SSH_INSERT_KEY = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
+      SUPPORT_NAMED_PROVISIONERS = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
+      SUPPORT_BOX_CHECK_UPDATE = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.5')
+    end
+
     def initialize(boxes)
       @ansible_groups = {}
       @boxes = boxes
@@ -56,8 +62,9 @@ module Forklift
     def define_vm(config, box = {})
       config.vm.define box.fetch('name'), primary: box.fetch('default', false) do |machine|
         machine.vm.box = box.fetch('box_name')
-        machine.vm.box_check_update = true
-        config.ssh.insert_key = false
+        config.ssh.insert_key = false if SUPPORT_SSH_INSERT_KEY
+        machine.vm.box_check_update = true if SUPPORT_BOX_CHECK_UPDATE
+
         machine.vm.box_url = box.fetch('box_url') if box.key?('box_url')
 
         machine.vm.hostname = if box.fetch('hostname', false)
@@ -117,7 +124,7 @@ module Forklift
       return unless (playbooks = ansible['playbook'])
 
       [playbooks].flatten.each_with_index do |playbook, index|
-        args = ["main#{index}", type: 'ansible']
+        args = SUPPORT_NAMED_PROVISIONERS ? ["main#{index}", type: 'ansible'] : [:ansible]
         machine.vm.provision(*args) do |ansible_provisioner|
           ansible_provisioner.playbook = playbook
           ansible_provisioner.extra_vars = ansible['variables']
