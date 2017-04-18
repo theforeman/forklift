@@ -25,6 +25,12 @@ installers:
     boxes:
       - 'centos7'
 
+  - foreman: '1.15'
+    katello: '3.4'
+    puppet: 4
+    boxes:
+      - 'centos7'
+
   - foreman: 'nightly'
     katello: 'nightly'
     puppet: 4
