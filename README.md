@@ -86,6 +86,9 @@ disk_size -- specify the size (in gigabytes) of the box's virtual disk. This
              resize partitions and filesystems manually.
 ansible -- updates the Ansible provisioner configuration including the
            playbook to be ran or any variables to set
+libvirt_options -- sets Libvirt specific options
+virtualbox_options -- sets VirtualBox specific options
+rackspace_options -- sets Rackspace specific options
 ```
 
 Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
@@ -112,6 +115,15 @@ static:
         libvirt__iface_name: vnet2
 ```
 
+Example with custom libvirt management network:
+
+```
+static:
+  box: centos7
+  hostname: mystatic.box.com
+  libvirt_options:
+    management_network_address: 172.23.99.0/24
+```
 ### Customize Deployment Settings
 
 Some settings can be customized for the entirety of the deployment, they are:

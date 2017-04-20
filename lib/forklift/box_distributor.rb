@@ -179,6 +179,10 @@ module Forklift
         p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
         p.memory = box.fetch('memory') if box.fetch('memory', false)
         p.machine_virtual_size = box.fetch('disk_size') if box.fetch('disk_size', false)
+
+        box.fetch('libvirt_options', []).each do |opt, val|
+          p.instance_variable_set("@#{opt}", val)
+        end
       end
     end
 
@@ -199,6 +203,10 @@ module Forklift
           override.vm.network :forwarded_port, guest: 80, host: 8080
           override.vm.network :forwarded_port, guest: 443, host: 4433
         end
+
+        box.fetch('virtualbox_options', []).each do |opt, val|
+          p.instance_variable_set("@#{opt}", val)
+        end
       end
     end
 
@@ -210,6 +218,10 @@ module Forklift
         p.flavor         = /4GB/
         p.image          = box.fetch('image_name')
         override.ssh.pty = true if box.fetch('pty')
+
+        box.fetch('rackspace_options', []).each do |opt, val|
+          p.instance_variable_set("@#{opt}", val)
+        end
       end
     end
 
