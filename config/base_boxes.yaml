@@ -28,8 +28,6 @@ boxes:
           - 'playbooks/katello.yml'
           - 'playbooks/katello_provisioning.yml'
       group: 'server'
-      variables:
-        puppet_repositories_version: 4
 
   centos7-freeipa-server:
       box: centos7
