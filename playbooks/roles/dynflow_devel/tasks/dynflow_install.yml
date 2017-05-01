@@ -1,0 +1,36 @@
+---
+- name: 'Clone the dynflow repository'
+  git:
+    repo: https://github.com/Dynflow/dynflow.git
+    dest: ~/dynflow
+    update: no
+    remote: upstream
+
+- name: 'Check if the fork remote exists'
+  shell: "git remote | grep ^{{ dynflow_devel_github_fork_remote_name }}$"
+  args:
+    chdir: ~/dynflow
+  ignore_errors: yes
+  register: fork_remote_exists
+
+- name: 'Add fork remote to cloned repository'
+  command: "git remote add {{ dynflow_devel_github_fork_remote_name }} git@github.com:{{ dynflow_devel_github_username }}/dynflow.git"
+  when: fork_remote_exists.rc != 0
+  args:
+    chdir: ~/dynflow
+
+- name: 'Install gem native dependencies'
+  become: true
+  yum:
+    name:
+      - gcc-c++
+      - mysql-devel
+      - postgresql-devel
+      - sqlite-devel
+    state: present
+
+- name: 'Install bundler'
+  gem: name=bundler state=present
+
+- name: 'Install gems'
+  bundler: chdir=~/dynflow state=present executable=~/bin/bundle

@@ -46,3 +46,12 @@ centos7-bats-ci:
         - "fb-install-katello.bats"
         - "fb-content-katello.bats"
         - "fb-finish-katello.bats"
+centos7-dynflow-devel:
+  box: centos7
+  memory: 512
+  ansible:
+    group: 'dynflow_devel'
+    playbook: 'playbooks/dynflow_devel.yml'
+    variables:
+      dynflow_devel_github_username: '<REPLACE ME>'
+      dynflow_devel_github_fork_remote_name: 'origin'

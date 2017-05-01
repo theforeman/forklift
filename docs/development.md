@@ -11,6 +11,7 @@ This covers how to setup and configure a development environment using the Forkl
  * [Capsule Development](#capsule-development)
  * [Client Development](#client-development)
  * [Webpack](#webpack)
+ * [Dynflow](#dynflow-development)
 
 ## Development Environment Deployment
 
@@ -253,3 +254,16 @@ Additionally, Foreman uses [secureheaders](https://github.com/twitter/securehead
 One last thing: Firefox will not like that webpack-dev-server is using a self-signed certificate. You should go to `https://centos7-devel.example.com:3008` (or your equivalent) and add an exception for this certificate. Chrome does not throw any warnings if you have accepted the same certificate already for `https://centos7-devel.example.com`.
 
 After these changes, you should be able to run the webpack development server alongside with Foreman. Try it out by going to `~/foreman` and running `foreman start`. Happy hacking!
+
+## Dynflow Development
+
+DYNamic workFLOW orchestration engine http://dynflow.github.io
+
+To use this box, copy the configuration from `boxes.yaml.example` to
+`boxes.yaml`, changing options as necessary, then run the following:
+
+```sh
+vagrant up centos7-dynflow-devel
+```
+
+In the vagrant box, the dynflow repository is cloned to `/home/vagrant/dynflow`.
