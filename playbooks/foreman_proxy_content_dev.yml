@@ -8,6 +8,7 @@
   roles:
     - foreman_repositories
     - katello_repositories
+    - puppet_repositories
     - epel_repositories
     - etc_hosts
     - {role: foreman_proxy_content, foreman_directory: '/home/vagrant/foreman/config/',
