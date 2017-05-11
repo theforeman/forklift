@@ -1,16 +1,15 @@
 ---
-- name: 'install yard gem'
-  shell: >
-      /opt/puppetlabs/puppet/bin/gem install yard
-  when: puppet_repositories_version == 4
-
-- name: 'install puppetlabs-strings'
-  shell: >
-      /opt/puppetlabs/puppet/bin/gem install puppet-strings
+- name: "Install gems to rebuild the kafo module cache"
+  gem:
+    name: "{{ item }}"
+    executable: /opt/puppetlabs/puppet/bin/gem
+  with_items:
+    - yard
+    - puppet-strings
   when: puppet_repositories_version == 4
 
 - name: "install git"
-  yum:
+  package:
     name: 'git'
     state: 'present'
 
