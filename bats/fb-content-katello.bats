@@ -146,7 +146,7 @@ EOF
 }
 
 @test "start katello-agent" {
-  service goferd status || service goferd start
+  service goferd status || tServiceStart goferd
 }
 
 @test "30 sec of sleep for groggy gofers" {
