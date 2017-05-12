@@ -11,19 +11,17 @@
   roles:
     - forklift
 
-- hosts: pipeline-katello-3.1-3.3-centos7
+- hosts:
+  - pipeline-katello-3.1-centos7
+  - pipeline-proxy-3.1-centos7
   become: yes
   vars:
     puppet_repositories_version: 3
     katello_repositories_version: 3.1
     foreman_repositories_version: 1.12
-    foreman_repositories_use_koji: true
     katello_repositories_use_koji: true
-    foreman_installer_scenario: katello
-    foreman_installer_options_internal_use_only:
-      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
-    foreman_installer_additional_packages:
-      - katello
+    foreman_repositories_use_koji: true
+    foreman_installer_skip_installer: true
   roles:
     - selinux
     - etc_hosts
@@ -37,12 +35,7 @@
 - hosts: pipeline-proxy-3.1-3.3-centos7
   become: yes
   vars:
-    puppet_repositories_version: 3
     foreman_proxy_content_server: pipeline-katello-3.1-3.3-centos7
-    katello_repositories_version: 3.1
-    foreman_repositories_version: 1.12
-    foreman_repositories_use_koji: true
-    katello_repositories_use_koji: true
     foreman_installer_scenario: capsule
     foreman_installer_options_internal_use_only:
       - '--foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
@@ -57,13 +50,6 @@
     foreman_installer_additional_packages:
       - foreman-installer-katello
   roles:
-    - selinux
-    - etc_hosts
-    - epel_repositories
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
-    - update_os_packages
     - foreman_proxy_content
     - foreman_installer
 

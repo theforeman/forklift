@@ -11,18 +11,15 @@
   roles:
     - forklift
 
-- hosts: pipeline-katello-3.2-centos7
+- hosts:
+  - pipeline-katello-3.2-centos7
+  - pipeline-proxy-3.2-centos7
   become: yes
   vars:
     katello_repositories_version: 3.2
     foreman_repositories_version: 1.13
     katello_repositories_use_koji: true
-    foreman_installer_scenario: katello
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
-      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
-    foreman_installer_additional_packages:
-      - katello
+    foreman_installer_skip_installer: true
   roles:
     - selinux
     - etc_hosts
@@ -33,13 +30,22 @@
     - update_os_packages
     - foreman_installer
 
+- hosts: pipeline-katello-3.2-centos7
+  become: yes
+  vars:
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+    foreman_installer_additional_packages:
+      - katello
+  roles:
+    - foreman_installer
+
 - hosts: pipeline-proxy-3.2-centos7
   become: yes
   vars:
     foreman_proxy_content_server: pipeline-katello-3.2-centos7
-    katello_repositories_version: 3.2
-    foreman_repositories_version: 1.13
-    katello_repositories_use_koji: true
     foreman_installer_scenario: capsule
     foreman_installer_options_internal_use_only:
       - '--disable-system-checks
@@ -55,13 +61,6 @@
     foreman_installer_additional_packages:
       - foreman-installer-katello
   roles:
-    - selinux
-    - etc_hosts
-    - epel_repositories
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
-    - update_os_packages
     - foreman_proxy_content
     - foreman_installer
 

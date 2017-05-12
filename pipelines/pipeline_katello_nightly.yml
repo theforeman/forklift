@@ -11,22 +11,18 @@
   roles:
     - forklift
 
-- hosts: pipeline-katello-nightly-centos7
+- hosts:
+  - pipeline-katello-nightly-centos7
+  - pipeline-proxy-nightly-centos7
   become: yes
   vars:
     katello_repositories_version: nightly
     foreman_repositories_version: nightly
     katello_repositories_use_koji: true
-    foreman_installer_scenario: katello
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
-      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
-    foreman_installer_additional_packages:
-      - katello
+    foreman_installer_skip_installer: true
   roles:
     - selinux
     - etc_hosts
-    - disable_ipv6
     - epel_repositories
     - puppet_repositories
     - foreman_repositories
@@ -34,13 +30,23 @@
     - update_os_packages
     - foreman_installer
 
+- hosts: pipeline-katello-nightly-centos7
+  become: yes
+  vars:
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+    foreman_installer_additional_packages:
+      - katello
+  roles:
+    - disable_ipv6
+    - foreman_installer
+
 - hosts: pipeline-proxy-nightly-centos7
   become: yes
   vars:
     foreman_proxy_content_server: pipeline-katello-nightly-centos7
-    katello_repositories_version: nightly
-    foreman_repositories_version: nightly
-    katello_repositories_use_koji: true
     foreman_installer_scenario: foreman-proxy-content
     foreman_installer_options_internal_use_only:
       - '--disable-system-checks
@@ -56,13 +62,6 @@
     foreman_installer_additional_packages:
       - foreman-installer-katello
   roles:
-    - selinux
-    - etc_hosts
-    - epel_repositories
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
-    - update_os_packages
     - foreman_proxy_content
     - foreman_installer
 
