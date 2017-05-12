@@ -68,6 +68,16 @@
 - hosts: pipeline-katello-3.1-3.3-centos7
   become: true
   vars:
+    bats_tests:
+      - "swapfile.bats"
+      - "fb-content-katello.bats"
+      - "fb-finish-katello.bats"
+  roles:
+    - bats
+
+- hosts: pipeline-katello-3.1-3.3-centos7
+  become: true
+  vars:
     katello_repositories_version: 3.3
     foreman_repositories_version: 1.14
     foreman_installer_upgrade: True
@@ -84,6 +94,9 @@
 
 - hosts: pipeline-katello-3.1-3.3-centos7
   become: true
+    bats_tests:
+      - "fb-content-upgrade.bats"
+      - "fb-finish-katello.bats"
   roles:
     - bats
 

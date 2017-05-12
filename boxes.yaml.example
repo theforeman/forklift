@@ -35,4 +35,5 @@ centos7-bats-ci:
         - "swapfile.bats"
         - "fb-install-katello.bats"
         - "fb-content-katello.bats"
+        - "fb-destroy-organization.bats"
         - "fb-finish-katello.bats"
