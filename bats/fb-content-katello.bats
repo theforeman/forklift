@@ -200,3 +200,7 @@ EOF
   hammer -u admin -p changeme organization delete \
     --name="Test Organization"
 }
+
+@test "Clean subscriptions" {
+  subscription-manager clean
+}
