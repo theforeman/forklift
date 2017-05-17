@@ -83,7 +83,7 @@ setup() {
 
 @test "install CLI (hammer)" {
   yum clean all
-  tPackageInstall foreman-cli
+  tPackageExists foreman-cli || tPackageInstall foreman-cli
 }
 
 @test "check smart proxy is registered" {
