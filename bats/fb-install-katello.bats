@@ -52,7 +52,7 @@ setup() {
 }
 
 @test "run the installer" {
-  foreman-installer --scenario katello --no-colors -v --disable-system-checks --foreman-admin-password=changeme 
+  foreman-installer --scenario katello --no-colors -v --disable-system-checks --foreman-admin-password=changeme
 }
 
 @test "run the installer once again" {
@@ -87,13 +87,13 @@ setup() {
 }
 
 @test "check smart proxy is registered" {
-  count=$(hammer -u admin -p changeme --csv proxy list | wc -l)
+  count=$(hammer --csv proxy list | wc -l)
   [ $count -gt 1 ]
 }
 
 @test "check host is registered" {
   [ x$FOREMAN_VERSION = "x1.3" ] && skip "Only supported on 1.4+"
-  hammer -u admin -p changeme host info --name $(hostname -f)
+  hammer host info --name $(hostname -f)
 }
 
 @test "Zzzz.... (120 sec)" {

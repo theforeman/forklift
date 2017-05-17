@@ -8,25 +8,22 @@ load foreman_helper
 
 setup() {
   tSetOSVersion
-  PROXY_INFO=$(hammer -u admin -p changeme --output json proxy list --search "feature = \"Pulp Node\"")
+  tPackageExists foreman-cli || tPackageInstall foreman-cli
+  PROXY_INFO=$(hammer --output json proxy list --search "feature = \"Pulp Node\"")
   PROXY_ID=$(echo $PROXY_INFO | ruby -e "require 'json'; puts JSON.load(ARGF.read).first['Id']")
   PROXY_HOSTNAME=$(echo $PROXY_INFO | ruby -e "require 'json'; puts JSON.load(ARGF.read).first['Name']")
 }
 
-@test "install CLI (hammer)" {
-  tPackageExists foreman-cli || tPackageInstall foreman-cli
-}
-
 @test "proxy is registered" {
-  hammer -u admin -p changeme proxy info --id $PROXY_ID
+  hammer proxy info --id $PROXY_ID
 }
 
 @test "enable lifecycle environment for proxy" {
-  hammer -u admin -p changeme capsule content add-lifecycle-environment --id=$PROXY_ID --environment="Library" --organization="Default Organization"
+  hammer capsule content add-lifecycle-environment --id=$PROXY_ID --environment="Library" --organization="Default Organization"
 }
 
 @test "sync proxy" {
-  hammer -u admin -p changeme capsule content synchronize --id=$PROXY_ID
+  hammer capsule content synchronize --id=$PROXY_ID
 }
 
 @test "content is available from proxy" {
