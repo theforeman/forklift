@@ -25,3 +25,18 @@ tForemanVersion() {
     fi
   ) | cut -d. -f1-2
 }
+
+tHammerSetup() {
+  tPackageExists foreman-cli || tPackageInstall foreman-cli
+  local USERNAME=${HAMMER_USERNAME:-admin}
+  local PASSWORD=${HAMMER_PASSWORD:-changeme}
+  local SERVER=${HAMMER_SERVER:-https://$(hostname -f)}
+
+  mkdir -p ~/.hammer/cli.modules.d
+  cat > ~/.hammer/cli.modules.d/foreman.yml <<EOF
+:foreman:
+  :host: "$SERVER"
+  :username: "$USERNAME"
+  :password: "$PASSWORD"
+EOF
+}
