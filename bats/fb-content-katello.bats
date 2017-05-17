@@ -109,7 +109,8 @@ setup() {
 }
 
 @test "install subscription manager" {
-  cat > /etc/yum.repos.d/candlepin.repo << EOF
+  if tIsRHEL 6; then
+    cat > /etc/yum.repos.d/subscription-manager.repo << EOF
 [dgoodwin-subscription-manager]
 name=Copr repo for subscription-manager owned by dgoodwin
 baseurl=https://copr-be.cloud.fedoraproject.org/results/dgoodwin/subscription-manager/epel-${OS_VERSION}-x86_64/
@@ -118,12 +119,8 @@ gpgcheck=0
 priority=1
 enabled=1
 EOF
-  # newer subscription-manager requires centos 6.8 yum, which is available in CR repo
-  if tIsRHEL 6; then
-    tPackageExists centos-release-cr || tPackageInstall centos-release-cr
   fi
   tPackageExists subscription-manager || tPackageInstall subscription-manager
-  yum install -y subscription-manager
 }
 
 @test "register subscription manager" {
@@ -149,7 +146,7 @@ EOF
 }
 
 @test "start katello-agent" {
-  service goferd status || service goferd start
+  service goferd status || tServiceStart goferd
 }
 
 @test "30 sec of sleep for groggy gofers" {
@@ -202,4 +199,8 @@ EOF
 @test "Delete an Organization" {
   hammer -u admin -p changeme organization delete \
     --name="Test Organization"
+}
+
+@test "Clean subscriptions" {
+  subscription-manager clean
 }

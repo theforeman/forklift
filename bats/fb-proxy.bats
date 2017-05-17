@@ -13,6 +13,10 @@ setup() {
   PROXY_HOSTNAME=$(echo $PROXY_INFO | ruby -e "require 'json'; puts JSON.load(ARGF.read).first['Name']")
 }
 
+@test "install CLI (hammer)" {
+  tPackageExists foreman-cli || tPackageInstall foreman-cli
+}
+
 @test "proxy is registered" {
   hammer -u admin -p changeme proxy info --id $PROXY_ID
 }
