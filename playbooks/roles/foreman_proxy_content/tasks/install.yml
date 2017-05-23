@@ -75,5 +75,5 @@
 
 - name: 'Install Capsule Installer RPM'
   yum:
-    name: foreman-installer-katello
+    name: foreman-proxy-content
   when: custom_install == False
