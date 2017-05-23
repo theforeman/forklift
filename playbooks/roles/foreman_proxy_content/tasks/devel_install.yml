@@ -14,7 +14,3 @@
 - name: 'Add group foreman'
   group: name=foreman state=present
   delegate_to: "{{ foreman_proxy_content_server }}"
-
-- name: 'Install foreman-installer-katello'
-  yum: name="foreman-installer-katello"
-  delegate_to: "{{ foreman_proxy_content_server }}"
