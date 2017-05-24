@@ -1,5 +1,6 @@
 ---
 - hosts: localhost
+  gather_facts: no
   vars:
     openshift_data_dir: /home/origin
   tasks:
@@ -16,14 +17,17 @@
       wait_for:
         path: "{{ openshift_data_dir }}/local.openshift.volumes/pv0100"
 
+    - name: 'Wait for volumes to be created'
+      wait_for:
+        path: "{{ openshift_data_dir }}/local.openshift.volumes/pv0067"
+
     # mongodb needs write permissions on the volume it uses
     - name: 'Set volume permissions'
       file:
         state: directory
-        path: "{{ openshift_data_dir }}/local.openshift.volumes"
+        path: "{{ openshift_data_dir }}/local.openshift.volumes/"
         mode: 0777
         recurse: yes
-      #command: "chmod 0777 -R {{ openshift_data_dir }}/local.openshift.volumes"
       become: yes
 
     - name: "Login as system admin to OpenShift"
@@ -37,7 +41,7 @@
 
     - name: "Login back in as developer"
       command: oc login -u developer -p a
-    
+
     - name: 'Create Foreman project'
       command: oc new-project foreman
 

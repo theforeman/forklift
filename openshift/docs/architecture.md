@@ -127,7 +127,13 @@ There are some services that are considered third party in that they are not a r
     Optional:
       - Puppet Server
 
-### Persistent Volume Breakdown
+    Name: Content Server
+    Description: Web server serving HTTPS and HTTP repositories
+    Used By:
+    Requires:
+    Volumes: Requires the same persistent volume storage attached to the Pulp workers
+
+### Persistent Volumes
 
 There are high number of persistent volumes required by the entirety of the deployment. This section breaks down what each of these volumes are and which services require them.
 

@@ -1,23 +1,21 @@
 ---
 - hosts: localhost
+  gather_facts: no
   vars:
-    #registry: http://172.30.1.1:5000
     registry: oc-cluster
-    project: foreman
   tasks:
     - name: 'Get Openshift token'
       command: 'oc whoami -t'
       register: token
 
-    - name: 'Push images to Openshift'
-      #command: "ansible-container push --push-to {{ registry }}/{{ project }} --username developer --password {{ token.stdout }}"
-      command: "ansible-container push --push-to {{ registry }} --username developer --password {{ token.stdout }}"
-
     - name: 'Generate deployment role'
-      command: "ansible-container shipit openshift --pull-from {{ registry }}"
+      command: "ansible-container --engine openshift deploy --push-to {{ registry }} --username developer --password {{ token.stdout }} --tag latest"
+
+      #- name: 'Install kubernetes-modules role'
+      #command: 'ansible-galaxy install -r requirements.yml -p ansible-deployment/'
 
     - name: 'Deploy to Openshift'
-      command: "ansible-playbook ansible/shipit-openshift.yml"
+      command: "ansible-playbook ansible-deployment/foreman.yml --tags start"
       register: shipit_output
       ignore_errors: true
 

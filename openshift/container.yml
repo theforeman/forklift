@@ -1,0 +1,301 @@
+---
+version: "2"
+
+settings:
+  conductor_base: centos:7
+  project_name: foreman
+  k8s_namespace:
+    name: foreman
+    description: Foreman stack
+    display_name: Foreman
+
+defaults:
+  POSTGRES_USER: foreman
+  POSTGRES_PASSWORD: foreman
+  POSTGRES_DB: foreman
+  POSTGRES_PORT: 5432
+  MONGODB_USER: admin
+  MONGODB_PASSWORD: admin
+  MONGODB_DATABASE: pulp_database
+  MONGODB_PORT: 27017
+
+services:
+  foreman-base:
+    from: centos:7
+    roles:
+      - epel-repositories
+      - role: puppet-repositories
+        puppet_repositories_version: 4
+      - foreman-repositories
+      - katello-repositories
+      - foreman
+  foreman:
+    from: foreman-foreman-base:latest
+    roles:
+      - noop
+    command: ['/usr/bin/start-foreman.sh']
+    entrypoint: ['/usr/bin/entrypoint.sh']
+    environment:
+      - POSTGRES_DB={{ POSTGRES_DB }}
+      - POSTGRES_USER={{ POSTGRES_USER }}
+      - POSTGRES_PASSWORD={{ POSTGRES_PASSWORD }}
+      - SEED_ADMIN_USER=admin
+      - SEED_ADMIN_PASSWORD=changeme
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  foreman-tasks:
+    from: foreman-foreman-base:latest
+    roles:
+      - foreman-tasks
+    command: ['/usr/bin/start-foreman-tasks.sh']
+    entrypoint: ['/usr/bin/entrypoint.sh']
+    environment:
+      - POSTGRES_DB={{ POSTGRES_DB }}
+      - POSTGRES_USER={{ POSTGRES_USER }}
+      - POSTGRES_PASSWORD={{ POSTGRES_PASSWORD }}
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  foreman-proxy:
+    from: centos:7
+    roles:
+      - epel-repositories
+      - foreman-repositories
+      - foreman-proxy
+    command: ['/usr/bin/start-foreman-proxy.sh']
+    expose:
+      - 8080
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  foreman-proxy-register:
+    from: centos:7
+    roles:
+      - epel-repositories
+      - foreman-repositories
+      - foreman-proxy
+    command: ['/usr/bin/register.sh']
+    environment:
+      - FOREMAN_PROXY_SERVICE_HOST=foreman_proxy
+      - FOREMAN_PROXY_SERVICE_PORT=8080
+      - FOREMAN_SERVICE_HOST=foreman
+      - FOREMAN_SERVICE_PORT=8080
+    depends_on:
+      - foreman
+      - foreman-proxy
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  puppet:
+    from: puppet/puppetserver
+    volumes:
+      - puppet-data:/etc/puppet
+    expose:
+      - 8140
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  candlepin:
+    from: centos:7
+    roles:
+      - epel-repositories
+      - katello-repositories
+      - candlepin
+    environment:
+      - POSTGRES_DB={{ POSTGRES_DB }}
+      - POSTGRES_USER={{ POSTGRES_USER }}
+      - POSTGRES_PASSWORD={{ POSTGRES_PASSWORD }}
+      - POSTGRES_PORT={{ POSTGRES_PORT }}
+      - POSTGRES_SERVICE=postgres
+      - QPID_SERVICE=qpid
+      - QPID_PORT=5672
+    expose:
+      - 8080
+    command: ['/usr/bin/start_candlepin.sh']
+    entrypoint: ['/usr/bin/entrypoint.sh']
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+      security_context:
+        run_as_user: 1000
+  postgres:
+    from: ansible/postgresql:latest
+    environment:
+      - POSTGRES_DB={{ POSTGRES_DB }}
+      - POSTGRES_USER={{ POSTGRES_USER }}
+      - POSTGRES_PASS={{ POSTGRES_PASSWORD }}
+      - PGDATA=/var/lib/pgsql/data/userdata
+    volumes:
+      - postgres-data:/var/lib/pgsql/data
+    expose:
+      - "{{ POSTGRES_PORT }}"
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  qpid:
+    from: centos:7
+    roles:
+      - epel-repositories
+      - qpid
+    command: ['/usr/bin/startup.sh']
+    expose:
+      - 5672
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  pulp-base:
+    from: centos:7
+    roles:
+      - epel-repositories
+      - katello-repositories
+      - pulp
+  pulp:
+    from: foreman-pulp-base:latest
+    roles:
+      - noop
+    command: ['/usr/bin/start_httpd.sh']
+    entrypoint: ['/usr/bin/entrypoint.sh']
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    depends_on:
+      - qpid
+      - mongodb
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  pulp-worker:
+    from: foreman-pulp-base:latest
+    roles:
+      - pulp-worker
+    entrypoint: ['/usr/bin/entrypoint.sh']
+    user: apache
+    depends_on:
+      - qpid
+      - pulp
+    depends_on:
+      - mongodb
+    volumes:
+      - pulp-data:/var/lib/pulp
+      - puppet-data:/etc/puppet
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 4
+  pulp-celerybeat:
+    from: foreman-pulp-base:latest
+    roles:
+      - pulp-celerybeat
+    entrypoint: ['/usr/bin/entrypoint.sh']
+    user: apache
+    depends_on:
+      - qpid
+      - pulp
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  pulp-resource-manager:
+    from: foreman-pulp-base:latest
+    roles:
+      - pulp-resource-manager
+    depends_on:
+      - qpid
+      - pulp
+    entrypoint: ['/usr/bin/entrypoint.sh']
+    user: apache
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  mongodb:
+    from: centos/mongodb-26-centos7:latest
+    environment:
+      - MONGODB_USER={{ MONGODB_USER }}
+      - MONGODB_PASSWORD={{ MONGODB_PASSWORD }}
+      - MONGODB_DATABASE={{ MONGODB_DATABASE }}
+      - MONGODB_ADMIN_PASSWORD={{ MONGODB_PASSWORD }}
+    volumes:
+      - mongodb-data:/var/lib/mongodb/data
+    expose:
+      - "{{ MONGODB_PORT }}"
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  content-server:
+    from: foreman-pulp-base:latest
+    roles:
+      - content-server
+    command: ['/usr/bin/start_httpd.sh']
+    ports:
+      - 8080:8080
+    volumes:
+      - pulp-data:/var/lib/pulp
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+volumes:
+  postgres-data:
+    openshift:
+      state: present
+      force: false
+      access_modes:
+        - ReadWriteOnce
+      requested_storage: 1Gi
+  mongodb-data:
+    openshift:
+      state: present
+      force: false
+      access_modes:
+        - ReadWriteOnce
+      requested_storage: 1Gi
+  puppet-data:
+    openshift:
+      state: present
+      force: false
+      access_modes:
+        - ReadWriteOnce
+      requested_storage: 1Gi
+  pulp-data:
+    openshift:
+      state: present
+      force: false
+      access_modes:
+        - ReadWriteOnce
+      requested_storage: 1Gi
+
+registries:
+  oc-cluster:
+    url: 172.30.1.1:5000
+    namespace: foreman

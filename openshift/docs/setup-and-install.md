@@ -30,7 +30,7 @@ In order to build the containers, run them locally or use OpenShift, Docker need
 
 Second, we need to allow for insecure registries to run. This can be enabled by editing `/etc/sysconfig/docker` and adding:
 
-    OPTIONS='--insecure-registry 172.30.0.0/16'
+    INSECURE_REGISTRY='--insecure-registry 172.30.0.0/16'
 
 Now restart the docker service:
 
@@ -90,18 +90,13 @@ Deploying the containers that were built involves pushing the containers to Open
 
     ansible-playbook deploy.yml
 
-To walkthrough the steps individual. First, the images are pushed to the registry running inside Openshift:
-
-    ansible-container push --push-to http://172.30.1.1:5000/foreman --username developer --password $(oc whoami -t)
-
 Now, generate the deployment role that will use the images that were pushed:
 
-    ansible-container shipit openshift --pull-from http://172.30.1.1:5000/foreman
+    ansible-container --engine openshift deploy --push-to oc-cluster --username developer --password $(oc whoami -t)
 
 The final step is deploy the role:
 
-    cd ansible
-    ansible-playbook shipit-openshift.yml
+    ansible-playbook ansible-deployment/foreman.yml --tags start
 
 At this point, all services will get created in Openshift and begin deploying. To check on the status of the deployment:
 
