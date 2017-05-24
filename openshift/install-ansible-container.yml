@@ -10,9 +10,10 @@
       git:
         repo: https://github.com/ansible/ansible-container.git
         dest: .tmp/ansible-container
+        update: yes
 
     - name: 'Install ansible-container'
       become: true
-      command: 'python ./setup.py install'
+      command: 'pip3 install -e .[docker,openshift]'
       args:
         chdir: .tmp/ansible-container

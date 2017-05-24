@@ -64,6 +64,10 @@ node "Puppet Server" {
   [Puppet Server] as puppet_server
 }
 
+node "Content Server" {
+  [Content Server] as content_server
+}
+
 /' Volumes '/
 database "Pulp Data Volume" {
   folder "Content" {
@@ -104,6 +108,8 @@ pulp --> pulp_content
 pulp_worker --> pulp_content
 pulp --> puppet_environments
 pulp_worker --> puppet_environments
+
+content_server --> pulp_content
 
 candlepin --> postgres
 candlepin --> qpid
