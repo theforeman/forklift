@@ -1,10 +1,4 @@
 ---
-- name: 'Update packages'
-  yum:
-    name: '*'
-    update_cache: yes
-    state: latest
-
 - name: 'Install foreman-installer'
   yum:
     name: foreman-installer

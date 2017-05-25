@@ -62,12 +62,6 @@
     src: "/tmp/{{ inventory_hostname }}{{ foreman_proxy_content_certs_tar }}"
     dest: ~/
 
-- name: 'Update packages'
-  yum:
-    name: '*'
-    update_cache: yes
-    state: latest
-
 - name: 'Change cert permissions'
   file: path='/etc/pki/katello/private' mode=0775
   delegate_to: "{{ foreman_proxy_content_server }}"

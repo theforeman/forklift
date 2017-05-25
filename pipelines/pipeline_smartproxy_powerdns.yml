@@ -40,6 +40,7 @@
     - epel_repositories
     - puppet_repositories
     - foreman_repositories
+    - update_os_packages
     - foreman_installer
     - powerdns
     - bats

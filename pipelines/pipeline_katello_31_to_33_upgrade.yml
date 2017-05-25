@@ -31,6 +31,7 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - update_os_packages
     - foreman_installer
 
 - hosts: pipeline-proxy-3.1-3.3-centos7
@@ -62,6 +63,7 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - update_os_packages
     - foreman_proxy_content
     - foreman_installer
 
@@ -80,6 +82,7 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - update_os_packages
     - foreman_installer
 
 - hosts: pipeline-katello-3.1-3.3-centos7

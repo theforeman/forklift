@@ -29,6 +29,7 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - update_os_packages
     - foreman_installer
 
 - hosts: pipeline-capsule-3.0-centos7
@@ -58,6 +59,7 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - update_os_packages
     - capsule
     - foreman_installer
 
