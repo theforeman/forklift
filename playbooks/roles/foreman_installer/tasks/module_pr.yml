@@ -1,4 +1,9 @@
 ---
+- name: "Determine if Puppet 4 is used"
+  stat:
+    path: /opt/puppetlabs/puppet/bin/gem
+  register: puppetlabs_gem
+
 - name: "Install gems to rebuild the kafo module cache"
   gem:
     name: "{{ item }}"
@@ -6,7 +11,7 @@
   with_items:
     - yard
     - puppet-strings
-  when: puppet_repositories_version == 4
+  when: puppetlabs_gem.stat.exists
 
 - name: "install git"
   package:
