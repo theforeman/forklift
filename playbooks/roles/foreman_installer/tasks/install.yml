@@ -1,7 +1,7 @@
 ---
 - name: 'Run installer'
   shell: >
-      foreman-installer {{ (foreman_installer_verbose == True) | ternary("-v", "") }}
+      {{ foreman_installer_command }} {{ (foreman_installer_verbose == True) | ternary("-v", "") }}
       --scenario "{{ foreman_installer_scenario }}"
       {{ foreman_installer_options }}
       {{ foreman_installer_options_internal_use_only | join(" ") }}
