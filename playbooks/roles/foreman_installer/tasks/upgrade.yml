@@ -13,7 +13,7 @@
 
 - name: 'Run installer upgrade'
   command: >
-    foreman-installer {{ (foreman_installer_verbose == True) | ternary("-v", "") }}
+    {{ foreman_installer_command }} {{ (foreman_installer_verbose == True) | ternary("-v", "") }}
     --disable-system-checks
     --upgrade
     --scenario "{{ foreman_installer_scenario }}"

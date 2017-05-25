@@ -5,6 +5,7 @@ foreman_installer_skip_installer: False
 foreman_installer_verbose: True
 foreman_installer_scenario: foreman
 foreman_installer_upgrade: False
+foreman_installer_command: foreman-installer
 
 # Comma-separated list of "organization/module/pr_number", e.g. "katello/foreman_proxy_content/37,katello/certs/34"
 foreman_installer_module_prs: ""
