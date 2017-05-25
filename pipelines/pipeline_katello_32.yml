@@ -70,6 +70,8 @@
 
 - hosts: pipeline-proxy-3.2-centos7
   become: true
+  environment:
+    HAMMER_SERVER: "https://{{ server_fqdn.stdout }}"
   vars:
     bats_tests:
       - fb-proxy.bats
