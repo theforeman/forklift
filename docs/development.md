@@ -34,7 +34,11 @@ centos7-devel:
     group: 'devel'
     variables:
       katello_devel_github_username: <REPLACE ME>
-      foreman_installer_options_internal_use_only: "--katello-devel-github-username myname --katello-devel-upstream-remote-name origin --katello-devel-extra-plugins theforeman/foreman_remote_execution --katello-devel-extra-plugins theforeman/foreman_discovery"
+      foreman_installer_options_internal_use_only:
+        - "--katello-devel-github-username {{ katello_devel_github_username }}"
+        - "--katello-devel-upstream-remote-name origin"
+        - "--katello-devel-extra-plugins theforeman/foreman_remote_execution"
+        - "--katello-devel-extra-plugins theforeman/foreman_discovery"
 ```
 
 Lastly, spin up the box:
