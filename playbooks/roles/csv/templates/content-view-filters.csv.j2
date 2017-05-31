@@ -1,0 +1,4 @@
+Name,Content View,Organization,Type,Description,Repositories,Rules
+{% for line in csv_content_view_filters %}
+{{ line.name }},{{ line.content_view }},{{ line.organization }},{{ line.type }},{{ line.description }},{{ line.repositories }},{{ line.rules }}
+{% endfor %}

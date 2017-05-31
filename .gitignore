@@ -4,7 +4,6 @@
 *.swn
 katello-installer*
 foreman-installer*
-puppet-*
 boxes.yaml
 .idea
 scripts

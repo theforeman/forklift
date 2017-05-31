@@ -1,0 +1,4 @@
+Name,Organization,Prior Environment,Description
+{% for line in csv_lifecycle_environments %}
+{{ line.name }},{{ line.organization }},{{ line.prior_environment }},{{ line.description }}
+{% endfor %}

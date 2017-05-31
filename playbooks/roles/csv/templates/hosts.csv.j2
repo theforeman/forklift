@@ -1,0 +1,4 @@
+Name,Organization,Location,Puppet Environment,Operating System,Architecture,MAC Address,Domain,Partition Table,Subnet,Realm,Medium,Hostgroup,Compute Resource,Compute Profile,Image,Enabled,Managed
+{% for line in csv_hosts %}
+{{ line.name }},{{ line.organization }},{{ line.location }},{{ line.puppet_environment }},{{ line.operating_system }},{{ line.architecture }},{{ line.mac_address }},{{ line.domain }},{{ line.partition_table }},{{ line.subnet }},{{ line.realm }},{{ line.medium }},{{ line.hostgroup }},{{ line.compute_resource }},{{ line.compute_profile }},{{ line.image }},{{ line.enabled }},{{ line.managed }}
+{% endfor %}

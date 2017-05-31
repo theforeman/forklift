@@ -1,0 +1,4 @@
+Name,Label,Description
+{% for line in csv_organizations %}
+{{ line.name }},{{ line.label }},{{ line.description }}
+{% endfor %}

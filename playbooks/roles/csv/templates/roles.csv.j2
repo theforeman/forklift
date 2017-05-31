@@ -1,0 +1,4 @@
+Name,Resource,Search,Permissions,Organizations,Locations
+{% for line in csv_roles %}
+{{ line.name }},{{ line.resource }},{{ line.search }},{{ line.permissions }},{{ line.organizations }},{{ line.locations }}
+{% endfor %}

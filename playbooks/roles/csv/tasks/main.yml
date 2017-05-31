@@ -1,0 +1,14 @@
+---
+- name: Create csv dir
+  file:
+    path: /home/vagrant/csv
+    state: directory
+    owner: vagrant
+
+- name: Import resources
+  include: import-csv.yml csv_resource={{ item }}
+  with_items:
+  - settings
+  - organizations
+  - locations
+  - operating-systems

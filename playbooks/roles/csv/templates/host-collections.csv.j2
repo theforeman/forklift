@@ -1,0 +1,4 @@
+Name,Organization,Limit,Description
+{% for line in csv_host_collections %}
+{{ line.name }},{{ line.organization }},{{ line.limit }},{{ line.description }}
+{% endfor %}

@@ -1,0 +1,88 @@
+---
+csv_hammer: hammer --server https://localhost --username admin --password changeme
+csv_source_dir: .
+
+csv_activation_keys:
+  - name: "# name"
+
+csv_architectures:
+  - name: "# name"
+
+csv_compute_profiles:
+  - name: "# name"
+
+csv_content_hosts:
+  - name: "# name"
+
+csv_content_view_filters:
+  - name: "# name"
+
+csv_content_views:
+  - name: "# name"
+
+csv_domains:
+  - name: "# name"
+
+csv_host_collections:
+  - name: "# name"
+
+csv_host_groups:
+  - name: "# name"
+
+csv_hosts:
+  - name: "# name"
+
+csv_installation_media:
+  - name: "# name"
+
+csv_job_templates:
+  - name: "# name"
+
+csv_lifecycle_environments:
+  - name: "# name"
+
+csv_locations:
+  - name: "# name"
+    parent_location: ""
+
+csv_operating_systems:
+  - name: "# name"
+    description: ""
+    family: ""
+    password_hash: ""
+    partition_tables: ""
+    architectures: ""
+    media: ""
+    provisioning_templates: ""
+    parameters: ""
+
+csv_organizations:
+  - name: "# name"
+
+csv_partition_tables:
+  - name: "# name"
+
+csv_products:
+  - name: "# name"
+
+csv_provisioning_templates:
+  - name: "# name"
+
+csv_puppet_environments:
+  - name: "# name"
+
+csv_roles:
+  - name: "# name"
+
+csv_settings:
+  - name: "# name"
+    value: "value"
+
+csv_smart_proxies:
+  - name: "# name"
+
+csv_subnets:
+  - name: "# name"
+
+csv_sync_plans:
+  - name: "# name"

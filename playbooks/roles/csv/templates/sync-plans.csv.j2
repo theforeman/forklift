@@ -1,0 +1,4 @@
+Name,Organization,Description,Enabled,Start Date,Interval,Products
+{% for line in csv_sync_plans %}
+{{ line.name }},{{ line.organization }},{{ line.description }},{{ line.enabled }},{{ line.start_date }},{{ line.interval }},{{ line.products }}
+{% endfor %}

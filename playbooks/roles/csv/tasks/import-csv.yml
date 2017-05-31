@@ -1,0 +1,26 @@
+---
+
+- name: Create {{ csv_resource }}.csv, if resource defined and file doesn't already exist
+  template:
+    src: "{{ template_src }}"
+    dest: "/home/vagrant/csv/{{ csv_resource }}.csv"
+    owner: vagrant
+    force: no
+  with_first_found:
+  - files:
+    - "{{ csv_source_dir }}/{{ csv_resource }}.csv"
+    - "templates/{{csv_resource}}.csv.j2"
+    - "templates/empty.csv"
+  loop_control:
+    loop_var: template_src
+
+- name: Run hammer csv {{ csv_resource }}
+  shell: >
+    BUNDLE_GEMFILE=~/hammer-cli-katello/Gemfile bundle exec {{ csv_hammer }}
+    csv operating-systems
+    --continue-on-error
+    --verbose
+    --file /home/vagrant/csv/{{ csv_resource }}.csv
+    &> /home/vagrant/csv/{{ csv_resource }}.log
+  args:
+    removes: /home/vagrant/csv/{{ csv_resource }}.csv

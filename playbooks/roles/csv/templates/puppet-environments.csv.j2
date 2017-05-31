@@ -1,0 +1,4 @@
+Name,Organizations,Locations
+{% for line in csv_puppet_environments %}
+{{ line.name }},{{ line.organizations }},{{ line.locations }}
+{% endfor %}

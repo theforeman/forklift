@@ -1,0 +1,4 @@
+Name,Organization,Environment,Content View,Host Collections,Virtual,Guest of Host,OS,Arch,Sockets,RAM,Cores,SLA,Products,Subscriptions
+{% for line in csv_content_hosts %}
+{{ line.name }},{{ line.organization }},{{ line.environment }},{{ line.content_view }},{{ line.host_collections }},{{ line.virtual }},{{ line.guest_of_host }},{{ line.os }},{{ line.arch }},{{ line.sockets }},{{ line.ram }},{{ line.cores }},{{ line.sla }},{{ line.products }},{{ line.subscriptions }}
+{% endfor %}

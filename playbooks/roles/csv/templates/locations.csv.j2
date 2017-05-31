@@ -1,0 +1,4 @@
+Name,Parent Location
+{% for line in csv_locations %}
+{{ line.name }},{{ line.parent_location }}
+{% endfor %}
