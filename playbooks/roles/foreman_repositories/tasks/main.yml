@@ -4,3 +4,8 @@
 
 - include: koji_repos.yml
   when: foreman_repositories_use_koji
+
+- name: 'Install foreman-release-scl'
+  yum:
+    name: foreman-release-scl
+    state: latest
