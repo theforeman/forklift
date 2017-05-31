@@ -101,3 +101,11 @@ boxes:
   pipeline-proxy-3.3-centos7:
     box: centos7
     memory: 3072
+
+  pipeline-katello-3.4-centos7:
+    box: centos7
+    memory: 4680
+
+  pipeline-proxy-3.4-centos7:
+    box: centos7
+    memory: 3072
