@@ -34,13 +34,13 @@ If you are making changes to bats tests and want to test your updates, edit `cen
 
 ## Pipeline Testing
 
-Under `playbooks/pipelines` are a series of playbooks designed around testing scenarios for various version of the Foreman and Katello stack. To run one:
+Under `pipelines` are a series of playbooks designed around testing scenarios for various version of the Foreman and Katello stack. To run one:
 
-    ansible-playbook playbooks/pipelines/pipeline_katello_nightly -e "forklift_state=up"
+    ansible-playbook pipelines/pipeline_katello_nightly.yml -e "forklift_state=up"
 
 When you are finished with the test, you can tear down the associated infrastructure:
 
-    ansible-playbook playbooks/pipelines/pipeline_katello_nightly -e "forklift_state=destroy"
+    ansible-playbook pipelines/pipeline_katello_nightly.yml -e "forklift_state=destroy"
 
 ## Client Testing With Docker
 
