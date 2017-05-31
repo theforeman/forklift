@@ -9,7 +9,7 @@ This section covers test infrastructure and environments that can be spun up usi
 
 Included with forklift is a small live test suite.  The current tests are:
 
-  * fb-install-katello.bats - Installs katello and runs a few simple tests
+  * fb-test-katello.bats - Runs a few simple tests
   * fb-content-katello.bats - Runs tests against content features
   * fb-finish.bats - Collects logs pertinent to the bats run
 

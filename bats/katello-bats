@@ -5,7 +5,6 @@ cat <<EOF
 Usage: $0 [options]
 
     Options:
-      nightly     Run bats against nightly
       devel       Run bats against development
       content     Run content tests (yum + puppet)
       proxy       Run proxy tests (requires content)
@@ -22,9 +21,6 @@ for arg do
         usage
         exit 1
         ;;
-      nightly)
-        katello_nightly_install=true
-        ;;
       content)
         katello_content_tests=true
         ;;
@@ -40,10 +36,7 @@ for arg do
    esac
 done
 
-if [ "$katello_nightly_install" == true ];
-then
-    BATS_ARGS=fb-install-katello.bats
-fi
+BATS_ARGS="fb-test-katello.bats"
 
 if [ "$katello_content_tests" == true ];
 then

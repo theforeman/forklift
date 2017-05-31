@@ -1,0 +1,9 @@
+- name: 'Install Haveged (faster population of PRNG)'
+  yum:
+    name: haveged
+    state: installed
+
+- name: 'Start Haveged'
+  service:
+    name: haveged
+    state: started

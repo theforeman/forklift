@@ -15,5 +15,7 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - disable_firewall
+    - haveged
     - foreman_installer
     - bats

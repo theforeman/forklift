@@ -29,6 +29,8 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - disable_firewall
+    - haveged
     - update_os_packages
     - foreman_installer
 

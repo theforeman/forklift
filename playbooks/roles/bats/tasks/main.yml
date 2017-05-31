@@ -1,8 +1,14 @@
 ---
-- name: "Install git"
+- name: install required packages
   yum:
-    name: "git"
-    state: "installed"
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - wget
+    - curl
+    - ruby
+    - yum-utils
+    - git
 
 - name: "Get /usr/bin/bats stat"
   stat:

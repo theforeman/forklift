@@ -1,0 +1,14 @@
+---
+- name: disable firewalld
+  service:
+    name: firewalld
+    enabled: false
+    state: stopped
+  ignore_errors: true
+
+- name: disable iptables
+  service:
+    name: iptables
+    enabled: false
+    state: stopped
+  ignore_errors: true
