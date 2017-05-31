@@ -1,0 +1,7 @@
+---
+- name: set hammer foreman password
+  lineinfile:
+    dest: /etc/hammer/cli.modules.d/foreman.yml
+    regexp: ":password:"
+    line: "  :password: '{{ foreman_installer_admin_password }}'"
+    state: present
