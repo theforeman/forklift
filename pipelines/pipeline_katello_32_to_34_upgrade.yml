@@ -1,0 +1,94 @@
+- hosts: localhost
+  vars:
+    forklift_name: pipeline-katello-3.2-3.4
+    forklift_boxes:
+      pipeline-katello-3.2-3.4-centos7:
+        box: centos7
+        memory: 4680
+      pipeline-proxy-3.2-3.4-centos7:
+        box: centos7
+        memory: 3072
+  roles:
+    - forklift
+
+- hosts:
+  - pipeline-katello-3.2-3.4-centos7
+  - pipeline-proxy-3.2-3.4-centos7
+  become: yes
+  vars:
+    puppet_repositories_version: 3
+    katello_repositories_version: 3.2
+    foreman_repositories_version: 1.13
+    foreman_repositories_use_koji: true
+    katello_repositories_use_koji: true
+    foreman_installer_skip_installer: true
+  roles:
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - disable_firewall
+    - haveged
+    - update_os_packages
+    - foreman_installer
+
+- hosts: pipeline-katello-3.2-3.4-centos7
+  become: yes
+  vars:
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+    foreman_installer_additional_packages:
+      - katello
+  roles:
+    - foreman_installer
+
+- hosts: pipeline-proxy-3.2-3.4-centos7
+  become: yes
+  vars:
+    foreman_proxy_content_server: pipeline-katello-3.2-3.4-centos7
+    foreman_installer_scenario: capsule
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--foreman-proxy-trusted-hosts {{ server_fqdn.stdout }}"
+      - "--foreman-proxy-trusted-hosts {{ ansible_nodename }}"
+      - "--foreman-proxy-foreman-base-url https://{{ server_fqdn.stdout }}"
+      - "--foreman-proxy-register-in-foreman true"
+      - "--foreman-proxy-oauth-consumer-key {{ oauth_consumer_key.stdout }}"
+      - "--foreman-proxy-oauth-consumer-secret {{ oauth_consumer_secret.stdout }}"
+      - "--capsule-certs-tar {{ foreman_proxy_content_certs_tar }}"
+      - "--capsule-parent-fqdn {{ server_fqdn.stdout }}"
+      - "--capsule-pulp-oauth-secret {{ pulp_oauth_secret.stdout }}"
+    foreman_installer_additional_packages:
+      - foreman-installer-katello
+  roles:
+    - foreman_proxy_content
+    - foreman_installer
+
+- hosts: pipeline-katello-3.2-3.4-centos7
+  become: true
+  vars:
+    bats_tests:
+      - fb-content-katello.bats
+      - fb-finish.bats
+      - fb-proxy.bats
+  roles:
+    - bats
+
+- hosts: pipeline-katello-3.2-3.4-centos7
+  become: true
+  vars:
+    katello_repositories_version: 3.4
+    foreman_repositories_version: 1.15
+    foreman_installer_upgrade: True
+    foreman_repositories_use_koji: True
+    katello_repositories_use_koji: True
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+  roles:
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer
