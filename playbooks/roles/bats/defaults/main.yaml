@@ -2,6 +2,7 @@
 bats_git_dir: "/root/bats"
 bats_forklift_dir: "/root/forklift"
 bats_forklift_repo: "https://github.com/theforeman/forklift.git"
+bats_forklift_version: HEAD
 bats_output_dir: "/root/bats_results"
 bats_update_forklift: "yes"
 bats_tests:
