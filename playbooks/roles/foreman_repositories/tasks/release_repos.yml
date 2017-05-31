@@ -10,8 +10,3 @@
     name: http://fedorapeople.org/groups/katello/releases/yum/foreman/1.13/el{{ ansible_distribution_major_version }}/x86_64/foreman-release.rpm
     state: present
   when: foreman_repositories_version == 1.13 and ansible_distribution_major_version == "6"
-
-- name: 'Install foreman-release-scl'
-  yum:
-    name: foreman-release-scl
-    state: latest
