@@ -22,7 +22,7 @@
 
 - name: "Clone forklift"
   git:
-    repo: "https://github.com/katello/forklift.git"
+    repo: "{{ bats_forklift_repo }}"
     dest: "{{ bats_forklift_dir }}"
     update: "{{ bats_update_forklift }}"
 
