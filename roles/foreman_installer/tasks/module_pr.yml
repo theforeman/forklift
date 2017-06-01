@@ -15,20 +15,6 @@
   tags:
     - packages
 
-- name: 'install yard gem'
-  shell: >
-      /opt/puppetlabs/puppet/bin/gem install yard
-  when: puppet_repositories_version == 4
-  tags:
-    - packages
-
-- name: 'install puppetlabs-strings'
-  shell: >
-      /opt/puppetlabs/puppet/bin/gem install puppet-strings
-  when: puppet_repositories_version == 4
-  tags:
-    - packages
-
 - name: "install git"
   package:
     name: 'git'

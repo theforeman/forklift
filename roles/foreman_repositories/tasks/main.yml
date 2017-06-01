@@ -9,3 +9,5 @@
   yum:
     name: foreman-release-scl
     state: latest
+  tags:
+    - packages

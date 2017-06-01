@@ -4,3 +4,5 @@
     name: '*'
     update_cache: yes
     state: latest
+  tags:
+    - packages
