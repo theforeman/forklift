@@ -11,5 +11,5 @@
 
 - name: 'Deploy configuration file with connection setup'
   template:
-    src: zzz_foreman_forklift_connection.yml.j2
-    dest: ~/.hammer/cli.modules.d/zzz_foreman_forklift_connection.yml
+    src: zzz_foreman_forklift_credentials.yml.j2
+    dest: ~/.hammer/cli.modules.d/zzz_foreman_forklift_credentials.yml
