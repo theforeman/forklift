@@ -10,7 +10,7 @@
     foreman-installer
     --enable-foreman-plugin-ansible
     --enable-foreman-proxy-plugin-ansible
-    {{ plugin_ansible_installer_options }}
+    {{ foreman_ansible_installer_options }}
   tags:
     - installation
 
@@ -45,12 +45,12 @@
 - name: 'Install ansible roles'
   shell: >
     ansible-galaxy install {{ item }}
-  with_items: '{{ plugin_ansible_roles }}'
+  with_items: '{{ foreman_ansible_roles }}'
   tags:
     - seed
 
 - name: 'Setup default ssh password'
   shell: >
-    foreman-rake config -- -k ansible_ssh_pass -v {{ plugin_ansible_password }}
+    foreman-rake config -- -k ansible_ssh_pass -v {{ foreman_ansible_ssh_password }}
   tags:
     - env_setup

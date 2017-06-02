@@ -1,0 +1,7 @@
+---
+foreman_ansible_ssh_password: changeme
+foreman_ansible_roles:
+  - jtyr.motd
+  - geerlingguy.ntp
+  - geerlingguy.mysql
+foreman_ansible_installer_options: ""

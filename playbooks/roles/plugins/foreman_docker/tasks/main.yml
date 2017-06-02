@@ -1,12 +1,12 @@
 - name: 'Prepare hammer taxonomy options'
   set_fact:
-    docker_hammer_taxonomy_params: "--organizations '{{ docker_organization }}' --locations '{{ docker_location }}'"
-  when: docker_use_taxonomies
+    foreman_docker_hammer_taxonomy_params: "--organizations '{{ foreman_docker_organization }}' --locations '{{ foreman_docker_location }}'"
+  when: foreman_docker_use_taxonomies
 
 - name: 'Prepare blank hammer taxonomy options'
   set_fact:
-    docker_hammer_taxonomy_params: ""
-  when: not docker_use_taxonomies
+    foreman_docker_hammer_taxonomy_params: ""
+  when: not foreman_docker_use_taxonomies
 
 - name: "Install foreman docker plugin"
   yum:
@@ -47,11 +47,11 @@
 
 - name: 'Create docker compute resource'
   shell: >
-    {{ docker_hammer }} --output=silent compute-resource info --name "docker" ||
-    {{ docker_hammer }} compute-resource create
+    {{ foreman_docker_hammer }} --output=silent compute-resource info --name "docker" ||
+    {{ foreman_docker_hammer }} compute-resource create
     --name docker
     --url 'unix://var/run/docker.sock'
     --provider Docker
-    {{ docker_hammer_taxonomy_params }}
+    {{ foreman_docker_hammer_taxonomy_params }}
   tags:
     - seed
