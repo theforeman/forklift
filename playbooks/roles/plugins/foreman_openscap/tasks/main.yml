@@ -3,7 +3,7 @@
     foreman-installer
     --enable-foreman-plugin-openscap
     --enable-foreman-proxy-plugin-openscap
-    {{ openscap_installer_options }}
+    {{ foreman_openscap_installer_options }}
   tags:
     - installation
 
@@ -28,22 +28,22 @@
 
 - name: 'Import puppet classes'
   shell: >
-    {{ openscap_hammer }} proxy import-classes --name {{ openscap_proxy_name }}
+    {{ foreman_openscap_hammer }} proxy import-classes --name {{ foreman_openscap_proxy_name }}
   tags:
     - seed
-  when: '{{ openscap_proxy_name != False }}'
+  when: '{{ foreman_openscap_proxy_name != False }}'
 
 - name: 'Import default scap content'
   shell: >
     foreman-rake foreman_openscap:bulk_upload:default
   tags:
     - seed
-  when: '{{ openscap_proxy_name != False }}'
+  when: '{{ foreman_openscap_proxy_name != False }}'
 
 # TODO: disabled until cli is fixed
 # - name: 'Create example policy'
 #   shell: >
-#     {{ openscap_hammer }} policy create --name 'Example policy'
+#     {{ foreman_openscap_hammer }} policy create --name 'Example policy'
 #      --period weekly --weekday monday
 #      --scap-content 'Red Hat centos6 default content'
 #      --scap-content-profile-id TODO

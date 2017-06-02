@@ -1,5 +1,0 @@
----
-docker_hammer: hammer
-docker_use_taxonomies: False
-docker_organization: Default Organization
-docker_location: Default Location

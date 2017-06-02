@@ -2,14 +2,13 @@
   shell: >
     foreman-installer
     --enable-foreman-plugin-templates
-    {{ templates_installer_options }}
+    {{ foreman_templates_installer_options }}
   tags:
     - installation
 
 - name: 'Fetch community templates'
   shell: >
-    foreman-rake templates:sync {{ templates_sync_params }}
-  when: templates_sync
+    foreman-rake templates:sync {{ foreman_templates_sync_params }}
+  when: foreman_templates_sync
   tags:
     - seed
-
