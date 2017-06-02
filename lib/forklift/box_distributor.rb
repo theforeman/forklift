@@ -111,13 +111,16 @@ module Forklift
 
     def configure_ansible(machine, ansible, box_name)
       return unless ansible
-      unless @ansible_groups[ansible['group'].to_s]
-        @ansible_groups[ansible['group'].to_s] = []
+
+      if ansible.key?('group') || !ansible['group'].nil?
+        unless @ansible_groups[ansible['group'].to_s]
+          @ansible_groups[ansible['group'].to_s] = []
+        end
+
+        @ansible_groups[ansible['group'].to_s] << box_name
       end
 
-      @ansible_groups[ansible['group'].to_s] << box_name
-
-      if ansible.key?('server')
+      if ansible.key?('server') || !ansible['server'].nil?
         @ansible_groups["server-#{box_name}"] = ansible['server']
       end
 
