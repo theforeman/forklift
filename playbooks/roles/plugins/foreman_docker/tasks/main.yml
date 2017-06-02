@@ -45,6 +45,11 @@
   tags:
     - env_setup
 
+- name: 'Restart Foreman to load the new compute provider type'
+  service:
+    name: httpd
+    state: restarted
+
 - name: 'Create docker compute resource'
   shell: >
     {{ foreman_docker_hammer }} --output=silent compute-resource info --name "docker" ||
