@@ -49,6 +49,14 @@
   tags:
     - seed
 
+- name: 'Import installed ansible roles'
+  shell: >
+      curl -k -u {{ foreman_ansible_foreman_user }}:{{ foreman_ansible_foreman_password }} \
+      -H 'Content-Type: application/json' \
+      -X PUT https://localhost/ansible/api/v2/ansible_roles/import
+  tags:
+    - seed
+
 - name: 'Setup default ssh password'
   shell: >
     foreman-rake config -- -k ansible_ssh_pass -v {{ foreman_ansible_ssh_password }}
