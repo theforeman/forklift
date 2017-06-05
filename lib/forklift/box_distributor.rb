@@ -23,7 +23,7 @@ module Forklift
       overrides = {}
       settings_file = "#{File.dirname(__FILE__)}/../../settings.yaml"
       default_settings = {
-        'memory' => 4608,
+        'memory' => 6144,
         'cpus' => 2,
         'sync_type' => 'rsync',
         'cachier' => {
