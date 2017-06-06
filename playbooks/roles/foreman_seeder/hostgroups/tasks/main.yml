@@ -1,0 +1,142 @@
+---
+#testing both --name and --title for backward compatibility
+- name: 'Create operating systems'
+  shell: >
+    {% if 'minor' in item %}
+    {% set title = item.name +' '+ item.major +'.'+ item.minor %}
+    {% else %}
+    {% set title = item.name +' '+ item.major %}
+    {% endif %}
+    {{ foreman_seeder_hostgroups_hammer }} --output=silent os info --name "{{ title }}" ||
+    {{ foreman_seeder_hostgroups_hammer }} --output=silent os info --title "{{ title }}" ||
+    {{ foreman_seeder_hostgroups_hammer }} os create
+    --name {{ item.name }}
+    --major '{{ item.major }}'
+    {% if 'minor' in item %}
+    --minor '{{ item.minor }}'
+    {% endif %}
+    {% if 'release_name' in item %}
+    --release-name '{{ item.release_name }}'
+    {% endif %}
+    --architectures x86_64
+    --family '{{ item.family }}'
+    --media '{{ item.medium }}'
+    --partition-tables '{{ (item.family  == "Redhat") | ternary('Kickstart default', 'Preseed default') }}'
+  with_items: '{{ foreman_seeder_operating_systems }}'
+  tags:
+    - seed
+
+# TODO: fix: Locations you cannot remove locations that are used by hosts or inherited.
+# - name: 'Add media to organizations'
+#   shell: >
+#     {{ foreman_seeder_hostgroups_hammer }} organization add-medium --name '{{ foreman_seeder_hostgroups_organization }}' --medium '{{ item.medium }}'
+#   with_items: '{{ foreman_seeder_operating_systems }}'
+#   when: foreman_seeder_hostgroups_use_taxonomies
+#   tags:
+#     - seed
+#
+# - name: 'Add media to locations'
+#   shell: >
+#     {{ foreman_seeder_hostgroups_hammer }} location add-medium --name '{{ foreman_seeder_hostgroups_location }}' --medium '{{ item.medium }}'
+#   with_items: '{{ foreman_seeder_operating_systems }}'
+#   when: foreman_seeder_hostgroups_use_taxonomies
+#   tags:
+#     - seed
+
+- name: 'Find kickstart templates'
+  shell: >
+    {{ foreman_seeder_hostgroups_hammer }} --output=json template list
+    --search 'name ~ "Kickstart default"'
+  register: kickstart_templates_json
+  tags:
+    - seed
+
+- name: 'Set kickstart templates'
+  set_fact:
+    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+  tags:
+    - seed
+
+- name: 'Find preseed templates'
+  shell: >
+    {{ foreman_seeder_hostgroups_hammer }} --output=json template list
+    --search 'name ~ "Preseed default"'
+  register: preseed_templates_json
+  tags:
+    - seed
+
+- name: 'Set preseed templates'
+  set_fact:
+    preseed_templates: "{{ preseed_templates_json.stdout|from_json }}"
+  tags:
+    - seed
+
+- name: 'Associate kickstart templates to operating systems'
+  shell: >
+    {% if 'minor' in item[0] %}
+    {% set title = item[0].name +' '+ item[0].major +'.'+ item[0].minor %}
+    {% else %}
+    {% set title = item[0].name +' '+ item[0].major %}
+    {% endif %}
+    {% if item[0].family == 'Redhat' %}
+        {{ foreman_seeder_hostgroups_hammer }} template add-operatingsystem --id {{ item[1].Id }} --operatingsystem '{{ title }}'
+    {% else %}
+        echo "Skipping {{ title }}"
+    {% endif %}
+  with_nested:
+    - "{{ foreman_seeder_operating_systems }}"
+    - "{{ kickstart_templates }}"
+  tags:
+    - seed
+
+- name: 'Associate preseed templates to operating systems'
+  shell: >
+    {% if 'minor' in item[0] %}
+    {% set title = item[0].name +' '+ item[0].major +'.'+ item[0].minor %}
+    {% else %}
+    {% set title = item[0].name +' '+ item[0].major %}
+    {% endif %}
+    {% if item[0].family == 'Debian' %}
+        {{ foreman_seeder_hostgroups_hammer }} template add-operatingsystem --id {{ item[1].Id }} --operatingsystem '{{ title }}'
+    {% else %}
+        echo "Skipping {{ title }}"
+    {% endif %}
+  with_nested:
+    - "{{ foreman_seeder_operating_systems }}"
+    - "{{ preseed_templates }}"
+  tags:
+    - seed
+
+- name: 'Find or create parent hostgroup'
+  shell: >
+    {{ foreman_seeder_hostgroups_hammer }} --output=silent hostgroup info --name "{{ foreman_seeder_hostgroups_parent_hostgroup }}" ||
+    {{ foreman_seeder_hostgroups_hammer }} hostgroup create --name "{{ foreman_seeder_hostgroups_parent_hostgroup }}"
+    {% if foreman_seeder_hostgroups_use_taxonomies %}
+    --organizations '{{ foreman_seeder_hostgroups_organization }}'
+    --locations '{{ foreman_seeder_hostgroups_location }}'
+    {% endif %}
+  tags:
+    - seed
+
+- name: 'Create hostgroups'
+  shell: >
+    {% if 'minor' in item %}
+    {% set os_title = item.name +' '+ item.major +'.'+ item.minor %}
+    {% else %}
+    {% set os_title = item.name +' '+ item.major %}
+    {% endif %}
+    {% set name = 'Forklift '+ os_title %}
+    {{ foreman_seeder_hostgroups_hammer }} --output=silent hostgroup info --name "{{ name }}" ||
+    {{ foreman_seeder_hostgroups_hammer }} hostgroup create
+    --name '{{ name }}'
+    --operatingsystem '{{ os_title }}'
+    --medium '{{ item.medium }}'
+    --partition-table '{{ (item.family  == "Redhat") | ternary('Kickstart default', 'Preseed default') }}'
+    --parent '{{ foreman_seeder_hostgroups_parent_hostgroup }}'
+    {% if foreman_seeder_hostgroups_use_taxonomies %}
+    --organizations '{{ foreman_seeder_hostgroups_organization }}'
+    --locations '{{ foreman_seeder_hostgroups_location }}'
+    {% endif %}
+  with_items: '{{ foreman_seeder_operating_systems }}'
+  tags:
+    - seed

@@ -1,0 +1,30 @@
+---
+foreman_seeder_hostgroups_hammer: hammer
+foreman_seeder_hostgroups_use_taxonomies: False
+foreman_seeder_hostgroups_organization: Default Organization
+foreman_seeder_hostgroups_location: Default Location
+foreman_seeder_hostgroups_parent_hostgroup: Forklift Base
+foreman_seeder_operating_systems:
+  - name: CentOS
+    major: '7'
+    family: Redhat
+    medium: CentOS mirror
+
+  - name: Fedora
+    major: '25'
+    family: Redhat
+    medium: Fedora mirror
+
+  - name: Debian
+    major: '8'
+    minor: '7'
+    family: Debian
+    medium: Debian mirror
+    release_name: jessie
+
+  - name: Ubuntu
+    major: '16'
+    minor: '04'
+    family: Debian
+    medium: Ubuntu mirror
+    release_name: xenial
