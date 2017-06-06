@@ -1,0 +1,17 @@
+---
+- name: 'Deploy chaos script'
+  copy:
+    src: "{{ role_path }}/files/foreman-chaos"
+    dest: "/usr/sbin/foreman-chaos"
+    mode: "u=rwx,g=rx,o=r"
+
+- name: 'Create cronjob'
+  cron:
+    state: "present"
+    user: "root"
+    name: "foreman chaos"
+    minute: "{{ foreman_chaos_minute }}"
+    hour: "{{ foreman_chaos_hour }}"
+    weekday: "{{ foreman_chaos_weekday }}"
+    job: "/usr/sbin/foreman-chaos"
+    cron_file: "foreman-chaos"

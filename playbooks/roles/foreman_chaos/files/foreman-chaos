@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+sleep_time = Random.new.rand(60)
+puts "Sleeping for #{sleep_time} minutes"
+sleep(sleep_time)
+
+service_list = `katello-service list`.split("\n")
+service_list = service_list.map { |service| service.split("enabled")[0].strip }
+service_list = service_list.map { |service| service.gsub(".service", "") }
+
+random_service = service_list[Random.new.rand(service_list.length - 1)]
+
+puts "Stopping #{random_service}"
+system("service #{random_service} stop")
+

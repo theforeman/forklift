@@ -18,3 +18,4 @@
     - foreman_repositories
     - katello_repositories
     - foreman_installer
+    - foreman_chaos

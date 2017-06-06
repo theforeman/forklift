@@ -1,0 +1,4 @@
+---
+foreman_chaos_minute: 0
+foreman_chaos_hour: "*"
+foreman_chaos_weekday: "*"
