@@ -1,9 +1,9 @@
 ---
-data_hosts_hammer: hammer
-data_hosts_organization: Default Organization
-data_hosts_location: Default Location
-data_hosts_parent_hostgroup: Forklift Base
-data_hosts:
+foreman_seeder_hosts_hammer: hammer
+foreman_seeder_hosts_organization: Default Organization
+foreman_seeder_hosts_location: Default Location
+foreman_seeder_hosts_parent_hostgroup: Forklift Base
+foreman_seeder_hosts:
   - name: host1
     hostgroup: Forklift CentOS 7
   - name: host2
@@ -13,7 +13,7 @@ data_hosts:
   - name: host4
     hostgroup: Forklift Ubuntu 16.04
 
-data_operating_systems:
+foreman_seeder_operating_systems:
   - name: CentOS
     major: '7'
     family: Redhat

@@ -1,0 +1,13 @@
+---
+- name: 'Install puppet modules'
+  shell: puppet module install {{ item }}
+  with_items: '{{ foreman_seeder_puppet_modules }}'
+  tags:
+    - seed
+
+- name: 'Import puppet classes'
+  shell: >
+    {{ foreman_seeder_puppet_modules_hammer }} proxy import-classes --name '{{ foreman_seeder_puppet_modules_proxy_name }}'
+  tags:
+    - seed
+  when: '{{ foreman_seeder_puppet_modules_proxy_name != False }}'
