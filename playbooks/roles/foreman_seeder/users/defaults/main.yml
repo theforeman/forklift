@@ -1,0 +1,5 @@
+---
+foreman_seeder_users_hammer: hammer
+foreman_seeder_users_use_taxonomies: False
+foreman_seeder_users_organization: Default Organization
+foreman_seeder_users_location: Default Location

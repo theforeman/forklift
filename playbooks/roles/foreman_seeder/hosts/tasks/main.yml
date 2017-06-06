@@ -7,9 +7,9 @@
     {% else %}
     {% set title = item.name +' '+ item.major %}
     {% endif %}
-    {{ data_hosts_hammer }} --output=silent os info --name "{{ title }}" ||
-    {{ data_hosts_hammer }} --output=silent os info --title "{{ title }}" ||
-    {{ data_hosts_hammer }} os create
+    {{ foreman_seeder_hosts_hammer }} --output=silent os info --name "{{ title }}" ||
+    {{ foreman_seeder_hosts_hammer }} --output=silent os info --title "{{ title }}" ||
+    {{ foreman_seeder_hosts_hammer }} os create
     --name {{ item.name }}
     --major '{{ item.major }}'
     {% if 'minor' in item %}
@@ -22,28 +22,28 @@
     --family '{{ item.family }}'
     --media '{{ item.medium }}'
     --partition-tables '{{ (item.family  == "Redhat") | ternary('Kickstart default', 'Preseed default') }}'
-  with_items: '{{ data_operating_systems }}'
+  with_items: '{{ foreman_seeder_operating_systems }}'
   tags:
     - seed
 
 # TODO: fix: Locations you cannot remove locations that are used by hosts or inherited.
 # - name: 'Add media to organizations'
 #   shell: >
-#     {{ data_hosts_hammer }} organization add-medium --name '{{ data_hosts_organization }}' --medium '{{ item.medium }}'
-#   with_items: '{{ data_operating_systems }}'
+#     {{ foreman_seeder_hosts_hammer }} organization add-medium --name '{{ foreman_seeder_hosts_organization }}' --medium '{{ item.medium }}'
+#   with_items: '{{ foreman_seeder_operating_systems }}'
 #   tags:
 #     - seed
 #
 # - name: 'Add media to locations'
 #   shell: >
-#     {{ data_hosts_hammer }} location add-medium --name '{{ data_hosts_location }}' --medium '{{ item.medium }}'
-#   with_items: '{{ data_operating_systems }}'
+#     {{ foreman_seeder_hosts_hammer }} location add-medium --name '{{ foreman_seeder_hosts_location }}' --medium '{{ item.medium }}'
+#   with_items: '{{ foreman_seeder_operating_systems }}'
 #   tags:
 #     - seed
 
 - name: 'Find kickstart templates'
   shell: >
-    {{ data_hosts_hammer }} --output=json template list
+    {{ foreman_seeder_hosts_hammer }} --output=json template list
     --search 'name ~ "Kickstart default"'
   register: kickstart_templates_json
   tags:
@@ -57,7 +57,7 @@
 
 - name: 'Find preseed templates'
   shell: >
-    {{ data_hosts_hammer }} --output=json template list
+    {{ foreman_seeder_hosts_hammer }} --output=json template list
     --search 'name ~ "Preseed default"'
   register: preseed_templates_json
   tags:
@@ -77,12 +77,12 @@
     {% set title = item[0].name +' '+ item[0].major %}
     {% endif %}
     {% if item[0].family == 'Redhat' %}
-        {{ data_hosts_hammer }} template add-operatingsystem --id {{ item[1].Id }} --operatingsystem '{{ title }}'
+        {{ foreman_seeder_hosts_hammer }} template add-operatingsystem --id {{ item[1].Id }} --operatingsystem '{{ title }}'
     {% else %}
         echo "Skipping {{ title }}"
     {% endif %}
   with_nested:
-    - "{{ data_operating_systems }}"
+    - "{{ foreman_seeder_operating_systems }}"
     - "{{ kickstart_templates }}"
   tags:
     - seed
@@ -95,12 +95,12 @@
     {% set title = item[0].name +' '+ item[0].major %}
     {% endif %}
     {% if item[0].family == 'Debian' %}
-        {{ data_hosts_hammer }} template add-operatingsystem --id {{ item[1].Id }} --operatingsystem '{{ title }}'
+        {{ foreman_seeder_hosts_hammer }} template add-operatingsystem --id {{ item[1].Id }} --operatingsystem '{{ title }}'
     {% else %}
         echo "Skipping {{ title }}"
     {% endif %}
   with_nested:
-    - "{{ data_operating_systems }}"
+    - "{{ foreman_seeder_operating_systems }}"
     - "{{ preseed_templates }}"
   tags:
     - seed
@@ -113,27 +113,27 @@
     {% set os_title = item.name +' '+ item.major %}
     {% endif %}
     {% set name = 'Forklift '+ os_title %}
-    {{ data_hosts_hammer }} --output=silent hostgroup info --name "{{ name }}" ||
-    {{ data_hosts_hammer }} hostgroup create
+    {{ foreman_seeder_hosts_hammer }} --output=silent hostgroup info --name "{{ name }}" ||
+    {{ foreman_seeder_hosts_hammer }} hostgroup create
     --name '{{ name }}'
     --operatingsystem '{{ os_title }}'
     --medium '{{ item.medium }}'
     --partition-table '{{ (item.family  == "Redhat") | ternary('Kickstart default', 'Preseed default') }}'
-    --parent '{{ data_hosts_parent_hostgroup }}'
-    --organizations '{{ data_hosts_organization }}'
-    --locations '{{ data_hosts_location }}'
-  with_items: '{{ data_operating_systems }}'
+    --parent '{{ foreman_seeder_hosts_parent_hostgroup }}'
+    --organizations '{{ foreman_seeder_hosts_organization }}'
+    --locations '{{ foreman_seeder_hosts_location }}'
+  with_items: '{{ foreman_seeder_operating_systems }}'
   tags:
     - seed
 
 - name: 'Create hosts'
   shell: >
-    {{ data_hosts_hammer }} host create
+    {{ foreman_seeder_hosts_hammer }} host create
     --hostgroup '{{ item.hostgroup }}'
-    --organization '{{ data_hosts_organization }}'
-    --location '{{ data_hosts_location }}'
+    --organization '{{ foreman_seeder_hosts_organization }}'
+    --location '{{ foreman_seeder_hosts_location }}'
     --name '{{ item.name }}'
     --mac $(echo -n 52:54:00:; openssl rand -hex 3 | sed 's/\(..\)/\1:/g; s/.$//')
-  with_items: '{{ data_hosts }}'
+  with_items: '{{ foreman_seeder_hosts }}'
   tags:
     - seed
