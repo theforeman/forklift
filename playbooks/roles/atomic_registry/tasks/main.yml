@@ -1,0 +1,54 @@
+---
+- name: 'install the docker package'
+  yum:
+    name: docker
+    state: latest
+
+- name: 'install the atomic package'
+  yum:
+    name: atomic
+    state: latest
+
+- name: 'install Atomic Registry docker image'
+  docker_image:
+    name: "{{ atomic_registry_upstream_image }}"
+
+- name: 'install master script'
+  shell: atomic install "{{ atomic_registry_upstream_image_name }}" executable=/usr/bin/bash
+  environment:
+    REGISTRYIMAGE: "{{ atomic_registry_registry_image }}"
+    REGISTRYTAG: "{{ atomic_registry_registry_tag }}"
+    REGISTRYPORT: "{{ atomic_registry_registry_port }}"
+    CONSOLEIMAGE: "{{ atomic_registry_console_image }}"
+    CONSOLETAG: "{{ atomic_registry_console_tag }}"
+    CONSOLEPORT: "{{ atomic_registry_console_port }}"
+    MASTERIMAGE: "{{ atomic_registry_master_image }}"
+    MASTERTAG: "{{ atomic_registry_master_tag }}"
+    MASTERPORT: "{{ atomic_registry_master_port }}"
+
+# https://github.com/openshift/origin/issues/11542
+- name: 'handle non-dns kubernetes service host name resolution'
+  lineinfile:
+    dest: /etc/sysconfig/atomic-registry-console
+    regexp: '^KUBERNETES_SERVICE_HOST='
+    line: 'KUBERNETES_SERVICE_HOST={{ ansible_default_ipv4.address }}'
+
+- name: 'enable Aatomic Registry services'
+  service:
+    name: atomic-registry-master.service
+    enabled: yes
+    state: started
+
+- name: 'delay 15 seconds before checking docker processes'
+  pause:
+    seconds: 15
+
+- name: 'wait until Atomic Registry docker containers have started'
+  shell: docker ps | grep -e atomic-registry-master -e atomic-registry -e atomic-registry-console | wc -l
+  register: result
+  until: result.stdout.find("3") != -1
+  retries: 30
+  delay: 15
+
+- name: 'finish running the installer'
+  shell: /var/run/setup-atomic-registry.sh

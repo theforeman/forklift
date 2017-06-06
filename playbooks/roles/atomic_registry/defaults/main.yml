@@ -1,0 +1,16 @@
+---
+atomic_registry_upstream_tag: latest
+atomic_registry_upstream_image: "docker.io/projectatomic/atomic-registry-install:{{ atomic_registry_upstream_tag }}"
+atomic_registry_upstream_image_name: "projectatomic/atomic-registry-install:{{ atomic_registry_upstream_tag }}"
+
+atomic_registry_registry_image: docker.io/openshift/origin-docker-registry
+atomic_registry_registry_tag: latest
+atomic_registry_registry_port: 5001
+
+atomic_registry_console_image: docker.io/cockpit/kubernetes
+atomic_registry_console_tag: latest
+atomic_registry_console_port: 9099
+
+atomic_registry_master_image: docker.io/openshift/origin
+atomic_registry_master_tag: latest
+atomic_registry_master_port: 8450
