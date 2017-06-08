@@ -1,9 +1,11 @@
 - name: 'Install openscap plugin'
-  shell: >
-    foreman-installer
-    --enable-foreman-plugin-openscap
-    --enable-foreman-proxy-plugin-openscap
-    {{ foreman_openscap_installer_options }}
+  include_role:
+    name: plugins/plugin_installer
+  vars:
+    plugin_installer_options: >
+      --enable-foreman-plugin-openscap
+      --enable-foreman-proxy-plugin-openscap
+      {{ foreman_openscap_installer_options }}
   tags:
     - installation
 

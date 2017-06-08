@@ -1,0 +1,17 @@
+
+- name: 'Test if katello is installed'
+  stat:
+    path: /etc/foreman/plugins/katello.yaml
+  register: katello_config
+  tags:
+    - installation
+
+- name: 'Install plugin'
+  shell: >
+    foreman-installer
+    {% if katello_config.stat.exists %}
+    --disable-system-checks
+    {% endif %}
+    {{ plugin_installer_options }}
+  tags:
+    - installation

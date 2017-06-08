@@ -6,13 +6,13 @@
     - installation
 
 - name: 'Install ansible plugin'
-  shell: >
-    foreman-installer
-    --enable-foreman-plugin-ansible
-    --enable-foreman-proxy-plugin-ansible
-    {{ foreman_ansible_installer_options }}
-  tags:
-    - installation
+  include_role:
+    name: plugins/plugin_installer
+  vars:
+    plugin_installer_options: >
+      --enable-foreman-plugin-ansible
+      --enable-foreman-proxy-plugin-ansible
+      {{ foreman_ansible_installer_options }}
 
 - name: 'Create ~foreman-proxy/.ansible/'
   file:
