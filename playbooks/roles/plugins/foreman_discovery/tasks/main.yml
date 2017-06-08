@@ -1,7 +1,7 @@
 - name: 'Install discovery plugin'
-  shell: >
-    foreman-installer
-    --enable-foreman-plugin-discovery
-    {{ foreman_discovery_installer_options }}
-  tags:
-    - installation
+  include_role:
+    name: plugins/plugin_installer
+  vars:
+    plugin_installer_options: >
+      --enable-foreman-plugin-discovery
+      {{ foreman_discovery_installer_options }}
