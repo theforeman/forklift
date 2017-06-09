@@ -3,16 +3,6 @@
     name: ipa-server,ipa-server-dns
     state: latest
 
-- name: 'Install Haveged (faster population of PRNG)'
-  yum:
-    name: haveged
-    state: latest
-
-- name: 'Start Haveged'
-  service:
-    name: haveged
-    state: started
-
 - name: 'Fix /etc/hosts record for self'
   lineinfile:
     dest: /etc/hosts

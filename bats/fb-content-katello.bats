@@ -8,8 +8,6 @@ load foreman_helper
 
 setup() {
   tSetOSVersion
-  tPackageExists foreman-cli || tPackageInstall foreman-cli
-  tPackageExists curl || tPackageInstall curl
 }
 
 # Ensure we have at least one organization present so that the test organization
