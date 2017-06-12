@@ -9,6 +9,7 @@
     - ruby
     - yum-utils
     - git
+    - sos
 
 - name: "Get /usr/bin/bats stat"
   stat:
