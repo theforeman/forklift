@@ -124,7 +124,7 @@ EOF
   run yum erase -y 'katello-ca-consumer-*'
   rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm || true
   subscription-manager register --force --org="Test_Organization" --activationkey="Test AK" || true
-  subscription-manager status | grep -q "Current"
+  subscription-manager list --consumed | grep "Test Product"
 }
 
 @test "check content host is registered" {
