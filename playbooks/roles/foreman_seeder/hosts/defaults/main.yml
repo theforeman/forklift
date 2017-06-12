@@ -3,6 +3,8 @@ foreman_seeder_hosts_hammer: hammer
 foreman_seeder_hosts_use_taxonomies: False
 foreman_seeder_hosts_organization: Default Organization
 foreman_seeder_hosts_location: Default Location
+# Please make sure the used hostgroups include full setup for provisioning,
+# otherwise the role will fail to create hosts.
 foreman_seeder_hosts:
   - name: host1
     hostgroup: Forklift CentOS 7
