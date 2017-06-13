@@ -4,8 +4,13 @@
     katello_repositories_version: nightly
     katello_repositories_use_koji: true
     puppet_repositories_version: 4
+    foreman_installer_scenario: katello
     foreman_installer_additional_packages:
       - katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+      - "--katello-enable-ostree=true"
   roles:
     - selinux
     - etc_hosts
