@@ -4,7 +4,6 @@
     katello_repositories_version: nightly
     katello_repositories_use_koji: true
     puppet_repositories_version: 4
-    foreman_installer_skip_installer: true
     foreman_installer_additional_packages:
       - katello
   roles:
