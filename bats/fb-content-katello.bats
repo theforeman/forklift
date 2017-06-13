@@ -121,9 +121,10 @@ EOF
     rpm -e `rpm -qf /etc/rhsm/ca/candlepin-local.pem`
   fi
 
-  rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm || true
-  subscription-manager register --force --org="Test_Organization" --activationkey="Test AK" || true
-  subscription-manager status | grep -q "Current"
+  run yum erase -y 'katello-ca-consumer-*'
+  run rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm
+  run subscription-manager register --force --org="Test_Organization" --activationkey="Test AK"
+  subscription-manager list --consumed | grep "Test Product"
 }
 
 @test "check content host is registered" {
