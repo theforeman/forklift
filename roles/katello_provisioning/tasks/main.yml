@@ -121,10 +121,62 @@
     --unlimited-hosts
   when: katello_provisioning_activation_key.stderr.find('not found') != -1
 
+# Associate templates
+- name: 'find CentOS_Linux 7'
+  shell: >
+    {{ katello_provisioning_hammer }} --output json os info --name "CentOS_Linux 7" ||
+    {{ katello_provisioning_hammer }} --output json os info --title "CentOS_Linux 7"
+  register: katello_provisioning_centos7_json
+  ignore_errors: True
+
+- name: 'get CentOS 7 info'
+  set_fact:
+    katello_provisioning_centos7: "{{ katello_provisioning_centos7_json.stdout|from_json }}"
+
+- name: 'update partition table for CentOS_Linux 7'
+  shell: >
+    {{ katello_provisioning_hammer }} os update --id {{ katello_provisioning_centos7.Id }} --partition-tables 'Kickstart default'
+  register: katello_provisioning_centos7_json
+
+- name: 'find kickstart templates'
+  shell: >
+    {{ katello_provisioning_hammer }} --output=json template list
+    --search 'name ~ "Kickstart default"'
+  register: kickstart_templates_json
+
+- name: 'set kickstart templates'
+  set_fact:
+    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+
+- name: 'find katello kickstart templates'
+  shell: >
+    {{ katello_provisioning_hammer }} --output=json template list
+    --search 'name ~ "Katello Kickstart default"'
+  register: katello_kickstart_templates_json
+
+- name: 'set kickstart templates'
+  set_fact:
+    katello_kickstart_templates: "{{ katello_kickstart_templates_json.stdout|from_json }}"
+
+- name: 'associate kickstart templates to CentOS_Linux 7'
+  shell: >
+    {{ katello_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS_Linux 7'
+  with_items: "{{ kickstart_templates }}"
+
+- name: 'set default templates for CentOS 7'
+  shell: >
+    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --config-template-id {{ item.Id }}
+  with_items: "{{ kickstart_templates }}"
+
+- name: 'overwrite default templates with katello specific ones for CentOS 7'
+  shell: >
+    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --config-template-id {{ item.Id }}
+  with_items: "{{ katello_kickstart_templates }}"
+
 # Host group
 - name: 'find hostgroup Forklift Katello CentOS 7'
   shell: >
-    {{ foreman_provisioning_hammer }} hostgroup info --name 'Forklift Katello CentOS 7'
+    {{ katello_provisioning_hammer }} hostgroup info --name 'Forklift Katello CentOS 7'
   register: katello_provisioning_hostgroup_katello_centos
   ignore_errors: True
 
