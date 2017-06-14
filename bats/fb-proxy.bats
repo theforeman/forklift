@@ -5,6 +5,7 @@ set -o pipefail
 
 load os_helper
 load foreman_helper
+load fixtures/content
 
 setup() {
   tSetOSVersion
@@ -19,7 +20,7 @@ setup() {
 }
 
 @test "enable lifecycle environment for proxy" {
-  hammer capsule content add-lifecycle-environment --id=$PROXY_ID --environment="Library" --organization="Default Organization"
+  hammer capsule content add-lifecycle-environment --id=$PROXY_ID --environment="Library" --organization="${ORGANIZATION}"
 }
 
 @test "sync proxy" {
@@ -27,6 +28,6 @@ setup() {
 }
 
 @test "content is available from proxy" {
-  wget http://$PROXY_HOSTNAME/pulp/repos/Default_Organization/Library/Test_CV/custom/Test_Product/Zoo/walrus-0.71-1.noarch.rpm -P /tmp
+  wget http://$PROXY_HOSTNAME/pulp/repos/${ORGANIZATION_LABEL}/Library/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/walrus-0.71-1.noarch.rpm -P /tmp
   tFileExists /tmp/walrus-0.71-1.noarch.rpm && tNonZeroFile /tmp/walrus-0.71-1.noarch.rpm
 }
