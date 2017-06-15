@@ -32,6 +32,14 @@ If you are making changes to bats tests and want to test your updates, edit `cen
         bats_forklift_dir: /vagrant
         bats_update_forklift: "no" 
 
+Or if you want to run bats from a different repository or branch, edit `centos7-bats-ci` to include:
+
+    ansible:
+      ....
+      variables:
+        bats_forklift_repo: https://github.com/<YOUR_NAME>/forklift.git
+        bats_forklift_version: your-branch
+
 ## Pipeline Testing
 
 Under `pipelines` are a series of playbooks designed around testing scenarios for various version of the Foreman and Katello stack. To run one:
