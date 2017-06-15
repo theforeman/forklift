@@ -21,5 +21,6 @@
     - katello_repositories
     - disable_firewall
     - haveged
+    - swapfile
     - foreman_installer
     - bats
