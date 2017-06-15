@@ -1,0 +1,34 @@
+---
+- name: check if swap file exists
+  stat:
+    path: "{{ swapfile_path }}"
+  register: swapfile_check
+
+- name: create swap file {{ swapfile_path }}
+  command: fallocate -l {{ swapfile_size }} {{ swapfile_path }}
+  when: not swapfile_check.stat.exists
+
+- name: set permissions on swap file
+  file:
+    path: "{{ swapfile_path }}"
+    mode: 0600
+
+- name: mkswap {{ swapfile_path }}
+  command: mkswap {{ swapfile_path }}
+  when: not swapfile_check.stat.exists
+
+- name: create swap entry in fstab
+  mount:
+    name: none
+    src: "{{ swapfile_path }}"
+    fstype: swap
+    state: present
+
+- name: swapon {{ swapfile_path }}
+  command: swapon {{ swapfile_path }}
+
+- name: set vm.swappiness to 60
+  sysctl:
+    name: vm.swappiness
+    value: 60
+    state: present

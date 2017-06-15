@@ -42,7 +42,6 @@ centos7-bats-ci:
     group: 'bats'
     variables:
       bats_tests:
-        - "swapfile.bats"
         - "fb-test-katello.bats"
         - "fb-content-katello.bats"
         - "fb-destroy-organization.bats"
