@@ -2,6 +2,8 @@
 - name: check if swap file exists
   stat:
     path: "{{ swapfile_path }}"
+    get_checksum: False
+    get_md5: False
   register: swapfile_check
 
 - name: create swap file {{ swapfile_path }}
