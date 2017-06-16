@@ -69,13 +69,12 @@
 
 - hosts: pipeline-katello-nightly-centos7
   become: true
-  roles:
-    - bats
-
-- hosts: pipeline-proxy-nightly-centos7
-  become: true
   vars:
     bats_tests:
+      - fb-test-katello.bats
+      - fb-content-katello.bats
       - fb-proxy.bats
+      - fb-destroy-organization.bats
+      - fb-finish-katello.bats
   roles:
     - bats
