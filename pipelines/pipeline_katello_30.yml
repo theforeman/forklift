@@ -67,14 +67,12 @@
     - foreman_installer
 
 - hosts: pipeline-katello-3.0-centos7
-  become: true
-  roles:
-    - bats
-
-- hosts: pipeline-capsule-3.0-centos7
-  become: true
   vars:
     bats_tests:
+      - fb-test-katello.bats
+      - fb-content-katello.bats
       - fb-proxy.bats
+      - fb-destroy-organization.bats
+      - fb-finish-katello.bats
   roles:
     - bats
