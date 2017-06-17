@@ -1,0 +1,134 @@
+@startuml
+
+note as general
+  This diagram outlines the design of all components and
+  their interactions within the OpenShift/Kubernetes environment.
+  Squares represent pods with a single container running per pod
+  (thus, any square can be scaled independently).
+  The contents of each pod represent the service running inside the pod.
+  Cylinders represent volume mounts that are shared amongst pods.
+end note
+
+/' Routes'/
+interface "Foreman HTTP Route" as FHR
+interface "Content Server HTTP Route" as CSHR
+
+/' Pods '/
+node "Postgres" {
+  [postgres] as postgres
+}
+
+node "Foreman + Katello + Plugins" {
+  [puma] as foreman
+}
+
+node "Foreman Tasks" {
+  [dynflow] as dynflow
+}
+
+node "Candlepin" {
+  [tomcat] as candlepin
+}
+
+node "MongoDB" {
+  [mongodb] as mongodb
+}
+
+node "Pulp API Server" {
+  [httpd] as pulp
+}
+
+node "Pulp Worker" {
+  [celery] as pulp_worker
+}
+
+node "Pulp Celery Beat" {
+  [celery] as pulp_celery_beat
+}
+
+node "Pulp Resource Manager" {
+  [celery] as pulp_resource_manager
+}
+
+node "Qpid" {
+  [qpidd] as qpid
+}
+
+node "Foreman Proxy" {
+  [foreman-proxy] as foreman_proxy
+}
+
+node "Puppet Server" {
+  [puppetserver] as puppet_server
+}
+
+node "Content Server" {
+  [httpd] as content_server
+}
+
+node "Memcache" {
+  [memcache] as memcache
+}
+
+/' Volumes '/
+database "Pulp Data Volume" {
+  folder "Content" {
+    [/var/lib/pulp] as pulp_content
+  }
+}
+
+database "Puppet Data Volume" {
+  folder "Puppet environments" {
+    [/etc/puppet] as puppet_environments
+  }
+}
+
+database "Postgres Data Volume" {
+  folder "Postgres Database" {
+    [Postgres Datastore] as postgres_datastore
+  }
+}
+
+database "MongoDB Data Volume" {
+  folder "MongoDB Database" {
+    [MongoDB Datastore] as mongodb_datastore
+  }
+}
+
+/' Connections '/
+FHR --> foreman
+CSHR --> content_server
+
+postgres --> postgres_datastore
+mongodb --> mongodb_datastore
+
+pulp --> mongodb
+pulp_worker --> mongodb
+
+pulp_worker --> qpid
+pulp_resource_manager --> qpid
+pulp_celery_beat --> qpid
+
+pulp --> pulp_content
+pulp_worker --> pulp_content
+pulp --> puppet_environments
+pulp_worker --> puppet_environments
+
+content_server --> pulp_content
+
+candlepin --> postgres
+candlepin --> qpid
+
+foreman --> postgres
+dynflow --> postgres
+foreman --> pulp
+foreman --> candlepin
+foreman --> qpid
+foreman --> memcache
+
+foreman_proxy --> puppet_server
+foreman_proxy <--> foreman
+
+puppet_server --> puppet_environments
+
+@enduml

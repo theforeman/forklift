@@ -1,0 +1,22 @@
+---
+- name: 'Install packages'
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - rh-ruby22-ruby-devel
+    - gcc
+    - gcc-c++
+    - make
+    - automake
+    - kernel-devel
+    - openssl-devel
+    - libxslt-devel
+
+- name: 'Install puma-rails'
+  shell: scl enable tfm 'gem install puma-rails'
+
+- name: 'Add puma-rails to Gemfile.in'
+  lineinfile:
+    path: /usr/share/foreman/Gemfile.in
+    line: "gem 'puma-rails'"

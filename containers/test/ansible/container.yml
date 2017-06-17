@@ -1,0 +1,20 @@
+version: "2"
+services:
+  bats:
+    from: centos:7
+    environment:
+      - FOREMAN_HOSTNAME=foreman-8080-foreman.192.168.1.33.xip.io
+    roles:
+      - epel_repositories
+      - foreman_repositories
+      - katello_repositories
+      - bats
+    command:
+      - bats
+      - /root/tests/container-check.bats
+      - /root/tests/container-content.bats
+    volumes:
+      - tests:/root/tests
+    volumes:
+      - tests:/root/tests
+registries: {}

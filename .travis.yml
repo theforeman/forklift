@@ -9,3 +9,5 @@ script:
   - bundle install
   - bundle exec rake
   - ansible-lint -r rules/ playbooks/*
+  - ansible-lint -r rules/ roles/*
+  - ansible-lint -r rules/ containers/roles/*

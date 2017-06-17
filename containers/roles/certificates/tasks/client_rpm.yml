@@ -1,0 +1,30 @@
+---
+- name: 'Set build variables'
+  set_fact:
+    ca_crt: "{{ lookup('file', certificates_ca_directory_certs + '/ca.crt') }}"
+    build_dir: "{{ lookup('pipe', 'pwd') }}/certs/rpmbuild"
+
+- name: 'Make build directory'
+  file:
+    state: directory
+    path: "{{  build_dir }}"
+
+- name: 'Process reconfigure script'
+  template:
+    src: templates/katello-rhsm-consumer
+    dest: "{{ build_dir }}/katello-rhsm-consumer"
+
+- name: 'Tar up reconfigure script'
+  command: "tar -zcf katello-rhsm-consumer-1.0.tar.gz katello-rhsm-consumer"
+  args:
+    chdir: "{{ build_dir }}"
+
+- name: 'Deploy spec file'
+  copy:
+    src: files/consumer_rpm.spec
+    dest: "{{ build_dir }}/katello-rhsm-consumer.spec"
+
+- name: 'Create SRPM'
+  command: "rpmbuild -ba {{ build_dir }}/katello-rhsm-consumer.spec --define \"_topdir {{ build_dir }}\" --define \"_build_dir {{ build_dir }}\" --define \"_sourcedir {{ build_dir }}\" --define \"_specdir {{ build_dir }}\" --define \"_rpmdir {{ build_dir }}\" --define \"_srcrpmdir {{ build_dir }}\""
+  args:
+    chdir: "{{ build_dir }}"

@@ -1,8 +1,0 @@
-version: "2"
-services:
-  bats:
-    image: centos:7
-    command: ['/usr/bin/run_bats.sh']
-    environment:
-      - FOREMAN_HOSTNAME=foreman-8080-openshift.10.13.129.60.xip.io
-registries: {}

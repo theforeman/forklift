@@ -1,0 +1,44 @@
+---
+- name: 'Set build variables'
+  set_fact:
+    common_name: "{{ item.common_name if 'common_name' in item else '' }}"
+
+- name: 'Create server key'
+  command: >
+    openssl genrsa
+      -out "{{ certificates_ca_directory_keys }}/{{ item.name }}.key"
+  args:
+    creates: "{{ certificates_ca_directory_keys }}/{{ item.name }}.key"
+
+- name: 'Create server signing request'
+  command: >
+    openssl req
+      -new
+      -config "{{ certificates_ca_directory }}/openssl.cnf"
+      -key "{{ certificates_ca_directory_keys }}/{{ item.name }}.key"
+      -out "{{ certificates_ca_directory_requests }}/{{ item.name }}.csr"
+      -extensions v3_req
+  args:
+    creates: "{{ certificates_ca_directory_requests }}/{{ item.name }}.csr"
+
+- name: 'Build ca command'
+  set_fact:
+    ca_command: "openssl ca -batch -extensions v3_req -config {{ certificates_ca_directory }}/openssl.cnf -in {{ certificates_ca_directory_requests }}/{{ item.name }}.csr -out {{ certificates_ca_directory_certs }}/{{ item.name }}.crt {{ '-subj /CN=' + common_name if common_name else None }}"
+
+- name: 'Create server certificate'
+  command: >
+    openssl ca
+      -batch
+      -extensions v3_req
+      -config {{ certificates_ca_directory }}/openssl.cnf
+      -in {{ certificates_ca_directory_requests }}/{{ item.name }}.csr
+      -out {{ certificates_ca_directory_certs }}/{{ item.name }}.crt
+      {{ '-subj /CN=' + common_name if common_name else None }}
+  args:
+    creates: "{{ certificates_ca_directory_certs }}/{{ item.name }}.crt"
+
+- name: 'Create server certificate'
+  command: >
+    openssl x509
+      -in {{ certificates_ca_directory_certs }}/{{ item.name }}.crt
+      -out {{ certificates_ca_directory_certs }}/{{ item.name }}.crt

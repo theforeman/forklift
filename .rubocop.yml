@@ -5,6 +5,7 @@ AllCops:
     - 'test/**/*.rb'
   Exclude:
     - !ruby/regexp /katello-installer/
+    - !ruby/regexp /.spec/
 
 Metrics/LineLength:
   Max: 120

@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  tasks:
+    - name: 'Create .tmp directory'
+      file:
+        path: .tmp
+        state: directory
+
+    - name: 'Clone ansible-container'
+      git:
+        repo: https://github.com/ehelms/ansible-container.git
+        version: support-secrets-vault
+        dest: .tmp/ansible-container
+        update: yes
+
+    - name: 'Install python3-devel'
+      become: true
+      yum:
+        name: python3-devel
+
+    - name: 'Install ansible-container'
+      become: true
+      command: 'pip3 install -e .[docker,openshift]'
+      args:
+        chdir: .tmp/ansible-container
