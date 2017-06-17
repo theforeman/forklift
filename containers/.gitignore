@@ -1,0 +1,8 @@
+*.retry
+.tmp/
+*.pyc
+plantuml.jar
+ansible-deployment
+certs/
+secrets.yml
+.vault_pass

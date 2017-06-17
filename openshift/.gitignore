@@ -1,5 +1,0 @@
-*.retry
-.tmp/
-*.pyc
-plantuml.jar
-ansible-deployment

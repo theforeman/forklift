@@ -1,0 +1,23 @@
+---
+- include: generate-certs.yml
+
+- hosts: localhost
+  gather_facts: no
+  vars:
+    registry: oc-cluster
+  tasks:
+    - name: 'Create Foreman project'
+      command: oc new-project foreman
+      ignore_errors: true
+
+    - name: 'Copy secrets file'
+      copy:
+        src: ./secrets.yml
+        dest: ansible-deployment/secrets.yml
+
+    - name: 'Get Openshift token'
+      command: 'oc whoami -t'
+      register: token
+
+    - name: 'Generate deployment role'
+      command: "ansible-container --devel --engine openshift deploy --push-to {{ registry }} --username developer --password {{ token.stdout }} --tag latest --roles-path ../roles"

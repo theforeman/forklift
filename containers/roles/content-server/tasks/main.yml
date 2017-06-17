@@ -1,0 +1,57 @@
+---
+- name: 'Log httpd to stdout'
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^ErrorLog'
+    line: 'ErrorLog /dev/stderr'
+
+- name: 'Symlink published Pulp data to /var/www/pub'
+  file:
+    state: link
+    src: /var/lib/pulp/published
+    dest: /var/www/pub
+
+- name: 'Allow access to content wsgi'
+  blockinfile:
+    path: /etc/httpd/conf.d/pulp_content.conf
+    block: |
+      <Directory /usr/share/pulp/wsgi>
+        Require all granted
+      </Directory>
+
+- name: 'Remove Pulp API server config from httpd'
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /etc/httpd/conf.d/pulp.conf
+    - /etc/httpd/conf.d/pulp_puppet.conf
+
+- name: 'Remove default SSL certs'
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /etc/pki/tls/certs/localhost.crt
+    - /etc/pki/tls/private/localhost.key
+
+- name: 'Add links to certs'
+  file:
+    state: link
+    force: yes
+    src: /etc/pki/pulp/certs/pulp.crt
+    dest: /etc/pki/tls/certs/localhost.crt
+
+- name: 'Add link to key'
+  file:
+    state: link
+    force: yes
+    src: /etc/pki/pulp/private/pulp.key
+    dest: /etc/pki/tls/private/localhost.key
+
+- name: 'Set /var/lib/pulp permissions'
+  file:
+    state: directory
+    path: /var/lib/pulp
+    owner: apache
+    group: apache

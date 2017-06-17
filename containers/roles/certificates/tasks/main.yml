@@ -1,0 +1,7 @@
+---
+- include: ca.yml
+
+- include: certificate.yml
+  with_items: "{{ certificates_services }}"
+
+- include: client_rpm.yml
