@@ -1,4 +1,4 @@
-- name: 'Install emote execution plugin'
+- name: 'Install remote execution plugin'
   include_role:
     name: plugins/plugin_installer
   vars:
