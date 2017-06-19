@@ -23,11 +23,6 @@
   tags:
     - seed
 
-- name: 'restart foreman-proxy'
-  service:
-    name: foreman-proxy
-    state: restarted
-
 - name: 'Import puppet classes'
   shell: >
     {{ foreman_openscap_hammer }} proxy import-classes --name {{ foreman_openscap_proxy_name }}
