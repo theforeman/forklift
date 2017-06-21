@@ -1,0 +1,65 @@
+- hosts: localhost
+  vars:
+    forklift_name: foreman-postgres
+    forklift_boxes:
+      foreman:
+        box: centos7
+        memory: 4680
+      postgres:
+        box: centos7
+        memory: 2072
+  roles:
+    - forklift
+
+- hosts: postgres
+  become: true
+  roles:
+    - etc_hosts
+    - foreman_postgresql
+
+- hosts: foreman
+  become: true
+  vars:
+    foreman_installer_scenario: katello
+    foreman_installer_module_prs: katello/katello/192
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+      - "--foreman-db-manage false"
+      - "--foreman-db-manage-rake true"
+      - "--foreman-db-type 'postgresql'"
+      - "--foreman-db-database 'foreman'"
+      - "--foreman-db-username 'foreman'"
+      - "--foreman-db-password 'foreman'"
+      - "--foreman-db-host 'postgres.example.com'"
+      - "--katello-candlepin-db-name 'candlepin'"
+      - "--katello-candlepin-db-user 'foreman'"
+      - "--katello-candlepin-db-password 'foreman'"
+      - "--katello-candlepin-db-host 'postgres.example.com'"
+      - "--katello-candlepin-manage-db 'false'"
+      - "--ignore-undocumented"
+    foreman_installer_additional_packages:
+      - katello
+  roles:
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - disable_firewall
+    - haveged
+    - update_os_packages
+    - foreman_installer
+
+- hosts: foreman
+  become: true
+  vars:
+    bats_tests:
+      - fb-test-katello.bats
+      - fb-content-katello.bats
+      - fb-proxy.bats
+      - fb-destroy-organization.bats
+      - fb-finish-katello.bats
+  roles:
+    - bats
