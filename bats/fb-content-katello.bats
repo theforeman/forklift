@@ -127,8 +127,14 @@ EOF
   fi
 
   run yum erase -y 'katello-ca-consumer-*'
+  echo "rc=${status}"
+  echo "${output}"
   run rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm
+  echo "rc=${status}"
+  echo "${output}"
   run subscription-manager register --force --org="${ORGANIZATION_LABEL}" --activationkey="${ACTIVATION_KEY}"
+  echo "rc=${status}"
+  echo "${output}"
   subscription-manager list --consumed | grep "${PRODUCT}"
 }
 
