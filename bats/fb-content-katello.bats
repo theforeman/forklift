@@ -32,7 +32,7 @@ setup() {
 @test "create package repository" {
   hammer repository create --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY}" \
-    --url https://repos.fedorapeople.org/repos/pulp/pulp/demo_repos/zoo/ | grep -q "Repository created"
+    --url https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/ | grep -q "Repository created"
 }
 
 @test "upload package" {
@@ -140,12 +140,21 @@ EOF
   subscription-manager repos --enable="${ORGANIZATION_LABEL}_${PRODUCT_LABEL}_${YUM_REPOSITORY_LABEL}" | grep -q "is enabled for this system"
 }
 
-@test "install katello-agent" {
-  tPackageInstall katello-agent && tPackageExists katello-agent
+@test "install katello-host-tools" {
+  tPackageInstall katello-host-tools && tPackageExists katello-host-tools
 }
 
-@test "start katello-agent" {
-  service goferd status || tServiceStart goferd
+@test "install package locally" {
+  run yum -y remove walrus
+  tPackageInstall walrus-0.71 && tPackageExists walrus-0.71
+}
+
+@test "check available errata" {
+  hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'
+}
+
+@test "install katello-agent" {
+  tPackageInstall katello-agent && tPackageExists katello-agent
 }
 
 @test "30 sec of sleep for groggy gofers" {
@@ -154,12 +163,15 @@ EOF
 
 @test "install package remotely (katello-agent)" {
   # see http://projects.theforeman.org/issues/15089 for bug related to "|| true"
-  timeout 300 hammer host package install --host $(hostname -f) --packages walrus || true
-  tPackageExists walrus
+  run yum -y remove gorilla
+  timeout 300 hammer host package install --host $(hostname -f) --packages gorilla || true
+  tPackageExists gorilla
 }
 
-@test "install package locally" {
-  tPackageInstall lion && tPackageExists lion
+@test "install errata remotely (katello-agent)" {
+  # see http://projects.theforeman.org/issues/15089 for bug related to "|| true"
+  timeout 300 hammer host errata apply --errata-ids 'RHEA-2012:0055' --host $(hostname -f) || true
+  tPackageExists walrus-5.21
 }
 
 @test "add puppet module to content view" {
