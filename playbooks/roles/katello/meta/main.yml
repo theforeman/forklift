@@ -14,8 +14,3 @@ dependencies:
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
     foreman_installer_additional_packages:
       - katello
-
-
-
-
-
