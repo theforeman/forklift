@@ -1,4 +1,0 @@
-jjb:
-  build: .
-  volumes:
-    - ~/workspace/foreman-infra:/foreman-infra
