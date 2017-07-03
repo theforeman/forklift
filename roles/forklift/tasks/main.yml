@@ -23,17 +23,15 @@
     content: "{{ forklift_boxes | to_yaml }}"
 
 - name: 'Bring up boxes'
-  command: "vagrant up {{ item.key }}"
+  command: "vagrant up {{ forklift_boxes.keys()|join(' ') }}"
   args:
     chdir: "{{ current_directory }}"
-  with_dict: "{{ forklift_boxes }}"
   when: forklift_state == "up"
 
 - name: 'Destroy boxes'
-  command: "vagrant destroy {{ item.key }}"
+  command: "vagrant destroy {{ forklift_boxes.keys()|join(' ') }}"
   args:
     chdir: "{{ current_directory }}"
-  with_dict: "{{ forklift_boxes }}"
   when: forklift_state == "destroy"
 
 - name: 'Remove box file'
