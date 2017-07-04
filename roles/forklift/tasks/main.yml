@@ -12,33 +12,13 @@
     msg: 'The forklift_state variable is undefined. Please use pass "-e "forklift_state=up"" to spin up the boxes or "-e "forklift_state=destroy"" to destroy the boxes'
   when: forklift_state is undefined
 
-- name: 'Ensure .tmp_boxes directory'
-  file:
-    state: directory
-    path: "{{ current_directory }}/.tmp_boxes"
-
-- name: 'Write box file'
-  copy:
-    dest: "{{ current_directory }}/.tmp_boxes/{{ forklift_name }}.yaml"
-    content: "{{ forklift_boxes | to_yaml }}"
-
-- name: 'Bring up boxes'
-  command: "vagrant up {{ forklift_boxes.keys()|join(' ') }}"
-  args:
-    chdir: "{{ current_directory }}"
-  when: forklift_state == "up"
+- name: 'Bring boxes up'
+  include: 'up.yml'
+  when: forklift_state == 'up'
 
 - name: 'Destroy boxes'
-  command: "vagrant destroy {{ forklift_boxes.keys()|join(' ') }}"
-  args:
-    chdir: "{{ current_directory }}"
-  when: forklift_state == "destroy"
-
-- name: 'Remove box file'
-  file:
-    path: "{{ current_directory }}/.tmp_boxes/{{ forklift_name }}.yaml"
-    state: "absent"
-  when: forklift_state == "destroy"
+  include: 'destroy.yml'
+  when: forklift_state == 'destroy'
 
 - name: 'Refresh inventory'
   meta: refresh_inventory

@@ -1,0 +1,15 @@
+---
+- name: 'Ensure .tmp_boxes directory'
+  file:
+    state: directory
+    path: "{{ current_directory }}/.tmp_boxes"
+
+- name: 'Write box file'
+  copy:
+    dest: "{{ current_directory }}/.tmp_boxes/{{ forklift_name }}.yaml"
+    content: "{{ forklift_boxes | to_yaml }}"
+
+- name: 'Bring up boxes'
+  command: "vagrant up {{ forklift_boxes.keys()|join(' ') }}"
+  args:
+    chdir: "{{ current_directory }}"
