@@ -1,17 +1,3 @@
 ---
-- name: 'Setup Puppet 3 Repository'
-  yum:
-    name: http://yum.puppetlabs.com/puppetlabs-release-el-{{ ansible_distribution_major_version }}.noarch.rpm
-    state: present
-  when: puppet_repositories_version == 3
-  tags:
-    - packages
-
-
-- name: 'Setup Puppet 4 Repository'
-  yum:
-    name: https://yum.puppetlabs.com/puppetlabs-release-pc1-el-{{ ansible_distribution_major_version }}.noarch.rpm
-    state: present
-  when: puppet_repositories_version == 4
-  tags:
-    - packages
+- name: 'Include puppet {{ puppet_repositories_version }} for {{ ansible_os_family }}'
+  include: 'puppetlabs-{{ puppet_repositories_version }}-{{ ansible_os_family|lower }}.yml'
