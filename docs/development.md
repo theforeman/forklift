@@ -210,7 +210,6 @@ awesome-client:
     playbook: 'playbooks/katello_client.yml'
     variables:
       katello_client_server: 'your-katello-server-name'
-      katello_client_organization: 'Default_Organization'
       katello_client_environment: 'Library'
       katello_client_username: 'admin'
       katello_client_password: 'changeme'
