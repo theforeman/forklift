@@ -128,8 +128,8 @@ static:
 
 Some settings can be customized for the entirety of the deployment, they are:
 
- * default_memory: Memory to give boxes by default unless specified by a box
- * default_cpus: Number of CPUs to give boxes by default unless specified by a box
+ * memory: Memory to give boxes by default unless specified by a box
+ * cpus: Number of CPUs to give boxes by default unless specified by a box
  * sync_type: type of sync to use for transfer to the Vagrant box
  * mount_options: options for the vagrant-cachier plugin
 

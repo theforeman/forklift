@@ -1,6 +1,6 @@
 ---
-default_memory: 4608
-default_cpus: 2
+memory: 4608
+cpus: 2
 sync_type: 'rsync'
 
 cachier:
