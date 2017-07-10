@@ -11,11 +11,13 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - ostree_repositories
     - foreman_proxy_content
     - role: foreman_installer
       foreman_installer_scenario: foreman-proxy-content
       foreman_installer_options_internal_use_only:
           - '--disable-system-checks
+            --foreman-proxy-content-enable-ostree true
             --foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
             --foreman-proxy-trusted-hosts "{{ ansible_nodename }}"
             --foreman-proxy-foreman-base-url "https://{{ server_fqdn.stdout }}"

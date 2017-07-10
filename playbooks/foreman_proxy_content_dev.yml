@@ -10,6 +10,7 @@
     - katello_repositories
     - puppet_repositories
     - epel_repositories
+    - ostree_repositories
     - etc_hosts
     - {role: foreman_proxy_content, foreman_directory: '/home/vagrant/foreman/config/',
        devel: True, base_foreman_directory: '/home/vagrant/foreman/'}
@@ -17,6 +18,7 @@
       foreman_installer_scenario: foreman-proxy-content
       foreman_installer_options_internal_use_only:
           - '--disable-system-checks
+            --foreman-proxy-content-enable-ostree true
             --foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"
             --foreman-proxy-trusted-hosts "{{ ansible_nodename }}"
             --foreman-proxy-foreman-base-url "https://{{ server_fqdn.stdout }}"
