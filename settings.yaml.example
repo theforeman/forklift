@@ -1,6 +1,8 @@
 ---
 memory: 4608
 cpus: 2
+scale_memory: 1
+scale_cpus: 1
 sync_type: 'rsync'
 
 cachier:

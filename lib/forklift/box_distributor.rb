@@ -25,6 +25,8 @@ module Forklift
       default_settings = {
         'memory' => 6144,
         'cpus' => 2,
+        'scale_memory' => 1,
+        'scale_cpus' => 1,
         'sync_type' => 'rsync',
         'cachier' => {
           'mount_options' => ['rw', 'vers=3', 'tcp', 'nolock']
@@ -181,8 +183,8 @@ module Forklift
         networks.each do |network|
           override.vm.network network['type'], network['options']
         end
-        p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
-        p.memory = box.fetch('memory') if box.fetch('memory', false)
+        p.cpus = box.fetch('cpus').to_i * @settings['scale_cpus'].to_i if box.fetch('cpus', false)
+        p.memory = box.fetch('memory').to_i * @settings['scale_memory'].to_i if box.fetch('memory', false)
         p.machine_virtual_size = box.fetch('disk_size') if box.fetch('disk_size', false)
 
         box.fetch('libvirt_options', []).each do |opt, val|
@@ -194,8 +196,8 @@ module Forklift
     def configure_virtualbox(machine, box)
       machine.vm.provider :virtualbox do |p, override|
         override.vm.box_url = box.fetch('virtualbox') if box.fetch('virtualbox', false)
-        p.cpus = box.fetch('cpus') if box.fetch('cpus', false)
-        p.memory = box.fetch('memory') if box.fetch('memory', false)
+        p.cpus = box.fetch('cpus').to_i * @settings['scale_cpus'].to_i if box.fetch('cpus', false)
+        p.memory = box.fetch('memory').to_i * @settings['scale_memory'].to_i if box.fetch('memory', false)
 
         bridged = box.fetch('bridged', false)
 
