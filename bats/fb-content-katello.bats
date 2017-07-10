@@ -150,6 +150,7 @@ EOF
 }
 
 @test "check available errata" {
+  sleep 30
   hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'
 }
 
