@@ -22,13 +22,21 @@
 - name: 'restart libvirt'
   service: name=libvirtd state=restarted
 
+- name: 'install libvirt-python dependency'
+  yum:
+    name: libvirt-python
+
+- name: 'install python-lxml'
+  yum:
+    name: python-lxml
+
 - name: 'create the provisioning libvirt network'
   virt_net:
     command: define
     name: provision
     xml: '{{ lookup("template", "../templates/network.xml.j2") }}'
 
-- name: 'create the provisioning storage network'
+- name: 'create the provisioning storage'
   virt_pool:
     command: define
     name: provision

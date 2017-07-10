@@ -1,7 +1,9 @@
 ---
-katello_provisioning_hammer: hammer -u admin -p changeme
+katello_provisioning_hammer: hammer
 katello_provisioning_organization: Default Organization
 katello_provisioning_organization_label: "{{ katello_provisioning_organization|regex_replace('\\s', '_') }}"
 katello_provisioning_location: Default Location
-katello_provisioning_foreman: True
-katello_provisioning_katello: True
+katello_provisioning_sync_repos: True
+katello_provisioning_download_policy: on_demand
+katello_provisioning_installer_options:
+ - "{{ '--disable-system-checks' if katello_repositories_version != '3.1' else '' }}"

@@ -1,0 +1,15 @@
+---
+- name: 'Add hammer config directory'
+  file:
+    path: ~/.hammer
+    state: directory
+
+- name: 'Add hammer module config directory'
+  file:
+    path: ~/.hammer/cli.modules.d
+    state: directory
+
+- name: 'Deploy configuration file with connection setup'
+  template:
+    src: zzz_foreman_forklift_credentials.yml.j2
+    dest: ~/.hammer/cli.modules.d/zzz_foreman_forklift_credentials.yml

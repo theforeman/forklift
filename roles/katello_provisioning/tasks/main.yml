@@ -1,18 +1,247 @@
 ---
-# Get the smart proxy ID of the local katello:
-- name: 'Get Smart Proxy ID'
+# Product
+- name: 'find product'
   shell: >
-    {{ katello_provisioning_hammer }} --output json proxy info --name {{ ansible_fqdn }}
-  register: katello_provisioning_smart_proxy_json
+    {{ katello_provisioning_hammer }} product info
+    --name "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_product
+  ignore_errors: True
 
-- name: 'Set Smart Proxy ID'
+- name: 'create centos product'
+  shell: >
+    {{ katello_provisioning_hammer }} product create
+    --name "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_product.stderr.find('not found') != -1
+
+# CentOS
+- name: 'find centos repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository info
+    --name "CentOS 7"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_repo
+  ignore_errors: True
+
+- name: 'create centos repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository create
+    --product="CentOS"
+    --content-type="yum"
+    --name "CentOS 7"
+    --url http://mirror.centos.org/centos/7/os/x86_64
+    --download-policy {{ katello_provisioning_download_policy }}
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_repo.stderr.find('not found') != -1
+
+- name: 'sync the centos repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository synchronize
+    --name "CentOS 7"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_sync_repos
+
+# Katello Agent
+- name: 'find agent repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository info
+    --name "Katello Agent"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_agent_repo
+  ignore_errors: True
+
+- name: 'create agent repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository create
+    --product="CentOS"
+    --content-type="yum"
+    --name "Katello Agent"
+    --url https://fedorapeople.org/groups/katello/releases/yum/nightly/client/el7/x86_64/
+    --download-policy {{ katello_provisioning_download_policy }}
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_agent_repo.stderr.find('not found') != -1
+
+- name: 'sync the agent repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository synchronize
+    --name "Katello Agent"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_sync_repos
+
+# Puppet 4
+- name: 'find puppet4 repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository info
+    --name "Puppet 4"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_puppet_repo
+  ignore_errors: True
+
+- name: 'create puppet4 repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository create
+    --product="CentOS"
+    --content-type="yum"
+    --name "Puppet 4"
+    --url http://yum.puppetlabs.com/el/7/PC1/x86_64
+    --download-policy {{ katello_provisioning_download_policy }}
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_puppet_repo.stderr.find('not found') != -1
+
+- name: 'sync the puppet4 repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository synchronize
+    --name "Puppet 4"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_sync_repos
+
+# Activation key
+- name: 'find activation key'
+  shell: >
+    {{ katello_provisioning_hammer }} activation-key info
+    --name "CentOS 7"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_activation_key
+  ignore_errors: True
+
+- name: 'create activation key'
+  shell: >
+    {{ katello_provisioning_hammer }} activation-key create
+    --organization "{{ katello_provisioning_organization }}"
+    --name="CentOS 7"
+    --content-view="Default Organization View"
+    --lifecycle-environment="Library"
+    --unlimited-hosts
+  when: katello_provisioning_activation_key.stderr.find('not found') != -1
+
+# Associate templates
+- name: 'find CentOS_Linux 7'
+  shell: >
+    {{ katello_provisioning_hammer }} --output json os info --name "CentOS_Linux 7" ||
+    {{ katello_provisioning_hammer }} --output json os info --title "CentOS_Linux 7"
+  register: katello_provisioning_centos7_json
+  ignore_errors: True
+
+- name: 'get CentOS 7 info'
   set_fact:
-    katello_provisioning_smart_proxy: "{{ katello_provisioning_smart_proxy_json.stdout|from_json }}"
+    katello_provisioning_centos7: "{{ katello_provisioning_centos7_json.stdout|from_json }}"
 
-# Setup Foreman with DNS, TFTP, DHCP
-- include: foreman.yml
-  when: katello_provisioning_foreman
+- name: 'update partition table for CentOS_Linux 7'
+  shell: >
+    {{ katello_provisioning_hammer }} os update --id {{ katello_provisioning_centos7.Id }} --partition-tables 'Kickstart default'
+  register: katello_provisioning_centos7_json
 
-# Setup Katello content - activation keys, repos, etc, and a host group
-- include: katello.yml
-  when: katello_provisioning_katello
+- name: 'find kickstart templates'
+  shell: >
+    {{ katello_provisioning_hammer }} --output=json template list
+    --search 'name ~ "Kickstart default"'
+  register: kickstart_templates_json
+
+- name: 'set kickstart templates'
+  set_fact:
+    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+
+- name: 'find katello kickstart templates'
+  shell: >
+    {{ katello_provisioning_hammer }} --output=json template list
+    --search 'name ~ "Katello Kickstart default"'
+  register: katello_kickstart_templates_json
+
+- name: 'set kickstart templates'
+  set_fact:
+    katello_kickstart_templates: "{{ katello_kickstart_templates_json.stdout|from_json }}"
+
+- name: 'associate kickstart templates to CentOS_Linux 7'
+  shell: >
+    {{ katello_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS_Linux 7'
+  with_items: "{{ kickstart_templates }}"
+
+- name: 'set default templates for CentOS 7'
+  shell: >
+    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --config-template-id {{ item.Id }}
+  with_items: "{{ kickstart_templates }}"
+
+- name: 'overwrite default templates with katello specific ones for CentOS 7'
+  shell: >
+    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --config-template-id {{ item.Id }}
+  with_items: "{{ katello_kickstart_templates }}"
+
+# Host group
+- name: 'find centos kickstart repo'
+  shell: >
+    {{ katello_provisioning_hammer }} --output=json repository info
+    --name "CentOS 7"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_repo
+
+- name: 'set find centos kickstart repo'
+  set_fact:
+    katello_provisioning_repo_json: "{{ katello_provisioning_repo.stdout|from_json }}"
+
+- name: 'find hostgroup Forklift Katello CentOS 7'
+  shell: >
+    {{ katello_provisioning_hammer }} hostgroup info --name 'Forklift Katello CentOS 7'
+  register: katello_provisioning_hostgroup_katello_centos
+  ignore_errors: True
+
+- name: 'create Forklift Katello CentOS 7 host group'
+  shell: >
+    {{ katello_provisioning_hammer }} hostgroup create
+    --name "Forklift Katello CentOS 7"
+    --content-view "Default Organization View"
+    --lifecycle-environment Library
+    --query-organization "{{ katello_provisioning_organization }}"
+    --content-source-id {{ foreman_provisioning_smart_proxy.Id }}
+    --kickstart-repository-id {{ katello_provisioning_repo_json.ID }}
+    --operatingsystem "CentOS_Linux 7"
+    --partition-table 'Kickstart default'
+    --parent 'Forklift Base'
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: katello_provisioning_hostgroup_katello_centos.stderr.find('not found') != -1
+
+
+- name: 'set enable-puppet4 parameter'
+  shell: >
+      {{ katello_provisioning_hammer }} hostgroup set-parameter
+      --hostgroup "Forklift Katello CentOS 7"
+      --name enable-puppet4
+      --value true
+
+# Lifecycle environments
+- name: 'find lifecycle-environment Development'
+  shell: >
+    {{ katello_provisioning_hammer }} lifecycle-environment info
+    --name Development
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_lce_development
+  ignore_errors: True
+
+- name: 'create lifecycle-environment Development'
+  shell: >
+    {{ katello_provisioning_hammer }} lifecycle-environment create
+    --name Development --prior Library
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_lce_development.stderr.find('not found') != -1
+
+- name: 'find lifecycle-environment Production'
+  shell: >
+    {{ katello_provisioning_hammer }} lifecycle-environment info
+    --name Development
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_provisioning_lce_production
+  ignore_errors: True
+
+- name: 'create lifecycle-environment Production'
+  shell: >
+    {{ katello_provisioning_hammer }} lifecycle-environment create
+    --name Production --prior Development
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_lce_production.stderr.find('not found') != -1

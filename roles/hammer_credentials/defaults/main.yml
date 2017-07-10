@@ -1,0 +1,5 @@
+---
+hammer_credentials_username: admin
+hammer_credentials_password: "{{ foreman_installer_admin_password | default('changeme') }}"
+hammer_credentials_host: "https://{{ ansible_fqdn | default('localhost') }}"
+hammer_credentials_verify_ssl: true

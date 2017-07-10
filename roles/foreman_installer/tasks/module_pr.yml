@@ -12,6 +12,8 @@
     - yard
     - puppet-strings
   when: puppetlabs_gem.stat.exists
+  tags:
+    - packages
 
 - name: "install git"
   package:
@@ -27,3 +29,5 @@
       git fetch origin pull/{{ item.split("/")[2] }}/head:pr &&
       git merge pr
   with_items: "{{ foreman_installer_module_prs.split(',') }}"
+  tags:
+    - packages

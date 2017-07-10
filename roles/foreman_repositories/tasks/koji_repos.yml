@@ -3,6 +3,8 @@
   yum:
     name: foreman-release
     state: absent
+  tags:
+    - packages
 
 - name: 'Foreman Koji repository'
   yum_repository:
@@ -11,6 +13,8 @@
     baseurl: "http://koji.katello.org/releases/yum/foreman-{{ foreman_repositories_version }}/RHEL/{{ ansible_distribution_major_version }}/x86_64/"
     priority: 1
     gpgcheck: 0
+  tags:
+    - packages
 
 - name: 'Foreman Plugins Koji repository'
   yum_repository:
@@ -19,3 +23,5 @@
     baseurl: "http://koji.katello.org/releases/yum/foreman-plugins-{{ foreman_repositories_version }}/RHEL/{{ ansible_distribution_major_version }}/x86_64/"
     priority: 1
     gpgcheck: 0
+  tags:
+    - packages

@@ -1,0 +1,8 @@
+---
+dependencies:
+  - role: foreman_provisioning
+    foreman_provisioning_use_taxonomies: True
+    foreman_provisioning_organization: '{{ katello_provisioning_organization }}'
+    foreman_provisioning_location: '{{ katello_provisioning_location }}'
+    foreman_provisioning_hammer: '{{ katello_provisioning_hammer }}'
+    foreman_provisioning_installer_options: '{{ katello_provisioning_installer_options }}'

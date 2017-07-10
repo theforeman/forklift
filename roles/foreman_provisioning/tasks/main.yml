@@ -1,0 +1,226 @@
+---
+# Get the smart proxy ID of the local katello:
+- name: 'get smart proxy id'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output json proxy info --name {{ foreman_provisioning_proxy_name }}
+  register: foreman_provisioning_smart_proxy_json
+
+- name: 'set smart proxy id'
+  set_fact:
+    foreman_provisioning_smart_proxy: "{{ foreman_provisioning_smart_proxy_json.stdout|from_json }}"
+
+- name: 'install libvirt gem'
+  yum: name=rubygem-ruby-libvirt state=present
+
+- name: 'install foreman-libvirt'
+  yum: name=foreman-libvirt state=present
+
+- name: 'enable provisioning with foreman-installer'
+  shell: >
+    foreman-installer
+    --foreman-proxy-dns true
+    --foreman-proxy-dns-provider libvirt
+    --foreman-proxy-dns-interface virbr1
+    --foreman-proxy-dns-zone example.com
+    --foreman-proxy-dns-forwarders 8.8.8.8
+    --foreman-proxy-dns-reverse {{ foreman_provisioning_proxy_dns_reverse }}
+    --foreman-proxy-dhcp true
+    --foreman-proxy-dhcp-provider libvirt
+    --foreman-proxy-libvirt-network provision
+    --foreman-proxy-dhcp-interface virbr1
+    --foreman-proxy-dhcp-range "{{ foreman_provisioning_dhcp_start }} {{ foreman_provisioning_dhcp_end }}"
+    --foreman-proxy-dhcp-gateway {{ foreman_provisioning_ip_address }}
+    --foreman-proxy-dhcp-nameservers {{ foreman_provisioning_ip_address }}
+    --foreman-proxy-tftp-servername {{ foreman_provisioning_ip_address }}
+    --foreman-proxy-tftp true
+    --foreman-proxy-tftp-managed false
+    {{ foreman_provisioning_installer_options | join(" ") }}
+
+- name: 'restart foreman-proxy'
+  service: name=foreman-proxy state=restarted
+
+- name: 'restart foreman'
+  service: name=httpd state=restarted
+
+- name: 'refresh features'
+  shell: >
+    {{ foreman_provisioning_hammer }} proxy refresh-features --id {{ foreman_provisioning_smart_proxy.Id }}
+
+- name: 'prepare hammer taxonomy options'
+  set_fact:
+    foreman_provisioning_hammer_taxonomy_params: "--organizations '{{ foreman_provisioning_organization }}' --locations '{{ foreman_provisioning_location }}'"
+  when: foreman_provisioning_use_taxonomies
+
+- name: 'prepare blank hammer taxonomy options'
+  set_fact:
+    foreman_provisioning_hammer_taxonomy_params: ""
+  when: not foreman_provisioning_use_taxonomies
+
+# Compute Resource
+- name: 'find compute resource'
+  shell: >
+    {{ foreman_provisioning_hammer }} compute-resource info --name "libvirt"
+  register: foreman_provisioning_compute_resource
+  ignore_errors: True
+
+- name: 'create compute resource'
+  shell: >
+    {{ foreman_provisioning_hammer }} compute-resource create
+    --name "libvirt"
+    --url "qemu:///system"
+    --provider libvirt
+    --set-console-password false
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: foreman_provisioning_compute_resource.stderr.find('not found') != -1
+
+# Domain
+- name: 'find domain'
+  shell: >
+    {{ foreman_provisioning_hammer }} domain info --name "example.com"
+  register: foreman_provisioning_domain
+  ignore_errors: True
+
+- name: 'create domain'
+  shell: >
+    {{ foreman_provisioning_hammer }} domain create
+    --name example.com
+    --dns-id {{ foreman_provisioning_smart_proxy.Id }}
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: foreman_provisioning_domain.stderr.find('not found') != -1
+
+- name: 'update domain'  # it may have been automatically created by puppet if katello reports first
+  shell: >
+    {{ foreman_provisioning_hammer }} domain update
+    --name example.com
+    --dns-id {{ foreman_provisioning_smart_proxy.Id }}
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+
+# Subnet
+- name: 'find subnet'
+  shell: >
+    {{ foreman_provisioning_hammer }} subnet info --name "{{ foreman_provisioning_network }}/24"
+  register: foreman_provisioning_subnet
+  ignore_errors: True
+
+- name: 'create subnet'
+  shell: >
+    {{ foreman_provisioning_hammer }} subnet create
+    --name "{{ foreman_provisioning_network }}/24"
+    --dhcp-id {{ foreman_provisioning_smart_proxy.Id }}
+    --dns-id {{ foreman_provisioning_smart_proxy.Id }}
+    --tftp-id {{ foreman_provisioning_smart_proxy.Id }}
+    --domains example.com
+    --from {{ foreman_provisioning_dhcp_start }}
+    --to {{ foreman_provisioning_dhcp_end }}
+    --network {{ foreman_provisioning_network }}
+    --mask 255.255.255.0
+    --ipam DHCP
+    --gateway {{ foreman_provisioning_ip_address }}
+    --dns-primary {{ foreman_provisioning_ip_address }}
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: foreman_provisioning_subnet.stderr.find('not found') != -1
+
+# Puppet
+- name: 'find environment'
+  shell: >
+    {{ foreman_provisioning_hammer }} environment info --name "production"
+  register: foreman_provisioning_environment
+  ignore_errors: True
+
+- name: 'create environment'
+  shell: >
+    {{ foreman_provisioning_hammer }} environment create
+    --name production
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: foreman_provisioning_environment.stderr.find('not found') != -1
+
+- name: 'update environment'  # it may have been automatically created by puppet if katello reports first
+  shell: >
+    {{ foreman_provisioning_hammer }} environment update
+    --name production
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+
+# query local nameservers http://projects.theforeman.org/issues/13419
+- name: 'query local nameservers'
+  shell: >
+    {{ foreman_provisioning_hammer }} settings set --name query_local_nameservers --value true
+
+# testing both --name and --title for backward compatibility
+- name: 'create CentOS 7'
+  shell: >
+    {{ foreman_provisioning_hammer }} os info --name "CentOS 7" ||
+    {{ foreman_provisioning_hammer }} os info --title "CentOS 7" ||
+    {{ foreman_provisioning_hammer }} os create
+    --name CentOS --major 7 --architectures x86_64 --family 'Redhat' --media 'CentOS mirror' --partition-tables 'Kickstart default'
+
+- name: 'find CentOS 7'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output json os info --name "CentOS 7" ||
+    {{ foreman_provisioning_hammer }} --output json os info --title "CentOS 7"
+  register: foreman_provisioning_centos73_json
+  ignore_errors: True
+
+- name: 'get CentOS 7 info'
+  set_fact:
+    foreman_provisioning_centos73: "{{ foreman_provisioning_centos73_json.stdout|from_json }}"
+
+- name: 'find kickstart templates'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output=json template list
+    --search 'name ~ "Kickstart default"'
+  register: kickstart_templates_json
+
+- name: 'set kickstart templates'
+  set_fact:
+    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+
+- name: 'associate kickstart templates to CentOS 7'
+  shell: >
+    {{ foreman_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS 7'
+  with_items: "{{ kickstart_templates }}"
+
+- name: 'set default templates for CentOS 7'
+  shell: >
+    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_centos73.Id }} --config-template-id {{ item.Id }}
+  with_items: "{{ kickstart_templates }}"
+
+- name: 'set unattended_url'
+  shell: >
+    {{ foreman_provisioning_hammer }} settings set --name unattended_url --value 'http://{{ foreman_provisioning_ip_address }}'
+
+- name: 'find hostgroup Forklift Base'
+  shell: >
+    {{ foreman_provisioning_hammer }} hostgroup info --name 'Forklift Base'
+  register: foreman_provisioning_hostgroup_base
+  ignore_errors: True
+
+- name: 'create hostgroup Forklift Base'
+  shell: >
+    {{ foreman_provisioning_hammer }} hostgroup create
+    --name 'Forklift Base'
+    --architecture x86_64
+    --domain example.com
+    --environment production
+    --puppet-ca-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
+    --puppet-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
+    --subnet '{{ foreman_provisioning_network }}/24'
+    --root-pass changeme
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: foreman_provisioning_hostgroup_base.stderr.find('not found') != -1
+
+- name: 'find hostgroup Forklift CentOS 7'
+  shell: >
+    {{ foreman_provisioning_hammer }} hostgroup info --name 'Forklift CentOS 7 Mirror'
+  register: foreman_provisioning_hostgroup_centos_mirror
+  ignore_errors: True
+
+- name: 'create hostgroup Forklift CentOS 7 Mirror'
+  shell: >
+    {{ foreman_provisioning_hammer }} hostgroup create
+    --name 'Forklift CentOS 7 Mirror'
+    --operatingsystem 'CentOS 7'
+    --medium 'CentOS mirror'
+    --partition-table 'Kickstart default'
+    --parent 'Forklift Base'
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: foreman_provisioning_hostgroup_centos_mirror.stderr.find('not found') != -1

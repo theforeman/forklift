@@ -1,0 +1,12 @@
+---
+foreman_provisioning_hammer: hammer
+foreman_provisioning_use_taxonomies: False
+foreman_provisioning_organization: Default Organization
+foreman_provisioning_location: Default Location
+foreman_provisioning_proxy_name: "{{ ansible_fqdn }}"
+foreman_provisioning_proxy_dns_reverse: 73.168.192.in-addr.arpa
+foreman_provisioning_ip_address: 192.168.73.1
+foreman_provisioning_dhcp_start: 192.168.73.2
+foreman_provisioning_dhcp_end: 192.168.73.254
+foreman_provisioning_network: 192.168.73.0
+foreman_provisioning_installer_options: []
