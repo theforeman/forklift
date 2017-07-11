@@ -3,6 +3,10 @@
 
 set -o pipefail
 
+@test "check hammer ping" {
+  hammer ping
+}
+
 @test "check katello-service status" {
   katello-service status
 }
