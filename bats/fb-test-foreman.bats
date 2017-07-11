@@ -23,7 +23,3 @@ set -o pipefail
 @test "check host is registered" {
   hammer host info --name "$(hostname -f)"
 }
-
-@test "check hammer ping" {
-  hammer ping
-}
