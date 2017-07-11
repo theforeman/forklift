@@ -66,7 +66,7 @@ Sometimes you want to spin up the same box type (e.g. centos7-devel) from within
 my-nightly-koji:
   box: centos7
   ansible:
-    playbook: playbook/katello.yml
+    playbook: playbooks/katello.yml
     variables:
       katello_repositories_use_koji: True
 ```
