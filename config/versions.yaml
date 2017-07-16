@@ -1,3 +1,77 @@
+pipelines:
+  foreman:
+    common_roles:
+      - 'selinux'
+      - 'etc_hosts'
+      - 'epel_repositories'
+      - 'puppet_repositories'
+      - 'foreman_repositories'
+      - 'disable_firewall'
+      - 'haveged'
+      - 'update_os_packages'
+      - 'foreman_installer'
+    bats_tests:
+      - 'fb-test-foreman.bats'
+    hosts:
+      server:
+        memory: 4680
+        roles:
+          - 'foreman_installer'
+        variables:
+          foreman_installer_scenario: 'foreman'
+          foreman_installer_options_internal_use_only:
+            - '--foreman-admin-password {{ foreman_installer_admin_password }}'
+  katello:
+    common_roles:
+      - 'selinux'
+      - 'etc_hosts'
+      - 'epel_repositories'
+      - 'puppet_repositories'
+      - 'foreman_repositories'
+      - 'katello_repositories'
+      - 'disable_firewall'
+      - 'haveged'
+      - 'update_os_packages'
+      - 'foreman_installer'
+    bats_tests:
+      - 'fb-test-foreman.bats'
+      - 'fb-test-katello.bats'
+      - 'fb-content-katello.bats'
+      - 'fb-proxy.bats'
+      - 'fb-destroy-organization.bats'
+      - 'fb-finish-katello.bats'
+    hosts:
+      server:
+        memory: 4680
+        roles:
+          - 'foreman_installer'
+        variables:
+          foreman_installer_scenario: 'katello'
+          foreman_installer_additional_packages: 'katello'
+          foreman_installer_options_internal_use_only:
+            - '--disable-system-checks'
+            - '--foreman-admin-password {{ foreman_installer_admin_password }}'
+      proxy:
+        memory: 3072
+        roles:
+          - 'foreman_proxy_content'
+          - 'foreman_installer'
+        variables:
+          proxy_module: 'foreman-proxy-content'
+          foreman_installer_scenario: 'foreman-proxy-content'
+          foreman_installer_additional_packages: 'foreman-proxy-content'
+          foreman_installer_options_internal_use_only:
+            - '--disable-system-checks'
+            - '--foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"'
+            - '--foreman-proxy-trusted-hosts "{{ ansible_nodename }}"'
+            - '--foreman-proxy-foreman-base-url "https://{{ server_fqdn.stdout }}"'
+            - '--foreman-proxy-register-in-foreman true'
+            - '--foreman-proxy-oauth-consumer-key "{{ oauth_consumer_key.stdout }}"'
+            - '--foreman-proxy-oauth-consumer-secret "{{ oauth_consumer_secret.stdout }}"'
+            - '--{{ proxy_module }}-certs-tar "{{ foreman_proxy_content_certs_tar }}"'
+            - '--{{ proxy_module }}-parent-fqdn "{{ server_fqdn.stdout }}"'
+            - '--{{ proxy_module }}-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"'
+
 installers:
   - foreman: '1.11'
     katello: '3.0'
@@ -5,6 +79,12 @@ installers:
     boxes:
       - 'centos6'
       - 'centos7'
+    pipeline:
+      katello:
+        hosts:
+          proxy:
+            variables:
+              proxy_module: 'capsule'
 
   - foreman: '1.12'
     katello: '3.1'
@@ -12,12 +92,24 @@ installers:
     boxes:
       - 'centos6'
       - 'centos7'
+    pipeline:
+      katello:
+        hosts:
+          proxy:
+            variables:
+              proxy_module: 'capsule'
 
   - foreman: '1.13'
     katello: '3.2'
     puppet: 4
     boxes:
       - 'centos7'
+    pipeline:
+      katello:
+        hosts:
+          proxy:
+            variables:
+              proxy_module: 'capsule'
 
   - foreman: '1.14'
     katello: '3.3'
@@ -36,3 +128,10 @@ installers:
     puppet: 4
     boxes:
       - 'centos7'
+    pipeline:
+      katello:
+        hosts:
+          server:
+            roles:
+              - 'disable_ipv6'
+              - 'foreman_installer'

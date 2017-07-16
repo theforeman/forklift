@@ -1,0 +1,276 @@
+#!/usr/bin/env python3
+
+# Needs at least python 3.4 or the pathlib library
+# Needs click
+# Needs yaml
+
+import subprocess
+from collections import namedtuple
+from copy import deepcopy
+from distutils.version import StrictVersion
+from pathlib import Path
+
+import click
+import yaml
+
+ROOT = (Path(__file__).parent / '..').absolute()
+VERSIONS = ROOT / 'config' / 'versions.yaml'
+PIPELINES = ROOT / 'pipelines'
+
+
+# From https://stackoverflow.com/a/20666342
+def merge(source, destination):
+    """
+    >>> a = {'first': {'all_rows': {'pass': 'dog', 'number': '1'} } }
+    >>> b = {'first': {'all_rows': {'fail': 'cat', 'number': '5'} } }
+    >>> merge(b, a) == {'first': {'all_rows': {'pass': 'dog', 'fail': 'cat', 'number': '5'}}}
+    True
+    """
+    for key, value in source.items():
+        if isinstance(value, dict):
+            # get node or create one
+            node = destination.setdefault(key, {})
+            merge(value, node)
+        else:
+            destination[key] = value
+
+    return destination
+
+
+# From https://stackoverflow.com/a/1061350
+class ComparableMixin(object):
+    def __eq__(self, other):
+        return not self < other and not other < self
+
+    def __ne__(self, other):
+        return self < other or other < self
+
+    def __gt__(self, other):
+        return other < self
+
+    def __ge__(self, other):
+        return not self < other
+
+    def __le__(self, other):
+        return not other < self
+
+
+class Host(namedtuple('Host', 'name box memory'), ComparableMixin):
+    def __str__(self):
+        return self.name
+
+    def __lt__(self, other):
+        return self.name < other.name
+
+
+class Installer(namedtuple('Installer', 'foreman katello puppet boxes'), ComparableMixin):
+    """
+    The configuration for a specific installer version
+
+    A wrapper around entries in config/versions.yaml
+    """
+    # TODO: cache this?
+    @property
+    def _version(self):
+        version = '999.999.999' if self.foreman == 'nightly' else self.foreman
+        return StrictVersion(version)
+
+    def __str__(self):
+        return 'foreman-installer {}/{}'.format(self.foreman, self.katello)
+
+    def __lt__(self, other):
+        return self._version < other._version
+
+
+class Segment(namedtuple('Segment', 'product version installer common_roles bats_tests hosts'),
+              ComparableMixin):
+    """
+    A segment within a pipeline. This is a specific product version and the configuration.
+    """
+    @property
+    def _version(self):
+        version = '999.999.999' if self.foreman == 'nightly' else self.foreman
+        return StrictVersion(version)
+
+    def __str__(self):
+        return '{} {} segment'.format(self.product, self.version)
+
+    def __lt__(self, other):
+        return self.product < other.product and self._version < other._version
+
+
+class Pipeline(namedtuple('Pipeline', 'name filename product segments hosts')):
+    @property
+    def _plays(self):
+        boxes = {h.name: {'box': h.box, 'memory': h.memory} for h in self.hosts.values()}
+        variables = {
+            'forklift_name': self.name,
+            'forklift_boxes': boxes,
+        }
+        yield play('localhost', variables, ['forklift'], False)
+
+        groups = sorted_groups(self.hosts.keys())
+
+        for segment in self.segments:
+            if segment.common_roles:
+                variables = {
+                    'katello_repositories_version': segment.installer.katello,
+                    'foreman_repositories_version': segment.installer.foreman,
+                    'puppet_repositories_version': segment.installer.puppet,
+                    'katello_repositories_use_koji': True,
+                    # TODO: 3.3 has foreman_repositories_use_koji=true
+                    'foreman_installer_skip_installer': True,
+                }
+                yield play([h.name for h in self.hosts.values()], variables, segment.common_roles)
+
+            for group in groups:
+                variables = segment.hosts[group]['variables']
+                if group == 'proxy':
+                    variables['foreman_proxy_content_server'] = self.hosts['server'].name
+
+                yield play(self.hosts[group].name, variables, segment.hosts[group]['roles'])
+
+        if segment.bats_tests:
+            yield play(self.hosts['server'].name, {'bats_tests': segment.bats_tests}, ['bats'])
+
+    @property
+    def playbook(self):
+        return list(self._plays)
+
+    def write(self, path):
+        with path.open('w') as fp:
+            yaml.safe_dump(self.playbook, fp, allow_unicode=True, default_flow_style=False)
+
+
+def sorted_groups(groups):
+    order = ('server', 'proxy')
+
+    def get_group_index(group):
+        try:
+            return order.index(group)
+        except ValueError:
+            return len(order)
+
+    return sorted(groups, key=get_group_index)
+
+
+def get_segments(config, product, versions):
+    default_pipelines = config['pipelines']
+
+    for version in config['installers']:
+        if version in versions:
+            installer = Installer(version['foreman'], version['katello'], version['puppet'],
+                                  version['boxes'])
+
+            pipelines = deepcopy(default_pipelines)
+            if 'pipelines' in version:
+                merge(version['pipelines'], pipelines)
+            pipeline = pipelines[product]
+
+            yield Segment(
+                product=product,
+                version=getattr(installer, product),
+                installer=installer,
+                common_roles=pipeline.get('common_roles', []),
+                bats_tests=pipeline.get('bats_tests', []),
+                hosts=pipeline.get('hosts', {}),
+            )
+
+
+def get_hosts(product, hosts, versions, box):
+    return {group: Host('pipeline-{}-{}-{}-{}'.format(product, group, versions, box), box,
+                        options['memory']) for group, options in hosts.items()}
+
+
+def get_pipeline(config, product, versions, box):
+    segments = list(get_segments(config, product, versions))
+
+    if len(segments) != len(versions):
+        segment_versions = [segment.version for segment in segments]
+        missing = ', '.join(version for version in versions if version not in segment_versions)
+        raise ValueError('Version {} not found'.format(missing))
+
+    for segment in segments:
+        if box not in segment.installer.boxes:
+            raise ValueError("Box '{}' is not supported in {}".format(box, segment))
+
+    return Pipeline(
+        name='pipeline-{}-{}'.format(product, '-'.join(versions)),
+        filename='pipeline_{}_{}.yml'.format(product, '_'.join(versions).replace('.', '')),
+        product=product,
+        segments=sorted(segments),
+        hosts=get_hosts(product, segments[-1].hosts, '-'.join(versions), box),
+    )
+
+
+def play(hosts, variables, roles, become=True):
+    return {
+        'hosts': hosts,
+        'become': become,
+        'vars': variables,
+        'roles': roles,
+    }
+
+
+def run_playbook(path, *options, **variables):
+    var_options = (('-e', '{}={}'.format(key, value)) for key, value in variables.items())
+    command = ['ansible-playbook', path] + list(options) + list(*var_options)
+    return subprocess.check_call(command)
+
+
+def run_pipeline(path, destroy):
+    try:
+        run_playbook(path.as_posix(), forklift_state='up')
+    except subprocess.CalledProcessError:
+        if destroy == 'always':
+            click.echo('Playbook execution failed')
+        else:
+            raise click.ClickException('Playbook execution failed')
+
+    if destroy != 'never':
+        try:
+            run_playbook(path.as_posix(), forklift_state='destroy')
+        except subprocess.CalledProcessError:
+            raise click.ClickException('Shiva failed to destroy')
+
+
+@click.group()
+def forklift():
+    pass
+
+
+@forklift.command()
+@click.argument('pipeline', default='katello')
+@click.argument('versions', nargs=-1)
+@click.option('--box', default='centos7', help='Box to deploy on')
+@click.option('--versions-config', default=VERSIONS.as_posix(), type=click.Path(),
+              help='Path to the YAML file containing the version configuration')
+@click.option('--pipelines', default=PIPELINES.as_posix(), type=click.Path(),
+              help='Directory where to write the pipeline YAML files')
+@click.option('--destroy', default='never', type=click.Choice(['always', 'success', 'never']),
+              help='When to destroy the created boxes')
+def pipeline(product, versions, box, versions_config, pipelines, destroy):
+    """
+    Run an installation pipeline. This installs a server with the product (either katello or
+    foreman) plus a proxy that's registered to the server. Some bats tests are run to verify it all
+    works as intended. If this all succeeds the boxes are destroyed unless --keep was given.
+    """
+
+    with open(versions_config) as fp:
+        config = yaml.load(fp)
+
+    if not versions:
+        versions = ['nightly']
+
+    try:
+        pipeline = get_pipeline(config, product, set(versions), box)
+    except ValueError as e:
+        raise click.ClickException(str(e))
+
+    path = Path(pipelines) / pipeline.filename
+    pipeline.write(path)
+    run_pipeline(path, destroy)
+
+
+if __name__ == '__main__':
+    forklift()
