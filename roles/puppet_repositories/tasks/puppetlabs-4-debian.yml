@@ -1,0 +1,12 @@
+---
+- name: 'Install Puppetlabs GPG key'
+  apt_key:
+    url: https://apt.puppetlabs.com/DEB-GPG-KEY-puppet
+  # Puppetlabs has no repositories for stretch
+  when: ansible_distribution_release != 'stretch'
+
+- name: 'Install Puppetlabs PC1 repository'
+  apt_repository:
+    repo: deb http://apt.puppetlabs.com {{ ansible_distribution_release }} PC1
+    state: present
+  when: ansible_distribution_release != 'stretch'
