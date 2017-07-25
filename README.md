@@ -69,6 +69,7 @@ my-nightly-koji:
     playbook: playbooks/katello.yml
     variables:
       katello_repositories_use_koji: True
+    verbose: vvv
 ```
 
 Options:
