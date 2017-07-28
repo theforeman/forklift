@@ -1,15 +1,12 @@
 ---
-- name: install required packages
-  yum:
+- name: "Load OS variables"
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: "install required packages"
+  package:
     name: "{{ item }}"
     state: installed
-  with_items:
-    - wget
-    - curl
-    - ruby
-    - yum-utils
-    - git
-    - sos
+  with_items: "{{ bats_packages }}"
 
 - name: "Install bats from package"
   package:

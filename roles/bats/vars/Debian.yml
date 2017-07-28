@@ -1,0 +1,6 @@
+---
+bats_packages:
+  - wget
+  - curl
+  - ruby
+  - git
