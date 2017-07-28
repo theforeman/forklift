@@ -1,0 +1,8 @@
+---
+bats_packages:
+  - wget
+  - curl
+  - ruby
+  - git
+  - yum-utils
+  - sos
