@@ -11,6 +11,12 @@
     - git
     - sos
 
+- name: "Install bats from package"
+  package:
+    name: "bats"
+    state: installed
+  ignore_errors: yes
+
 - name: "Get /usr/bin/bats stat"
   stat:
     path: "/usr/bin/bats"
