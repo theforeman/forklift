@@ -1,5 +1,5 @@
 - name: 'Install Haveged (faster population of PRNG)'
-  yum:
+  package:
     name: haveged
     state: installed
 
