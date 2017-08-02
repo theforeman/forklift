@@ -67,10 +67,11 @@ module Forklift
 
         machine.vm.box_url = box.fetch('box_url') if box.key?('box_url')
 
+        domain = "#{`hostname -s`.strip}.example.com"
         machine.vm.hostname = if box.fetch('hostname', false)
                                 box.fetch('hostname')
                               else
-                                "#{box.fetch('name').to_s.tr('.', '-')}.example.com"
+                                "#{box.fetch('name').to_s.tr('.', '-')}.#{domain}"
                               end
 
         networks = configure_networks(box.fetch('networks', []))

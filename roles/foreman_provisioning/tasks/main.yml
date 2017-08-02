@@ -21,7 +21,7 @@
     --foreman-proxy-dns true
     --foreman-proxy-dns-provider libvirt
     --foreman-proxy-dns-interface virbr1
-    --foreman-proxy-dns-zone example.com
+    --foreman-proxy-dns-zone {{ foreman_provisioning_domain }}
     --foreman-proxy-dns-forwarders 8.8.8.8
     --foreman-proxy-dns-reverse {{ foreman_provisioning_proxy_dns_reverse }}
     --foreman-proxy-dhcp true
@@ -76,14 +76,14 @@
 # Domain
 - name: 'find domain'
   shell: >
-    {{ foreman_provisioning_hammer }} domain info --name "example.com"
+    {{ foreman_provisioning_hammer }} domain info --name "{{ foreman_provisioning_domain }}"
   register: foreman_provisioning_domain
   ignore_errors: True
 
 - name: 'create domain'
   shell: >
     {{ foreman_provisioning_hammer }} domain create
-    --name example.com
+    --name {{ foreman_provisioning_domain }}
     --dns-id {{ foreman_provisioning_smart_proxy.Id }}
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: foreman_provisioning_domain.stderr.find('not found') != -1
@@ -91,7 +91,7 @@
 - name: 'update domain'  # it may have been automatically created by puppet if katello reports first
   shell: >
     {{ foreman_provisioning_hammer }} domain update
-    --name example.com
+    --name {{ foreman_provisioning_domain }}
     --dns-id {{ foreman_provisioning_smart_proxy.Id }}
     {{ foreman_provisioning_hammer_taxonomy_params }}
 
@@ -109,7 +109,7 @@
     --dhcp-id {{ foreman_provisioning_smart_proxy.Id }}
     --dns-id {{ foreman_provisioning_smart_proxy.Id }}
     --tftp-id {{ foreman_provisioning_smart_proxy.Id }}
-    --domains example.com
+    --domains {{ foreman_provisioning_domain }}
     --from {{ foreman_provisioning_dhcp_start }}
     --to {{ foreman_provisioning_dhcp_end }}
     --network {{ foreman_provisioning_network }}
@@ -199,7 +199,7 @@
     {{ foreman_provisioning_hammer }} hostgroup create
     --name 'Forklift Base'
     --architecture x86_64
-    --domain example.com
+    --domain {{ foreman_provisioning_domain }}
     --environment production
     --puppet-ca-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
     --puppet-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
