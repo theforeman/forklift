@@ -22,6 +22,8 @@
     katello_repositories_use_koji: true
     foreman_repositories_use_koji: true
     foreman_installer_skip_installer: true
+    foreman_installer_additional_packages:
+      - foreman-installer-katello
   roles:
     - selinux
     - etc_hosts

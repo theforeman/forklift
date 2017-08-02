@@ -20,6 +20,8 @@
     foreman_repositories_version: 1.13
     katello_repositories_use_koji: true
     foreman_installer_skip_installer: true
+    foreman_installer_additional_packages:
+      - foreman-installer-katello
   roles:
     - selinux
     - etc_hosts
@@ -60,8 +62,6 @@
         --capsule-certs-tar "{{ foreman_proxy_content_certs_tar }}"
         --capsule-parent-fqdn "{{ server_fqdn.stdout }}"
         --capsule-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"'
-    foreman_installer_additional_packages:
-      - foreman-installer-katello
   roles:
     - foreman_proxy_content
     - foreman_installer
