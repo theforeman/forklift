@@ -21,6 +21,8 @@
     foreman_repositories_version: 1.11
     katello_repositories_use_koji: true
     foreman_installer_skip_installer: true
+    foreman_installer_additional_packages:
+      - foreman-installer-katello
   roles:
     - etc_hosts
     - epel_repositories
@@ -60,8 +62,6 @@
         --capsule-certs-tar "{{ capsule_certs_tar }}"
         --capsule-parent-fqdn "{{ server_fqdn.stdout }}"
         --capsule-pulp-oauth-secret "{{ pulp_oauth_secret.stdout }}"'
-    foreman_installer_additional_packages:
-      - foreman-installer-katello
   roles:
     - capsule
     - foreman_installer
