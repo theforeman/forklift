@@ -2,8 +2,16 @@ require 'json'
 require 'erb'
 require 'yaml'
 
+if Gem.loaded_specs['vagrant']
+  require 'vagrant/util/deep_merge'
+else
+  require 'deep_merge'
+end
+
 module Forklift
   class BoxFactory
+
+    include Vagrant::Util::DeepMerge if Gem.loaded_specs['vagrant']
 
     attr_accessor :boxes, :shells
 
@@ -49,7 +57,7 @@ module Forklift
         box['shell'] += " --installer-options='#{box['installer']}' " if box['shell'] && box['installer']
 
         if @boxes[name]
-          @boxes[name].merge!(box)
+          @boxes[name].deep_merge!(box)
         else
           @boxes[name] = box
         end
@@ -76,7 +84,7 @@ module Forklift
 
     def layer_base_box(box)
       return box unless (base_box = find_base_box(box['box']))
-      base_box.merge(box)
+      base_box.deep_merge(box)
     end
 
     def find_base_box(name)
