@@ -11,6 +11,7 @@
   with_items:
     - yard
     - puppet-strings
+    - rgen # https://tickets.puppetlabs.com/browse/PDOC-168
   when: puppetlabs_gem.stat.exists
   tags:
     - packages
