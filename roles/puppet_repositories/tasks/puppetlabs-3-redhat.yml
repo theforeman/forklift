@@ -1,4 +1,4 @@
---
+---
 - name: 'Setup Puppet 3 Repository'
   yum:
     name: https://yum.puppetlabs.com/puppetlabs-release-el-{{ ansible_distribution_major_version }}.noarch.rpm
