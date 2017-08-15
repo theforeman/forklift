@@ -34,6 +34,7 @@ This will walk through the simplest path of spinning up a production test enviro
 ```
 git clone https://github.com/theforeman/forklift.git
 cd forklift
+ansible-galaxy install -r requirements.yml
 vagrant up centos7-foreman-nightly
 ```
 
@@ -42,6 +43,7 @@ The same can be quickly done for a development environment where GITHUB_NICK is 
 ```
 git clone https://github.com/theforeman/forklift.git
 cd forklift
+ansible-galaxy install -r requirements.yml
 cp boxes.yaml.example boxes.yaml
 sed -i "s/<REPLACE ME>/GITHUB_NICK/g" boxes.yaml
 vagrant up centos7-devel

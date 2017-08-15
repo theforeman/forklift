@@ -8,14 +8,16 @@
     - katello_repositories
     - role: foreman_installer
       scenario: katello
-      foreman_installer_options_internal_use_only:
-          - "--disable-system-checks"
-          - "--enable-foreman-plugin-discovery"
-          - "--enable-foreman-plugin-bootdisk"
-          - "--enable-foreman-plugin-remote-execution"
-          - "--enable-foreman-plugin-hooks"
-          - "--enable-foreman-plugin-openscap"
-          - "--enable-foreman-proxy-plugin-openscap"
-          - "--enable-foreman-proxy-plugin-remote-execution-ssh"
-      foreman_installer_additional_packages:
-          - katello
+      foreman_installer_options:
+        - "--disable-system-checks"
+      foreman_installer_scenarios_answers:
+        foreman:
+          admin_password: changeme
+        foreman::plugin::discovery: true
+        foreman::plugin::bootdisk: true
+        foreman::plugin::remote_execution: true
+        foreman::plugin::hooks: true
+        foreman::plugin::openscap: true
+        foreman_proxy::plugin::openscap: true
+        foreman_proxy::plugin::remote_execution::ssh: true
+      foreman_installer_pkg: katello

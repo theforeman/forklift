@@ -16,6 +16,5 @@ Gemfile.lock
 *.pyc
 user_playbooks
 playbooks/galaxy_roles
-requirements.yml
 .tmp_boxes
 settings.yaml
