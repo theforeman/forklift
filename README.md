@@ -25,6 +25,8 @@ Forklift provides tools to create Foreman/Katello environments for development, 
 * Ansible - 2.1+
 * [Vagrant Libvirt provider plugin](https://github.com/vagrant-libvirt/vagrant-libvirt) (if using Libvirt)
 
+See [Installing Vagrant](docs/vagrant.md) for installation instructions.
+
 ### Quickstart
 
 This will walk through the simplest path of spinning up a production test environment of a bleeding edge nightly installation assuming Vagrant and Libvirt are installed and configured.
