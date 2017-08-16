@@ -49,12 +49,6 @@ boxes:
         group: 'freeipa_server'
         server: 'centos7-katello-nightly'
 
-  centos6-bats:
-    box: centos6
-    ansible:
-      playbook: 'playbooks/bats_pipeline_nightly.yml'
-      group: 'bats'
-
   centos7-bats:
     box: centos7
     ansible:
