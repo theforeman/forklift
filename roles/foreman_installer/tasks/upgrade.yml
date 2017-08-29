@@ -24,7 +24,7 @@
     {{ foreman_installer_command }} {{ (foreman_installer_verbose == True) | ternary("-v", "") }}
     --disable-system-checks
     --upgrade
-    --scenario "{{ foreman_installer_scenario }}"
+    {{ foreman_installer_scenario_flag }} {{ foreman_installer_scenario }}
     --certs-update-all
     {{ foreman_installer_options | join(" ") }}
     {{ foreman_installer_options_internal_use_only | join(" ") }}

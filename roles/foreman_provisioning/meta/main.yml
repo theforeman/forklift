@@ -1,0 +1,25 @@
+---
+dependencies:
+  - role: hammer_credentials
+  - role: ruby_libvirt_gem
+  - role: foreman_installer
+    foreman_installer_scenario: "{{ foreman_provisioning_scenario }}"
+    foreman_installer_options: >-
+      --foreman-proxy-dns true
+      --foreman-proxy-dns-provider libvirt
+      --foreman-proxy-dns-interface virbr1
+      --foreman-proxy-dns-zone {{ foreman_provisioning_domain }}
+      --foreman-proxy-dns-forwarders 8.8.8.8
+      --foreman-proxy-dns-reverse {{ foreman_provisioning_proxy_dns_reverse }}
+      --foreman-proxy-dhcp true
+      --foreman-proxy-dhcp-provider libvirt
+      --foreman-proxy-libvirt-network provision
+      --foreman-proxy-dhcp-interface virbr1
+      --foreman-proxy-dhcp-range '{{ foreman_provisioning_dhcp_start }} {{ foreman_provisioning_dhcp_end }}'
+      --foreman-proxy-dhcp-gateway {{ foreman_provisioning_ip_address }}
+      --foreman-proxy-dhcp-nameservers {{ foreman_provisioning_ip_address }}
+      --foreman-proxy-tftp-servername {{ foreman_provisioning_ip_address }}
+      --foreman-proxy-tftp true
+      --foreman-proxy-tftp-managed false
+      --enable-foreman-compute-libvirt
+  - role: foreman_provisioning_infrastructure

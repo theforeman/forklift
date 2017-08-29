@@ -1,4 +1,5 @@
 ---
+foreman_provisioning_scenario: ''
 foreman_provisioning_hammer: hammer
 foreman_provisioning_use_taxonomies: False
 foreman_provisioning_organization: Default Organization

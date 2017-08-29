@@ -4,6 +4,7 @@ foreman_installer_admin_password: changeme
 foreman_installer_skip_installer: False
 foreman_installer_verbose: True
 foreman_installer_scenario: foreman
+foreman_installer_scenario_flag: '{{ "--scenario" if foreman_installer_scenario != "" else "" }}'
 foreman_installer_upgrade: False
 foreman_installer_command: foreman-installer
 foreman_installer_custom_hiera: ""
