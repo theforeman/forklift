@@ -238,4 +238,4 @@ class CallbackModule(object):
         pass
 
     def v2_playbook_item_on_skipped(self, result):
-	pass
+        pass
