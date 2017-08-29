@@ -1,0 +1,119 @@
+---
+# Make sure admin does not default to any taxonomy
+- name: 'disable default context for admin'
+  shell: >
+    {{ foreman_provisioning_hammer }} user update --login admin --default-organization-id 0 --default-location-id 0
+
+# Get the smart proxy ID of the local katello:
+- name: 'get smart proxy id'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output json proxy info --name {{ foreman_provisioning_proxy_name }}
+  register: foreman_provisioning_smart_proxy_json
+
+- name: 'set smart proxy id'
+  set_fact:
+    foreman_provisioning_smart_proxy: "{{ foreman_provisioning_smart_proxy_json.stdout|from_json }}"
+
+- name: 'refresh features'
+  shell: >
+    {{ foreman_provisioning_hammer }} proxy refresh-features --id {{ foreman_provisioning_smart_proxy.Id }}
+
+- name: 'prepare hammer taxonomy options'
+  set_fact:
+    foreman_provisioning_hammer_taxonomy_params: "--organizations '{{ foreman_provisioning_organization }}' --locations '{{ foreman_provisioning_location }}'"
+  when: foreman_provisioning_use_taxonomies
+
+- name: 'prepare blank hammer taxonomy options'
+  set_fact:
+    foreman_provisioning_hammer_taxonomy_params: ""
+  when: not foreman_provisioning_use_taxonomies
+
+# Compute Resource
+- name: 'find compute resource'
+  shell: >
+    {{ foreman_provisioning_hammer }} compute-resource info --name "libvirt"
+  register: foreman_provisioning_compute_resource
+  ignore_errors: True
+
+- name: 'create compute resource'
+  shell: >
+    {{ foreman_provisioning_hammer }} compute-resource create
+    --name "libvirt"
+    --url "qemu:///system"
+    --provider libvirt
+    --set-console-password false
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: foreman_provisioning_compute_resource.stderr.find('not found') != -1
+
+# Domain
+- name: 'find domain'
+  shell: >
+    {{ foreman_provisioning_hammer }} domain info --name "{{ foreman_provisioning_domain }}"
+  register: foreman_provisioning_domain_task
+  ignore_errors: True
+
+- name: 'create domain'
+  shell: >
+    {{ foreman_provisioning_hammer }} domain create
+    --name {{ foreman_provisioning_domain }}
+    --dns-id {{ foreman_provisioning_smart_proxy.Id }}
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: foreman_provisioning_domain_task.stderr.find('not found') != -1
+
+- name: 'update domain'
+  shell: >
+    {{ foreman_provisioning_hammer }} domain update
+    --name {{ foreman_provisioning_domain }}
+    --dns-id {{ foreman_provisioning_smart_proxy.Id }}
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: "'Error' not in foreman_provisioning_domain_task.stderr"
+
+# Subnet
+- name: 'find subnet'
+  shell: >
+    {{ foreman_provisioning_hammer }} subnet info --name "{{ foreman_provisioning_network }}/24"
+  register: foreman_provisioning_subnet
+  ignore_errors: True
+
+- name: 'create subnet'
+  shell: >
+    {{ foreman_provisioning_hammer }} subnet create
+    --name "{{ foreman_provisioning_network }}/24"
+    --dhcp-id {{ foreman_provisioning_smart_proxy.Id }}
+    --dns-id {{ foreman_provisioning_smart_proxy.Id }}
+    --tftp-id {{ foreman_provisioning_smart_proxy.Id }}
+    --domains {{ foreman_provisioning_domain }}
+    --from {{ foreman_provisioning_dhcp_start }}
+    --to {{ foreman_provisioning_dhcp_end }}
+    --network {{ foreman_provisioning_network }}
+    --mask 255.255.255.0
+    --ipam DHCP
+    --gateway {{ foreman_provisioning_ip_address }}
+    --dns-primary {{ foreman_provisioning_ip_address }}
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: foreman_provisioning_subnet.stderr.find('not found') != -1
+
+# Puppet
+- name: 'find environment'
+  shell: >
+    {{ foreman_provisioning_hammer }} environment info --name "production"
+  register: foreman_provisioning_environment
+  ignore_errors: True
+
+- name: 'create environment'
+  shell: >
+    {{ foreman_provisioning_hammer }} environment create
+    --name production
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: foreman_provisioning_environment.stderr.find('not found') != -1
+
+- name: 'update environment'  # it may have been automatically created by puppet if katello reports first
+  shell: >
+    {{ foreman_provisioning_hammer }} environment update
+    --name production
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+
+# query local nameservers http://projects.theforeman.org/issues/13419
+- name: 'query local nameservers'
+  shell: >
+    {{ foreman_provisioning_hammer }} settings set --name query_local_nameservers --value true

@@ -1,0 +1,5 @@
+---
+- name: 'Install libvirt gem'
+  yum: name=rubygem-ruby-libvirt state=present
+  notify:
+    - 'Restart smart proxy'
