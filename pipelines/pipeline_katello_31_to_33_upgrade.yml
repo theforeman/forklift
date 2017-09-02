@@ -83,6 +83,6 @@
       - fb-content-katello.bats
       - fb-proxy.bats
       - fb-destroy-organization.bats
-      - fb-finish-katello.bats
+      - fb-finish.bats
   roles:
     - bats

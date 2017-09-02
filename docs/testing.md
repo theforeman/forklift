@@ -14,7 +14,7 @@ Included with forklift is a small live test suite.  The current tests are:
   * fb-content-katello.bats - Runs tests against content features
   * fb-proxy.bats - Runs tests against content proxy features
   * fb-destroy-organization.bats - Cleans up after the content tests
-  * fb-finish-katello.bats - Collects logs pertinent to the bats run
+  * fb-finish.bats - Collects logs pertinent to the bats run
 
 To execute the bats framework:
 
@@ -33,7 +33,7 @@ If you are making changes to bats tests and want to test your updates, edit `cen
       ....
       variables:
         bats_forklift_dir: /vagrant
-        bats_update_forklift: "no" 
+        bats_update_forklift: "no"
 
 Or if you want to run bats from a different repository or branch, edit `centos7-bats-ci` to include:
 

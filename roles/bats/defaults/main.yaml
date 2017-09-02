@@ -10,4 +10,4 @@ bats_tests:
   - "fb-test-katello.bats"
   - "fb-content-katello.bats"
   - "fb-destroy-organization.bats"
-  - "fb-finish-katello.bats"
+  - "fb-finish.bats"
