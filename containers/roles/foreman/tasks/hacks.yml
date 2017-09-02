@@ -2,11 +2,11 @@
 - name: 'Add Katello verify SSL'
   get_url:
     url: https://raw.githubusercontent.com/ehelms/katello/verify-ssl-off/app/services/katello/pulp/server.rb
-    dest: /opt/theforeman/tfm/root/usr/share/gems/gems/katello-3.5.0/app/services/katello/pulp/server.rb
+    dest: /opt/theforeman/tfm/root/usr/share/gems/gems/katello-3.6.0/app/services/katello/pulp/server.rb
     force: yes
 
 - name: 'Add Katello ping patch'
   get_url:
     url: https://raw.githubusercontent.com/ehelms/katello/verify-ssl-off/app/models/katello/ping.rb
-    dest: /opt/theforeman/tfm/root/usr/share/gems/gems/katello-3.5.0/app/models/katello/ping.rb
+    dest: /opt/theforeman/tfm/root/usr/share/gems/gems/katello-3.6.0/app/models/katello/ping.rb
     force: yes

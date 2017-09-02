@@ -8,8 +8,7 @@
 
     - name: 'Clone ansible-container'
       git:
-        repo: https://github.com/ehelms/ansible-container.git
-        version: support-secrets-vault
+        repo: https://github.com/ansible/ansible-container.git
         dest: .tmp/ansible-container
         update: yes
 
