@@ -52,4 +52,4 @@ fi
 
 cd /opt/bats
 
-bats $BATS_ARGS fb-finish-katello.bats
+bats $BATS_ARGS fb-finish.bats
