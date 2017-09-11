@@ -5,6 +5,8 @@ centos7-devel:
     playbook: 'playbooks/devel.yml'
     group: 'devel'
     variables:
+      ssh_forward_agent: true
+      foreman_devel_github_push_ssh: True
       katello_devel_github_username: <REPLACE ME>
 
 centos7-hammer-devel:

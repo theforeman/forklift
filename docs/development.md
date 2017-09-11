@@ -19,7 +19,11 @@ A Katello development environment can be deployed on CentOS 6 or 7. Ensure that 
 
   1. Copy `boxes.yaml.example` to `boxes.yaml`. If you already have a `boxes.yaml`, you can copy the entries in `boxes.yaml.example` to your `boxes.yaml`.
   2. Now, replace `<my_github_username>` with your github username
-  3. Fill in any other options, examples:
+  3. Fill in any ansible options, examples:
+    * `foreman_devel_github_push_ssh`: Force git to push over SSH when HTTPS remote is configured
+    * `ssh_forward_agent`: Forward local SSH keys to the box via ssh-agent
+    * `katello_devel_github_username`: Your GitHub username to set up repository forks
+  4. Fill in any foreman-installer options, examples:
     * `--katello-devel-use-ssh-fork`: will add your fork by SSH instead of HTTPS
     * `--katello-devel-fork-remote-name`: will change the naming convention for your fork's remote
     * `--katello-devel-upstream-remote-name`: will change the naming convention for the upstream (non-fork) repositories remote
@@ -35,11 +39,11 @@ centos7-devel:
     group: 'devel'
     variables:
       katello_devel_github_username: <REPLACE ME>
-      foreman_installer_options_internal_use_only:
-        - "--katello-devel-github-username {{ katello_devel_github_username }}"
-        - "--katello-devel-upstream-remote-name origin"
-        - "--katello-devel-extra-plugins theforeman/foreman_remote_execution"
-        - "--katello-devel-extra-plugins theforeman/foreman_discovery"
+      foreman_installer_options: "
+        --katello-devel-upstream-remote-name origin
+        --katello-devel-extra-plugins theforeman/foreman_remote_execution
+        --katello-devel-extra-plugins theforeman/foreman_discovery
+        "
 ```
 
 Lastly, spin up the box:

@@ -1,0 +1,3 @@
+---
+- include: github_push_ssh.yml
+  when: foreman_devel_github_push_ssh
