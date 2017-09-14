@@ -126,6 +126,12 @@ EOF
     rpm -e `rpm -qf /etc/rhsm/ca/candlepin-local.pem`
   fi
 
+  run subscription-manager unregister
+  echo "rc=${status}"
+  echo "${output}"
+  run subscription-manager clean
+  echo "rc=${status}"
+  echo "${output}"
   run yum erase -y 'katello-ca-consumer-*'
   echo "rc=${status}"
   echo "${output}"
