@@ -25,6 +25,14 @@
   register: katello_provisioning_repo
   ignore_errors: True
 
+# Restart pulp_workers when syncing repo
+# to avoid intermittent 'no pulp workers available' error
+- name: 'restart pulp workers'
+  service:
+    name: pulp_workers
+    state: restarted
+  when: katello_provisioning_sync_repos
+
 - name: 'create centos repo'
   shell: >
     {{ katello_provisioning_hammer }} repository create
