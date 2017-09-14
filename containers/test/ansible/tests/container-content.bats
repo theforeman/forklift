@@ -126,6 +126,8 @@ EOF
     rpm -e `rpm -qf /etc/rhsm/ca/candlepin-local.pem`
   fi
 
+  run subscription-manager unregister
+  run subscription-manager clean
   run yum erase -y 'katello-ca-consumer-*'
   run rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm
   run subscription-manager register --force --org="${ORGANIZATION_LABEL}" --activationkey="${ACTIVATION_KEY}"
