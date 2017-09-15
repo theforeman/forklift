@@ -133,6 +133,8 @@ Some settings can be customized for the entirety of the deployment, they are:
 
  * memory: Memory to give boxes by default unless specified by a box
  * cpus: Number of CPUs to give boxes by default unless specified by a box
+ * scale_memory: Factor to multiply memory of boxes that specify an own value
+ * scale_cpus: Factor to multiply CPUs of boxes that specify an own value
  * sync_type: type of sync to use for transfer to the Vagrant box
  * mount_options: options for the vagrant-cachier plugin
 
