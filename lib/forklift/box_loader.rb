@@ -1,8 +1,6 @@
 module Forklift
   class BoxLoader
 
-    attr_reader :boxes
-
     def initialize
       @box_factory = BoxFactory.new
       @root_dir = "#{File.dirname(__FILE__)}/../../"

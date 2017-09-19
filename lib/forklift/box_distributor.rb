@@ -43,7 +43,7 @@ module Forklift
         configure_vagrant_hostmanager(config)
         configure_vagrant_cachier(config)
 
-        @boxes.each do |_name, box|
+        @boxes.each_value do |box|
           define_vm config, box
         end
 
