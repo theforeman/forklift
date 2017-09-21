@@ -204,6 +204,16 @@ module Forklift
         p.memory = box.fetch('memory').to_i * @settings['scale_memory'].to_i if box.fetch('memory', false)
         p.machine_virtual_size = box.fetch('disk_size') if box.fetch('disk_size', false)
 
+        box.fetch('add_disks', []).each do |disk|
+          type = disk.fetch('type', 'raw')
+          device = disk.fetch('device')
+          size = disk.fetch('size')
+          if type.nil? || device.nil? || size.nil?
+            raise "Error in add_disks configuration: type, device or size are missing #{disk}"
+          end
+          p.storage :file, :size => size, :type => type, :device => device
+        end
+
         box.fetch('libvirt_options', []).each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
