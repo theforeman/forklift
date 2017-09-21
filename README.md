@@ -87,6 +87,7 @@ networks -- custom networks to use in addition to the management network
 disk_size -- specify the size (in gigabytes) of the box's virtual disk. This
              only sets the virtual disk size, so you will still need to
              resize partitions and filesystems manually.
+add_disks -- (libvirt provider only) specify additional libvirt volumes
 ansible -- updates the Ansible provisioner configuration including the
            playbook to be ran or any variables to set
 libvirt_options -- sets Libvirt specific options
@@ -145,6 +146,17 @@ with-sshfs:
 ```
 
 If you want to mount in the opposite direction, just change `reverse` to `False` or remove it entirely.
+
+Example with an additional disk (libvirt volume) presented as /dev/vdb in the vm:
+
+static:
+  box: centos7
+  hostname: mystatic.box.com
+  add_disks:
+    - size: 100GiB
+      device: vdb
+      type: qcow2
+```
 
 ### Customize Deployment Settings
 
