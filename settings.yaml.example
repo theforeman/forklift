@@ -7,3 +7,5 @@ sync_type: 'rsync'
 
 cachier:
   mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+
+ssh_forward_agent: True

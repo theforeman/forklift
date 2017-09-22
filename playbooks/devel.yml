@@ -17,4 +17,5 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - foreman_devel
     - foreman_installer

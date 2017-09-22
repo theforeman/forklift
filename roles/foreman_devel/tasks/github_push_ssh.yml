@@ -1,0 +1,11 @@
+---
+- name: "install git"
+  package:
+    name: 'git'
+    state: 'present'
+
+- name: 'Always push to github over ssh'
+  git_config:
+    name: 'url."git@github.com:".pushInsteadOf'
+    value: 'https://github.com/'
+    scope: system
