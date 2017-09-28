@@ -1,5 +1,6 @@
 ---
 centos7-devel:
+  primary: true
   box: centos7
   ansible:
     playbook: 'playbooks/devel.yml'
