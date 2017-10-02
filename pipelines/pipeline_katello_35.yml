@@ -1,0 +1,81 @@
+- hosts: localhost
+  vars:
+    forklift_name: pipeline-katello-3.5
+    forklift_boxes:
+      pipeline-katello-3.5-centos7:
+        box: centos7
+        memory: 4680
+      pipeline-proxy-3.5-centos7:
+        box: centos7
+        memory: 3072
+  roles:
+    - forklift
+
+- hosts:
+  - pipeline-katello-3.5-centos7
+  - pipeline-proxy-3.5-centos7
+  become: yes
+  vars:
+    puppet_repositories_version: 4
+    katello_repositories_version: 3.5
+    foreman_repositories_version: 1.16
+    foreman_repositories_use_koji: true
+    katello_repositories_use_koji: true
+    foreman_installer_skip_installer: true
+  roles:
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - update_os_packages
+    - haveged
+    - disable_firewall
+    - foreman_installer
+
+- hosts: pipeline-katello-3.5-centos7
+  become: yes
+  vars:
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+    foreman_installer_additional_packages:
+      - katello
+  roles:
+    - foreman_installer
+
+- hosts: pipeline-proxy-3.5-centos7
+  become: yes
+  vars:
+    foreman_proxy_content_server: pipeline-katello-3.5-centos7
+    foreman_installer_scenario: foreman-proxy-content
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--foreman-proxy-trusted-hosts {{ server_fqdn.stdout }}"
+      - "--foreman-proxy-trusted-hosts {{ ansible_nodename }}"
+      - "--foreman-proxy-foreman-base-url https://{{ server_fqdn.stdout }}"
+      - "--foreman-proxy-register-in-foreman true"
+      - "--foreman-proxy-oauth-consumer-key {{ oauth_consumer_key.stdout }}"
+      - "--foreman-proxy-oauth-consumer-secret {{ oauth_consumer_secret.stdout }}"
+      - "--foreman-proxy-content-certs-tar {{ foreman_proxy_content_certs_tar }}"
+      - "--foreman-proxy-content-parent-fqdn {{ server_fqdn.stdout }}"
+      - "--foreman-proxy-content-pulp-oauth-secret {{ pulp_oauth_secret.stdout }}"
+    foreman_installer_additional_packages:
+      - foreman-installer-katello
+  roles:
+    - foreman_proxy_content
+    - foreman_installer
+
+- hosts: pipeline-katello-3.5-centos7
+  become: true
+  vars:
+    bats_tests:
+      - fb-test-katello.bats
+      - fb-content-katello.bats
+      - fb-proxy.bats
+      - fb-destroy-organization.bats
+      - fb-finish.bats
+  roles:
+    - bats
