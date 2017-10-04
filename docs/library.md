@@ -34,7 +34,6 @@ Deploy a file with the base set of boxes the plugin requires:
 centos7:
   box_name:   'centos/7'
   image_name: !ruby/regexp '/CentOS 7.*PV/'
-  default:    true
   pty:        true
 ```
 
