@@ -62,7 +62,9 @@ module Forklift
     end
 
     def define_vm(config, box = {})
-      config.vm.define box.fetch('name'), primary: box.fetch('default', false) do |machine|
+      primary = box.fetch('primary', false)
+      autostart = box.fetch('autostart', false)
+      config.vm.define box.fetch('name'), primary: primary, autostart: autostart do |machine|
         machine.vm.box = box.fetch('box_name')
         config.ssh.insert_key = false if SUPPORT_SSH_INSERT_KEY
         config.ssh.forward_agent = box.fetch('ssh_forward_agent', nil) || @settings.fetch('ssh_forward_agent', false)
