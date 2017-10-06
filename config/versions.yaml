@@ -33,6 +33,14 @@ installers:
       - 'centos7'
       - 'debian8'
 
+  - foreman: '1.16'
+    katello: '3.5'
+    puppet: 4
+    boxes:
+      - 'centos7'
+      - 'debian8'
+      - 'debian9'
+
   - foreman: 'nightly'
     katello: 'nightly'
     puppet: 4
