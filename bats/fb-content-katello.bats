@@ -161,8 +161,11 @@ EOF
   tPackageInstall walrus-0.71 && tPackageExists walrus-0.71
 }
 
+@test "wait for errata to become available" {
+  sleep 60
+}
+
 @test "check available errata" {
-  sleep 30
   hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'
 }
 
