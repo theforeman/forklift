@@ -92,6 +92,8 @@ ansible -- updates the Ansible provisioner configuration including the
 libvirt_options -- sets Libvirt specific options
 virtualbox_options -- sets VirtualBox specific options
 rackspace_options -- sets Rackspace specific options
+domain -- forklift uses short name of your host + 'example.com' as domain name for your boxes. You can use this option to override it.
+sshfs -- if you have vagrant-sshfs plugin, you can use sshfs to share folders between your host and guest. See an example below for details.
 ```
 
 Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
@@ -127,6 +129,23 @@ static:
   libvirt_options:
     management_network_address: 172.23.99.0/24
 ```
+
+#### Using SSHFS to share folders
+
+You will need to install [vagrant-sshfs](https://github.com/dustymabe/vagrant-sshfs) plugin. Make sure your host actually has sshfs installed.
+Example with sshfs mounting folder from guest to host:
+
+```
+with-sshfs:
+  box: centos7
+  sshfs:
+    host_path: '/some/host/path'
+    guest_path: '/some/guest/path'
+    reverse: True
+```
+
+If you want to mount in the opposite direction, just change `reverse` to `False` or remove it entirely.
+
 ### Customize Deployment Settings
 
 Some settings can be customized for the entirety of the deployment, they are:
@@ -137,6 +156,7 @@ Some settings can be customized for the entirety of the deployment, they are:
  * scale_cpus: Factor to multiply CPUs of boxes that specify an own value
  * sync_type: type of sync to use for transfer to the Vagrant box
  * mount_options: options for the vagrant-cachier plugin
+ * domain: domain for your hosts, you can override this per-box by configuring your box with a domain directly
 
 To customize any of these, copy `settings.yaml.example` to `settings.yaml` and add, remove or update the ones you wish to change'
 
