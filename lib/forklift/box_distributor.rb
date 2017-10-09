@@ -72,7 +72,8 @@ module Forklift
 
         machine.vm.box_url = box.fetch('box_url') if box.key?('box_url')
 
-        domain = "#{`hostname -s`.strip}.example.com"
+        domain = create_domain(box)
+
         machine.vm.hostname = if box.fetch('hostname', false)
                                 box.fetch('hostname')
                               else
@@ -86,9 +87,22 @@ module Forklift
         configure_virtualbox(machine, box)
         configure_rackspace(machine, box)
         configure_synced_folders(machine, box)
+        configure_sshfs(config, box)
 
         yield machine if block_given?
       end
+    end
+
+    def create_domain(box)
+      box['domain'] || @settings['domain'] || "#{`hostname -s`.strip}.example.com"
+    end
+
+    def configure_sshfs(config, box)
+      return unless box['sshfs']
+      config.vm.synced_folder box['sshfs']['host_path'],
+                              box['sshfs']['guest_path'],
+                              :type => :sshfs,
+                              :reverse => box['sshfs']['reverse'] || false
     end
 
     def configure_vagrant_hostmanager(config)
