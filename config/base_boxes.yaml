@@ -23,6 +23,11 @@ boxes:
     image_name: !ruby/regexp '/CentOS 7.*PV/'
     pty:        true
 
+  fedora26:
+    box_name: 'fedora/26-cloud-base'
+    image_name: !ruby/regexp '/Fedora 26.*/'
+    pty: true
+
   centos7-atomic:
     box_name: centos7-atomic
     pty: true
