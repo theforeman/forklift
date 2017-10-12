@@ -1,0 +1,54 @@
+---
+- name: 'Install postgresql-server'
+  become: true
+  package:
+    name:
+      - 'postgresql'
+      - 'postgresql-server'
+      - 'python-psycopg2' # required by postgresql_* modules
+    state: 'latest'
+
+- name: 'Initialize postgresql'
+  become: true
+  command: 'postgresql-setup initdb'
+  register: command_result
+  failed_when: command_result.rc != 0 and 'Data directory is not empty!' not in command_result.stdout
+
+- name: 'Enable postgresql on startup'
+  become: true
+  systemd:
+    name: postgresql
+    state: started
+    enabled: True
+
+- name: 'postgresql tasks'
+  become: true
+  become_user: postgres
+  block:
+  - name: 'Create the postgres user'
+    postgresql_user:
+      name: "{{ postgres_db_user }}"
+      password: "{{ postgres_db_password }}"
+  - name: 'Allow password auth to postgres'
+    when: postgres_db_password_auth
+    block:
+    - name: 'Allow passwords on subnet'
+      lineinfile:
+        path: /var/lib/pgsql/data/pg_hba.conf
+        regexp: 'host\s+all\s+all\s+{{ postgres_db_listen_subnet }}\s+(ident|md5)'
+        line: 'host all all {{ postgres_db_listen_subnet }} md5'
+  - name: 'Listen on subnet'
+    lineinfile:
+      path: /var/lib/pgsql/data/postgresql.conf
+      regexp: 'listen_addresses = .'
+      line: "listen_addresses = '*'"
+  - name: 'Create databases'
+    postgresql_db:
+      name: "{{ item }}"
+    with_items: "{{ postgres_databases }}"
+
+- name: 'Restart postgresql'
+  become: true
+  systemd:
+    name: postgresql
+    state: restarted
