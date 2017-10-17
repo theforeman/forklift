@@ -161,12 +161,15 @@ EOF
   tPackageInstall walrus-0.71 && tPackageExists walrus-0.71
 }
 
-@test "wait for errata to become available" {
-  sleep 60
-}
-
 @test "check available errata" {
-  hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'
+  local next_wait_time=0
+  until hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'; do
+    if [ $next_wait_time -eq 14 ]; then
+      # make one last try, also makes the error nice
+      hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'
+    fi
+    sleep $(( next_wait_time++ ))
+  done
 }
 
 @test "install katello-agent" {
