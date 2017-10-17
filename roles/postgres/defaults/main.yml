@@ -1,0 +1,8 @@
+---
+postgres_db_user: postgres
+postgres_db_password: changeme
+postgres_db_password_auth: yes
+postgres_db_listen_subnet: '192.168.121.0/24'
+postgres_databases:
+  - candlepin
+  - katello
