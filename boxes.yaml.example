@@ -59,3 +59,10 @@ centos7-dynflow-devel:
     variables:
       dynflow_devel_github_username: '<REPLACE ME>'
       dynflow_devel_github_fork_remote_name: 'origin'
+
+centos7-katello-35:
+  box: centos7
+  ansible:
+    playbook: 'playbooks/katello.yml'
+    variables:
+      katello_repositories_version: 3.5
