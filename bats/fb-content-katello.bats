@@ -121,7 +121,7 @@ EOF
   tPackageExists subscription-manager || tPackageInstall subscription-manager
 }
 
-@test "register subscription manager" {
+@test "register subscription manager with username and password" {
   if [ -e "/etc/rhsm/ca/candlepin-local.pem" ]; then
     rpm -e `rpm -qf /etc/rhsm/ca/candlepin-local.pem`
   fi
@@ -136,6 +136,16 @@ EOF
   echo "rc=${status}"
   echo "${output}"
   run rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm
+  echo "rc=${status}"
+  echo "${output}"
+  run subscription-manager register --force --org="${ORGANIZATION_LABEL}" --username=admin --password=changeme
+}
+
+@test "register subscription manager with activation key" {
+  run subscription-manager unregister
+  echo "rc=${status}"
+  echo "${output}"
+  run subscription-manager clean
   echo "rc=${status}"
   echo "${output}"
   run subscription-manager register --force --org="${ORGANIZATION_LABEL}" --activationkey="${ACTIVATION_KEY}"
