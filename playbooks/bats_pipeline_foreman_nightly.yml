@@ -1,6 +1,8 @@
 - hosts: all
   become: true
   vars:
+    foreman_repositories_version: nightly
+    foreman_repositories_use_koji: true
     bats_tests:
       - "fb-test-foreman.bats"
       - "fb-finish.bats"
