@@ -1,0 +1,59 @@
+---
+- name: Install packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - gcc
+    - git
+    - libffi-devel
+    - openssl-devel
+    - python-devel
+    - python-pip
+    - python-virtualenv
+
+- name: Clone robottelo
+  git:
+    repo: "{{ robottelo_url }}"
+    dest: "{{ robottelo_directory }}"
+    update: yes
+    force: yes
+    version: "{{ robottelo_version }}"
+
+- name: Update setuptools
+  pip:
+    name: setuptools
+    state: latest
+    virtualenv: "{{ robottelo_virtualenv_path }}"
+
+- name: Install requirements
+  pip:
+    requirements: "{{ robottelo_directory }}/requirements.txt"
+    virtualenv: "{{ robottelo_virtualenv_path }}"
+    chdir: "{{ robottelo_directory }}"
+
+- name: robottelo properties file
+  shell: cp robottelo.properties.sample robottelo.properties
+  args:
+    chdir: "{{ robottelo_directory }}"
+
+- name: Set robottelo hostname
+  lineinfile:
+    dest: "{{ robottelo_directory }}/robottelo.properties"
+    regexp: "^hostname="
+    line: "hostname={{ ansible_fqdn }}"
+    state: present
+    backrefs: yes
+
+- name: Set robottelo logging
+  lineinfile:
+    dest: "{{ robottelo_directory }}/logging.conf"
+    regexp: "^level=DEBUG"
+    line: "level=INFO"
+    state: present
+    backrefs: yes
+
+- name: Run tests
+  command: "{{ robottelo_virtualenv_path }}/bin/py.test --junit-xml=results.xml {{ robottelo_test_arguments|join(' ') }}"
+  args:
+    chdir: "{{ robottelo_directory }}"
