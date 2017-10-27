@@ -138,7 +138,7 @@ EOF
   run rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm
   echo "rc=${status}"
   echo "${output}"
-  run subscription-manager register --force --org="${ORGANIZATION_LABEL}" --username=admin --password=changeme
+  subscription-manager register --force --org="${ORGANIZATION_LABEL}" --username=admin --password=changeme --env=Library
 }
 
 @test "register subscription manager with activation key" {
