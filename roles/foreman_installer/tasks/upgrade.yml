@@ -5,6 +5,9 @@
     update_cache: yes
     state: latest
 
+- name: 'Stop katello-services'
+  command: katello-service stop
+
 - name: 'Update packages'
   yum:
     name: '*'
