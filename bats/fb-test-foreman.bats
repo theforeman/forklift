@@ -4,7 +4,7 @@
 set -o pipefail
 
 @test "check web app is up" {
-  curl -sk "https://localhost$URL_PREFIX/users/login" | grep -q login-form
+  curl -sk "https://localhost$URL_PREFIX/users/login" | grep login-form
 }
 
 @test "wake up puppet agent" {
@@ -13,7 +13,7 @@ set -o pipefail
 }
 
 @test "check web app is still up" {
-  curl -sk "https://localhost$URL_PREFIX/users/login" | grep -q login-form
+  curl -sk "https://localhost$URL_PREFIX/users/login" | grep login-form
 }
 
 @test "check smart proxy is registered" {
