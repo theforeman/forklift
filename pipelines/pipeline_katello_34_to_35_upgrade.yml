@@ -1,26 +1,24 @@
 - hosts: localhost
   vars:
-    forklift_name: pipeline-katello-3.5
+    forklift_name: pipeline-katello-3.4-3.5
     forklift_boxes:
-      pipeline-katello-3.5-centos7:
+      pipeline-katello-3.4-3.5-centos7:
         box: centos7
         memory: 6144
-      pipeline-proxy-3.5-centos7:
+      pipeline-proxy-3.4-3.5-centos7:
         box: centos7
         memory: 3072
   roles:
     - forklift
 
 - hosts:
-  - pipeline-katello-3.5-centos7
-  - pipeline-proxy-3.5-centos7
+  - pipeline-katello-3.4-3.5-centos7
+  - pipeline-proxy-3.4-3.5-centos7
   become: yes
   vars:
     puppet_repositories_version: 4
-    katello_repositories_version: 3.5
-    foreman_repositories_version: 1.16
-    foreman_repositories_use_koji: true
-    katello_repositories_use_koji: true
+    katello_repositories_version: 3.4
+    foreman_repositories_version: 1.15
     foreman_installer_skip_installer: true
   roles:
     - selinux
@@ -32,24 +30,23 @@
     - update_os_packages
     - haveged
     - disable_firewall
-    - foreman_installer
 
-- hosts: pipeline-katello-3.5-centos7
+- hosts: pipeline-katello-3.4-3.5-centos7
   become: yes
   vars:
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+      - "--disable-system-checks"
     foreman_installer_additional_packages:
       - katello
   roles:
     - foreman_installer
 
-- hosts: pipeline-proxy-3.5-centos7
+- hosts: pipeline-proxy-3.4-3.5-centos7
   become: yes
   vars:
-    foreman_proxy_content_server: pipeline-katello-3.5-centos7
+    foreman_proxy_content_server: pipeline-katello-3.4-3.5-centos7
     foreman_installer_scenario: foreman-proxy-content
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
@@ -69,14 +66,40 @@
     - foreman_proxy_content
     - foreman_installer
 
-- hosts: pipeline-katello-3.5-centos7
+- hosts: pipeline-katello-3.4-3.5-centos7
   become: true
   vars:
     bats_tests:
       - fb-test-katello.bats
       - fb-content-katello.bats
-      - fb-proxy.bats
+  roles:
+    - bats
+
+- hosts: pipeline-katello-3.4-3.5-centos7
+  become: true
+  vars:
+    katello_repositories_version: 3.5
+    foreman_repositories_version: 1.16
+    foreman_installer_upgrade: True
+    foreman_repositories_use_koji: True
+    katello_repositories_use_koji: True
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+  roles:
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer
+
+- hosts: pipeline-katello-3.4-3.5-centos7
+  become: true
+  vars:
+    bats_tests:
+      - fb-test-katello.bats
       - fb-destroy-organization.bats
+      - fb-content-katello.bats
+      - fb-proxy.bats
       - fb-finish.bats
   roles:
     - bats
