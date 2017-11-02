@@ -132,6 +132,24 @@
 - name: 'get CentOS 7 info'
   set_fact:
     katello_provisioning_centos7: "{{ katello_provisioning_centos7_json.stdout|from_json }}"
+  when: katello_provisioning_centos7_json|succeeded
+
+- block:
+    - name: 'Create CentOS_Linux 7'
+      shell: >
+        {{ katello_provisioning_hammer }} os create
+        --name CentOS_Linux --major 7 --architectures x86_64 --family 'Redhat'
+
+    - name: 'find newly created CentOS_Linux 7'
+      shell: >
+        {{ katello_provisioning_hammer }} --output json os info --name "CentOS_Linux 7" ||
+        {{ katello_provisioning_hammer }} --output json os info --title "CentOS_Linux 7"
+      register: katello_provisioning_centos7_json_new
+
+    - name: 'get new CentOS 7 info'
+      set_fact:
+        katello_provisioning_centos7: "{{ katello_provisioning_centos7_json_new.stdout|from_json }}"
+  when: "'not found' in katello_provisioning_centos7_json.stderr"
 
 - name: 'update partition table for CentOS_Linux 7'
   shell: >
