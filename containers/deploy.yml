@@ -1,5 +1,5 @@
 ---
-- include: generate-certs.yml
+- include_tasks: generate-certs.yml
 
 - hosts: localhost
   gather_facts: no

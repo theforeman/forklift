@@ -1,9 +1,9 @@
 ---
-- include: devel_install.yml
+- include_tasks: devel_install.yml
   when: (foreman_proxy_content_upgrade == False and devel is defined and devel == True)
 
-- include: install.yml
+- include_tasks: install.yml
   when: foreman_proxy_content_upgrade == False
 
-- include: upgrade.yml
+- include_tasks: upgrade.yml
   when: foreman_proxy_content_upgrade == True

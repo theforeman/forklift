@@ -32,9 +32,9 @@
     - tfm-rubygem-foreman_hooks
     - tfm-rubygem-foreman_memcache
 
-- include: hacks.yml
+- include_tasks: hacks.yml
 
-- include: install-puma.yml
+- include_tasks: install-puma.yml
 
 - name: 'Remove bin/spring'
   file:
@@ -51,7 +51,7 @@
     src: "{{ role_path }}/files/katello.yaml"
     dest: "/etc/foreman/plugins/katello.yaml"
 
-- include: apipie-cache-index.yml
+- include_tasks: apipie-cache-index.yml
 
 - name: 'Deploy production database.yml'
   copy:

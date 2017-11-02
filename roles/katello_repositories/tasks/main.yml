@@ -1,9 +1,9 @@
 ---
-- include: release_repos.yml
+- include_tasks: release_repos.yml
   when: katello_repositories_use_release and not katello_repositories_use_koji
 
-- include: koji_repos.yml
+- include_tasks: koji_repos.yml
   when: katello_repositories_use_koji
 
-- include: qpid.yml
+- include_tasks: qpid.yml
   when: ansible_distribution_major_version == "6" and katello_repositories_version == 3.2

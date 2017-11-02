@@ -1,11 +1,11 @@
 ---
-- include: debian_release_repos.yml
+- include_tasks: debian_release_repos.yml
   when: ansible_os_family == 'Debian' and foreman_repositories_use_release
 
-- include: redhat_release_repos.yml
+- include_tasks: redhat_release_repos.yml
   when: ansible_os_family == 'RedHat' and foreman_repositories_use_release and not foreman_repositories_use_koji
 
-- include: koji_repos.yml
+- include_tasks: koji_repos.yml
   when: foreman_repositories_use_koji
 
 - name: 'Install foreman-release-scl'

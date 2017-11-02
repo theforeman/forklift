@@ -1,3 +1,3 @@
 ---
-- include: hammer_install.yml
-- include: hammer_config.yml
+- include_tasks: hammer_install.yml
+- include_tasks: hammer_config.yml
