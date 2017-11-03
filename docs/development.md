@@ -15,14 +15,16 @@ This covers how to setup and configure a development environment using the Forkl
 
 ## Development Environment Deployment
 
-A Katello development environment can be deployed on CentOS 6 or 7. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin. There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
+A Katello development environment can be deployed on CentOS 6 or 7. Ensure that you have followed the steps to [setup Vagrant and the libvirt plugin](vagrant.md). There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
 
+  0. Ensure your workstation is configured to access your GitHub account.
   1. Copy `boxes.yaml.example` to `boxes.yaml`. If you already have a `boxes.yaml`, you can copy the entries in `boxes.yaml.example` to your `boxes.yaml`.
-  2. Now, replace `<my_github_username>` with your github username
+  2. Now, replace `<REPLACE ME>` with your github username.
   3. Fill in any ansible options, examples:
     * `foreman_devel_github_push_ssh`: Force git to push over SSH when HTTPS remote is configured
     * `ssh_forward_agent`: Forward local SSH keys to the box via ssh-agent
     * `katello_devel_github_username`: Your GitHub username to set up repository forks
+    * `forwarded_port_host_ip`: control what IP port forwards bind to. '0.0.0.0' will bind to all. Defaults to '127.0.0.1'
   4. Fill in any foreman-installer options, examples:
     * `--katello-devel-use-ssh-fork`: will add your fork by SSH instead of HTTPS
     * `--katello-devel-fork-remote-name`: will change the naming convention for your fork's remote
@@ -52,13 +54,65 @@ Lastly, spin up the box:
 vagrant up centos7-devel
 ```
 
-The box can now be accessed via ssh and the Rails server started directly (this assumes you are connecting as the default `vagrant` user):
+If you get an error about the host CPU not providing the 'svm' feature but you most assuredly do have an Intel CPU and virtualization is most definitely turned on, add this to your Vagrantfile.
 
-    vagrant ssh <deployment>
-    cd /home/vagrant/foreman
-    sudo service iptables stop
-    bin/rails s -b 0.0.0.0
+```
+Vagrant.configure("2") do |config|
+  config.vm.provider :libvirt do |domain|
+    domain.cpu_mode = "host-passthrough"
+  end
+end
+```
 
+Try to bring it up again with `vagrant up centos7-devel` after making that change.
+
+If you get an error related to your user not having privileges to execute libvirt commands, create a polkit rule similar to the following:
+
+```
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.libvirt.unix.manage" &&
+        subject.isInGroup("wheel")) {
+            return polkit.Result.YES;
+    }
+});
+```
+
+This rule will allow any user in the `wheel` group to perform libvirt commands. The file needs to reside in `/etc/polkit-1/rules.d`, named something like `49-org.libvirt.unix.manage.rules`. Now try to bring it up again with `vagrant up centos7-devel`.
+
+You may experience some failures during the provisioning process. You may also find that rerunning `vagrant provision centos7-devel` will eventually result in a successful installation. If not, check error messages and logs for hints and/or seek help from the mailing list or IRC.
+
+Once successfulling installed, access the box via ssh: `vagrant ssh centos7-devel`.
+
+Before we can run the app, we need to install a couple things by hand to make webpack work.
+
+Install `nodejs`, `npm` and `http-parser-devel`:
+
+```
+yum install nodejs npm http-parser-devel
+```
+
+Execute `npm install`:
+
+```
+cd /home/vagrant/foreman
+npm install
+```
+
+If you are planning to make changes to the Webpack code, follow the [advanced webpack instructions](#webpack).
+
+Now compile webpack:
+
+```
+bundle exec rake webpack:compile
+```
+
+And finally the Rails server can be started directly (this assumes you are connecting as the default `vagrant` user):
+
+```
+bin/rails s -b 0.0.0.0
+```
+
+The web application is forwarded to the host on port 3330 (HTTP) and 4430 (HTTPS).
 
 ## Koji Scratch Builds
 
@@ -231,16 +285,18 @@ to the main katello server you want the client attached to
 
 ## Webpack
 
-Forklift creates a reverse proxy between localhost:3000 (Rails development default server) and https://forkliftfqdn (e.g: https://centos7-devel.example.com). This will cause mixed-content errors if you try to enable the webpack server without any options, as it needs to use the right certificates for HTTPS and Foreman needs to allow it. If you do not need to hack on Webpack code, ensure `:webpack_dev_server` is set to false in `~/foreman/config/settings.yaml` and run `bundle exec rake webpack:compile` from `~/foreman`.That will create the necessary assets to be served by Foreman. If you want to work on Webpack code, follow these instructions:
+Forklift creates a reverse proxy between localhost:3000 (Rails development default server) and https://forkliftfqdn (e.g: https://centos7-devel.example.com). This will cause mixed-content errors if you try to enable the webpack server without any options, as it needs to use the right certificates for HTTPS and Foreman needs to allow it. Thus, to use the reverse proxy you need to follow these additional steps (while connected to the guest's shell):
 
-To work with webpack-dev-server, ensure the following lines are in your `~/foreman/config/settings.yaml`:
+Add/change the following variables in  `~/foreman/config/settings.yaml`:
 
 ```yaml
 :webpack_dev_server: true
 :webpack_dev_server_https: true
 ```
 
-This will instruct Foreman to use Webpack from an https source. Now we need to make sure Webpack is using the right certificates to serve the development content through HTTPS. We're going to save these configuration values on `~/foreman/.env`:
+This will instruct Foreman to use Webpack from an https source.
+
+Now we need to make sure Webpack is using the right certificates to serve the development content through HTTPS. We're going to save these configuration values on `~/foreman/.env`:
 
 ```
 WEBPACK_OPTS='--https --key /etc/pki/katello/private/katello-default-ca.key --cert /etc/pki/katello/certs/katello-default-ca.crt --cacert /etc/pki/katello/certs/katello-default-ca.crt'
