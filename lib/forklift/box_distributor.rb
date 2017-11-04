@@ -222,6 +222,7 @@ module Forklift
           override.vm.network :public_network, bridge: bridged
         elsif box.fetch('name').to_s.include?('devel')
           override.vm.network :forwarded_port, guest: 3000, host: 3330
+          override.vm.network :forwarded_port, guest: 3808, host: 3808
           override.vm.network :forwarded_port, guest: 443, host: 4430
         else
           override.vm.network :forwarded_port, guest: 80, host: 8080

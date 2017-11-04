@@ -47,17 +47,6 @@ centos7-devel:
         "
 ```
 
-Next, you may want to edit the Vagrantfile to forward some ports from the guest to the host:
-
-```
-Vagrant.configure("2") do |config|
-  config.vm.network :forwarded_port, guest: 443, host: 8443, host_ip: "0.0.0.0"
-  config.vm.network :forwarded_port, guest: 3808, host: 3808, host_ip: "0.0.0.0"
-end
-```
-
-The above assumes you want to access the web interface via the nginx reverse proxy rather than directly via TCP port 3000.
-
 Lastly, spin up the box:
 
 ```
@@ -119,7 +108,7 @@ Set `:webpack_dev_server` to false in `~/foreman/config/settings.yaml` (it defau
 :webpack_dev_server: false
 ```
 
-If you are planning to make changes to the Webpack code or you want to access the app via HTTPS, follow the [advanced webpack instructions](#webpack).
+If you are planning to make changes to the Webpack code or you want to access the app via HTTPS (forwarded to the host on port 4430), follow the [advanced webpack instructions](#webpack).
 
 Now compile webpack:
 
@@ -132,6 +121,8 @@ And finally the Rails server can be started directly (this assumes you are conne
 ```
 bin/rails s -b 0.0.0.0
 ```
+
+The web application is forwarded to the host on port 3330 (HTTP) and 4430 (HTTPS).
 
 ## Koji Scratch Builds
 
