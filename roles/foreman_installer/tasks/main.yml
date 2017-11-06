@@ -1,14 +1,14 @@
 ---
-- include: packages.yml
+- include_tasks: packages.yml
 
-- include: locales.yml
+- include_tasks: locales.yml
   when: ansible_os_family == 'Debian'
 
-- include: module_pr.yml
+- include_tasks: module_pr.yml
   when: foreman_installer_module_prs != ""
 
-- include: install.yml
+- include_tasks: install.yml
   when: foreman_installer_upgrade == False
 
-- include: upgrade.yml
+- include_tasks: upgrade.yml
   when: foreman_installer_upgrade == True

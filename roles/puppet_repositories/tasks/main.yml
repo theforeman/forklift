@@ -1,3 +1,3 @@
 ---
 - name: 'Include puppet {{ puppet_repositories_version }} for {{ ansible_os_family }}'
-  include: 'puppetlabs-{{ puppet_repositories_version }}-{{ ansible_os_family|lower }}.yml'
+  include_tasks: 'puppetlabs-{{ puppet_repositories_version }}-{{ ansible_os_family|lower }}.yml'

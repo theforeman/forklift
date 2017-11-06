@@ -1,2 +1,2 @@
 ---
-- include: dynflow_install.yml
+- include_tasks: dynflow_install.yml
