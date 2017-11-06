@@ -249,13 +249,14 @@ module Forklift
     end
 
     def configure_forwarded_ports(box, override, bridged)
+      host_ip = box.fetch('forwarded_port_host_ip', '127.0.0.01')
       if !bridged && box.fetch('name').to_s.include?('devel')
-        override.vm.network :forwarded_port, guest: 3000, host: 3330
-        override.vm.network :forwarded_port, guest: 3808, host: 3808
-        override.vm.network :forwarded_port, guest: 443, host: 4430
+        override.vm.network :forwarded_port, guest: 3000, host: 3330, host_ip: host_ip
+        override.vm.network :forwarded_port, guest: 3808, host: 3808, host_ip: host_ip
+        override.vm.network :forwarded_port, guest: 443, host: 4430, host_ip: host_ip
       elsif !bridged
-        override.vm.network :forwarded_port, guest: 80, host: 8080
-        override.vm.network :forwarded_port, guest: 443, host: 4433
+        override.vm.network :forwarded_port, guest: 80, host: 8080, host_ip: host_ip
+        override.vm.network :forwarded_port, guest: 443, host: 4433, host_ip: host_ip
       end
     end
 

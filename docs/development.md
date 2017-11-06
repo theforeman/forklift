@@ -24,6 +24,7 @@ A Katello development environment can be deployed on CentOS 6 or 7. Ensure that 
     * `foreman_devel_github_push_ssh`: Force git to push over SSH when HTTPS remote is configured
     * `ssh_forward_agent`: Forward local SSH keys to the box via ssh-agent
     * `katello_devel_github_username`: Your GitHub username to set up repository forks
+    * `forwarded_port_host_ip`: control what IP port forwards bind to. '0.0.0.0' will bind to all. Defaults to '127.0.0.1'
   4. Fill in any foreman-installer options, examples:
     * `--katello-devel-use-ssh-fork`: will add your fork by SSH instead of HTTPS
     * `--katello-devel-fork-remote-name`: will change the naming convention for your fork's remote
