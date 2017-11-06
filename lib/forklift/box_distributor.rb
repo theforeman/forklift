@@ -194,9 +194,11 @@ module Forklift
         override.vm.box_url = box.fetch('libvirt') if box.fetch('libvirt', false)
         override.vm.synced_folder '.', '/vagrant', type: @settings['sync_type'], rsync__args: ['--max-size=100m']
 
-        if box.fetch('bridged', false)
-          override.vm.network :public_network, :dev => box.fetch('bridged'), :mode => 'bridge'
+        bridged = box.fetch('bridged', false)
+        if bridged
+          override.vm.network :public_network, :dev => bridged, :mode => 'bridge'
         end
+        configure_forwarded_ports(box, override, bridged)
         networks.each do |network|
           override.vm.network network['type'], network['options']
         end
@@ -217,17 +219,7 @@ module Forklift
         p.memory = box.fetch('memory').to_i * @settings['scale_memory'].to_i if box.fetch('memory', false)
 
         bridged = box.fetch('bridged', false)
-
-        if bridged
-          override.vm.network :public_network, bridge: bridged
-        elsif box.fetch('name').to_s.include?('devel')
-          override.vm.network :forwarded_port, guest: 3000, host: 3330
-          override.vm.network :forwarded_port, guest: 3808, host: 3808
-          override.vm.network :forwarded_port, guest: 443, host: 4430
-        else
-          override.vm.network :forwarded_port, guest: 80, host: 8080
-          override.vm.network :forwarded_port, guest: 443, host: 4433
-        end
+        configure_forwarded_ports(box, override, bridged)
 
         box.fetch('virtualbox_options', []).each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
@@ -254,6 +246,17 @@ module Forklift
 
     def symbolized_options(hash)
       hash.inject({}) { |memo, (k, v)| memo.update(k.to_sym => v) }
+    end
+
+    def configure_forwarded_ports(box, override, bridged)
+      if !bridged && box.fetch('name').to_s.include?('devel')
+        override.vm.network :forwarded_port, guest: 3000, host: 3330
+        override.vm.network :forwarded_port, guest: 3808, host: 3808
+        override.vm.network :forwarded_port, guest: 443, host: 4430
+      elsif !bridged
+        override.vm.network :forwarded_port, guest: 80, host: 8080
+        override.vm.network :forwarded_port, guest: 443, host: 4433
+      end
     end
 
   end
