@@ -84,7 +84,7 @@ module Forklift
         configure_shell(machine, box)
         configure_ansible(machine, box['ansible'], box['name'])
         configure_libvirt(machine, box, networks)
-        configure_virtualbox(machine, box)
+        configure_virtualbox(machine, box, networks)
         configure_rackspace(machine, box)
         configure_synced_folders(machine, box)
         configure_sshfs(config, box)
@@ -210,7 +210,7 @@ module Forklift
       end
     end
 
-    def configure_virtualbox(machine, box)
+    def configure_virtualbox(machine, box, networks = [])
       machine.vm.provider :virtualbox do |p, override|
         override.vm.box_url = box.fetch('virtualbox') if box.fetch('virtualbox', false)
         p.cpus = box.fetch('cpus').to_i * @settings['scale_cpus'].to_i if box.fetch('cpus', false)
@@ -226,6 +226,10 @@ module Forklift
         else
           override.vm.network :forwarded_port, guest: 80, host: 8080
           override.vm.network :forwarded_port, guest: 443, host: 4433
+        end
+
+        networks.each do |network|
+          override.vm.network network['type'], network['options']
         end
 
         box.fetch('virtualbox_options', []).each do |opt, val|
