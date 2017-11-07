@@ -7,7 +7,7 @@
   register: swapfile_check
 
 - name: create swap file {{ swapfile_path }}
-  command: fallocate -l {{ swapfile_size }} {{ swapfile_path }}
+  command: dd if=/dev/zero of={{ swapfile_path }} count={{ swapfile_size }} bs=1MiB
   when: not swapfile_check.stat.exists
 
 - name: set permissions on swap file
