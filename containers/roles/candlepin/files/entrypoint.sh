@@ -6,15 +6,13 @@ set -x
 
 /usr/bin/gen-certs
 
-liquibase \
-    --driver=org.postgresql.Driver \
-    --classpath=/usr/share/java/postgresql-jdbc.jar:/var/lib/tomcat/webapps/candlepin/WEB-INF/classes/ \
-    --changeLogFile=db/changelog/changelog-create.xml \
-    --url=jdbc:postgresql://$POSTGRES_SERVICE:$POSTGRES_PORT/$POSTGRES_DB \
-    --username=$POSTGRES_USER \
-    --password=$POSTGRES_PASSWORD \
-    migrate \
-    -Dcommunity=False
+cpdb --create \
+     --schema-only \
+     --dbhost=$POSTGRES_SERVICE \
+     --dbport=$POSTGRES_PORT \
+     --database=$POSTGRES_DB \
+     --user=$POSTGRES_USER  \
+     --password=$POSTGRES_PASSWORD
 
 qpid-config -b tcp://${QPID_SERVICE}:${QPID_PORT} exchanges event
 
