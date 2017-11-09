@@ -39,22 +39,18 @@ vagrant status
 This will show a list of boxes by type and OS. For example, at the time of this documentation both Foreman 1.12 and Katello 3.1 had been released. Thus, when doing a status I see, for example:
 
 ```
-centos6-foreman-nightly   not created (libvirt)
-centos7-foreman-nightly   not created (libvirt)
-centos6-katello-nightly   not created (libvirt)
-centos6-capsule-nightly   not created (libvirt)
-centos7-katello-nightly   not created (libvirt)
-centos7-capsule-nightly   not created (libvirt)
-centos7-foreman-1.12      not created (libvirt)
-centos7-katello-3.1       not created (libvirt)
-centos7-capsule-3.1       not created (libvirt)
+centos7-foreman-nightly                 not created (libvirt)
+centos7-katello-nightly                 not created (libvirt)
+centos7-foreman-proxy-nightly           not created (libvirt)
+centos7-foreman-1.16                    not created (libvirt)
+centos7-katello-3.4                     not created (libvirt)
 ```
 
-This indicates that both Foreman and Katello nightly (our unstable releases) are available as well as production installations on Centos 7 boxes of Foreman 1.12, Katello 3.1 and a Katello Capsule 3.1. To fire up a Katello 3.1:
+This indicates that both Foreman and Katello nightly (our unstable releases) are available as well as production installations on Centos 7 boxes of Foreman, Katello and a Foreman Proxy. To fire up a Katello 3.4:
 
 Start the installation for CentOS 7:
 
-    vagrant up centos7-katello-3.1
+    vagrant up centos7-katello-3.4
 
 This will create a libvirt based virtual machine running the Katello server on CentOS.
 
