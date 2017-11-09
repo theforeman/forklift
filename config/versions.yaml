@@ -1,31 +1,4 @@
 installers:
-  - foreman: '1.11'
-    katello: '3.0'
-    puppet: 3
-    boxes:
-      - 'centos6'
-      - 'centos7'
-
-  - foreman: '1.12'
-    katello: '3.1'
-    puppet: 3
-    boxes:
-      - 'centos6'
-      - 'centos7'
-
-  - foreman: '1.13'
-    katello: '3.2'
-    puppet: 4
-    boxes:
-      - 'centos7'
-
-  - foreman: '1.14'
-    katello: '3.3'
-    puppet: 4
-    boxes:
-      - 'centos7'
-      - 'debian8'
-
   - foreman: '1.15'
     katello: '3.4'
     puppet: 4

@@ -1,8 +1,0 @@
-- hosts: all
-  vars:
-    katello_upgrade: True
-    katello_version: 3.1
-    katello_foreman_version: 1.12
-  roles:
-    - etc_hosts
-    - katello

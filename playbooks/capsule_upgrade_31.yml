@@ -1,8 +1,0 @@
-- hosts: all
-  vars:
-    capsule_upgrade: True
-    capsule_version: 3.1
-    capsule_foreman_version: 1.12
-  roles:
-    - etc_hosts
-    - capsule

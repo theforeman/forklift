@@ -144,13 +144,8 @@ setup() {
 }
 
 @test "verify record type CNAME" {
-  if [[ $NAMESERVER == "bind" ]] ; then
-    (
-      [[ $FOREMAN_VERSION == "1.11" ]] ||
-      [[ $FOREMAN_VERSION == "1.12" ]] ||
-      [[ $FOREMAN_VERSION == "1.13" ]] ||
-      [[ $FOREMAN_VERSION == "1.14" ]]
-    ) && skip "CNAME records are only supported on 1.15+"
+  if [[ $NAMESERVER == "bind" ]] && [[ $(echo "$FOREMAN_VERSION < 1.15" | bc) == 1 ]] ; then
+    skip "CNAME records are only supported on 1.15+"
   fi
 
   local target=bats-test.example.com
