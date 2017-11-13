@@ -1,6 +1,9 @@
 - hosts: all
   become: true
   vars:
+    foreman_installer_options_internal_use_only:
+      # Because we don't have a correct reverse DNS in our CI
+      - "--skip-checks-i-know-better"
     foreman_repositories_version: nightly
     foreman_repositories_use_koji: true
     bats_tests:
