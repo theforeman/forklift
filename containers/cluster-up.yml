@@ -13,13 +13,15 @@
       when: cluster_status.rc != 0
       register: cluster_up
 
-    - name: 'Wait for volumes to be created'
-      wait_for:
-        path: "{{ openshift_data_dir }}/local.openshift.volumes/pv0100"
-
-    - name: 'Wait for volumes to be created'
-      wait_for:
-        path: "{{ openshift_data_dir }}/local.openshift.volumes/pv0067"
+      #    - name: 'Wait for volumes to be created'
+      #      wait_for:
+      #        path: "{{ openshift_data_dir }}/local.openshift.volumes/pv0100"
+      #        timeout: 800
+      #
+      #    - name: 'Wait for volumes to be created'
+      #      wait_for:
+      #        path: "{{ openshift_data_dir }}/local.openshift.volumes/pv0067"
+      #        timeout: 800
 
     - name: "Login as system admin to OpenShift"
       command: oc login -u system:admin
@@ -42,4 +44,4 @@
         state: directory
 
     - debug:
-        msg: "{{ cluster_up.stdout.split('\n') }}"
+        msg: "{{ cluster_up.stdout_lines | join('\n') }}"

@@ -1,0 +1,6 @@
+---
+- name: 'Add foreman-tasks dynflow startup error patch'
+  replace:
+    regexp: "if options\\[\\:memory_limit\\] > 0"
+    replace: "if options.key?(:memory_limit) && options[:memory_limit] > 0"
+    path: /opt/theforeman/tfm/root/usr/share/gems/gems/foreman-tasks-0.10.0/lib/foreman_tasks/dynflow/daemon.rb
