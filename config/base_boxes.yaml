@@ -1,7 +1,3 @@
-shells:
-  runcible_shell: &runcible_shell
-    shell: '/vagrant/shells/runcible.sh'
-
 boxes:
   debian8:
     box_name:   'debian/jessie64'
@@ -58,5 +54,5 @@ boxes:
 
   runcible:
     box: centos7
-    <<: *runcible_shell
+    shell: '/vagrant/shells/runcible.sh'
     privileged: false

@@ -5,11 +5,10 @@ require 'yaml'
 module Forklift
   class BoxFactory
 
-    attr_accessor :boxes, :shells
+    attr_accessor :boxes
 
     def initialize
       @boxes = {}
-      @shells = {}
     end
 
     def add_boxes(box_file, version_file)
@@ -17,8 +16,6 @@ module Forklift
       return @boxes unless config
 
       versions = YAML.load_file(version_file)
-
-      process_shells(config['shells']) if config.key?('shells')
 
       if config.key?('boxes')
         process_versions(config, versions)
@@ -37,16 +34,10 @@ module Forklift
       YAML.load(ERB.new(file).result)
     end
 
-    def process_shells(shells)
-      @shells.merge!(shells)
-    end
-
     def process_boxes(boxes)
       boxes.each do |name, box|
         box['name'] = name
         box = layer_base_box(box)
-        box['shell'] += " #{box['options']} " if box['shell'] && box['options']
-        box['shell'] += " --installer-options='#{box['installer']}' " if box['shell'] && box['installer']
 
         if @boxes[name]
           @boxes[name].merge!(box)
