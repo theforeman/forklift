@@ -26,8 +26,13 @@
     fstype: swap
     state: present
 
-- name: swapon {{ swapfile_path }}
-  command: swapon {{ swapfile_path }}
+- name: get active swap
+  shell: "swapon --summary | grep '^{{ swapfile_path }}'"
+  register: swapfile_active
+
+- name: "activate {{ swapfile_path }}"
+  command: "swapon {{ swapfile_path }}"
+  when: swapfile_active | failed
 
 - name: set vm.swappiness to 60
   sysctl:
