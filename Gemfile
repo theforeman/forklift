@@ -8,5 +8,6 @@ group :test do
   gem 'rubocop'
 end
 
+gem 'deep_merge'
 gem 'librarian-puppet'
 gem 'puppet', '< 4.0.0'
