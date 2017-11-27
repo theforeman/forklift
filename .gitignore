@@ -19,3 +19,5 @@ playbooks/galaxy_roles
 requirements.yml
 .tmp_boxes
 settings.yaml
+boxes.d/*-local.yaml
+boxes.d/80-tmp-*.yaml

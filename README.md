@@ -42,8 +42,8 @@ The same can be quickly done for a development environment where GITHUB_NICK is 
 ```
 git clone https://github.com/theforeman/forklift.git
 cd forklift
-cp boxes.yaml.example boxes.yaml
-sed -i "s/<REPLACE ME>/GITHUB_NICK/g" boxes.yaml
+cp boxes.d/99-local.yaml.example boxes.d/99-local.yaml
+sed -i "s/<REPLACE ME>/GITHUB_NICK/g" boxes.d/99-local.yaml
 vagrant up centos7-devel
 ```
 
@@ -62,7 +62,7 @@ By default, the boxes are set with `example.com` domain.
 
 ### Adding Custom Boxes
 
-Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `boxes.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
+Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
 
 ```
 my-nightly-koji:

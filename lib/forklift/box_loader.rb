@@ -1,45 +1,36 @@
 module Forklift
   class BoxLoader
 
-    def initialize
-      @box_factory = BoxFactory.new
-      @root_dir = "#{File.dirname(__FILE__)}/../../"
-      @boxes = {}
+    attr_accessor :locations
+
+    def initialize(root_dir = nil, locations = nil)
+      @root_dir = root_dir || default_root_dir
+      @locations = locations || default_locations
+      @box_factory = BoxFactory.new(versions)
     end
 
-    def load
-      add_base_boxes
-      plugin_vagrantfiles
-      add_plugin_base_boxes
-      add_user_boxes
-    end
-
-    def add_base_boxes
-      @boxes = @box_factory.add_boxes("#{@root_dir}/config/base_boxes.yaml", "#{@root_dir}/config/versions.yaml")
-    end
-
-    def add_user_boxes
-      return unless File.exist?("#{@root_dir}/boxes.yaml")
-      @boxes = @box_factory.add_boxes("#{@root_dir}/boxes.yaml", "#{@root_dir}/config/versions.yaml")
-    end
-
-    def add_boxes(boxes)
-      @boxes = @box_factory.add_boxes(boxes, "#{@root_dir}/config/versions.yaml")
+    def load!
+      @locations.sort_by { |f| File.basename(f) }.each do |box_file|
+        @box_factory.add_boxes!(box_file)
+      end
     end
 
     def boxes
-      box_files = Dir.glob "#{Dir.pwd}/.tmp_boxes/*.yaml"
-      box_files.each { |tmp_boxes| add_boxes(tmp_boxes) }
-      @boxes
+      @box_factory.boxes
     end
 
-    def add_plugin_base_boxes
-      base_boxes = Dir.glob "#{@root_dir}/plugins/*/base_boxes.yaml"
-      base_boxes.each { |boxes| add_boxes(boxes) }
+    private
+
+    def default_root_dir
+      "#{File.dirname(__FILE__)}/../../"
     end
 
-    def plugin_vagrantfiles
-      Dir.glob "#{@root_dir}/plugins/*/Vagrantfile"
+    def default_locations
+      Dir.glob(["#{@root_dir}/boxes.d/*.yaml", "#{@root_dir}/plugins/*/base_boxes.yaml"])
+    end
+
+    def versions
+      YAML.load_file("#{@root_dir}/config/versions.yaml")
     end
 
   end

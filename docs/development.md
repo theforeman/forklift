@@ -17,7 +17,7 @@ This covers how to setup and configure a development environment using the Forkl
 
 A Katello development environment can be deployed on CentOS 6 or 7. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin. There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
 
-  1. Copy `boxes.yaml.example` to `boxes.yaml`. If you already have a `boxes.yaml`, you can copy the entries in `boxes.yaml.example` to your `boxes.yaml`.
+  1. Copy `boxes.d/99-local.yaml.example` to `boxes.d/99-local.yaml`. If you already have a `99-local.yaml`, you can copy the entries in `99-local.yaml.example` to your `99-local.yaml`.
   2. Now, replace `<my_github_username>` with your github username
   3. Fill in any ansible options, examples:
     * `foreman_devel_github_push_ssh`: Force git to push over SSH when HTTPS remote is configured
@@ -62,7 +62,7 @@ The box can now be accessed via ssh and the Rails server started directly (this 
 
 ## Koji Scratch Builds
 
-Forklift supports using Koji scratch builds to make RPMs available for testing purposes. For example, if you want to test a change to nightly, with a scratch build of rubygem-katello. This is done by fetching the scratch builds, and deploying a local yum repo to the box you are deploying on. Multiple scratch builds are also supported for testing changes to multiple components at once (e.g. the installer and the rubygem), see examples below. Also, this option may be specified from within boxes.yaml via the `options:` option.
+Forklift supports using Koji scratch builds to make RPMs available for testing purposes. For example, if you want to test a change to nightly, with a scratch build of rubygem-katello. This is done by fetching the scratch builds, and deploying a local yum repo to the box you are deploying on. Multiple scratch builds are also supported for testing changes to multiple components at once (e.g. the installer and the rubygem), see examples below. Also, this option may be specified from within `99-local.yaml` via the `options:` option.
 
 
 An Ansible role is provided that can setup and configure a Koji scratch build for testing. If you had an existing playbook such as:
@@ -94,7 +94,7 @@ The Koji role and task ID variable can be added to download and configure a repo
 
 Testing installer puppet module pull requests is possible through an Ansible variable. Any number of modules and associated pull requests may be specified. For example, if a module under goes a refactoring, and you want to test that it continues to work with the installer. The pull requests are indicated by the github project, repository, and pull request number (eg. katello/qpid/23). Note that the name in this situation is the name as laid down in the module directory as opposed to the github repository name. In other words, use 'qpid' not 'puppet-qpid'. The pull requests are specified through the 'foreman_installer_module_prs' variable in the 'ansible' 'variables' section of your box definition. See examples below.
 
-Single module PR in boxes.yaml:
+Single module PR in `99-local.yaml`:
 ```yaml
 ansible:
   variables:
@@ -160,12 +160,12 @@ configuration at `/home/vagrant/.hammer`.
 
 ## Capsule Development
 
-To use this functionality, add the following configuration to your boxes.yaml,
+To use this functionality, add the following configuration to your `99-local.yaml`,
 changing the hostnames as needed
 
 ### To setup a smart proxy (capsule) and a new development environment
 
-* setup boxes.yaml
+* setup 99-local.yaml
 
 ```yaml
 capsule-dev:
@@ -182,7 +182,7 @@ capsule-dev:
 
 ### To setup a capsule with an existing development environment
 
-* Add the following to the existing Katello development server's configuration in boxes.yaml
+* Add the following to the existing Katello development server's configuration in `99-local.yaml`
 ```yaml
   ansible:
     group: 'server'
@@ -202,7 +202,7 @@ capsule-dev:
 
 ## Client Development
 
-In boxes.yaml:
+In `99-local.yaml`:
 
 Add your client, replacing 'your-katello-server-name' with your main katello development server name
 

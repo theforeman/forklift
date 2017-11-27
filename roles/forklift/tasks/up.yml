@@ -6,7 +6,7 @@
 
 - name: 'Write box file'
   copy:
-    dest: "{{ current_directory }}/.tmp_boxes/{{ forklift_name }}.yaml"
+    dest: "{{ current_directory }}/boxes.d/80-tmp-{{ forklift_name }}.yaml"
     content: "{{ forklift_boxes | to_yaml }}"
 
 - name: 'Bring up boxes'

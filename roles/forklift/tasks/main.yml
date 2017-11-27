@@ -9,8 +9,8 @@
 
 - name: 'Check Forklift state'
   fail:
-    msg: 'The forklift_state variable is undefined. Please use pass "-e "forklift_state=up"" to spin up the boxes or "-e "forklift_state=destroy"" to destroy the boxes'
-  when: forklift_state is undefined
+    msg: 'Invalid value for the forklift_state variable. Please use pass "-e "forklift_state=up"" to spin up the boxes or "-e "forklift_state=destroy"" to destroy the boxes'
+  when: forklift_state not in ('up', 'destroy')
 
 - name: 'Bring boxes up'
   include_tasks: 'up.yml'

@@ -7,24 +7,21 @@ module Forklift
 
     attr_accessor :boxes
 
-    def initialize
+    def initialize(versions)
+      @versions = versions
       @boxes = {}
     end
 
-    def add_boxes(box_file, version_file)
+    def add_boxes!(box_file)
       config = load_box_file(box_file)
-      return @boxes unless config
-
-      versions = YAML.load_file(version_file)
+      return unless config
 
       if config.key?('boxes')
-        process_versions(config, versions)
-        process_boxes(config['boxes'])
+        process_versions(config)
+        process_boxes!(config['boxes'])
       else
-        process_boxes(config)
+        process_boxes!(config)
       end
-
-      @boxes
     end
 
     private
@@ -34,7 +31,7 @@ module Forklift
       YAML.load(ERB.new(file).result)
     end
 
-    def process_boxes(boxes)
+    def process_boxes!(boxes)
       boxes.each do |name, box|
         box['name'] = name
         box = layer_base_box(box)
@@ -45,12 +42,10 @@ module Forklift
           @boxes[name] = box
         end
       end
-
-      @boxes
     end
 
-    def process_versions(config, versions)
-      versions['installers'].each do |version|
+    def process_versions(config)
+      @versions['installers'].each do |version|
         version['boxes'].each do |base_box|
           scenarios = config['boxes'][base_box]['scenarios'] || []
           scenarios.each do |scenario|
