@@ -1,0 +1,3 @@
+---
+debian_backports_uri: http://http.debian.net/debian
+debian_backports_components: "{{ debian_backports_distribution }}-backports main contrib non-free"
