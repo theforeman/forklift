@@ -82,7 +82,7 @@
     katello_repositories_version: 3.5
     foreman_repositories_version: 1.16
     foreman_installer_upgrade: True
-    foreman_repositories_use_koji: True
+    foreman_repositories_environment: staging
     katello_repositories_use_koji: True
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:

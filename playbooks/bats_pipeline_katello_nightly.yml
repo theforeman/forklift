@@ -3,6 +3,8 @@
   vars:
     katello_repositories_version: nightly
     katello_repositories_use_koji: true
+    foreman_repositories_version: nightly
+    foreman_repositories_environment: staging
     puppet_repositories_version: 4
     foreman_installer_scenario: katello
     foreman_installer_additional_packages:
