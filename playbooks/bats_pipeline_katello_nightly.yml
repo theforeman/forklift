@@ -9,9 +9,13 @@
       - katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
+      # Because we don't have a correct reverse DNS in our CI
       - "--skip-checks-i-know-better"
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
       - "--katello-enable-ostree=true"
+      - "--puppet-server-max-active-instances 1"
+      - "--puppet-server-jvm-min-heap-size 1G"
+      - "--puppet-server-jvm-max-heap-size 1G"
     bats_tests:
       - "fb-test-foreman.bats"
       - "fb-test-katello.bats"
