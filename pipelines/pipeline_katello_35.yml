@@ -19,7 +19,7 @@
     puppet_repositories_version: 4
     katello_repositories_version: 3.5
     foreman_repositories_version: 1.16
-    foreman_repositories_use_koji: true
+    foreman_repositories_environment: staging
     katello_repositories_use_koji: true
     foreman_installer_skip_installer: true
   roles:

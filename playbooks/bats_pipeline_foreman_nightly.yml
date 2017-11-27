@@ -9,7 +9,7 @@
       - "--puppet-server-jvm-min-heap-size 1G"
       - "--puppet-server-jvm-max-heap-size 1G"
     foreman_repositories_version: nightly
-    foreman_repositories_use_koji: true
+    foreman_repositories_environment: staging
     bats_tests:
       - "fb-test-foreman.bats"
       - "fb-finish.bats"
