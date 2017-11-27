@@ -7,6 +7,3 @@ group :test do
   gem 'rake'
   gem 'rubocop'
 end
-
-gem 'librarian-puppet'
-gem 'puppet', '< 4.0.0'
