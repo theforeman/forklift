@@ -38,7 +38,7 @@ module Forklift
       @settings ||= default_settings.merge(overrides)
     end
 
-    def distribute
+    def distribute!
       Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         configure_vagrant_hostmanager(config)
         configure_vagrant_cachier(config)
@@ -132,15 +132,12 @@ module Forklift
     def configure_ansible(machine, ansible, box_name)
       return unless ansible
 
-      if ansible.key?('group') || !ansible['group'].nil?
-        unless @ansible_groups[ansible['group'].to_s]
-          @ansible_groups[ansible['group'].to_s] = []
-        end
-
+      if ansible.key?('group') && !ansible['group'].nil?
+        @ansible_groups[ansible['group'].to_s] ||= []
         @ansible_groups[ansible['group'].to_s] << box_name
       end
 
-      if ansible.key?('server') || !ansible['server'].nil?
+      if ansible.key?('server') && !ansible['server'].nil?
         @ansible_groups["server-#{box_name}"] = ansible['server']
       end
 
