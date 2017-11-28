@@ -18,7 +18,7 @@ installers:
 
   - foreman: 'nightly'
     katello: 'nightly'
-    puppet: 4
+    puppet: 5
     boxes:
       - 'centos7'
       - 'debian8'
