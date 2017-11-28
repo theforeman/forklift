@@ -5,6 +5,7 @@ installers:
     boxes:
       - 'centos7'
       - 'debian8'
+      - 'ubuntu1604'
 
   - foreman: '1.16'
     katello: '3.5'
@@ -13,6 +14,7 @@ installers:
       - 'centos7'
       - 'debian8'
       - 'debian9'
+      - 'ubuntu1604'
 
   - foreman: 'nightly'
     katello: 'nightly'
@@ -21,3 +23,4 @@ installers:
       - 'centos7'
       - 'debian8'
       - 'debian9'
+      - 'ubuntu1604'
