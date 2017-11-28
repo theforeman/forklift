@@ -24,6 +24,14 @@ boxes:
     image_name: !ruby/regexp '/Fedora 26.*/'
     pty: true
 
+  ubuntu1604:
+    box_name: 'generic/ubuntu1604'
+    image_name: !ruby/regexp '/Ubuntu.*16\.04/'
+    pty: true
+    ansible:
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+
   centos7-atomic:
     box_name: centos7-atomic
     pty: true

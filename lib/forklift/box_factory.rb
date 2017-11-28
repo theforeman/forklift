@@ -78,14 +78,18 @@ module Forklift
     def build_box(base_box, group, playbook, version)
       box = JSON.parse(JSON.dump(base_box))
 
+      variables = {}
+      variables.merge!(box['ansible']['vars']) if box['ansible'] && box['ansible']['vars']
+      variables.merge!(
+        'foreman_repositories_version' => version['foreman'],
+        'katello_repositories_version' => version['katello'],
+        'puppet_repositories_version'  => version['puppet']
+      )
+
       box['ansible'] = {
         'playbook' => playbook,
         'group'    => group,
-        'variables' => {
-          'foreman_repositories_version' => version['foreman'],
-          'katello_repositories_version' => version['katello'],
-          'puppet_repositories_version'  => version['puppet']
-        }
+        'variables' => variables
       }
 
       box
