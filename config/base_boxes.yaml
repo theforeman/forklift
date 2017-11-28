@@ -3,21 +3,31 @@ boxes:
     box_name:   'debian/jessie64'
     image_name: !ruby/regexp '/Debian.*Jessie/'
     pty:        true
+    scenarios:
+      - foreman
 
   debian9:
     box_name:   'debian/stretch64'
     image_name: !ruby/regexp '/Debian.*Stretch/'
     pty:        true
+    scenarios:
+      - foreman
 
   centos6:
     box_name:   'centos/6'
     image_name: !ruby/regexp '/CentOS 6.*PV/'
     pty:        true
+    scenarios:
+      - foreman
+      - katello
 
   centos7:
     box_name:   'centos/7'
     image_name: !ruby/regexp '/CentOS 7.*PV/'
     pty:        true
+    scenarios:
+      - foreman
+      - katello
 
   fedora26:
     box_name: 'fedora/26-cloud-base'
@@ -28,6 +38,8 @@ boxes:
     box_name: 'generic/ubuntu1604'
     image_name: !ruby/regexp '/Ubuntu.*16\.04/'
     pty: true
+    scenarios:
+      - foreman
     ansible:
       vars:
         ansible_python_interpreter: /usr/bin/python3

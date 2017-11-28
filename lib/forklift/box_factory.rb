@@ -52,10 +52,13 @@ module Forklift
     def process_versions(config, versions)
       versions['installers'].each do |version|
         version['boxes'].each do |base_box|
-          %w[foreman katello].each do |scenario|
+          scenarios = config['boxes'][base_box]['scenarios'] || []
+          scenarios.each do |scenario|
             installer_box = build_box(config['boxes'][base_box], 'server', "playbooks/#{scenario}.yml", version)
             config['boxes']["#{base_box}-#{scenario}-#{version[scenario]}"] = installer_box
           end
+
+          next unless scenarios.include?('katello')
 
           foreman_proxy_box = build_box(config['boxes'][base_box], 'foreman-proxy-content',
                                         'playbooks/foreman_proxy_content.yml', version)
