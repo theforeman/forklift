@@ -21,6 +21,7 @@
     foreman_repositories_version: 1.15
     foreman_installer_skip_installer: true
   roles:
+    - umask
     - selinux
     - etc_hosts
     - epel_repositories

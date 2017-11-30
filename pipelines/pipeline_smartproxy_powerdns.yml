@@ -35,6 +35,7 @@
       - "121.168.192.in-addr.arpa"
       - "8.b.d.0.1.0.0.2.ip6.arpa"
   roles:
+    - umask
     - selinux
     - etc_hosts
     - epel_repositories

@@ -23,6 +23,7 @@
     foreman_installer_additional_packages:
       - foreman-installer-katello
   roles:
+    - umask
     - selinux
     - etc_hosts
     - epel_repositories

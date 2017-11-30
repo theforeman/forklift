@@ -1,0 +1,18 @@
+---
+- name: "Configure pam"
+  lineinfile:
+    state: present
+    path: "{{ item }}"
+    regexp: "^session\\s+optional\\s+pam_umask.so$"
+    line: "session optional        pam_umask.so"
+    insertbefore: "pam_unix.so"
+  with_items:
+    - /etc/pam.d/common-session
+    - /etc/pam.d/common-session-noninteractive
+
+- name: "Configure defaults"
+  lineinfile:
+    state: present
+    path: "/etc/login.defs"
+    regexp: "^UMASK"
+    line: "UMASK {{ umask_mode }}"
