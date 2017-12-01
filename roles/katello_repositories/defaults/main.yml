@@ -1,4 +1,3 @@
 ---
 katello_repositories_version: nightly
-katello_repositories_use_release: True
-katello_repositories_use_koji: False
+katello_repositories_environment: release

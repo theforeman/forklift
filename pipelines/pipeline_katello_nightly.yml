@@ -18,7 +18,7 @@
   vars:
     katello_repositories_version: nightly
     foreman_repositories_version: nightly
-    katello_repositories_use_koji: true
+    katello_repositories_environment: staging
     foreman_repositories_environment: staging
     foreman_installer_skip_installer: true
     foreman_installer_additional_packages:

@@ -70,7 +70,7 @@ my-nightly-koji:
   ansible:
     playbook: playbooks/katello.yml
     variables:
-      katello_repositories_use_koji: True
+      katello_repositories_environment: staging
     verbose: vvv
 ```
 
