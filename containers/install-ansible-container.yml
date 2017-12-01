@@ -2,8 +2,21 @@
 - hosts: localhost
   gather_facts: no
   tasks:
+    - set_fact:
+        inside_virtual_env: "{{ lookup('pipe', 'echo $VIRTUAL_ENV') }}"
+
+    - name: 'Create .tmp directory'
+      file:
+        path: .tmp
+        state: directory
+
+    - name: 'Clone ansible-container'
+      git:
+        repo: https://github.com/ansible/ansible-container.git
+        dest: .tmp/ansible-container
+        update: yes
+
     - name: 'Install ansible-container'
-      pip:
-        name: git+https://github.com/ansible/ansible-container.git
-        extra_args: -e .[docker,openshift] --upgrade --user
+      command: "pip install -e .[docker,openshift] --upgrade {{ '' if inside_virtual_env else '--user' }}"
+      args:
         chdir: .tmp/ansible-container
