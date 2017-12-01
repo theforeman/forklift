@@ -1,16 +1,15 @@
 ---
-- name: 'Katello Client Koji repository'
+- name: 'Katello Client Staging Repository'
   yum_repository:
     name: katello-client-koji
     description: "Katello {{ katello_client_repositories_version }} Client Koji Repository"
     baseurl: "http://koji.katello.org/releases/yum/katello-{{ katello_client_repositories_version }}/client/el{{ ansible_distribution_major_version }}/x86_64/"
     priority: 1
     gpgcheck: 0
-  when: katello_client_repositories_use_koji
+  when: katello_client_repositories_environment == "staging"
 
-- name: 'Setup Katello Repository'
-  become: true
+- name: 'Setup Katello Client Release Repository'
   yum:
     name: https://fedorapeople.org/groups/katello/releases/yum/{{ katello_client_repositories_version }}/client/el{{ ansible_distribution_major_version }}/x86_64/katello-client-repos-latest.rpm
     state: present
-  when: not katello_client_repositories_use_koji
+  when: katello_client_repositories_environment == "release"
