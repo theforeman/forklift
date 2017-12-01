@@ -1,24 +1,9 @@
 ---
 - hosts: localhost
+  gather_facts: no
   tasks:
-    - name: 'Create .tmp directory'
-      file:
-        path: .tmp
-        state: directory
-
-    - name: 'Clone ansible-container'
-      git:
-        repo: https://github.com/ansible/ansible-container.git
-        dest: .tmp/ansible-container
-        update: yes
-
-    - name: 'Install python3-devel'
-      become: true
-      yum:
-        name: python3-devel
-
     - name: 'Install ansible-container'
-      become: true
-      command: 'pip3 install -e .[docker,openshift]'
-      args:
+      pip:
+        name: git+https://github.com/ansible/ansible-container.git
+        extra_args: -e .[docker,openshift] --upgrade --user
         chdir: .tmp/ansible-container
