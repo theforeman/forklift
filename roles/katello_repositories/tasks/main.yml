@@ -1,9 +1,6 @@
 ---
-- include_tasks: release_repos.yml
-  when: katello_repositories_use_release and not katello_repositories_use_koji
-
-- include_tasks: koji_repos.yml
-  when: katello_repositories_use_koji
+- name: "Set up {{ katello_repositories_environment }} repositories"
+  include_tasks: "{{ katello_repositories_environment }}_repos.yml"
 
   # Required for el6 clients
 - include_tasks: qpid.yml
