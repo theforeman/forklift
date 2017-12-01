@@ -1,0 +1,5 @@
+---
+- name: "Configure profile.d"
+  copy:
+    content: "umask {{ umask_mode }}\n"
+    dest: "/etc/profile.d/umask.sh"

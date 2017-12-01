@@ -19,6 +19,7 @@
       - "fb-destroy-organization.bats"
       - "fb-finish.bats"
   roles:
+    - umask
     - selinux
     - etc_hosts
     - disable_ipv6

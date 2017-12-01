@@ -10,6 +10,7 @@
       - "fb-test-foreman.bats"
       - "fb-finish.bats"
   roles:
+    - umask
     - selinux
     - etc_hosts
     - disable_ipv6
