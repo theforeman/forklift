@@ -9,7 +9,7 @@ installers:
 
   - foreman: '1.16'
     katello: '3.5'
-    puppet: 4
+    puppet: 5
     boxes:
       - 'centos7'
       - 'debian8'
