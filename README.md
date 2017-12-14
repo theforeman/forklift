@@ -52,7 +52,7 @@ vagrant up centos7-devel
 For the multi-host setup, one of the easiest way of making the name
 resolution working with vagrant is using
 [vagrant-hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager). Forklift supports
-this plugin by default. The only thing on needs to do is install the vagrant-hostmanager plugin:
+this plugin by default. The only thing one needs to do is install the vagrant-hostmanager plugin:
 
 ```
 vagrant plugin install vagrant-hostmanager
