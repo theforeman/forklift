@@ -117,6 +117,16 @@ tPackageVersion() {
   fi
 }
 
+tPackageVendor() {
+  if tIsRedHatCompatible; then
+    rpm -q --qf '%{VENDOR}' $1
+  elif tIsDebianCompatible; then
+    dpkg-query --show -f '${Maintainer}' $1
+  else
+    false # not implemented
+  fi
+}
+
 tServiceDisable() {
   if tCommandExists systemctl; then
     systemctl disable "$1"
