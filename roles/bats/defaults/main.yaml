@@ -7,6 +7,7 @@ bats_output_dir: "/root/bats_results"
 bats_update_forklift: "yes"
 bats_tests:
   - "fb-test-foreman.bats"
+  - "fb-test-puppet.bats"
   - "fb-test-katello.bats"
   - "fb-content-katello.bats"
   - "fb-destroy-organization.bats"
