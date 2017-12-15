@@ -1,4 +1,4 @@
-# rubocop:disable Style/FileName
+# rubocop:disable Naming/FileName
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -8,3 +8,5 @@ loader = Forklift::BoxLoader.new
 loader.load
 distributor = Forklift::BoxDistributor.new(loader.boxes)
 distributor.distribute
+
+# rubocop:enable Naming/FileName
