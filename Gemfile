@@ -1,4 +1,4 @@
-# rubocop:disable Style/FileName
+# rubocop:disable Naming/FileName
 source 'https://rubygems.org'
 
 group :test do
@@ -7,3 +7,5 @@ group :test do
   gem 'rake'
   gem 'rubocop'
 end
+
+# rubocop:enable Naming/FileName
