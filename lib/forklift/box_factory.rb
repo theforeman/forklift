@@ -49,6 +49,8 @@ module Forklift
     def process_versions(config)
       @versions['installers'].each do |version|
         version['boxes'].each do |base_box|
+          next unless config['boxes'].key?(base_box)
+
           scenarios = config['boxes'][base_box]['scenarios'] || []
           scenarios.each do |scenario|
             installer_box = build_box(config['boxes'][base_box], 'server', "playbooks/#{scenario}.yml", version)
