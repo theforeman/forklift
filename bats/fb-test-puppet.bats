@@ -6,6 +6,10 @@ set -o pipefail
 load os_helper
 load foreman_helper
 
+if [[ -e /etc/profile.d/puppet-agent.sh ]] ; then
+  . /etc/profile.d/puppet-agent.sh
+fi
+
 @test "check smart proxy is registered" {
   hammer proxy info --name=$(hostname -f)
 }
