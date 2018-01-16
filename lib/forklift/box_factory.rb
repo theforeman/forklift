@@ -2,6 +2,8 @@ require 'json'
 require 'erb'
 require 'yaml'
 
+require_relative 'compat'
+
 module Forklift
   class BoxFactory
 
@@ -37,7 +39,7 @@ module Forklift
         box = layer_base_box(box)
 
         if @boxes[name]
-          @boxes[name].merge!(box)
+          @boxes[name].deep_merge!(box)
         else
           @boxes[name] = box
         end
@@ -67,7 +69,7 @@ module Forklift
 
     def layer_base_box(box)
       return box unless (base_box = find_base_box(box['box']))
-      base_box.merge(box)
+      deep_merge(base_box, box)
     end
 
     def find_base_box(name)
@@ -79,7 +81,7 @@ module Forklift
       box = JSON.parse(JSON.dump(base_box))
 
       variables = {}
-      variables.merge!(box['ansible']['vars']) if box['ansible'] && box['ansible']['vars']
+      variables.merge!(box['ansible']['variables']) if box['ansible'] && box['ansible']['variables']
       variables.merge!(
         'foreman_repositories_version' => version['foreman'],
         'katello_repositories_version' => version['katello'],
