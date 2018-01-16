@@ -41,7 +41,7 @@ boxes:
     scenarios:
       - foreman
     ansible:
-      vars:
+      variables:
         ansible_python_interpreter: /usr/bin/python3
 
   centos7-atomic:
