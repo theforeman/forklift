@@ -49,6 +49,7 @@
   with_items: "{{ bats_tests }}"
   register: "test_output"
   ignore_errors: true
+  environment: "{{ bats_environment }}"
 
 - name: "Read results"
   shell: "cat {{ bats_output_dir }}/{{ item }}.tap"

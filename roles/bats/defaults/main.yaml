@@ -1,4 +1,5 @@
 ---
+bats_environment: {}
 bats_git_dir: "/root/bats"
 bats_forklift_dir: "/root/forklift"
 bats_forklift_repo: "https://github.com/theforeman/forklift.git"
