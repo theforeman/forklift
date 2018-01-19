@@ -1,0 +1,10 @@
+---
+- name: "Run bats tests"
+  include_role:
+    name: "bats"
+  when: foreman_testing_bats
+
+- name: "Run hammer tests"
+  include_role:
+    name: "hammer_tests"
+  when: foreman_testing_hammer_tests

@@ -1,0 +1,3 @@
+---
+foreman_testing_bats: true
+foreman_testing_hammer_tests: false
