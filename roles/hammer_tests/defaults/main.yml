@@ -1,0 +1,9 @@
+---
+hammer_tests_dependencies:
+  - "colorize"
+  - "open4"
+hammer_tests_dir: "/root/hammer-tests"
+hammer_tests_repo: "https://github.com/theforeman/hammer-tests.git"
+hammer_tests_update: "yes"
+hammer_tests_version: HEAD
+hammer_tests_log_dir: "/root/hammer_test_logs"

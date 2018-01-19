@@ -38,4 +38,4 @@
     - haveged
     - swapfile
     - foreman_installer
-    - bats
+    - foreman_testing

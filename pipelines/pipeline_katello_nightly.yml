@@ -79,4 +79,4 @@
       - fb-destroy-organization.bats
       - fb-finish.bats
   roles:
-    - bats
+    - foreman_testing

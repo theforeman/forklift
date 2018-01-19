@@ -1,0 +1,27 @@
+---
+- name: "Install dependencies"
+  gem:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ hammer_tests_dependencies }}"
+
+- name: "Clone hammer-tests"
+  git:
+    repo: "{{ hammer_tests_repo }}"
+    dest: "{{ hammer_tests_dir }}"
+    update: "{{ hammer_tests_update }}"
+    version: "{{ hammer_tests_version }}"
+
+- name: "Create log directory"
+  file:
+    path: "{{ hammer_tests_log_dir }}"
+    state: directory
+
+- name: "Run tests"
+  shell: ./run_tests ./tests/
+  environment:
+    HT_FOREMAN_LOG_FILE: /var/log/foreman/production.log
+    HT_HAMMER_LOG_FILE: /root/.hammer/log/hammer.log
+    HT_LOGS_LOCATION: "{{ hammer_tests_log_dir }}"
+  args:
+    chdir: "{{ hammer_tests_dir }}"
