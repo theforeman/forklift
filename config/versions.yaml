@@ -16,6 +16,14 @@ installers:
       - 'debian9'
       - 'ubuntu1604'
 
+  - foreman: '1.17'
+    katello: '3.6'
+    puppet: 5
+    boxes:
+      - 'centos7'
+      - 'debian9'
+      - 'ubuntu1604'
+
   - foreman: 'nightly'
     katello: 'nightly'
     puppet: 5
