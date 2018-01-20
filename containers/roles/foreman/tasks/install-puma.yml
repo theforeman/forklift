@@ -4,7 +4,7 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - rh-ruby22-ruby-devel
+    - rh-ruby24-ruby-devel
     - gcc
     - gcc-c++
     - make

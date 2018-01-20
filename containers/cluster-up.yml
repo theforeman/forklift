@@ -1,6 +1,5 @@
 ---
 - hosts: localhost
-  gather_facts: no
   vars:
     openshift_data_dir: /home/origin
   tasks:
@@ -10,7 +9,7 @@
       ignore_errors: true
 
     - name: "Spin cluster up"
-      command: "oc cluster up --host-pv-dir='{{ openshift_data_dir }}/local.openshift.volumes' --logging=true"
+      command: "oc cluster up --public-hostname={{ ansible_default_ipv4.address }} --host-pv-dir='{{ openshift_data_dir }}/local.openshift.volumes' --logging=true"
       when: cluster_status.rc != 0
       register: cluster_up
 

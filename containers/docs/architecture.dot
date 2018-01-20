@@ -22,8 +22,8 @@ node "Foreman + Katello + Plugins" {
   [puma] as foreman
 }
 
-node "Foreman Tasks" {
-  [dynflow] as dynflow
+node "Dynflow" {
+  [dynflowd] as dynflowd
 }
 
 node "Candlepin" {
@@ -120,7 +120,7 @@ candlepin --> postgres
 candlepin --> qpid
 
 foreman --> postgres
-dynflow --> postgres
+dynflowd --> postgres
 foreman --> pulp
 foreman --> candlepin
 foreman --> qpid
