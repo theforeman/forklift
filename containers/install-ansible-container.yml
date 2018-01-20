@@ -17,6 +17,6 @@
         update: yes
 
     - name: 'Install ansible-container'
-      command: "pip install -e .[docker,openshift] --upgrade {{ '' if inside_virtual_env else '--user' }}"
+      command: "pip2 install -e .[docker,openshift] --upgrade {{ '' if inside_virtual_env else '--user' }}"
       args:
         chdir: .tmp/ansible-container

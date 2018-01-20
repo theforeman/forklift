@@ -25,10 +25,10 @@
     update_cache: yes
   with_items:
     - tfm-rubygem-katello
-    - tfm-rubygem-foreman_discovery
-    - tfm-rubygem-foreman_remote_execution
-    - tfm-rubygem-foreman_openscap
-    - tfm-rubygem-foreman_ansible
+    #- tfm-rubygem-foreman_discovery
+    #- tfm-rubygem-foreman_remote_execution
+    #- tfm-rubygem-foreman_openscap
+    #- tfm-rubygem-foreman_ansible
     - tfm-rubygem-foreman_hooks
     - tfm-rubygem-foreman_memcache
 

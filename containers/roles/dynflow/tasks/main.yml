@@ -1,5 +1,5 @@
 ---
-- name: "Add foreman-tasks startup script"
+- name: "Add dynflowd startup script"
   copy:
     src: "{{ role_path }}/files/{{ item }}"
     dest: "/usr/bin/{{ item }}"
@@ -8,4 +8,4 @@
     mode: 0775
   with_items:
     - entrypoint.sh
-    - start-foreman-tasks.sh
+    - start-dynflowd.sh

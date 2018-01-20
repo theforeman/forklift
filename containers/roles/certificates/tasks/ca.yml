@@ -1,8 +1,4 @@
-- name: 'Install openssl'
-  yum:
-    name: openssl
-    state: present
-
+---
 - name: 'Create certs directory'
   file:
     path: "{{ certificates_ca_directory_certs }}"

@@ -111,7 +111,7 @@ There are some services that are considered third party in that they are not a r
       - Qpid
       - Postgres
 
-    Name: Foreman Tasks / Dynflow
+    Name: Dynflow
     Description: Asynchronous task processor and orchestration engine
     Used By:
       - Foreman
