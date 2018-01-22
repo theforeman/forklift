@@ -84,6 +84,7 @@ module Forklift
         configure_libvirt(machine, box, networks)
         configure_virtualbox(machine, box, networks)
         configure_rackspace(machine, box)
+        configure_openstack_provider(machine, box)
         configure_synced_folders(machine, box)
         configure_sshfs(config, box)
         configure_nfs(config, box)
@@ -265,6 +266,22 @@ module Forklift
         override.ssh.pty = true if box.fetch('pty')
 
         box.fetch('rackspace_options', []).each do |opt, val|
+          p.instance_variable_set("@#{opt}", val)
+        end
+      end
+    end
+
+    def configure_openstack_provider(machine, box)
+      return unless box.fetch('image_name', false)
+      machine.vm.provider :openstack do |p, override|
+        override.vm.box        = nil
+        override.ssh.username  = 'root'
+        override.ssh.pty       = true if box.fetch('pty')
+        p.server_name          = machine.vm.hostname
+        p.flavor               = /4GB/
+        p.image                = box.fetch('image_name')
+
+        box.fetch('openstack_options', []).each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
       end
