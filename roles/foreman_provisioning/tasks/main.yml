@@ -77,7 +77,7 @@
 - name: 'find domain'
   shell: >
     {{ foreman_provisioning_hammer }} domain info --name "{{ foreman_provisioning_domain }}"
-  register: foreman_provisioning_domain
+  register: foreman_provisioning_domain_output
   ignore_errors: True
 
 - name: 'create domain'
@@ -86,7 +86,7 @@
     --name {{ foreman_provisioning_domain }}
     --dns-id {{ foreman_provisioning_smart_proxy.Id }}
     {{ foreman_provisioning_hammer_taxonomy_params }}
-  when: foreman_provisioning_domain.stderr.find('not found') != -1
+  when: foreman_provisioning_domain_output.stderr.find('not found') != -1
 
 - name: 'update domain'  # it may have been automatically created by puppet if katello reports first
   shell: >
