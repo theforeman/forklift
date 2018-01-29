@@ -18,12 +18,17 @@
 - name: 'Register Foreman in FreeIPA'
   become: true
   delegate_to: "{{ katello_server_ip }}"
-  shell: ipa-client-install --domain {{ ansible_domain }} --server {{ ansible_nodename }} --mkhomedir --fixed-primary --realm={{ freeipa_server_realm }} --force-join -p {{ freeipa_server_kerberos_principal }}@{{ freeipa_server_realm }} -w {{ freeipa_server_realm_password }} -U creates=/etc/krb5.keytab
+  shell: ipa-client-install --domain {{ ansible_domain }} --server {{ ansible_nodename }} --mkhomedir --fixed-primary --realm={{ freeipa_server_realm }} --force-join -p {{ freeipa_server_kerberos_principal }}@{{ freeipa_server_realm }} -w {{ freeipa_server_realm_password }} -U
+  args:
+    creates: /etc/krb5.keytab
 
 - name: 'Run foreman-prepare-realm'
   become: true
   delegate_to: "{{ katello_server_ip }}"
-  shell: echo changeme | foreman-prepare-realm {{ freeipa_server_kerberos_principal }}@{{ freeipa_server_realm }} {{ katello_server }}.{{ freeipa_server_domain }} chdir=/root creates=/root/freeipa.keytab
+  shell: echo changeme | foreman-prepare-realm {{ freeipa_server_kerberos_principal }}@{{ freeipa_server_realm }} {{ katello_server }}
+  args:
+    chdir: /root
+    creates: /root/freeipa.keytab
 
 - name: 'Create HTTP principal'
   become: true
@@ -43,12 +48,19 @@
 - name: 'Get the keytab'
   become: true
   delegate_to: "{{ katello_server_ip }}"
-  shell: test -e /etc/httpd/conf/ipa.keytab  || ipa-getkeytab -s {{ ansible_nodename }} -p HTTP/{{ katello_server }}.{{ freeipa_server_domain }}@{{ freeipa_server_realm }} -k /etc/httpd/conf/ipa.keytab
+  shell: ipa-getkeytab -s {{ ansible_nodename }} -p HTTP/{{ katello_server }}.{{ freeipa_server_domain }}@{{ freeipa_server_realm }} -k /etc/httpd/conf/ipa.keytab
+  args:
+    creates: /etc/httpd/conf/ipa.keytab
 
 - name: 'Copy the keytab'
   become: true
   delegate_to: "{{ katello_server_ip }}"
-  shell: test -e /root/freeipa.keytab && cp /root/freeipa.keytab /etc/foreman-proxy/freeipa.keytab && chown foreman-proxy /etc/foreman-proxy/freeipa.keytab && chmod 0600 /etc/foreman-proxy/freeipa.keytab
+  copy:
+    src: /root/freeipa.keytab
+    dest: /etc/foreman-proxy/freeipa.keytab
+    remote_src: yes
+    owner: foreman-proxy
+    mode: 0600
 
 - name: 'Enable Realm with foreman-installer'
   become: true
