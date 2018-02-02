@@ -14,6 +14,7 @@
   command: >
     openssl req
       -new
+      -days 7300
       -config "{{ certificates_ca_directory }}/openssl.cnf"
       -key "{{ certificates_ca_directory_keys }}/{{ item.name }}.key"
       -out "{{ certificates_ca_directory_requests }}/{{ item.name }}.csr"

@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: no
+  vars:
+    services: ''
+    project_dir: "{{ lookup('pipe', 'pwd') }}/../"
+    working_dir: "{{ project_dir }}"
+  tasks:
+    - name: 'Run build'
+      shell: "ansible-container --devel build {{ '--services' if services else '' }} {{ services }}"
+      args:
+        chdir: "{{ working_dir }}"

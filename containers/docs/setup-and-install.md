@@ -1,6 +1,6 @@
 ## Setup
 
-This setup is done in two phases: build and deployment. The build phase is handled by the `ansible-container` project using Ansible roles to build out each container in preparation to push to Openshift. The deployment phase can either be done locally or to a local or remote Openshift cluster. This README will walk through how to build and run on Openshift:
+This setup is done in two phases: build and deployment. The build phase is handled by the `ansible-container` project using Ansible roles to build out each container in preparation to push to Openshift. The deployment phase can either be done locally or to a local or remote Openshift cluster. This README will walk through how to build and run on a local Openshift:
 
   1. [Install ansible](#install-ansible)
   2. [Install and Configure Docker](#setup-docker)
@@ -10,7 +10,9 @@ This setup is done in two phases: build and deployment. The build phase is handl
   6. [Setup and Install Local OpenShift](#setup-and-install-openshift)
   7. [Deploy Containers to OpenShift](#deploy-containers-to-openshift)
 
-This installation guide assumes that you are working from the `forklift/containers` directory for all actions.
+This installation guide assumes that you are working from the `forklift/containers` directory for all actions and that you have a fresh CentOS 7 VM running. Other OSes like Fedora can be used, but some aspects such as configuring docker may be different.
+
+The rest of this guide will assume there is an Ansible inventory present configured to point at your CentOS 7 box.
 
 ### Install Ansible
 
@@ -24,61 +26,57 @@ Using pip:
 
     sudo pip install ansible
 
+At this point, if you want to skip ahead to the all in one at the bottom you can. However, if this is your first time we recommend running through each step individually to learn what each does and how to customize.
+
 ### Setup Docker
 
-In order to build the containers, run them locally or use OpenShift, Docker needs to be installed and configured properly. First, ensure that docker is installed:
+In order to build the containers, run them locally or use OpenShift, Docker needs to be installed and configured with an insecure registry.
 
-    sudo yum install docker
-
-Second, we need to allow for insecure registries to run. This can be enabled by editing `/etc/sysconfig/docker` and adding:
-
-    INSECURE_REGISTRY='--insecure-registry 172.30.0.0/16'
-
-Now restart the docker service:
-
-    sudo systemctl restart docker
+    ansible-playbook tools/install-docker.yml -l centos7 -b -e "@vars/remote.yml"
 
 ### Install ansible-container
 
 This project is currently using the bleeding edge version of `ansible-container` and will be installed from source. To simplify install, an Ansible playbook has been provided to do the installation:
 
-    ansible-playbook install-ansible-container.yml
+    ansible-playbook tools/install-ansible-container.yml -l centos7 -b -e "@vars/remote.yml"
 
 ### Build Containers
 
-Now that `ansible-container` is installed, the containers can be built. This build takes a while and can cause the docker client to timeout. Thus, before building run:
+Before the containers can be built the local copy of the container code needs to be synced to the CentOS box. This allows for making local changes in the future and having them tested through the various stages on the CentOS box:
 
-    export DOCKER_CLIENT_TIMEOUT=600
+    ansible-container tools/install-forklift.yml -l centos7 -b -e "@vars/remote.yml"
 
 Now build the containers (and grab a coffee):
 
-    ./build.sh
+    ansible-playbook tools/build.yml -l centos7 -b -e "@vars/remote.yml"
 
 To build an individual (or multiple individual) services pass the name(s) space separated:
 
-   ./build.sh foreman-base foreman
+   ansible-playbook tools/build.yml -l centos7 -b -e "@vars/remote.yml" -e services='foreman dynflow'
+
+To build just Foreman:
+
+  ansible-playbook tools/build-foreman.yml
+
+To build just Pulp:
+
+  ansible-playbook tools/build-pulp.yml
+
+To build just Candlepin:
+
+  ansible-playbook tools/build-candlepin.yml
 
 This sort of smaller incremental building is good for small changes or rolling out a single service update for quicker development cycles.
-
-### Run Containers Locally
-
-Once the containers have been built locally into Docker, `ansible-container` can be used to run the entire stack locally:
-
-    ansible-container run
-
-This will expose the Foreman user interface at `http://0.0.0.0:8080`
 
 ### Setup and Install Openshift
 
 This setup requires access to OpenShift 3.5 or later. The easiest way to run and play with this locally is to use the OpenShift Origin client tools 1.5+ and docker. This short guide will run through setting up a local test environment.
 
-This setup guide was written using Fedora 23 but newer version of Fedora or Centos 7+ should work.
-
 #### Setup OpenShift Client Tools
 
 The ability to spin up an OpenShift cluster on docker was added to OpenShift Client Tools v1.3+. This has been abstracted into an Ansible playbook for your convenience.
 
-    ansible-playbook install-openshift-tools.yml
+    ansible-playbook tools/install-openshift-tools.yml -l centos7 -b -e "@vars/remote.yml"
 
 You can change the version of the OpenShift Client Tools that are installed by editing the playbook or passing variables to the `ansible-playbook` command.
 
@@ -86,49 +84,37 @@ You can change the version of the OpenShift Client Tools that are installed by e
 
 Now that we have docker and the appropriate client tools setup we can spin up a docker based OpenShift cluster using the playbook to do this:
 
-    ansible-playbook cluster-up.yml
-
-Note that this will put all Openshift data in `/home/origin` by default as this assumes most users are developers whom have a majority of their data storage in their home directory. To configure this specify a new directory when running the playbook:
-
-    ansible-playbook cluster-up.yml -e openshift_data_dir=/var/lib/origin
+    ansible-playbook tools/configure-firewall.yml -l centos7 -b -e "@vars/remote.yml"
+    ansible-playbook tools/cluster-up.yml -l centos7 -b -e "@vars/remote.yml"
 
 ### Deploy Containers to Openshift
 
-Deploying the containers that were built involves pushing the containers to Openshift, generating a deployment role and then finally shipping them to Openshift. The simplest method is to call the all in one playbook:
+Deploying the containers that were built involves pushing the containers to Openshift, generating a deployment role and then finally shipping them to Openshift. The first step in this is to generate a set of SSL certificates for the services to communicate with:
 
-    ansible-playbook deploy.yml
+    ansible-playbook tools/generate-certificates.yml -l centos7 -b -e "@vars/remote.yml"
 
-Now, generate the deployment role that will use the images that were pushed:
+Now those certificates need to be turned into a Ansible secrets file:
 
-    ansible-container --engine openshift deploy --push-to oc-cluster --username developer --password $(oc whoami -t)
+    ansible-playbook tools/build-secrets.yml -l centos7 -b -e "@vars/remote.yml"
 
-The final step is deploy the role:
+Now that we have generated our secrets file, the deployment role is ready to be generated:
 
-    ansible-playbook ansible-deployment/foreman.yml --tags start
+    ansible-playbook tools/generate-deployment-role.yml -l centos7 -b -e "@vars/remote.yml"
 
-At this point, all services will get created in Openshift and begin deploying. To check on the status of the deployment:
+Finally, the application stack is ready to be deployed to Openshift running on our VM:
 
-    oc get pods
+    ansible-playbook tools/deploy.yml -l centos7 -b -e "@vars/remote.yml"
 
 After the `foreman` role has entered the `Running` state, a basic application health check along with backend services can be performed. List the routes and locate the hostname the `foreman` route is deployed on, for example:
 
     oc get routes
     curl http://foreman-8080-openshift.10.13.129.60.xip.io/katello/api/v2/ping
 
-## Deployment Verification
+### All In One
 
-As part of this deployment, there is an effort to verify the functionality of the deployment based upon automated testing. The current baseline for this is the `bats` testing that is performed on an installation on the Katello nightly pipeline. To perform this test verification yourself:
+All of the steps above can be executed together through a single playbook:
 
-First, build the bats testing container:
-
-    cd test/
-    ansible-container build
-
-Now, run the tests:
-
-    ansible-container run
-
-Currently this test is expected to run manually on your host outside the OpenShift environment. Future enhancements would be to push this into OpenShift and run as a stand-alone container or OpenShift job. Potentially even spinning up a Jenkins to run a test pipeline.
+    ansible-playbook tools/end-to-end.yml -l centos7 -b -e "@vars/remote.yml"
 
 ## Troubleshooting
 
