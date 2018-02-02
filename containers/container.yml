@@ -2,7 +2,13 @@
 version: "2"
 
 settings:
-  conductor_base: centos:7
+  conductor:
+    base: centos:7
+    roles_path:
+      - ./roles
+      - ../roles/
+    environment:
+      DOCKER_CLIENT_TIMEOUT: '600'
   project_name: foreman
   vault_files:
     - secrets.yml
@@ -70,8 +76,6 @@ services:
                 path: ca.crt
               - key: pulp-client.crt
                 path: pulp-client.crt
-          - env_variable: WOOT_WOOT
-            key: ca.crt
     openshift:
       state: present
       deployment:
@@ -87,6 +91,7 @@ services:
       - POSTGRES_DB={{ POSTGRES_DB }}
       - POSTGRES_USER={{ POSTGRES_USER }}
       - POSTGRES_PASSWORD={{ POSTGRES_PASSWORD }}
+      - RAILS_ENV={{ RAILS_ENV }}
     secrets:
       keys:
         openshift:
@@ -165,7 +170,8 @@ services:
     from: centos:7
     roles:
       - epel_repositories
-      - katello_repositories
+      - role: katello_repositories
+        katello_repositories_environment: staging
       - candlepin
     environment:
       - POSTGRES_DB={{ POSTGRES_DB }}

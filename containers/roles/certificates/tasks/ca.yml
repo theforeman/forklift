@@ -42,6 +42,7 @@
       -x509
       -nodes
       -extensions v3_ca
+      -days 7300
       -config "{{ certificates_ca_directory }}/openssl.cnf"
       -keyout "{{ certificates_ca_directory_keys }}/ca.key"
       -out "{{ certificates_ca_directory_certs }}/ca.crt"

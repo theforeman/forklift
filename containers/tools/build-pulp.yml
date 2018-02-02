@@ -1,0 +1,4 @@
+---
+- import_playbook: build.yml
+  vars:
+    services: 'pulp-base pulp pulp-worker pulp-resource-manager pulp-celerybeat qpid content-server mongodb'

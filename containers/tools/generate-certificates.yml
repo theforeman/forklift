@@ -1,0 +1,12 @@
+---
+- name: 'Generate certificates'
+  hosts: all
+  vars:
+    certificates_services:
+      - name: pulp
+        common_name: pulp
+      - name: pulp-client
+        common_name: admin
+    content_server_hostname: "content-server-8080-foreman.{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.xip.io"
+  roles:
+    - certificates

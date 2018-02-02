@@ -1,0 +1,6 @@
+---
+project_dir: "/root/forklift"
+working_dir: "{{ project_dir }}/containers"
+certificates_ca_directory: "{{ working_dir }}/certs"
+registry: oc-cluster
+
