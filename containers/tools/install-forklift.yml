@@ -1,0 +1,8 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: 'Copy forklift to node'
+      synchronize:
+        src: "{{ lookup('pipe', 'pwd') }}/../../"
+        dest: "{{ project_dir }}"

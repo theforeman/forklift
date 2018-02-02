@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: 'Install ruby'
+      package:
+        name: ruby
+        state: present
+
+    - name: 'Run tests'
+      shell: ./test/test.rb
+      args:
+        chdir: "{{ working_dir }}"

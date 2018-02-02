@@ -71,7 +71,15 @@
 
     - name: "Deploy test.pp"
       copy:
-        content: "class { pulp:\nenable_rpm => true,\nenable_docker => true,\nenable_puppet => true,\nenable_ostree => true,\nenable_deb => true,\nenable_python => true\n}"
+        content: |
+          class { pulp:
+            enable_rpm => true,
+            enable_docker => true,
+            enable_puppet => true,
+            enable_ostree => true,
+            enable_deb => true,
+            enable_python => true
+          }
         dest: "/home/vagrant/test.pp"
 
     - name: "Run puppet apply"

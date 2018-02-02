@@ -31,8 +31,8 @@
     #- tfm-rubygem-foreman_ansible
     - tfm-rubygem-foreman_hooks
     - tfm-rubygem-foreman_memcache
-
-- include_tasks: hacks.yml
+    - tfm-ror51-rubygem-tilt
+    - tfm-ror51-rubygem-sinatra
 
 - include_tasks: install-puma.yml
 

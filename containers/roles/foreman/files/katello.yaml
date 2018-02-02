@@ -10,9 +10,8 @@
     :oauth_secret: katello
 
   :pulp:
-    :url: https://<%= ENV['PULP_SERVICE_HOST'] || 'pulp' %>:<%= ENV['PULP_SERVICE_PORT'] || 8080 %>/pulp/api/v2/
+    :url: https://pulp:<%= ENV['PULP_SERVICE_PORT'] || 8080 %>/pulp/api/v2/
     :ca_cert_file: /etc/pki/katello/certs/ca.crt
-    :verify_ssl: false
 
   :qpid:
     :url: amqp:tcp:<%= ENV['QPID_SERVICE_HOST'] || 'qpid' %>:5672

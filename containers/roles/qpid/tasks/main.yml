@@ -2,7 +2,7 @@
 - name: 'Install Qpid packages'
   yum:
     name: "{{ item }}"
-    state: "latest"
+    state: present
     update_cache: yes
   with_items:
     - qpid-cpp-server

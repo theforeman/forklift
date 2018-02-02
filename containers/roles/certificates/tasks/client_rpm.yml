@@ -1,13 +1,21 @@
 ---
 - name: 'Set build variables'
   set_fact:
-    ca_crt: "{{ lookup('file', certificates_ca_directory_certs + '/ca.crt') }}"
-    build_dir: "{{ lookup('pipe', 'pwd') }}/certs/rpmbuild"
+    build_dir: "{{ certificates_ca_directory }}/certs/rpmbuild"
 
 - name: 'Make build directory'
   file:
     state: directory
     path: "{{  build_dir }}"
+
+- name: 'Extract CA cert contents'
+  slurp:
+    src: "{{ certificates_ca_directory + '/certs/ca.crt' }}"
+  register: ca_crt
+
+- name: 'Decode CA crt content'
+  set_fact:
+    ca_crt: "{{ ca_crt.content | b64decode }}"
 
 - name: 'Process reconfigure script'
   template:
@@ -23,6 +31,11 @@
   copy:
     src: files/consumer_rpm.spec
     dest: "{{ build_dir }}/katello-rhsm-consumer.spec"
+
+- name: 'Install rpmbuild'
+  yum:
+    name: rpm-build
+    state: present
 
 - name: 'Create SRPM'
   command: "rpmbuild -ba {{ build_dir }}/katello-rhsm-consumer.spec --define \"_topdir {{ build_dir }}\" --define \"_build_dir {{ build_dir }}\" --define \"_sourcedir {{ build_dir }}\" --define \"_specdir {{ build_dir }}\" --define \"_rpmdir {{ build_dir }}\" --define \"_srcrpmdir {{ build_dir }}\""
