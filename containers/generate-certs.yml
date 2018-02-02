@@ -31,7 +31,12 @@
         - pulp.key
         - pulp-client.key
 
+    - name: 'Clear out old certs'
+      file:
+        state: absent
+        path: secrets.yml
+
     - name: 'Write secrets to file'
       copy:
         content: "{{ certs | combine(keys) | to_nice_yaml }}"
-        dest: ./secrets.yml
+        dest: "{{ playbook_dir }}/secrets.yml"

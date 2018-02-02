@@ -1,10 +1,14 @@
-sudo: false
+sudo: required
+env:
+  - CHANGE_MINIKUBE_NONE_USER=true
+services:
+  - docker
 language: python
 python:
   - 2.7
 install:
   - |
-    if git diff origin/master --name-only | grep -q "lib\|test"; then
+    if git diff origin/master --name-only | grep -q "lib/\|test/"; then
       rvm install 2.2.4
     fi
 
@@ -12,9 +16,27 @@ install:
     if git diff origin/master --name-only | grep -q "playbooks\|roles\|containers/roles"; then
       pip install ansible-lint
     fi
+
+  - |
+    if git diff origin/master --name-only | grep -q "containers/\|roles/"; then
+      pip install ansible --upgrade
+      pip install openshift --upgrade
+    fi
+before_script:
+  - |
+    if git diff origin/master --name-only | grep -q "containers/\|roles/"; then
+      tmp=`mktemp`
+      echo 'DOCKER_OPTS="$DOCKER_OPTS --insecure-registry 172.30.0.0/16"' > ${tmp}
+      sudo mv ${tmp} /etc/default/docker
+      sudo mount --make-shared /
+      sudo service docker restart
+      cd containers
+      ansible-playbook install-openshift-tools.yml
+      ansible-playbook cluster-up.yml -e openshift_data_dir=`pwd`
+    fi
 script:
   - |
-    if git diff origin/master --name-only | grep -q "lib\|test"; then
+    if git diff origin/master --name-only | grep -q "lib/\|test/"; then
       bundle install
       bundle exec rake
     fi
@@ -24,4 +46,15 @@ script:
       ansible-lint -r rules/ playbooks/*
       ansible-lint -r rules/ roles/*
       ansible-lint -r rules/ containers/roles/*
+    fi
+
+  - |
+    if git diff origin/master --name-only | grep -q "containers/\|roles/"; then
+      export DOCKER_CLIENT_TIMEOUT=600
+      cd containers/
+      touch .vault_pass
+      ansible-playbook install-ansible-container.yml
+      ./build.sh
+      ./deploy.sh
+      ./test.rb
     fi
