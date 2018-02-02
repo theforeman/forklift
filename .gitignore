@@ -10,8 +10,6 @@ boxes.yaml
 scripts
 repo
 Gemfile.lock
-.ruby-version
-.ruby-gemset
 *.retry
 *.pyc
 user_playbooks

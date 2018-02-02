@@ -243,8 +243,10 @@ To work with webpack-dev-server, ensure the following lines are in your `~/forem
 This will instruct Foreman to use Webpack from an https source. Now we need to make sure Webpack is using the right certificates to serve the development content through HTTPS. We're going to save these configuration values on `~/foreman/.env`:
 
 ```
-WEBPACK_OPTS='--https --key /etc/pki/katello/private/katello-default-ca.key --cert /etc/pki/katello/certs/katello-default-ca.crt --cacert /etc/pki/katello/certs/katello-default-ca.crt'
+WEBPACK_OPTS='--https --key /etc/pki/katello/private/katello-default-ca.key --cert /etc/pki/katello/certs/katello-default-ca.crt --cacert /etc/pki/katello/certs/katello-default-ca.crt --host 0.0.0.0 --public centos7-devel.example.com'
 ```
+
+Replace centos7-devel.example.com with the public hostname of your development server, if different.
 
 Remember to run `source ~/foreman/.env` before running your Webpack server, so that the right options to enable HTTPS are loaded.
 
