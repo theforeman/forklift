@@ -26,7 +26,7 @@ HashSyntax:
 Metrics/AbcSize:
   Max: 20
 
-Style/EmptyLinesAroundClassBody:
+Layout/EmptyLinesAroundClassBody:
   EnforcedStyle: empty_lines
 
 Metrics/AbcSize:
@@ -42,4 +42,7 @@ Metrics/CyclomaticComplexity:
   Max: 10
 
 Security/YAMLLoad:
+  Enabled: false
+
+Style/IfUnlessModifier:
   Enabled: false

@@ -2,22 +2,31 @@
   become: true
   vars:
     katello_repositories_version: nightly
-    katello_repositories_use_koji: true
+    katello_repositories_environment: staging
+    foreman_repositories_version: nightly
+    foreman_repositories_environment: staging
     puppet_repositories_version: 4
     foreman_installer_scenario: katello
     foreman_installer_additional_packages:
       - katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
+      # Because we don't have a correct reverse DNS in our CI
+      - "--skip-checks-i-know-better"
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
       - "--katello-enable-ostree=true"
+      - "--puppet-server-max-active-instances 1"
+      - "--puppet-server-jvm-min-heap-size 1G"
+      - "--puppet-server-jvm-max-heap-size 1G"
     bats_tests:
       - "fb-test-foreman.bats"
+      - "fb-test-puppet.bats"
       - "fb-test-katello.bats"
       - "fb-content-katello.bats"
       - "fb-destroy-organization.bats"
       - "fb-finish.bats"
   roles:
+    - umask
     - selinux
     - etc_hosts
     - disable_ipv6

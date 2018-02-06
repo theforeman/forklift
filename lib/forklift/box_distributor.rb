@@ -38,7 +38,7 @@ module Forklift
       @settings ||= default_settings.merge(overrides)
     end
 
-    def distribute
+    def distribute!
       Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         configure_vagrant_hostmanager(config)
         configure_vagrant_cachier(config)
@@ -84,7 +84,7 @@ module Forklift
         configure_shell(machine, box)
         configure_ansible(machine, box['ansible'], box['name'])
         configure_libvirt(machine, box, networks)
-        configure_virtualbox(machine, box)
+        configure_virtualbox(machine, box, networks)
         configure_rackspace(machine, box)
         configure_synced_folders(machine, box)
         configure_sshfs(config, box)
@@ -132,15 +132,12 @@ module Forklift
     def configure_ansible(machine, ansible, box_name)
       return unless ansible
 
-      if ansible.key?('group') || !ansible['group'].nil?
-        unless @ansible_groups[ansible['group'].to_s]
-          @ansible_groups[ansible['group'].to_s] = []
-        end
-
+      if ansible.key?('group') && !ansible['group'].nil?
+        @ansible_groups[ansible['group'].to_s] ||= []
         @ansible_groups[ansible['group'].to_s] << box_name
       end
 
-      if ansible.key?('server') || !ansible['server'].nil?
+      if ansible.key?('server') && !ansible['server'].nil?
         @ansible_groups["server-#{box_name}"] = ansible['server']
       end
 
@@ -204,13 +201,23 @@ module Forklift
         p.memory = box.fetch('memory').to_i * @settings['scale_memory'].to_i if box.fetch('memory', false)
         p.machine_virtual_size = box.fetch('disk_size') if box.fetch('disk_size', false)
 
+        box.fetch('add_disks', []).each do |disk|
+          type = disk.fetch('type', 'raw')
+          device = disk.fetch('device')
+          size = disk.fetch('size')
+          if type.nil? || device.nil? || size.nil?
+            raise "Error in add_disks configuration: type, device or size are missing #{disk}"
+          end
+          p.storage :file, :size => size, :type => type, :device => device
+        end
+
         box.fetch('libvirt_options', []).each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
       end
     end
 
-    def configure_virtualbox(machine, box)
+    def configure_virtualbox(machine, box, networks = [])
       machine.vm.provider :virtualbox do |p, override|
         override.vm.box_url = box.fetch('virtualbox') if box.fetch('virtualbox', false)
         p.cpus = box.fetch('cpus').to_i * @settings['scale_cpus'].to_i if box.fetch('cpus', false)
@@ -226,6 +233,10 @@ module Forklift
         else
           override.vm.network :forwarded_port, guest: 80, host: 8080
           override.vm.network :forwarded_port, guest: 443, host: 4433
+        end
+
+        networks.each do |network|
+          override.vm.network network['type'], network['options']
         end
 
         box.fetch('virtualbox_options', []).each do |opt, val|

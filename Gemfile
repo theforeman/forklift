@@ -1,4 +1,4 @@
-# rubocop:disable Style/FileName
+# rubocop:disable Naming/FileName
 source 'https://rubygems.org'
 
 group :test do
@@ -8,5 +8,4 @@ group :test do
   gem 'rubocop'
 end
 
-gem 'librarian-puppet'
-gem 'puppet', '< 4.0.0'
+# rubocop:enable Naming/FileName

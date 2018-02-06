@@ -1,0 +1,3 @@
+---
+debian_backports_uri: http://archive.ubuntu.com/ubuntu
+debian_backports_components: "{{ debian_backports_distribution }}-backports main restricted universe multiverse"

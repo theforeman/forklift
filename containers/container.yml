@@ -29,8 +29,10 @@ services:
       - epel_repositories
       - role: puppet_repositories
         puppet_repositories_version: 4
-      - foreman_repositories
-      - katello_repositories
+      - role: foreman_repositories
+        foreman_repositories_environment: staging
+      - role: katello_repositories
+        katello_repositories_environment: staging
       - foreman
     openshift:
       state: absent
@@ -75,21 +77,11 @@ services:
       deployment:
         force: false
         replicas: 2
-
-  memcache:
-    from: memcached
-    expose:
-      - 11211
-    openshift:
-      state: present
-      deployment:
-        force: false
-        replicas: 1
-  foreman-tasks:
+  dynflow:
     from: foreman-foreman-base:latest
     roles:
-      - foreman-tasks
-    command: ['/usr/bin/start-foreman-tasks.sh']
+      - dynflow
+    command: ['/usr/bin/start-dynflowd.sh']
     entrypoint: ['/usr/bin/entrypoint.sh']
     environment:
       - POSTGRES_DB={{ POSTGRES_DB }}
@@ -112,6 +104,15 @@ services:
                 path: ca.crt
               - key: pulp-client.crt
                 path: pulp-client.crt
+    openshift:
+      state: present
+      deployment:
+        force: false
+        replicas: 1
+  memcached:
+    from: manageiq/memcached:latest
+    expose:
+      - 11211
     openshift:
       state: present
       deployment:

@@ -3,11 +3,25 @@ language: python
 python:
   - 2.7
 install:
-  - pip install ansible-lint
-  - rvm install 2.2.4
+  - |
+    if git diff origin/master --name-only | grep -q "lib\|test"; then
+      rvm install 2.2.4
+    fi
+
+  - |
+    if git diff origin/master --name-only | grep -q "playbooks\|roles\|containers/roles"; then
+      pip install ansible-lint
+    fi
 script:
-  - bundle install
-  - bundle exec rake
-  - ansible-lint -r rules/ playbooks/*
-  - ansible-lint -r rules/ roles/*
-  - ansible-lint -r rules/ containers/roles/*
+  - |
+    if git diff origin/master --name-only | grep -q "lib\|test"; then
+      bundle install
+      bundle exec rake
+    fi
+
+  - |
+    if git diff origin/master --name-only | grep -q "playbooks\|roles\|containers/roles"; then
+      ansible-lint -r rules/ playbooks/*
+      ansible-lint -r rules/ roles/*
+      ansible-lint -r rules/ containers/roles/*
+    fi

@@ -10,9 +10,10 @@
     state: 'directory'
 
 - name: 'Download RPMs'
-  command: "koji --server {{ koji_host }} download-task {{ koji_task_id }}"
+  command: "koji --server {{ koji_host }} download-task --topurl {{ koji_topurl }} {{ item }}"
   args:
     chdir: "{{ koji_repo_directory }}"
+  with_items: "{{ koji_task_ids }}"
 
 - name: 'Install createrepo'
   yum:
@@ -24,10 +25,10 @@
 
 - name: 'Add repo file'
   yum_repository:
-    name: "koji-task-{{ koji_task_id }}-repo"
+    name: "koji-forklift-task-repo"
     description: 'Local repository for Koji task RPMs'
     baseurl: "file://{{ koji_repo_directory }}"
-    file: "koji_task_repo_{{ koji_task_id }}"
+    file: "koji_forklift_task_repo"
     priority: 1
     enabled: yes
     gpgcheck: no

@@ -22,7 +22,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
 ### Requirements
 
 * Vagrant - 1.8+ - Both the VirtualBox and Libvirt providers are tested
-* Ansible - 2.1+
+* Ansible - 2.4+
 * [Vagrant Libvirt provider plugin](https://github.com/vagrant-libvirt/vagrant-libvirt) (if using Libvirt)
 
 See [Installing Vagrant](docs/vagrant.md) for installation instructions.
@@ -42,8 +42,8 @@ The same can be quickly done for a development environment where GITHUB_NICK is 
 ```
 git clone https://github.com/theforeman/forklift.git
 cd forklift
-cp boxes.yaml.example boxes.yaml
-sed -i "s/<REPLACE ME>/GITHUB_NICK/g" boxes.yaml
+cp boxes.d/99-local.yaml.example boxes.d/99-local.yaml
+sed -i "s/<REPLACE ME>/GITHUB_NICK/g" boxes.d/99-local.yaml
 vagrant up centos7-devel
 ```
 
@@ -52,7 +52,7 @@ vagrant up centos7-devel
 For the multi-host setup, one of the easiest way of making the name
 resolution working with vagrant is using
 [vagrant-hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager). Forklift supports
-this plugin by default. The only thing on needs to do is install the vagrant-hostmanager plugin:
+this plugin by default. The only thing one needs to do is install the vagrant-hostmanager plugin:
 
 ```
 vagrant plugin install vagrant-hostmanager
@@ -62,7 +62,7 @@ By default, the boxes are set with `example.com` domain.
 
 ### Adding Custom Boxes
 
-Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `boxes.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
+Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
 
 ```
 my-nightly-koji:
@@ -70,7 +70,7 @@ my-nightly-koji:
   ansible:
     playbook: playbooks/katello.yml
     variables:
-      katello_repositories_use_koji: True
+      katello_repositories_environment: staging
     verbose: vvv
 ```
 
@@ -87,6 +87,7 @@ networks -- custom networks to use in addition to the management network
 disk_size -- specify the size (in gigabytes) of the box's virtual disk. This
              only sets the virtual disk size, so you will still need to
              resize partitions and filesystems manually.
+add_disks -- (libvirt provider only) specify additional libvirt volumes
 ansible -- updates the Ansible provisioner configuration including the
            playbook to be ran or any variables to set
 libvirt_options -- sets Libvirt specific options
@@ -145,6 +146,17 @@ with-sshfs:
 ```
 
 If you want to mount in the opposite direction, just change `reverse` to `False` or remove it entirely.
+
+Example with an additional disk (libvirt volume) presented as /dev/vdb in the vm:
+
+static:
+  box: centos7
+  hostname: mystatic.box.com
+  add_disks:
+    - size: 100GiB
+      device: vdb
+      type: qcow2
+```
 
 ### Customize Deployment Settings
 

@@ -1,0 +1,28 @@
+boxes:
+  centos7-bats:
+    box: centos7
+    ansible:
+      playbook: 'playbooks/bats_pipeline_nightly.yml'
+      group: 'bats'
+
+  centos7-freeipa-server:
+    box: centos7
+    memory: 2048
+    ansible:
+      playbook: 'playbooks/freeipa_server.yml'
+      group: 'freeipa_server'
+      server: 'centos7-katello-nightly'
+
+  centos7-provision-nightly:
+    box: centos7
+    memory: 8096
+    ansible:
+      playbook:
+        - 'playbooks/katello.yml'
+        - 'playbooks/katello_provisioning.yml'
+      group: 'server'
+
+  runcible:
+    box: centos7
+    ansible:
+      playbook: 'playbooks/runcible.yml'

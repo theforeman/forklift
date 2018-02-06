@@ -1,9 +1,7 @@
 ---
-- include: release_repos.yml
-  when: katello_repositories_use_release and not katello_repositories_use_koji
+- name: "Set up {{ katello_repositories_environment }} repositories"
+  include_tasks: "{{ katello_repositories_environment }}_repos.yml"
 
-- include: koji_repos.yml
-  when: katello_repositories_use_koji
-
-- include: qpid.yml
-  when: ansible_distribution_major_version == "6" and katello_repositories_version == 3.2
+  # Required for el6 clients
+- include_tasks: qpid.yml
+  when: ansible_distribution_major_version == "6"

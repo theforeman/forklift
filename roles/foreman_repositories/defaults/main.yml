@@ -1,4 +1,3 @@
 ---
 foreman_repositories_version: nightly
-foreman_repositories_use_release: True
-foreman_repositories_use_koji: False
+foreman_repositories_environment: release

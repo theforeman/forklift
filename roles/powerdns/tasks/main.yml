@@ -37,8 +37,8 @@
     state: "restarted"
   when: pdns_configured.changed
 
-- include: "schema.mysql.yml"
+- include_tasks: "schema.mysql.yml"
   when: powerdns_db_backend == "gmysql"
 
-- include: "zones.yml"
+- include_tasks: "zones.yml"
   when: powerdns_zones

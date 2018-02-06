@@ -1,7 +1,7 @@
 ---
-- include: ca.yml
+- include_tasks: ca.yml
 
-- include: certificate.yml
+- include_tasks: certificate.yml
   with_items: "{{ certificates_services }}"
 
-- include: client_rpm.yml
+- include_tasks: client_rpm.yml

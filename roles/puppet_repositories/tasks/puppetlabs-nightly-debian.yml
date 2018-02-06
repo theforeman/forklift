@@ -1,0 +1,21 @@
+---
+- name: 'Install Puppetlabs GPG key'
+  apt_key:
+    url: https://apt.puppetlabs.com/DEB-GPG-KEY-puppet
+
+- name: 'Install Puppetlabs Puppet 5 Nightly repository'
+  apt_repository:
+    repo: deb http://apt.puppetlabs.com {{ ansible_distribution_release }} puppet5-nightly
+    state: present
+
+- name: 'Install backports'
+  include_role:
+    name: 'debian_backports'
+  when: ansible_distribution_release == "jessie"
+
+- name: 'Install openjdk-8-jre-headless from backports'
+  apt:
+    name: 'openjdk-8-jre-headless'
+    state: present
+    default_release: "{{ansible_distribution_release}}-backports"
+  when: ansible_distribution_release == "jessie"

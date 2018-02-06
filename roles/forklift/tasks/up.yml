@@ -1,15 +1,12 @@
 ---
-- name: 'Ensure .tmp_boxes directory'
-  file:
-    state: directory
-    path: "{{ current_directory }}/.tmp_boxes"
-
 - name: 'Write box file'
   copy:
-    dest: "{{ current_directory }}/.tmp_boxes/{{ forklift_name }}.yaml"
+    dest: "{{ current_directory }}/boxes.d/80-tmp-{{ forklift_name }}.yaml"
     content: "{{ forklift_boxes | to_yaml }}"
 
+# using --no-parallel here to avoid problems with libvirt storage volumes
+# see https://github.com/vagrant-libvirt/vagrant-libvirt/issues/850
 - name: 'Bring up boxes'
-  command: "vagrant up {{ forklift_boxes.keys()|join(' ') }}"
+  command: "vagrant up --no-parallel {{ forklift_boxes.keys()|join(' ') }}"
   args:
     chdir: "{{ current_directory }}"

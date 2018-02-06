@@ -11,7 +11,7 @@ module APlugin
 
     DB           = 'db'
     WEB          = 'web'
-    PARENT_NAME  = 'centos6-devel'
+    PARENT_NAME  = 'centos7-devel'
     PROJECT_PATH = "#{Forklift::ROOT}/../a_repo"
 
     Forklift.define_vm config, Forklift.new_box(PARENT_NAME, DB) do |machine|

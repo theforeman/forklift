@@ -6,4 +6,4 @@ katello_provisioning_location: Default Location
 katello_provisioning_sync_repos: True
 katello_provisioning_download_policy: on_demand
 katello_provisioning_installer_options:
- - "{{ '--disable-system-checks' if katello_repositories_version != '3.1' else '' }}"
+ - '--disable-system-checks'

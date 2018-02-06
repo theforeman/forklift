@@ -1,0 +1,4 @@
+---
+- name: "Configure system wide umask on {{ ansible_os_family }} to {{ umask_mode }}"
+  include_tasks: "{{ ansible_os_family|lower }}.yml"
+  when: umask_mode != false
