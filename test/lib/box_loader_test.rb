@@ -3,7 +3,7 @@ require 'test_helper'
 class TestBoxLoader < Minitest::Test
 
   def test_load
-    locations = get_locations('00-base.yaml')
+    locations = get_locations('00-centos.yaml')
     loader = Forklift::BoxLoader.new(nil, locations)
     loader.load!
 
