@@ -47,6 +47,8 @@ sed -i "s/<REPLACE ME>/GITHUB_NICK/g" boxes.d/99-local.yaml
 vagrant up centos7-devel
 ```
 
+You can find more thorough guides in the [docs folder](https://github.com/theforeman/forklift/tree/master/docs).
+
 ### Poor man's DNS a.k.a /etc/hosts
 
 For the multi-host setup, one of the easiest way of making the name
