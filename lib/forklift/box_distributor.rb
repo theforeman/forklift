@@ -88,6 +88,7 @@ module Forklift
         configure_rackspace(machine, box)
         configure_synced_folders(machine, box)
         configure_sshfs(config, box)
+        configure_nfs(config, box)
 
         yield machine if block_given?
       end
@@ -95,6 +96,15 @@ module Forklift
 
     def create_domain(box)
       box['domain'] || @settings['domain'] || "#{`hostname -s`.strip}.example.com"
+    end
+
+    def configure_nfs(config, box)
+      return unless box['nfs']
+      config.vm.synced_folder box['nfs']['host_path'],
+                              box['nfs']['guest_path'],
+                              :type    => :nfs,
+                              :nfs_udp => box['nfs']['udp'] || false,
+                              :linux__nfs_options => box['nfs']['options'] || %w[async rw no_subtree_check all_squash]
     end
 
     def configure_sshfs(config, box)

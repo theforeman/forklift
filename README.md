@@ -76,26 +76,23 @@ my-nightly-koji:
 
 Options:
 
-```
-box -- the ':name' one of the defined boxes in the Vagrantfile
-bridged -- deploy on Libvirt with a bridged networking configuration, value
-           of this parameter should be the interface of the host (e.g. em1)
-memory -- set the amount of memory (in megabytes) this box will consume
-cpus -- set the number of cpus this box will use
-hostname -- hostname to set on the box
-networks -- custom networks to use in addition to the management network
-disk_size -- specify the size (in gigabytes) of the box's virtual disk. This
-             only sets the virtual disk size, so you will still need to
-             resize partitions and filesystems manually.
-add_disks -- (libvirt provider only) specify additional libvirt volumes
-ansible -- updates the Ansible provisioner configuration including the
-           playbook to be ran or any variables to set
-libvirt_options -- sets Libvirt specific options
-virtualbox_options -- sets VirtualBox specific options
-rackspace_options -- sets Rackspace specific options
-domain -- forklift uses short name of your host + 'example.com' as domain name for your boxes. You can use this option to override it.
-sshfs -- if you have vagrant-sshfs plugin, you can use sshfs to share folders between your host and guest. See an example below for details.
-```
+| Option             | Description                                                           |
+|:-------------------|:----------------------------------------------------------------------|
+| box                |  the ':name' one of the defined boxes in the Vagrantfile |
+| bridged            |  deploy on Libvirt with a bridged networking configuration, value of this parameter should be the interface of the host (e.g. em1) |
+| memory             |  set the amount of memory (in megabytes) this box will consume |
+| cpus               |  set the number of cpus this box will use |
+| hostname           |  hostname to set on the box |
+| networks           |  custom networks to use in addition to the management network |
+| disk_size          |  specify the size (in gigabytes) of the box's virtual disk. This only sets the virtual disk size, so you will still need to resize partitions and filesystems manually. |
+| add_disks          |  (libvirt provider only) specify additional libvirt volumes |
+| ansible            |  updates the Ansible provisioner configuration including the playbook to be ran or any variables to set |
+| libvirt_options    |  sets Libvirt specific options |
+| virtualbox_options |  sets VirtualBox specific options |
+| rackspace_options  |  sets Rackspace specific options |
+| domain             |  forklift uses short name of your host + 'example.com' as domain name for your boxes. You can use this option to override it. |
+| sshfs              |  if you have vagrant-sshfs plugin, you can use sshfs to share folders between your host and guest. See an example below for details. |
+| nfs                |  share folders between host and guest.  See an example below for details. |
 
 Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
 
@@ -149,6 +146,7 @@ If you want to mount in the opposite direction, just change `reverse` to `False`
 
 Example with an additional disk (libvirt volume) presented as /dev/vdb in the vm:
 
+```
 static:
   box: centos7
   hostname: mystatic.box.com
@@ -156,6 +154,20 @@ static:
     - size: 100GiB
       device: vdb
       type: qcow2
+```
+
+#### Using NFS to share folders
+
+An alternative to SSHFS is to share the folders with NFS.  It is slightly more work than SSHFS.  See the [Fedora developer documentation](https://developer.fedoraproject.org/tools/vagrant/vagrant-nfs.html) for information about how to configure an NFS server for Vagrant.
+
+Then create your box:
+
+```
+with-nfs:
+  box: centos7
+  nfs:
+    host_path: '/some/host/path'
+    guest_path: '/some/guest/path'
 ```
 
 ### Customize Deployment Settings
