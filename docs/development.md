@@ -40,7 +40,6 @@ centos7-devel:
     variables:
       katello_devel_github_username: <REPLACE ME>
       foreman_installer_options: "
-        --katello-devel-upstream-remote-name origin
         --katello-devel-extra-plugins theforeman/foreman_remote_execution
         --katello-devel-extra-plugins theforeman/foreman_discovery
         "
@@ -54,10 +53,15 @@ vagrant up centos7-devel
 
 The box can now be accessed via ssh and the Rails server started directly (this assumes you are connecting as the default `vagrant` user):
 
-    vagrant ssh <deployment>
-    cd /home/vagrant/foreman
-    sudo service iptables stop
-    bin/rails s -b 0.0.0.0
+```sh
+vagrant ssh centos7-devel
+cd foreman
+bundle exec foreman start
+```
+
+### Webpack dev server & Firefox
+
+When using the dev server on Firefox you need to accept the self-signed certificate. You should go to `https://centos7-devel.example.com:3808` (or your equivalent) and add an exception for this certificate. Chrome does not throw any warnings if you have accepted the same certificate already for `https://centos7-devel.example.com`.
 
 
 ## Koji Scratch Builds
@@ -228,38 +232,6 @@ then add
 ```
 
 to the main katello server you want the client attached to
-
-## Webpack
-
-Forklift creates a reverse proxy between localhost:3000 (Rails development default server) and https://forkliftfqdn (e.g: https://centos7-devel.example.com). This will cause mixed-content errors if you try to enable the webpack server without any options, as it needs to use the right certificates for HTTPS and Foreman needs to allow it. If you do not need to hack on Webpack code, ensure `:webpack_dev_server` is set to false in `~/foreman/config/settings.yaml` and run `bundle exec rake webpack:compile` from `~/foreman`.That will create the necessary assets to be served by Foreman. If you want to work on Webpack code, follow these instructions:
-
-To work with webpack-dev-server, ensure the following lines are in your `~/foreman/config/settings.yaml`:
-
-```yaml
-:webpack_dev_server: true
-:webpack_dev_server_https: true
-```
-
-This will instruct Foreman to use Webpack from an https source. Now we need to make sure Webpack is using the right certificates to serve the development content through HTTPS. We're going to save these configuration values on `~/foreman/.env`:
-
-```
-WEBPACK_OPTS='--https --key /etc/pki/katello/private/katello-default-ca.key --cert /etc/pki/katello/certs/katello-default-ca.crt --cacert /etc/pki/katello/certs/katello-default-ca.crt --host 0.0.0.0 --public centos7-devel.example.com'
-```
-
-Replace centos7-devel.example.com with the public hostname of your development server, if different.
-
-Remember to run `source ~/foreman/.env` before running your Webpack server, so that the right options to enable HTTPS are loaded.
-
-Additionally, Foreman uses [secureheaders](https://github.com/twitter/secureheaders) to protect users from different attacks. secureheaders will block requests to the webpack development server, as it's not running in localhost:3000. To allow it, change the following lines in `~/foreman/config/initializers/secure_headers.rb`, substituting centos7-devel.example.com for your fqdn, you can get this value by running `hostname -f`.
-
-```
-    :style_src   => ["'unsafe-inline'", "'self'", 'centos7-devel.example.com:3808'],
-    :script_src  => ["'unsafe-eval'", "'unsafe-inline'", "'self'", 'centos7-devel.example.com:3808'],
-```
-
-One last thing: Firefox will not like that webpack-dev-server is using a self-signed certificate. You should go to `https://centos7-devel.example.com:3008` (or your equivalent) and add an exception for this certificate. Chrome does not throw any warnings if you have accepted the same certificate already for `https://centos7-devel.example.com`.
-
-After these changes, you should be able to run the webpack development server alongside with Foreman. Try it out by going to `~/foreman` and running `foreman start`. Happy hacking!
 
 ## Dynflow Development
 
