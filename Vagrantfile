@@ -13,7 +13,7 @@ def migrate_boxes!
   return if File.symlink?(old) || !File.exist?(old)
 
   if File.exist?(new)
-    raise BoxesMoveError, "File #{new} already exists. Refusing to overwrite"
+    raise "File #{new} already exists, refusing to overwrite. Remove boxes.yaml in favor of boxes.d/99-local.yaml"
   end
 
   File.rename(old, new)
