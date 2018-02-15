@@ -5,16 +5,18 @@
 Forklift provides tools to create Foreman/Katello environments for development, testing and production configurations. Whether you are a developer wanting an environment to write code, or a user wanting to spin up the latest production environment for deployment or evaluation Forklift has you covered.
 
  * [Using Forklift](#using-forklift)
+   - [Requirements](#requirements)
+   - [Quickstart](#quickstart)
+   - [Poor man's DNS a.k.a /etc/hosts](#poor-mans-dns-aka-etchosts)
    - [Adding Custom Boxes](#adding-custom-boxes)
    - [Customize Deployment Settings](#customize-deployment-settings)
-   - [Post Provisioning Playbooks & Scripts](#post-install-playbooks)
-   - [Customize with Plugins](#plugins)
+   - [Post Install Playbooks](#post-install-playbooks)
  * [Production Environments](docs/production.md)
  * [Development Environments](docs/development.md)
  * [Testing Environments](docs/testing.md)
  * [Provisioning environment](docs/provision.md)
  * [Plugins](docs/plugins.md)
- * [Using Forklift as a Library](library.md)
+ * [Using Forklift as a Library](docs/library.md)
  * [Troubleshooting](docs/troubleshooting.md)
 
 ## Using Forklift
