@@ -28,21 +28,55 @@
     {{ foreman_openscap_hammer }} proxy import-classes --name {{ foreman_openscap_proxy_name }}
   tags:
     - seed
-  when: '{{ foreman_openscap_proxy_name != False }}'
 
 - name: 'Import default scap content'
   shell: >
     foreman-rake foreman_openscap:bulk_upload:default
   tags:
     - seed
-  when: '{{ foreman_openscap_proxy_name != False }}'
 
-# TODO: disabled until cli is fixed
-# - name: 'Create example policy'
-#   shell: >
-#     {{ foreman_openscap_hammer }} policy create --name 'Example policy'
-#      --period weekly --weekday monday
-#      --scap-content 'Red Hat centos6 default content'
-#      --scap-content-profile-id TODO
-#   tags:
-#     - seed
+- name: 'get scap content profile json'
+  shell: >
+    {{ foreman_openscap_hammer }} --output json scap-content info --title 'Red Hat centos7 default content'
+  register: foreman_openscap_scap_content_json
+
+- name: 'set openscap scap content'
+  set_fact:
+    foreman_openscap_scap_content: "{{ foreman_openscap_scap_content_json.stdout|from_json }}"
+
+- name: 'find hostgroup Katello CentOS 7'
+  shell: >
+    {{ foreman_openscap_hammer }} hostgroup info --name 'Katello CentOS 7'
+  register: katello_provisioning_hostgroup_katello_centos
+  ignore_errors: True
+
+- name: 'find hostgroup Katello CentOS 7 OpenSCAP'
+  shell: >
+    {{ foreman_openscap_hammer }} hostgroup info --name 'OpenSCAP'
+  register: katello_provisioning_hostgroup_katello_centos_openscap
+  ignore_errors: True
+
+- name: 'create Katello CentOS 7 OpenSCAP host group'
+  shell: >
+    {{ foreman_openscap_hammer }} hostgroup create
+    --name "OpenSCAP"
+    --parent 'Katello CentOS 7'
+    --openscap-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
+    {{ foreman_provisioning_hammer_taxonomy_params }}
+  when: (katello_provisioning_hostgroup_katello_centos.stderr.find('not found') == -1) and (katello_provisioning_hostgroup_katello_centos_openscap.stderr.find('not found') != -1)
+
+- name: 'find CentOS policy'
+  shell: >
+    {{ foreman_openscap_hammer }} policy info --name 'Standard CentOS 7 OpenSCAP policy'
+  register: foreman_openscap_centos_policy_output
+  ignore_errors: True
+
+# This will break with hammer_cli_foreman_openscap 0.1.6 because of http://projects.theforeman.org/issues/21687
+# the format will need to be changed
+- name: 'create CentOS policy'
+  shell: >
+    {{ foreman_openscap_hammer }} policy create --name 'Standard CentOS 7 OpenSCAP policy' --period weekly --weekday monday --scap-content-id {{ foreman_openscap_scap_content.Id }} --scap-content-profile-id {{ foreman_openscap_scap_content | json_query('"SCAP content profiles"."1"."Id"') }} --hostgroups "OpenSCAP"
+  when: foreman_openscap_centos_policy_output.stderr.find('not found') != -1
+  tags:
+    - seed
+
