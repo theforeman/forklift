@@ -1,0 +1,7 @@
+- name: 'Install bootdisk plugin'
+  include_role:
+    name: plugins/plugin_installer
+  vars:
+    plugin_installer_options: >
+      --enable-foreman-plugin-bootdisk
+      {{ foreman_bootdisk_installer_options }}
