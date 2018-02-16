@@ -1,0 +1,79 @@
+# Manually verify your hosts has FQDN set correctly
+# check it's in /etc/hosts /etc/hostname and hostname returns it, /etc/hosts first line should be 192.168.73.1  $fqdn
+
+# TODO - add role for setting up the machine - autologin in gdm, perhaps background image etc, installation of virt-manager, vim, htop
+# TODO - refactor katello_provisioning so that it does not run installer, it should only seed stuff, installer should be customized from playbook using foreman_installer's role variables
+
+- hosts: all
+  become: true
+  roles:
+    - disable_ipv6
+    - disable_firewall
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - ostree_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer
+    - libvirt_setup
+    - katello_provisioning
+    - plugins/foreman_templates
+# openscap manual steps
+# 1. edit Base/Katello CentOS 7/OpenSCAP host group and set the policy manually
+# covered by http://projects.theforeman.org/issues/22481
+    - plugins/foreman_openscap
+# discovery manual steps (to make discovery work via pxelinux):
+# 1. unlock PXELinux global default
+# 2. change ONTIMEOUT local to ONTIMEOUT discovery
+# 3. save
+# 4. click Build PXE Default button
+# covered by http://projects.theforeman.org/issues/21204/
+    - plugins/foreman_discovery
+    - plugins/foreman_bootdisk
+    - plugins/foreman_remote_execution
+    - plugins/foreman_ansible 
+  vars:
+    katello_provisioning_organization: Demo
+    katello_provisioning_location: Belgium
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+    foreman_installer_additional_packages:
+      - rubygem-ruby-libvirt
+      - foreman-libvirt
+      - foreman-ec2
+      - foreman-gce
+      - foreman-openstack
+      - foreman-ovirt
+      - foreman-rackspace
+      - foreman-vmware
+      - katello
+    foreman_installer_options: >
+      --foreman-admin-password {{ foreman_installer_admin_password }}
+      --foreman-organizations-enabled true 
+      --foreman-locations-enabled true 
+      --foreman-initial-organization {{ katello_provisioning_organization }}
+      --foreman-initial-location {{ katello_provisioning_location }} 
+      --puppet-show-diff=true
+      --foreman-proxy-dns true 
+      --foreman-proxy-dhcp true 
+      --foreman-proxy-dns-managed false 
+      --foreman-proxy-dhcp-managed false 
+      --foreman-proxy-dns-provider libvirt 
+      --foreman-proxy-dns-interface virbr1 
+      --foreman-proxy-dhcp-provider libvirt 
+      --foreman-proxy-libvirt-network provision 
+      --foreman-proxy-dhcp-interface virbr1 \
+    foreman_repositories_environment: release
+    katello_repositories_environment: release
+    selinux_state: disabled
+    # if you're rerunning this playbook to save some time you may want to disable repo sync if they were synced recently
+    katello_provisioning_sync_repos: True
+    # if you want to speed up the setup and you don't care about packages being downloaded, you can change this to on_demand
+    # valid options are on_demand, background, immediate
+    katello_provisioning_download_policy: immediate
+# MANUAL STEPS
+# 1. create a compute profile through UI (there's no API for it)
+#   define it as Small, 2 GB RAM, network type is Virtual (NAT) with network provision
