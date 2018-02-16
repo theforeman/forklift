@@ -1,0 +1,6 @@
+---
+- name: deploy custom-hiera.yaml
+  blockinfile:
+    dest: /etc/foreman-installer/custom-hiera.yaml
+    block: "{{ foreman_installer_custom_hiera }}"
+    create: yes
