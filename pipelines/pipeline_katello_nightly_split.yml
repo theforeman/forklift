@@ -73,6 +73,7 @@
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
+      - "--certs-generate false"
       - "--katello-manage-application true"
       - "--katello-manage-candlepin false"
       - "--katello-candlepin-hostname pipeline-services-nightly-centos7-split.{{ ansible_domain }}"
