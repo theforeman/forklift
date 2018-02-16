@@ -50,7 +50,25 @@ sed -i.bak "s/<REPLACE ME>/GITHUB_NICK/g" vagrant/boxes.d/99-local.yaml
 vagrant up centos7-katello-devel
 ```
 
-You can find more thorough guides in the [docs folder](https://github.com/theforeman/forklift/tree/master/docs).
+In case using vagrant is not desired, ansible playbooks and roles from this repo can be used separately. This is useful if an existing host should be used for the installation, e.g. a beaker machine. In order to deploy the devel environment on host test.example.com, the following needs to be done:
+
+on test.example.com machine, where the dev env should be deployed
+```sh
+useradd vagrant
+echo "vagrant	ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers`
+```
+
+in forklift checkout
+```sh
+echo "[devel]\ntest.example.com" > inventories/local_inventory
+ansible-playbook --private-key=~/.ssh/id_rsa --user root --inventory inventories/local_inventory --extra-vars katello_devel_github_username=katello playbooks/devel.yml
+```
+
+In an example above, ansible was instructed to use specific private key (overriding the value from ansible.cfg), root user was set as ssh user and playbook variable was set, so that checkout will be made from katello user.
+
+Other playbooks from playbooks/ directory can be used similarly, though some might need more variables and investigating their parameters is recommended first.
+
+More thorough guides can be found in the [docs folder](https://github.com/theforeman/forklift/tree/master/docs).
 
 ### Credentials
 
