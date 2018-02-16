@@ -1,4 +1,9 @@
 ---
+# Make sure admin does not default to any taxonomy
+- name: 'disable default context for admin'
+  shell: >
+    {{ foreman_provisioning_hammer }} user update --login admin --default-organization-id 0 --default-location-id 0
+
 # Get the smart proxy ID of the local katello:
 - name: 'get smart proxy id'
   shell: >
@@ -145,82 +150,77 @@
   shell: >
     {{ foreman_provisioning_hammer }} settings set --name query_local_nameservers --value true
 
-# testing both --name and --title for backward compatibility
-- name: 'create CentOS 7'
+
+# make installation media available
+# until it's done by seed - http://projects.theforeman.org/issues/22661
+- name: 'assign organization and location to all seeded media'
+  with_items:
+    - CentOS mirror
+    - CoreOS mirror
+    - Debian mirror
+    - Fedora Atomic mirror
+    - Fedora mirror
+    - FreeBSD mirror
+    - OpenSUSE mirror
+    - Ubuntu mirror
   shell: >
-    {{ foreman_provisioning_hammer }} os info --name "CentOS 7" ||
-    {{ foreman_provisioning_hammer }} os info --title "CentOS 7" ||
-    {{ foreman_provisioning_hammer }} os create
-    --name CentOS --major 7 --architectures x86_64 --family 'Redhat' --media 'CentOS mirror' --partition-tables 'Kickstart default'
+    {{ foreman_provisioning_hammer }} medium update --name "{{ item }}" --organization-titles "{{ foreman_provisioning_organization }}" --location-titles "{{ foreman_provisioning_location }}"
 
-- name: 'find CentOS 7'
-  shell: >
-    {{ foreman_provisioning_hammer }} --output json os info --name "CentOS 7" ||
-    {{ foreman_provisioning_hammer }} --output json os info --title "CentOS 7"
-  register: foreman_provisioning_centos73_json
-  ignore_errors: True
 
-- name: 'get CentOS 7 info'
-  set_fact:
-    foreman_provisioning_centos73: "{{ foreman_provisioning_centos73_json.stdout|from_json }}"
+- name: 'Setup CentOS 7 provisioning'
+  import_tasks: configure_centos_7.yml
 
-- name: 'find kickstart templates'
-  shell: >
-    {{ foreman_provisioning_hammer }} --output=json template list
-    --search 'name ~ "Kickstart default"'
-  register: kickstart_templates_json
+- name: 'Setup Fedora 27 provisioning'
+  import_tasks: configure_fedora_27.yml
 
-- name: 'set kickstart templates'
-  set_fact:
-    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+- name: 'Setup Debian 9.3 provisioning'
+  import_tasks: configure_debian_9_3.yml
 
-- name: 'associate kickstart templates to CentOS 7'
-  shell: >
-    {{ foreman_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS 7'
-  with_items: "{{ kickstart_templates }}"
+- name: 'Setup Ubuntu 17.10 provisioning'
+  import_tasks: configure_ubuntu_17_10.yml
 
-- name: 'set default templates for CentOS 7'
-  shell: >
-    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_centos73.Id }} --config-template-id {{ item.Id }}
-  with_items: "{{ kickstart_templates }}"
-
+# TODO verify - should not be needed, DNS should work just fine
 - name: 'set unattended_url'
   shell: >
     {{ foreman_provisioning_hammer }} settings set --name unattended_url --value 'http://{{ foreman_provisioning_ip_address }}'
 
-- name: 'find hostgroup Forklift Base'
+- name: 'find hostgroup Base'
   shell: >
-    {{ foreman_provisioning_hammer }} hostgroup info --name 'Forklift Base'
+    {{ foreman_provisioning_hammer }} hostgroup info --name 'Base'
   register: foreman_provisioning_hostgroup_base
   ignore_errors: True
 
-- name: 'create hostgroup Forklift Base'
+# TODO compute-profile can't be specified by name until http://projects.theforeman.org/issues/21580/ so we hardcode 1
+- name: 'create hostgroup Base'
   shell: >
     {{ foreman_provisioning_hammer }} hostgroup create
-    --name 'Forklift Base'
+    --name 'Base'
     --architecture x86_64
     --domain {{ foreman_provisioning_domain }}
     --environment production
     --puppet-ca-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
     --puppet-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
     --subnet '{{ foreman_provisioning_network }}/24'
+    --compute-profile-id 1
+    --compute-resource 'libvirt'
     --root-pass changeme
+    --pxe-loader "PXELinux BIOS"
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: foreman_provisioning_hostgroup_base.stderr.find('not found') != -1
 
-- name: 'find hostgroup Forklift CentOS 7'
+- name: 'find hostgroup CentOS 7'
   shell: >
-    {{ foreman_provisioning_hammer }} hostgroup info --name 'Forklift CentOS 7 Mirror'
+    {{ foreman_provisioning_hammer }} hostgroup info --name 'CentOS 7 Mirror'
   register: foreman_provisioning_hostgroup_centos_mirror
   ignore_errors: True
 
-- name: 'create hostgroup Forklift CentOS 7 Mirror'
+- name: 'create hostgroup CentOS 7 Mirror'
   shell: >
     {{ foreman_provisioning_hammer }} hostgroup create
-    --name 'Forklift CentOS 7 Mirror'
+    --name 'CentOS 7 Mirror'
     --operatingsystem 'CentOS 7'
     --medium 'CentOS mirror'
     --partition-table 'Kickstart default'
-    --parent 'Forklift Base'
+    --parent 'Base'
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: foreman_provisioning_hostgroup_centos_mirror.stderr.find('not found') != -1

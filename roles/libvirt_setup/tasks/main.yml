@@ -36,6 +36,11 @@
     name: provision
     xml: '{{ lookup("template", "../templates/network.xml.j2") }}'
 
+# libvirt seems to have bug that it does not create the symlink even if the network was defined with auto provisioning
+# so we ensure the symlink exists and network autostarts after reboot
+- name: 'make provisioning network autostart on reboot'
+  file: state=link src=/etc/libvirt/qemu/networks/provision.xml path=/etc/libvirt/qemu/networks/autostart/provision.xml
+
 - name: 'create the provisioning storage'
   virt_pool:
     command: define

@@ -1,0 +1,36 @@
+- name: 'create Debian 9.3'
+  shell: >
+    {{ foreman_provisioning_hammer }} os info --title "Debian 9.3" ||
+    {{ foreman_provisioning_hammer }} os create
+    --name Debian --major 9 --minor 3 --release-name 'stretch' --architectures x86_64 --family 'Debian' --media 'Debian mirror' --partition-tables 'Preseed default'
+
+- name: 'find Debian 9.3'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output json os info --name "Debian 9.3" ||
+    {{ foreman_provisioning_hammer }} --output json os info --title "Debian 9.3"
+  register: foreman_provisioning_debian93_json
+  ignore_errors: True
+
+- name: 'get CentOS 9.3 info'
+  set_fact:
+    foreman_provisioning_debian93: "{{ foreman_provisioning_debian93_json.stdout|from_json }}"
+
+- name: 'find preseed templates'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output=json template list
+    --search 'name ~ "Preseed default"'
+  register: preseed_templates_json
+
+- name: 'set preseed templates'
+  set_fact:
+    preseed_templates: "{{ preseed_templates_json.stdout|from_json }}"
+
+- name: 'associate preseed templates to Debian 9.3'
+  shell: >
+    {{ foreman_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'Debian 9.3'
+  with_items: "{{ preseed_templates }}"
+
+- name: 'set default templates for Debian 9.3'
+  shell: >
+    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_debian93.Id }} --config-template-id {{ item.Id }}
+  with_items: "{{ preseed_templates }}"

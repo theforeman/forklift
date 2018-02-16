@@ -1,0 +1,40 @@
+- name: 'associate CentOS 7 media'
+  shell: >
+    {{ foreman_provisioning_hammer }} medium update --name "CentOS mirror" --organization-titles "{{ foreman_provisioning_organization }}" --location-titles "{{ foreman_provisioning_location }}"
+
+- name: 'create CentOS 7'
+  shell: >
+    {{ foreman_provisioning_hammer }} os info --title "CentOS 7" ||
+    {{ foreman_provisioning_hammer }} os create
+    --name CentOS --major 7 --architectures x86_64 --family 'Redhat' --media 'CentOS mirror' --partition-tables 'Kickstart default'
+
+- name: 'find CentOS 7'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output json os info --name "CentOS 7" ||
+    {{ foreman_provisioning_hammer }} --output json os info --title "CentOS 7"
+  register: foreman_provisioning_centos73_json
+  ignore_errors: True
+
+- name: 'get CentOS 7 info'
+  set_fact:
+    foreman_provisioning_centos73: "{{ foreman_provisioning_centos73_json.stdout|from_json }}"
+
+- name: 'find kickstart templates'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output=json template list
+    --search 'name ~ "Kickstart default"'
+  register: kickstart_templates_json
+
+- name: 'set kickstart templates'
+  set_fact:
+    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+
+- name: 'associate kickstart templates to CentOS 7'
+  shell: >
+    {{ foreman_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS 7'
+  with_items: "{{ kickstart_templates }}"
+
+- name: 'set default templates for CentOS 7'
+  shell: >
+    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_centos73.Id }} --config-template-id {{ item.Id }}
+  with_items: "{{ kickstart_templates }}"
