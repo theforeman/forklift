@@ -1,0 +1,36 @@
+- name: 'create Ubuntu 17.10'
+  shell: >
+    {{ foreman_provisioning_hammer }} os info --title "Ubuntu 17.10" ||
+    {{ foreman_provisioning_hammer }} os create
+    --name Ubuntu --major 17 --minor 10 --release-name 'artful' --architectures x86_64 --family 'Debian' --media 'Ubuntu mirror' --partition-tables 'Preseed default'
+
+- name: 'find Ubuntu 17.10'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output json os info --name "Ubuntu 17.10" ||
+    {{ foreman_provisioning_hammer }} --output json os info --title "Ubuntu 17.10"
+  register: foreman_provisioning_ubuntu1710_json
+  ignore_errors: True
+
+- name: 'get Ubuntu 17.10 info'
+  set_fact:
+    foreman_provisioning_ubuntu1710: "{{ foreman_provisioning_ubuntu1710_json.stdout|from_json }}"
+
+- name: 'find preseed templates'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output=json template list
+    --search 'name ~ "Preseed default"'
+  register: preseed_templates_json
+
+- name: 'set preseed templates'
+  set_fact:
+    preseed_templates: "{{ preseed_templates_json.stdout|from_json }}"
+
+- name: 'associate preseed templates to Ubuntu 17.10'
+  shell: >
+    {{ foreman_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'Ubuntu 17.10'
+  with_items: "{{ preseed_templates }}"
+
+- name: 'set default templates for Ubuntu 17.10'
+  shell: >
+    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_ubuntu1710.Id }} --config-template-id {{ item.Id }}
+  with_items: "{{ preseed_templates }}"

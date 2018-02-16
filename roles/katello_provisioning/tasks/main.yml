@@ -102,6 +102,35 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_sync_repos
 
+# EPEL
+- name: 'find epel repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository info
+    --name "EPEL 7"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_epel_repo
+  ignore_errors: True
+
+- name: 'create epel repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository create
+    --product="CentOS"
+    --content-type="yum"
+    --name "EPEL 7"
+    --url "http://download.fedoraproject.org/pub/epel/7/x86_64"
+    --download-policy {{ katello_provisioning_download_policy }}
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_epel_repo.stderr.find('not found') != -1
+
+- name: 'sync the epel repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository synchronize
+    --name "EPEL 7"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_sync_repos
+
 # Activation key
 - name: 'find activation key'
   shell: >
@@ -122,10 +151,9 @@
   when: katello_provisioning_activation_key.stderr.find('not found') != -1
 
 # Associate templates
-- name: 'find CentOS_Linux 7'
+- name: 'find CentOS 7'
   shell: >
-    {{ katello_provisioning_hammer }} --output json os info --name "CentOS_Linux 7" ||
-    {{ katello_provisioning_hammer }} --output json os info --title "CentOS_Linux 7"
+    {{ katello_provisioning_hammer }} --output json os info --title "CentOS 7"
   register: katello_provisioning_centos7_json
   ignore_errors: True
 
@@ -151,7 +179,7 @@
         katello_provisioning_centos7: "{{ katello_provisioning_centos7_json_new.stdout|from_json }}"
   when: "'not found' in katello_provisioning_centos7_json.stderr"
 
-- name: 'update partition table for CentOS_Linux 7'
+- name: 'update partition table for CentOS 7'
   shell: >
     {{ katello_provisioning_hammer }} os update --id {{ katello_provisioning_centos7.Id }} --partition-tables 'Kickstart default'
   register: katello_provisioning_centos7_json
@@ -176,9 +204,9 @@
   set_fact:
     katello_kickstart_templates: "{{ katello_kickstart_templates_json.stdout|from_json }}"
 
-- name: 'associate kickstart templates to CentOS_Linux 7'
+- name: 'associate kickstart templates to CentOS 7'
   shell: >
-    {{ katello_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS_Linux 7'
+    {{ katello_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS 7'
   with_items: "{{ kickstart_templates }}"
 
 - name: 'set default templates for CentOS 7'
@@ -204,24 +232,24 @@
   set_fact:
     katello_provisioning_repo_json: "{{ katello_provisioning_repo.stdout|from_json }}"
 
-- name: 'find hostgroup Forklift Katello CentOS 7'
+- name: 'find hostgroup Katello CentOS 7'
   shell: >
-    {{ katello_provisioning_hammer }} hostgroup info --name 'Forklift Katello CentOS 7'
+    {{ katello_provisioning_hammer }} hostgroup info --name 'Katello CentOS 7'
   register: katello_provisioning_hostgroup_katello_centos
   ignore_errors: True
 
-- name: 'create Forklift Katello CentOS 7 host group'
+- name: 'create Katello CentOS 7 host group'
   shell: >
     {{ katello_provisioning_hammer }} hostgroup create
-    --name "Forklift Katello CentOS 7"
+    --name "Katello CentOS 7"
     --content-view "Default Organization View"
     --lifecycle-environment Library
     --query-organization "{{ katello_provisioning_organization }}"
     --content-source-id {{ foreman_provisioning_smart_proxy.Id }}
     --kickstart-repository-id {{ katello_provisioning_repo_json.ID }}
-    --operatingsystem "CentOS_Linux 7"
+    --operatingsystem "CentOS 7"
     --partition-table 'Kickstart default'
-    --parent 'Forklift Base'
+    --parent 'Base'
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: katello_provisioning_hostgroup_katello_centos.stderr.find('not found') != -1
 
@@ -229,7 +257,7 @@
 - name: 'set enable-puppet4 parameter'
   shell: >
       {{ katello_provisioning_hammer }} hostgroup set-parameter
-      --hostgroup "Forklift Katello CentOS 7"
+      --hostgroup "Katello CentOS 7"
       --name enable-puppet4
       --value true
 
