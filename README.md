@@ -148,6 +148,17 @@ with-sshfs:
 
 If you want to mount in the opposite direction, just change `reverse` to `False` or remove it entirely.
 
+Additonal options may be specified with using `options`.
+
+```
+with-sshfs-options:
+  box: centos7
+  sshfs:
+    host_path: '/some/host/path'
+    guest_path: '/some/guest/path'
+    options: '-o allow_other'
+```
+
 Example with an additional disk (libvirt volume) presented as /dev/vdb in the vm:
 
 ```
