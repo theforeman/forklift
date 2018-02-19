@@ -10,6 +10,15 @@ centos7-devel:
       foreman_devel_github_push_ssh: True
       katello_devel_github_username: <REPLACE ME>
 
+centos7-luna-devel:
+  box: centos7
+  memory: 9000
+  ansible:
+    playbook: 'playbooks/luna-devel.yml'
+    group: 'devel'
+    variables:
+      katello_devel_github_username: <REPLACE ME>
+
 centos7-hammer-devel:
   box: centos7
   memory: 512

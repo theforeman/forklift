@@ -1,0 +1,17 @@
+---
+- import_playbook: devel.yml
+  vars:
+    katello_devel_github_username: ''
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--katello-devel-github-username '{{ katello_devel_github_username }}'"
+      - "--katello-devel-enable-ostree=true"
+      - "--katello-devel-extra-plugins theforeman/foreman_remote_execution"
+      - "--katello-devel-extra-plugins theforeman/foreman_discovery"
+      - "--katello-devel-extra-plugins theforeman/foreman_ansible"
+      - "--katello-devel-extra-plugins theforeman/foreman-tasks"
+      - "--katello-devel-extra-plugins theforeman/foreman_bootdisk"
+      - "--katello-devel-extra-plugins theforeman/foreman_openscap"
+      - "--katello-devel-extra-plugins theforeman/foreman_templates"
+      - "--katello-devel-extra-plugins theforeman/foreman_hooks"
+      - "--katello-devel-extra-plugins theforeman/foreman_docker"

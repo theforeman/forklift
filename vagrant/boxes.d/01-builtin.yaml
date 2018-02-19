@@ -27,3 +27,8 @@ boxes:
     box: centos7
     ansible:
       playbook: 'playbooks/runcible.yml'
+
+  centos7-luna:
+    box: centos7
+    ansible:
+      playbook: 'playbooks/luna.yml'
