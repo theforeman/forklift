@@ -28,10 +28,15 @@
 
 - name: 'Enable extra repositories'
   command: subscription-manager repos --enable {{ item }}
-  with_items:
-    "{{ katello_client_extra_repos }}"
+  with_items: "{{ katello_client_extra_repos }}"
+
+- name: 'Install katello-host-tools'
+  yum:
+    name: "katello-host-tools"
+    state: "present"
 
 - name: 'Install katello-agent'
   yum:
     name: "katello-agent"
     state: "present"
+  when: katello_client_install_agent
