@@ -1,0 +1,19 @@
+---
+- name: 'Remove possibly faulty RHSM facts'
+  file:
+    name: /etc/rhsm/facts/katello.facts
+    state: absent
+
+- name: 'Try to unregister from any old upstream'
+  redhat_subscription:
+    state: "absent"
+  ignore_errors: True
+
+- name: 'Clean old registrations'
+  command: subscription-manager clean
+
+- name: 'Remove old katello-ca-consumer RPM'
+  yum:
+    name: katello-ca-consumer-*
+    state: absent
+  ignore_errors: True

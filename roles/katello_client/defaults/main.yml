@@ -1,4 +1,5 @@
 ---
+katello_client_cleanup: False
 katello_client_organization: "Default_Organization"
 katello_client_environment: "Library"
 katello_client_username: "admin"
