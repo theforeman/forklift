@@ -112,7 +112,8 @@ module Forklift
       config.vm.synced_folder box['sshfs']['host_path'],
                               box['sshfs']['guest_path'],
                               :type => :sshfs,
-                              :reverse => box['sshfs']['reverse'] || false
+                              :reverse => box['sshfs']['reverse'] || false,
+                              :sshfs_opts_append => box['sshfs']['options'] || ''
     end
 
     def configure_vagrant_hostmanager(config)
