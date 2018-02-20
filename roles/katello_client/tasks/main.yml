@@ -8,13 +8,23 @@
     name: "http://{{ katello_client_server }}/pub/katello-ca-consumer-latest.noarch.rpm"
     state: "present"
 
-- name: 'Register client with subscription-manager'
+- name: 'Register client with subscription-manager as user {{ katello_client_username }}'
   redhat_subscription:
     state: "present"
     org_id: "{{ katello_client_organization }}"
     environment: "{{ katello_client_environment }}"
     username: "{{ katello_client_username }}"
     password: "{{ katello_client_password }}"
+  when:
+    - katello_client_activationkey == ""
+
+- name: 'Register client with subscription-manager using AK {{ katello_client_activationkey }}'
+  redhat_subscription:
+    state: "present"
+    org_id: "{{ katello_client_organization }}"
+    activationkey: "{{ katello_client_activationkey }}"
+  when:
+    - katello_client_activationkey != ""
 
 - name: 'Install katello-agent'
   yum:
