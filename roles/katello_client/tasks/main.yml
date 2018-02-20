@@ -1,4 +1,8 @@
 ---
+- name: 'Cleanup previous registrations'
+  include_tasks: cleanup.yml
+  when: katello_client_cleanup
+
 - name: 'Install bootstrap rpm'
   yum:
     name: "http://{{ katello_client_server }}/pub/katello-ca-consumer-latest.noarch.rpm"
