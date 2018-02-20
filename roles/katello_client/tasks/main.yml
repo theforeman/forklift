@@ -26,6 +26,11 @@
   when:
     - katello_client_activationkey != ""
 
+- name: 'Enable extra repositories'
+  command: subscription-manager repos --enable {{ item }}
+  with_items:
+    "{{ katello_client_extra_repos }}"
+
 - name: 'Install katello-agent'
   yum:
     name: "katello-agent"
