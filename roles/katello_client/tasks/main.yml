@@ -40,3 +40,9 @@
     name: "katello-agent"
     state: "present"
   when: katello_client_install_agent
+
+- name: 'Install katello-host-tools-tracer'
+  yum:
+    name: "katello-host-tools-tracer"
+    state: "present"
+  when: katello_client_install_tracer
