@@ -26,6 +26,12 @@
     state: latest
     virtualenv: "{{ robottelo_virtualenv_path }}"
 
+- name: Upgrade pip in the virtualenv
+  pip:
+    name: pip
+    state: latest
+    virtualenv: "{{ robottelo_virtualenv_path }}"
+
 - name: Install requirements
   pip:
     requirements: "{{ robottelo_directory }}/requirements.txt"
