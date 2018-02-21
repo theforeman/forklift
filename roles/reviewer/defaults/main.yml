@@ -1,0 +1,4 @@
+---
+reviewer_user: vagrant
+reviewer_install_repo: "https://github.com/ares/reviewer.git"
+reviewer_install_dir: "/home/{{ reviewer_user }}"

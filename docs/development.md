@@ -63,6 +63,25 @@ bundle exec foreman start
 
 When using the dev server you need to accept the self-signed certificate. You should go to `https://centos7-devel.example.com:3808` (or your equivalent) and add an exception for this certificate. 
 
+### Reviewing Pull Requests
+
+It's easy to checkout pull requests from projects that were installed in development environment. All projects are cloned in vagrant's home, e.g. ~/foreman, ~/katello etc. In order to apply some PR to any of this project, you can use a reviewer script. See following example
+
+```sh
+cd ~/katello
+rpr 5266
+```
+
+`rpr` is shortcut for review pull request. This fetches information about PR number 5266, defines new remote in you .git/config, fetches new objects from it. Then it creates new local branch called review/pr5266 and pulls the code from the PR. It uses SSH connection so using ssh-agent, with SSH key uploaded to your github account, is recommended. If you're applying a PR on remote machine to which you connected through SSH, make sure you open that connection with agent forwarding, e.g. `ssh -a vagrant@host.example.com`. Don't forget to migrate and seed the database if the PR contains related changes. Note that this might create new merge commit so git might want you to set your email and name. You can set that with following commands.
+
+```sh
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+```
+
+Once reviewing is finished, the repository can be reset to develop/master branch by calling `rrpr`. It destroys the review branch after it checkouts back to master branch.
+
+If `rpr` is used in project with `config/database.yml` it will also create a backup of the db in ./tmp/. When `rrpr` is called later and in case previous backup was found, it asks whether it should be restored.
 
 ## Koji Scratch Builds
 
