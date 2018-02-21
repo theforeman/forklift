@@ -1,3 +1,7 @@
 ---
 - include_tasks: github_push_ssh.yml
   when: foreman_devel_github_push_ssh
+
+- name: setup reviewing script
+  include_role: 
+    name: reviewer
