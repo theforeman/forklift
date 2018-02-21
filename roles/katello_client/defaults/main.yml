@@ -7,3 +7,4 @@ katello_client_password: "changeme"
 katello_client_activationkey: ""
 katello_client_extra_repos: []
 katello_client_install_agent: False
+katello_client_install_tracer: False
