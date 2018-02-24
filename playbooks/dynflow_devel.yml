@@ -3,5 +3,5 @@
   roles:
     - etc_hosts
     - git
-    - ruby-2-3
+    - ruby_scl
     - dynflow_devel
