@@ -1,0 +1,20 @@
+- name: 'Install SCL repository'
+  yum:
+    name: centos-release-scl
+    state: present
+
+- name: 'Install Ruby SCL'
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ ruby_scl_version }}"
+    - "{{ ruby_scl_version }}-ruby-devel"
+
+- name: 'Enable SCL at login'
+  blockinfile:
+    dest: /etc/profile.d/enable-{{ ruby_scl_version }}.sh
+    create: yes
+    block: |
+      #!/bin/bash
+      source scl_source enable {{ ruby_scl_version }}
