@@ -34,6 +34,7 @@
   yum:
     name: "katello-host-tools"
     state: "present"
+  ignore_errors: yes
 
 - name: 'Install katello-agent'
   yum:
