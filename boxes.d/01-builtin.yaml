@@ -16,6 +16,7 @@ boxes:
   centos7-provision-nightly:
     box: centos7
     memory: 8096
+    cpu_mode: host-passthrough
     ansible:
       playbook:
         - 'playbooks/katello.yml'
