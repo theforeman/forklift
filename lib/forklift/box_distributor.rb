@@ -4,7 +4,6 @@ module Forklift
     VAGRANTFILE_API_VERSION = '2'.freeze
 
     if Gem.loaded_specs['vagrant']
-      SUPPORT_SSH_INSERT_KEY = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
       SUPPORT_NAMED_PROVISIONERS = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
       SUPPORT_BOX_CHECK_UPDATE = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.5')
     end
@@ -66,7 +65,6 @@ module Forklift
       autostart = box.fetch('autostart', false)
       config.vm.define box.fetch('name'), primary: primary, autostart: autostart do |machine|
         machine.vm.box = box.fetch('box_name')
-        config.ssh.insert_key = false if SUPPORT_SSH_INSERT_KEY
         config.ssh.forward_agent = box.fetch('ssh_forward_agent', nil) || @settings.fetch('ssh_forward_agent', false)
         machine.vm.box_check_update = true if SUPPORT_BOX_CHECK_UPDATE
 
