@@ -1,0 +1,12 @@
+# using elastic's image since it is sp3, which is not offered by SUSE yet
+sles12sp3:
+  box_name: elastic/sles-12-x86_64
+  pty: true
+
+sles12sp2:
+  box_name: suse/sles12sp2
+  pty: true
+
+sles12sp1:
+  box_name: suse/sles12sp1
+  pty: true
