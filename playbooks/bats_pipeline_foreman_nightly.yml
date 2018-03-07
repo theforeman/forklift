@@ -18,7 +18,6 @@
     - umask
     - selinux
     - etc_hosts
-    - disable_ipv6
     - epel_repositories
     - puppet_repositories
     - foreman_repositories
