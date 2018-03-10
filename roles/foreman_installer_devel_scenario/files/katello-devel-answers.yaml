@@ -1,0 +1,34 @@
+---
+certs:
+  group: vagrant
+  deploy: true
+  generate: true
+katello_devel:
+  deployment_dir: /home/vagrant
+  user: vagrant
+  db_type: postgres
+  rvm: true
+foreman_proxy_content:
+  pulp_master: true
+  qpid_router_broker_addr: localhost
+foreman_proxy:
+  custom_repo: true
+  http: true
+  ssl_port: '9090'
+  templates: false
+  tftp: false
+  ssl_ca: /etc/foreman-proxy/ssl_ca.pem
+  ssl_cert: /etc/foreman-proxy/ssl_cert.pem
+  ssl_key: /etc/foreman-proxy/ssl_key.pem
+  foreman_ssl_ca: /etc/foreman-proxy/foreman_ssl_ca.pem
+  foreman_ssl_cert: /etc/foreman-proxy/foreman_ssl_cert.pem
+  foreman_ssl_key: /etc/foreman-proxy/foreman_ssl_key.pem
+puppet:
+  server: true
+  server_environments_owner: apache
+  server_foreman_ssl_ca: /etc/pki/katello/puppet/puppet_client_ca.crt
+  server_foreman_ssl_cert: /etc/pki/katello/puppet/puppet_client.crt
+  server_foreman_ssl_key: /etc/pki/katello/puppet/puppet_client.key
+foreman_proxy::plugin::pulp:
+  enabled: true
+  pulpnode_enabled: false
