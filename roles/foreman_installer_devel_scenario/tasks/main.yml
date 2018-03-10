@@ -1,0 +1,29 @@
+---
+- name: 'Install git'
+  package:
+    name: git
+    state: present
+
+- name: 'Copy scenario files'
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: /etc/foreman-installer/scenarios.d
+  with_items:
+    - katello-devel.yaml
+    - katello-devel-answers.yaml
+
+- name: 'Remove current puppet-katello_devel'
+  file:
+    state: absent
+    path: /usr/share/katello-installer-base/modules/katello_devel
+
+- name: 'Clone latest puppet-katello_devel'
+  git:
+    repo: https://github.com/theforeman/puppet-katello_devel
+    dest: /usr/share/katello-installer-base/modules/katello_devel
+    update: yes
+
+- name: "Install gems to rebuild the kafo module cache"
+  gem:
+    name: puppet-strings
+    executable: /opt/puppetlabs/puppet/bin/gem
