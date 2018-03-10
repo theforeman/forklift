@@ -1,21 +1,25 @@
-.vagrant
+# Vim
 *.swo
 *.swp
 *.swn
+
 katello-installer*
 foreman-installer*
 puppet-*
-boxes.yaml
 .idea
-scripts
 repo
-Gemfile.lock
+
+# Ansible
 *.retry
 *.pyc
 user_playbooks
 playbooks/galaxy_roles
 requirements.yml
-.tmp_boxes
-settings.yaml
-boxes.d/*-local.yaml
-boxes.d/80-tmp-*.yaml
+
+# Vagrant
+.vagrant
+boxes.yaml
+vagrant/Gemfile.lock
+vagrant/settings.yaml
+vagrant/boxes.d/*-local.yaml
+vagrant/boxes.d/80-tmp-*.yaml

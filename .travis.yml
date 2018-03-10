@@ -4,7 +4,7 @@ python:
   - 2.7
 install:
   - |
-    if git diff origin/master --name-only | grep -q "lib\|test\|boxes.d"; then
+    if git diff origin/master --name-only | grep -q "vagrant"; then
       rvm install 2.2.4
     fi
 
@@ -14,7 +14,8 @@ install:
     fi
 script:
   - |
-    if git diff origin/master --name-only | grep -q "lib\|test\|boxes.d"; then
+    if git diff origin/master --name-only | grep -q "vagrant"; then
+      cd vagrant
       bundle install
       bundle exec rake
     fi

@@ -6,5 +6,5 @@
 
 - name: 'Remove box file'
   file:
-    path: "{{ current_directory }}/boxes.d/80-tmp-{{ forklift_name }}.yaml"
+    path: "{{ current_directory }}/vagrant/boxes.d/80-tmp-{{ forklift_name }}.yaml"
     state: "absent"
