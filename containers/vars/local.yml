@@ -5,4 +5,4 @@ certificates_ca_directory: "{{ working_dir }}/certs"
 registry: oc-cluster
 openshift_data_dir: /home/origin
 services: ''
-bin_dir: "~/bin"
+bin_dir: ~/bin

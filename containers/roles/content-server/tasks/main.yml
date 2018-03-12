@@ -1,4 +1,12 @@
 ---
+- name: 'Install packages'
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - python-pulp-streamer
+
 - name: 'Log httpd to stdout'
   lineinfile:
     path: /etc/httpd/conf/httpd.conf
@@ -55,3 +63,9 @@
     path: /var/lib/pulp
     owner: apache
     group: apache
+
+- name: 'Configure squid hostname in pulp_streamer.conf'
+  replace:
+    dest: '/etc/httpd/conf.d/pulp_streamer.conf'
+    regexp: '127.0.0.1'
+    replace: 'squid'

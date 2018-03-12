@@ -13,7 +13,6 @@
     - pulp-rpm-plugins
     - pulp-puppet-plugins
     - pulp-docker-plugins
-    - pulp-katello
 
 - name: 'Add pulp-db-manage dry-run patch'
   get_url:
@@ -55,7 +54,8 @@
     state: directory
     path: /var/lib/pulp
     owner: apache
-    group: apache
+    group: root
+    mode: 0755
 
 - name: 'Generate CA'
   shell: 'pulp-gen-ca-certificate'
@@ -108,6 +108,12 @@
   with_items:
     - "ErrorLog logs/ssl_error_log"
     - "TransferLog logs/ssl_access_log"
+
+- name: 'Add apache to root group'
+  user:
+    name: apache
+    groups: apache,root
+    createhome: no
 
 - name: Copy entrypoint
   copy:

@@ -47,6 +47,22 @@
   tags:
     - stop
     - restart
+- name: Stop squid containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      name: squid
+      namespace: foreman
+      replicas: 0
+  tags:
+    - stop
+    - restart
+- name: Stop pulp-streamer containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      name: pulp-streamer
+      namespace: foreman
+      replicas: 0
+  tags:
+    - stop
+    - restart
 - name: Create deployment, and scale replicas up
   openshift_v1_deployment_config:
       state: present
@@ -129,6 +145,8 @@
                       containers:
                         - name: pulp-worker
                           securityContext: {}
+                          serviceAccount: anyuid
+                          serviceAccountName: anyuid
                           state: present
                           command:
                             - /usr/bin/entrypoint.sh
@@ -140,8 +158,6 @@
                               mountPath: /etc/puppet
                               name: puppet-data
                           image: projgriffin/foreman-pulp-worker:latest
-                      serviceAccount: anyuid
-                      serviceAccountName: anyuid
                       volumes:
                         - name: pulp-data
                           persistentVolumeClaim:
@@ -335,6 +351,82 @@
                         - name: pulp-data
                           persistentVolumeClaim:
                               claimName: pulp-data
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart
+
+- name: Create Squid deployment and scale up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: squid
+              labels:
+                  app: foreman
+                  service: squid
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: squid
+                  spec:
+                      containers:
+                        - name: squid
+                          securityContext: {}
+                          state: present
+                          command:
+                            - /usr/bin/entrypoint.sh
+                          args:
+                            - /usr/bin/start_squid.sh
+                          ports:
+                            - protocol: TCP
+                              containerPort: 3128
+                          image: projgriffin/foreman-squid:latest
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart
+
+- name: Create Pulp Streamer deployment and scale up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: pulp-streamer
+              labels:
+                  app: foreman
+                  service: pulp-streamer
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: pulp-streamer
+                  spec:
+                      containers:
+                        - name: pulp-streamer
+                          securityContext: {}
+                          state: present
+                          args:
+                            - /usr/bin/start_pulp_streamer.sh
+                          ports:
+                            - protocol: TCP
+                              containerPort: 8751
+                          image: projgriffin/foreman-pulp-streamer:latest
               replicas: 1
               strategy:
                   type: Rolling
