@@ -1,0 +1,23 @@
+---
+- name: 'Install squid'
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - squid
+
+- name: 'Deply config file'
+  template:
+    src: "templates/squid.conf.j2"
+    dest: "/etc/squid/squid.conf"
+
+- name: Copy entrypoint
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - entrypoint.sh
+    - start_squid.sh

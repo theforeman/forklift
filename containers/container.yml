@@ -62,22 +62,36 @@ services:
       - epel_repositories
       - katello_repositories
       - pulp
+    user: apache
   pulp:
     from: foreman-pulp-base:latest
     roles:
       - noop
+    user: apache
   pulp-worker:
     from: foreman-pulp-base:latest
     roles:
       - pulp-worker
+    user: apache
   pulp-celerybeat:
     from: foreman-pulp-base:latest
     roles:
       - pulp-celerybeat
+    user: apache
   pulp-resource-manager:
     from: foreman-pulp-base:latest
     roles:
       - pulp-resource-manager
+    user: apache
+  pulp-streamer:
+    from: foreman-pulp-base:latest
+    roles:
+      - pulp-streamer
+    user: apache
+  squid:
+    from: centos:7
+    roles:
+      - squid
   mongodb:
     from: centos/mongodb-26-centos7:latest
     roles:
@@ -87,11 +101,13 @@ services:
     roles:
       - epel_repositories
       - qpid
+    user: qpid
   content-server:
     from: foreman-pulp-base:latest
     roles:
       - content-server
       - registration-gateway
+    user: apache
 
 registries:
   oc-cluster:

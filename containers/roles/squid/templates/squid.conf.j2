@@ -1,0 +1,76 @@
+# predefined ACLs
+acl localnet src 10.0.0.0/8     # RFC1918 possible internal network
+acl localnet src 172.16.0.0/12  # RFC1918 possible internal network
+acl localnet src 192.168.0.0/16 # RFC1918 possible internal network
+acl localnet src fc00::/7       # RFC 4193 local private network range
+acl localnet src fe80::/10      # RFC 4291 link-local (directly plugged) machines
+acl SSL_ports port 443
+acl Safe_ports port 80
+acl Safe_ports port 21
+acl Safe_ports port 443
+acl Safe_ports port 70
+acl Safe_ports port 210
+acl Safe_ports port 1025-65535
+acl Safe_ports port 280
+acl Safe_ports port 488
+acl Safe_ports port 591
+acl Safe_ports port 777
+acl CONNECT method CONNECT
+
+# predefined http_accesses
+http_access allow manager localhost
+http_access deny manager
+http_access deny !Safe_ports
+http_access deny CONNECT !SSL_ports
+
+# user-defined ACLs
+acl Safe_ports port 3128
+
+# user-defined http_accesses
+http_access allow localhost
+http_access deny to_localhost
+http_access deny all
+http_access allow localnet
+http_access allow localhost
+http_access deny all
+
+# user-defined icp_access
+
+# user-defined http_port
+http_port 3128 accel defaultsite=pulp-streamer:8751
+
+# user-defined https_port
+
+# user-defined tcp_outgoing_addresses
+
+
+# general settings
+coredump_dir                   /var/spool/squid
+maximum_object_size_in_memory  100 MB
+maximum_object_size            5 GB
+cache_mgr                      root
+client_persistent_connections  on
+server_persistent_connections  on
+forwarded_for                  on
+via                            on
+access_log                     stdio:/var/log/squid/access.log squid
+
+cache_mem                      256 MB
+cache_store_log                stdio:/var/log/squid/store.log
+cache_log                      /var/log/squid/cache.log
+cache                          allow all
+
+refresh_pattern                ^ftp:              1440    20%    10080
+refresh_pattern                ^gopher:           1440     0%     1440
+refresh_pattern                -i (/cgi-bin/|\?)     0     0%        0
+refresh_pattern                .                     0    20%     4320
+
+
+# user-defined cache-dirs
+cache_dir aufs /var/spool/squid 10000 16 256
+
+# user-defined configuration settings from config_hash
+cache_peer                     pulp-streamer parent 8751 0 no-digest no-query originserver name=PulpStreamer
+cache_peer_access              PulpStreamer allow all
+minimum_object_size            0 kB
+range_offset_limit             none

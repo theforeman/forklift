@@ -1,6 +1,5 @@
 ---
 - hosts: all
-  gather_facts: no
   vars_files:
     - ../vars/local.yml
   tasks:
