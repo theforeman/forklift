@@ -1,0 +1,14 @@
+---
+- name: "Check forks of user's repository"
+  uri:
+    url: "https://github.com/{{ katello_devel_github_username }}/{{ item.split('/') | last }}"
+  with_items: "{{ foreman_installer_options_internal_use_only }}"
+  when: item | search("katello-devel-extra-plugins")
+
+
+- name: "Check forks of user's katello & foreman repository"
+  uri:
+    url: "https://github.com/{{ katello_devel_github_username }}/{{ item }}"
+  with_items:
+    - katello
+    - foreman
