@@ -1,0 +1,42 @@
+---
+- name: "Creating of {{ vagrant_user }} user"
+  user:
+    name: "{{ vagrant_user }}"
+    comment: "John Vagrant"
+
+- name: "Add {{ vagrant_user }} to sudoers"
+  lineinfile:
+    dest: "/etc/sudoers.d/{{ vagrant_user }}"
+    state: present
+    regexp: '^{{ vagrant_user }}'
+    line: '{{ vagrant_user }} ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+    create: yes
+
+- name: "Check /home/{{ vagrant_user }}/.ssh/authorized_keys"
+  stat:
+    path: /home/{{ vagrant_user }}/.ssh/authorized_keys
+  register: authorized_keys_file
+
+- block:
+    - name: "Create {{ vagrant_user }} .ssh"
+      file:
+        path: "/home/{{ vagrant_user }}/.ssh"
+        owner: "{{ vagrant_user }}"
+        group: root
+        state: directory
+        mode: 0700
+
+    - name: "Copy .ssh/authorized_keys"
+      copy:
+        remote_src: true
+        src:  /root/.ssh/authorized_keys
+        dest: "/home/{{ vagrant_user }}/.ssh/authorized_keys"
+
+    - name: "Set rights for .ssh/authorized_keys"
+      file:
+        mode: 0600
+        owner: "{{ vagrant_user }}"
+        path: "/home/{{ vagrant_user }}/.ssh/authorized_keys"
+  when: authorized_keys_file.stat.exists == False
+
