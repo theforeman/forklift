@@ -5,3 +5,10 @@
 - name: setup reviewing script
   include_role: 
     name: reviewer
+
+- include_tasks: check_forks_of_repos.yml
+  when: katello_devel_github_username is defined and foreman_installer_options_internal_use_only is defined
+
+- include_tasks: rhel.yml
+  when: ansible_distribution == "RedHat"
+

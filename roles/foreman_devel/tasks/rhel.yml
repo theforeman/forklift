@@ -1,0 +1,22 @@
+---
+- name: "Check the registration"
+  shell: "subscription-manager identity > /dev/null"
+  register: sresult
+  become: true
+  ignore_errors: True
+
+- name: "Stop installation; the system is not registered"
+  fail:
+    msg: "Please register the system via subscription-manager before continuing"
+  when: "sresult.rc != 0"
+
+- name: "Enable only RHEL7 base + optional + extras repos"
+  shell: "{{ item }}"
+  become: true
+  with_items:
+    - subscription-manager repos --disable='*'
+    - >
+      subscription-manager repos 
+      --enable="rhel-7-server-rpms"
+      --enable="rhel-7-server-extras-rpms"
+      --enable="rhel-7-server-optional-rpms"
