@@ -61,6 +61,10 @@ Now those certificates need to be turned into a Ansible secrets file:
 
 ### Deploy Application
 
+Before deploying the application, the Ansible Kubernetes role needs to be installed:
+
+    ansible-galaxy install -r requirements.yml
+
 Finally, the application stack is ready to be deployed to Openshift running on our VM:
 
     ansible-playbook foreman.yml --tags restart
