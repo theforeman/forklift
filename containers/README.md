@@ -6,7 +6,8 @@ The following is currently a proof of concept for running Foreman, Katello and t
 
 Table of Contents
 
- * [Setup and Install](./docs/setup-and-install.md)
+ * [Build](./docs/build.md)
+ * [Deploy](./docs/deploy.md)
  * [Architecture](./docs/architecture.md)
  * [Issues to be Addressed](#issues)
 

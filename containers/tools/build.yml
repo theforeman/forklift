@@ -1,10 +1,8 @@
 ---
 - hosts: all
   gather_facts: no
-  vars:
-    services: ''
-    project_dir: "{{ lookup('pipe', 'pwd') }}/../"
-    working_dir: "{{ project_dir }}"
+  vars_files:
+    - ../vars/local.yml
   tasks:
     - name: 'Run build'
       shell: "ansible-container --devel build {{ '--services' if services else '' }} {{ services }}"
