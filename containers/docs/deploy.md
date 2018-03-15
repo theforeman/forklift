@@ -49,7 +49,9 @@ Now that we have docker and the appropriate client tools setup we can spin up a 
 
 ## Deploy Containers to Openshift
 
-Deploying the containers that were built involves pushing the containers to Openshift, generating a deployment role and then finally shipping them to Openshift. The first step in this is to generate a set of SSL certificates for the services to communicate with:
+### Generate Certificates
+
+Some services require SSL certificates to communicate or to generate client certificates. The first step in this is to generate a set of SSL certificates for the services to communicate with:
 
     ansible-playbook tools/generate-certificates.yml
 
@@ -57,9 +59,11 @@ Now those certificates need to be turned into a Ansible secrets file:
 
     ansible-playbook tools/build-secrets.yml
 
+### Deploy Application
+
 Finally, the application stack is ready to be deployed to Openshift running on our VM:
 
-    ansible-playbook tools/deploy.yml -l centos7 -b -e "@vars/remote.yml"
+    ansible-playbook foreman.yml --tags restart
 
 After the `foreman` role has entered the `Running` state, a basic application health check along with backend services can be performed. List the routes and locate the hostname the `foreman` route is deployed on, for example:
 

@@ -5,4 +5,4 @@ plantuml.jar
 certs/
 secrets.yml
 .vault_pass
-ansible-deployment
+galaxy_roles
