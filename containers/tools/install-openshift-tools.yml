@@ -1,10 +1,11 @@
 ---
 - hosts: all
   gather_facts: no
+  vars_files:
+    - ../vars/local.yml
   vars:
     openshift_version: v3.7.1
     openshift_checksum: ab0f056
-    bin_dir: "/usr/bin"
   tasks:
     - name: 'Create .tmp directory'
       file:

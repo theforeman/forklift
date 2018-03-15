@@ -1,8 +1,8 @@
 ---
 - hosts: all
   gather_facts: no
-  vars:
-    project_dir: "/root"
+  vars_files:
+    - ../vars/local.yml
   tasks:
     - name: 'Install pip'
       become: true
