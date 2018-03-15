@@ -1,0 +1,73 @@
+---
+- name: Create PVC
+  k8s_v1_persistent_volume_claim:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+              name: puppet-data
+              namespace: foreman
+          spec:
+              resources:
+                  requests:
+                      storage: 1Gi
+              accessModes:
+                - ReadWriteOnce
+  tags:
+    - start
+- name: Create PVC
+  k8s_v1_persistent_volume_claim:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+              name: mongodb-data
+              namespace: foreman
+          spec:
+              resources:
+                  requests:
+                      storage: 1Gi
+              accessModes:
+                - ReadWriteOnce
+  tags:
+    - start
+- name: Create PVC
+  k8s_v1_persistent_volume_claim:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+              name: postgres-data
+              namespace: foreman
+          spec:
+              resources:
+                  requests:
+                      storage: 1Gi
+              accessModes:
+                - ReadWriteOnce
+  tags:
+    - start
+- name: Create PVC
+  k8s_v1_persistent_volume_claim:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+              name: pulp-data
+              namespace: foreman
+          spec:
+              resources:
+                  requests:
+                      storage: 1Gi
+              accessModes:
+                - ReadWriteOnce
+  tags:
+    - start
