@@ -33,7 +33,7 @@ def list_running_hosts():
         else:
             (_, host, key, value, provider) = line.split(',')
 
-        if key == 'state' and value == 'running':
+        if key == 'state' and value in ('active', 'running'):
             hosts[host] = get_host_details(host)
     return hosts
 
