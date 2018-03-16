@@ -408,7 +408,7 @@
                         - name: puppet-data
                           persistentVolumeClaim:
                               claimName: puppet-data
-              replicas: 4
+              replicas: "{{ pulp_worker_count }}"
               strategy:
                   type: Rolling
   tags:
