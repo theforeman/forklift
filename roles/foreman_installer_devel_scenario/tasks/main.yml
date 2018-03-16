@@ -23,6 +23,14 @@
     dest: /usr/share/katello-installer-base/modules/katello_devel
     update: yes
 
+- name: 'Install puppet-agent'
+  package:
+    name: puppet-agent
+    state: present
+
+- name: 'Install puppetlabs-vcsrepo'
+  shell: /opt/puppetlabs/puppet/bin/puppet module install --ignore-dependencies --target-dir /usr/share/katello-installer-base/modules puppetlabs-vcsrepo
+
 - name: "Install gems to rebuild the kafo module cache"
   gem:
     name: puppet-strings
