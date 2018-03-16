@@ -6,6 +6,8 @@
     - role: ansible-kubernetes-modules
   vars_files:
     - secrets.yml
+  vars:
+    pulp_worker_count: 2
   tasks:
     - import_tasks: deploy/project.yml
 
