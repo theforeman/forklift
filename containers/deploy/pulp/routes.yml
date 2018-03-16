@@ -1,0 +1,22 @@
+---
+- name: Create route
+  openshift_v1_route:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Route
+          metadata:
+              name: content-server-8080
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: content-server
+          spec:
+              to:
+                  kind: Service
+                  name: content-server
+              port:
+                  targetPort: port-8080-tcp
+  tags:
+    - start

@@ -1,0 +1,151 @@
+---
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: foreman-proxy
+              labels:
+                  app: foreman
+                  service: foreman-proxy
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: foreman-proxy
+                  spec:
+                      containers:
+                        - name: foreman-proxy
+                          securityContext: {}
+                          state: present
+                          args:
+                            - /usr/bin/start-foreman-proxy.sh
+                          image: projgriffin/foreman-foreman-proxy:latest
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: foreman-proxy-register
+              labels:
+                  app: foreman
+                  service: foreman-proxy-register
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: foreman-proxy-register
+                  spec:
+                      containers:
+                        - name: foreman-proxy-register
+                          securityContext: {}
+                          state: present
+                          env:
+                            - name: FOREMAN_PROXY_SERVICE_HOST
+                              value: foreman-proxy
+                            - name: FOREMAN_PROXY_SERVICE_PORT
+                              value: '8080'
+                            - name: FOREMAN_SERVICE_HOST
+                              value: foreman
+                            - name: FOREMAN_SERVICE_PORT
+                              value: '8080'
+                          args:
+                            - /usr/bin/register.sh
+                          image: projgriffin/foreman-foreman-proxy-register:latest
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: foreman-proxy
+              labels:
+                  app: foreman
+                  service: foreman-proxy
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: foreman-proxy
+                  spec:
+                      containers:
+                        - name: foreman-proxy
+                          securityContext: {}
+                          state: present
+                          args:
+                            - /usr/bin/start-foreman-proxy.sh
+                          image: projgriffin/foreman-foreman-proxy:latest
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: foreman-proxy-register
+              labels:
+                  app: foreman
+                  service: foreman-proxy-register
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: foreman-proxy-register
+                  spec:
+                      containers:
+                        - name: foreman-proxy-register
+                          securityContext: {}
+                          state: present
+                          env:
+                            - name: FOREMAN_PROXY_SERVICE_HOST
+                              value: foreman-proxy
+                            - name: FOREMAN_PROXY_SERVICE_PORT
+                              value: '8080'
+                            - name: FOREMAN_SERVICE_HOST
+                              value: foreman
+                            - name: FOREMAN_SERVICE_PORT
+                              value: '8080'
+                          args:
+                            - /usr/bin/register.sh
+                          image: projgriffin/foreman-foreman-proxy-register:latest
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart

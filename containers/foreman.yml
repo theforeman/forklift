@@ -8,8 +8,31 @@
     - secrets.yml
   tasks:
     - import_tasks: deploy/project.yml
-    - import_tasks: deploy/secrets.yml
-    - import_tasks: deploy/services.yml
-    - import_tasks: deploy/deployments.yml
-    - import_tasks: deploy/persistent_volume_claims.yml
-    - import_tasks: deploy/routes.yml
+
+    - import_tasks: deploy/secrets/secrets.yml
+
+    - import_tasks: deploy/qpid/services.yml
+    - import_tasks: deploy/qpid/deployments.yml
+
+    - import_tasks: deploy/postgres/services.yml
+    - import_tasks: deploy/postgres/deployments.yml
+    - import_tasks: deploy/postgres/persistent_volume_claims.yml
+
+    - import_tasks: deploy/pulp/services.yml
+    - import_tasks: deploy/pulp/deployments.yml
+    - import_tasks: deploy/pulp/persistent_volume_claims.yml
+    - import_tasks: deploy/pulp/routes.yml
+
+    - import_tasks: deploy/candlepin/services.yml
+    - import_tasks: deploy/candlepin/deployments.yml
+    - import_tasks: deploy/candlepin/routes.yml
+
+    - import_tasks: deploy/foreman/services.yml
+    - import_tasks: deploy/foreman/deployments.yml
+    - import_tasks: deploy/foreman/routes.yml
+
+    - import_tasks: deploy/puppet/services.yml
+    - import_tasks: deploy/puppet/deployments.yml
+
+    - import_tasks: deploy/foreman-proxy/services.yml
+    - import_tasks: deploy/foreman-proxy/deployments.yml

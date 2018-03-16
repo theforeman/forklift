@@ -1,0 +1,97 @@
+---
+- name: Create service
+  k8s_v1_service:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: pulp
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: pulp
+          spec:
+              selector:
+                  app: foreman
+                  service: pulp
+              ports:
+                - protocol: TCP
+                  targetPort: 443
+                  name: port-443-tcp
+                  port: 443
+  tags:
+    - start
+- name: Create service
+  k8s_v1_service:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: mongodb
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: mongodb
+          spec:
+              selector:
+                  app: foreman
+                  service: mongodb
+              ports:
+                - protocol: TCP
+                  targetPort: 27017
+                  name: port-27017-tcp
+                  port: 27017
+  tags:
+    - start
+- name: Create service
+  k8s_v1_service:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: qpid
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: qpid
+          spec:
+              selector:
+                  app: foreman
+                  service: qpid
+              ports:
+                - protocol: TCP
+                  targetPort: 5672
+                  name: port-5672-tcp
+                  port: 5672
+  tags:
+    - start
+- name: Create service
+  k8s_v1_service:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: content-server
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: content-server
+          spec:
+              selector:
+                  app: foreman
+                  service: content-server
+              ports:
+                - protocol: TCP
+                  targetPort: 8080
+                  name: port-8080-tcp
+                  port: 8080
+  tags:
+    - start

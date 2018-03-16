@@ -1,0 +1,123 @@
+---
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: candlepin
+              labels:
+                  app: foreman
+                  service: candlepin
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: candlepin
+                  spec:
+                      containers:
+                        - name: candlepin
+                          securityContext: {}
+                          state: present
+                          volumeMounts:
+                            - readOnly: true
+                              mountPath: /etc/candlepin/certs
+                              name: ca
+                          env:
+                            - name: POSTGRES_DB
+                              value: foreman
+                            - name: POSTGRES_USER
+                              value: foreman
+                            - name: POSTGRES_PASSWORD
+                              value: foreman
+                            - name: POSTGRES_PORT
+                              value: '5432'
+                            - name: POSTGRES_SERVICE
+                              value: postgres
+                            - name: QPID_SERVICE
+                              value: qpid
+                            - name: QPID_PORT
+                              value: '5672'
+                          args:
+                            - /usr/bin/start_candlepin.sh
+                          command:
+                            - /usr/bin/entrypoint.sh
+                          image: projgriffin/foreman-candlepin:latest
+                      volumes:
+                        - secret:
+                              items: &id005
+                                - path: candlepin-ca.key
+                                  key: ca.key
+                                - path: candlepin-ca.crt
+                                  key: ca.crt
+                              secretName: ca
+                          name: ca
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: candlepin
+              labels:
+                  app: foreman
+                  service: candlepin
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: candlepin
+                  spec:
+                      containers:
+                        - name: candlepin
+                          securityContext: {}
+                          state: present
+                          volumeMounts:
+                            - readOnly: true
+                              mountPath: /etc/candlepin/certs
+                              name: ca
+                          env:
+                            - name: POSTGRES_DB
+                              value: foreman
+                            - name: POSTGRES_USER
+                              value: foreman
+                            - name: POSTGRES_PASSWORD
+                              value: foreman
+                            - name: POSTGRES_PORT
+                              value: '5432'
+                            - name: POSTGRES_SERVICE
+                              value: postgres
+                            - name: QPID_SERVICE
+                              value: qpid
+                            - name: QPID_PORT
+                              value: '5672'
+                          args:
+                            - /usr/bin/start_candlepin.sh
+                          command:
+                            - /usr/bin/entrypoint.sh
+                          image: projgriffin/foreman-candlepin:latest
+                      volumes:
+                        - secret:
+                              items: *id005
+                              secretName: ca
+                          name: ca
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart

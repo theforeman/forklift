@@ -1,0 +1,25 @@
+---
+- name: Create service
+  k8s_v1_service:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: qpid
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: qpid
+          spec:
+              selector:
+                  app: foreman
+                  service: qpid
+              ports:
+                - protocol: TCP
+                  targetPort: 5672
+                  name: port-5672-tcp
+                  port: 5672
+  tags:
+    - start
