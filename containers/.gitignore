@@ -3,6 +3,5 @@
 *.pyc
 plantuml.jar
 certs/
-secrets.yml
 .vault_pass
 galaxy_roles
