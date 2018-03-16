@@ -1,0 +1,73 @@
+---
+- name: Create service
+  k8s_v1_service:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: foreman
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: foreman
+          spec:
+              selector:
+                  app: foreman
+                  service: foreman
+              ports:
+                - protocol: TCP
+                  targetPort: 8080
+                  name: port-8080-tcp
+                  port: 8080
+  tags:
+    - start
+- name: Create service
+  k8s_v1_service:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: memcached
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: memcached
+          spec:
+              selector:
+                  app: foreman
+                  service: memcached
+              ports:
+                - protocol: TCP
+                  targetPort: 11211
+                  name: port-11211-tcp
+                  port: 11211
+  tags:
+    - start
+- name: Create service
+  k8s_v1_service:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: puppet
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: puppet
+          spec:
+              selector:
+                  app: foreman
+                  service: puppet
+              ports:
+                - protocol: TCP
+                  targetPort: 8140
+                  name: port-8140-tcp
+                  port: 8140
+  tags:
+    - start

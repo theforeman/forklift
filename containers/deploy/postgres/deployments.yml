@@ -1,0 +1,97 @@
+---
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: postgres
+              labels:
+                  app: foreman
+                  service: postgres
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: postgres
+                  spec:
+                      containers:
+                        - name: postgres
+                          securityContext: {}
+                          state: present
+                          env:
+                            - name: POSTGRES_DB
+                              value: foreman
+                            - name: POSTGRES_USER
+                              value: foreman
+                            - name: POSTGRES_PASS
+                              value: foreman
+                            - name: PGDATA
+                              value: /var/lib/pgsql/data/userdata
+                          volumeMounts:
+                            - readOnly: false
+                              mountPath: /var/lib/pgsql/data
+                              name: postgres-data
+                          image: ansible/postgresql
+                      volumes:
+                        - name: postgres-data
+                          persistentVolumeClaim:
+                              claimName: postgres-data
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: postgres
+              labels:
+                  app: foreman
+                  service: postgres
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: postgres
+                  spec:
+                      containers:
+                        - name: postgres
+                          securityContext: {}
+                          state: present
+                          env:
+                            - name: POSTGRES_DB
+                              value: foreman
+                            - name: POSTGRES_USER
+                              value: foreman
+                            - name: POSTGRES_PASS
+                              value: foreman
+                            - name: PGDATA
+                              value: /var/lib/pgsql/data/userdata
+                          volumeMounts:
+                            - readOnly: false
+                              mountPath: /var/lib/pgsql/data
+                              name: postgres-data
+                          image: ansible/postgresql
+                      volumes:
+                        - name: postgres-data
+                          persistentVolumeClaim:
+                              claimName: postgres-data
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart

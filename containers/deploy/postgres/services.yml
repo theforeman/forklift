@@ -1,0 +1,25 @@
+---
+- name: Create service
+  k8s_v1_service:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: postgres
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: postgres
+          spec:
+              selector:
+                  app: foreman
+                  service: postgres
+              ports:
+                - protocol: TCP
+                  targetPort: 5432
+                  name: port-5432-tcp
+                  port: 5432
+  tags:
+    - start

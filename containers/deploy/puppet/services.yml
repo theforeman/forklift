@@ -1,0 +1,25 @@
+---
+- name: Create service
+  k8s_v1_service:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: puppet
+              namespace: foreman
+              labels:
+                  app: foreman
+                  service: puppet
+          spec:
+              selector:
+                  app: foreman
+                  service: puppet
+              ports:
+                - protocol: TCP
+                  targetPort: 8140
+                  name: port-8140-tcp
+                  port: 8140
+  tags:
+    - start

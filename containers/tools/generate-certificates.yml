@@ -1,6 +1,8 @@
 ---
 - name: 'Generate certificates'
   hosts: all
+  vars_files:
+    - ../vars/local.yml
   vars:
     certificates_services:
       - name: pulp

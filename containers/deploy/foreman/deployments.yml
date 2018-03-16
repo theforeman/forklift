@@ -1,0 +1,690 @@
+---
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: foreman
+              labels:
+                  app: foreman
+                  service: foreman
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: foreman
+                  spec:
+                      containers:
+                        - name: foreman
+                          securityContext: {}
+                          state: present
+                          volumeMounts:
+                            - readOnly: true
+                              mountPath: /etc/pki/katello/private
+                              name: keys
+                            - readOnly: true
+                              mountPath: /etc/pki/katello/certs
+                              name: certs
+                          env:
+                            - name: POSTGRES_DB
+                              value: foreman
+                            - name: POSTGRES_USER
+                              value: foreman
+                            - name: POSTGRES_PASSWORD
+                              value: foreman
+                            - name: SEED_ADMIN_USER
+                              value: admin
+                            - name: SEED_ADMIN_PASSWORD
+                              value: changeme
+                            - name: RAILS_ENV
+                              value: production
+                          args:
+                            - /usr/bin/start-foreman.sh
+                          command:
+                            - /usr/bin/entrypoint.sh
+                          ports:
+                            - protocol: TCP
+                              containerPort: 8080
+                          image: projgriffin/foreman-foreman:latest
+                      volumes:
+                        - secret:
+                              items: &id001
+                                - path: ca.key
+                                  key: ca.key
+                                - path: pulp-client.key
+                                  key: pulp-client.key
+                              secretName: keys
+                          name: keys
+                        - secret:
+                              items: &id002
+                                - path: ca.crt
+                                  key: ca.crt
+                                - path: pulp-client.crt
+                                  key: pulp-client.crt
+                              secretName: certs
+                          name: certs
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: dynflow
+              labels:
+                  app: foreman
+                  service: dynflow
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: dynflow
+                  spec:
+                      containers:
+                        - name: dynflow
+                          securityContext: {}
+                          state: present
+                          volumeMounts:
+                            - readOnly: true
+                              mountPath: /etc/pki/katello/private
+                              name: keys
+                            - readOnly: true
+                              mountPath: /etc/pki/katello/certs
+                              name: certs
+                          env:
+                            - name: POSTGRES_DB
+                              value: foreman
+                            - name: POSTGRES_USER
+                              value: foreman
+                            - name: POSTGRES_PASSWORD
+                              value: foreman
+                            - name: RAILS_ENV
+                              value: production
+                          args:
+                            - /usr/bin/start-dynflowd.sh
+                          command:
+                            - /usr/bin/entrypoint.sh
+                          image: projgriffin/foreman-dynflow:latest
+                      volumes:
+                        - secret:
+                              items: &id003
+                                - path: ca.key
+                                  key: ca.key
+                                - path: pulp-client.key
+                                  key: pulp-client.key
+                              secretName: keys
+                          name: keys
+                        - secret:
+                              items: &id004
+                                - path: ca.crt
+                                  key: ca.crt
+                                - path: pulp-client.crt
+                                  key: pulp-client.crt
+                              secretName: certs
+                          name: certs
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: memcached
+              labels:
+                  app: foreman
+                  service: memcached
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: memcached
+                  spec:
+                      containers:
+                        - name: memcached
+                          securityContext: {}
+                          state: present
+                          image: manageiq/memcached
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: foreman-proxy
+              labels:
+                  app: foreman
+                  service: foreman-proxy
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: foreman-proxy
+                  spec:
+                      containers:
+                        - name: foreman-proxy
+                          securityContext: {}
+                          state: present
+                          args:
+                            - /usr/bin/start-foreman-proxy.sh
+                          image: projgriffin/foreman-foreman-proxy:latest
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: foreman-proxy-register
+              labels:
+                  app: foreman
+                  service: foreman-proxy-register
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: foreman-proxy-register
+                  spec:
+                      containers:
+                        - name: foreman-proxy-register
+                          securityContext: {}
+                          state: present
+                          env:
+                            - name: FOREMAN_PROXY_SERVICE_HOST
+                              value: foreman-proxy
+                            - name: FOREMAN_PROXY_SERVICE_PORT
+                              value: '8080'
+                            - name: FOREMAN_SERVICE_HOST
+                              value: foreman
+                            - name: FOREMAN_SERVICE_PORT
+                              value: '8080'
+                          args:
+                            - /usr/bin/register.sh
+                          image: projgriffin/foreman-foreman-proxy-register:latest
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: puppet
+              labels:
+                  app: foreman
+                  service: puppet
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: puppet
+                  spec:
+                      containers:
+                        - name: puppet
+                          securityContext: {}
+                          state: present
+                          volumeMounts:
+                            - readOnly: false
+                              mountPath: /etc/puppet
+                              name: puppet-data
+                          image: puppet/puppetserver
+                      volumes:
+                        - name: puppet-data
+                          persistentVolumeClaim:
+                              claimName: puppet-data
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: postgres
+              labels:
+                  app: foreman
+                  service: postgres
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: postgres
+                  spec:
+                      containers:
+                        - name: postgres
+                          securityContext: {}
+                          state: present
+                          env:
+                            - name: POSTGRES_DB
+                              value: foreman
+                            - name: POSTGRES_USER
+                              value: foreman
+                            - name: POSTGRES_PASS
+                              value: foreman
+                            - name: PGDATA
+                              value: /var/lib/pgsql/data/userdata
+                          volumeMounts:
+                            - readOnly: false
+                              mountPath: /var/lib/pgsql/data
+                              name: postgres-data
+                          image: ansible/postgresql
+                      volumes:
+                        - name: postgres-data
+                          persistentVolumeClaim:
+                              claimName: postgres-data
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: qpid
+              labels:
+                  app: foreman
+                  service: qpid
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: qpid
+                  spec:
+                      containers:
+                        - name: qpid
+                          securityContext: {}
+                          state: present
+                          args:
+                            - /usr/bin/startup.sh
+                          image: projgriffin/foreman-qpid:latest
+              replicas: 0
+              strategy:
+                  type: Rolling
+  tags:
+    - stop
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: foreman
+              labels:
+                  app: foreman
+                  service: foreman
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: foreman
+                  spec:
+                      containers:
+                        - name: foreman
+                          securityContext: {}
+                          state: present
+                          volumeMounts:
+                            - readOnly: true
+                              mountPath: /etc/pki/katello/private
+                              name: keys
+                            - readOnly: true
+                              mountPath: /etc/pki/katello/certs
+                              name: certs
+                          env:
+                            - name: POSTGRES_DB
+                              value: foreman
+                            - name: POSTGRES_USER
+                              value: foreman
+                            - name: POSTGRES_PASSWORD
+                              value: foreman
+                            - name: SEED_ADMIN_USER
+                              value: admin
+                            - name: SEED_ADMIN_PASSWORD
+                              value: changeme
+                            - name: RAILS_ENV
+                              value: production
+                          args:
+                            - /usr/bin/start-foreman.sh
+                          command:
+                            - /usr/bin/entrypoint.sh
+                          ports:
+                            - protocol: TCP
+                              containerPort: 8080
+                          image: projgriffin/foreman-foreman:latest
+                      volumes:
+                        - secret:
+                              items: *id001
+                              secretName: keys
+                          name: keys
+                        - secret:
+                              items: *id002
+                              secretName: certs
+                          name: certs
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: dynflow
+              labels:
+                  app: foreman
+                  service: dynflow
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: dynflow
+                  spec:
+                      containers:
+                        - name: dynflow
+                          securityContext: {}
+                          state: present
+                          volumeMounts:
+                            - readOnly: true
+                              mountPath: /etc/pki/katello/private
+                              name: keys
+                            - readOnly: true
+                              mountPath: /etc/pki/katello/certs
+                              name: certs
+                          env:
+                            - name: POSTGRES_DB
+                              value: foreman
+                            - name: POSTGRES_USER
+                              value: foreman
+                            - name: POSTGRES_PASSWORD
+                              value: foreman
+                            - name: RAILS_ENV
+                              value: production
+                          args:
+                            - /usr/bin/start-dynflowd.sh
+                          command:
+                            - /usr/bin/entrypoint.sh
+                          image: projgriffin/foreman-dynflow:latest
+                      volumes:
+                        - secret:
+                              items: *id003
+                              secretName: keys
+                          name: keys
+                        - secret:
+                              items: *id004
+                              secretName: certs
+                          name: certs
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: memcached
+              labels:
+                  app: foreman
+                  service: memcached
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: memcached
+                  spec:
+                      containers:
+                        - name: memcached
+                          securityContext: {}
+                          state: present
+                          image: manageiq/memcached
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: foreman-proxy
+              labels:
+                  app: foreman
+                  service: foreman-proxy
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: foreman-proxy
+                  spec:
+                      containers:
+                        - name: foreman-proxy
+                          securityContext: {}
+                          state: present
+                          args:
+                            - /usr/bin/start-foreman-proxy.sh
+                          image: projgriffin/foreman-foreman-proxy:latest
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: foreman-proxy-register
+              labels:
+                  app: foreman
+                  service: foreman-proxy-register
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: foreman-proxy-register
+                  spec:
+                      containers:
+                        - name: foreman-proxy-register
+                          securityContext: {}
+                          state: present
+                          env:
+                            - name: FOREMAN_PROXY_SERVICE_HOST
+                              value: foreman-proxy
+                            - name: FOREMAN_PROXY_SERVICE_PORT
+                              value: '8080'
+                            - name: FOREMAN_SERVICE_HOST
+                              value: foreman
+                            - name: FOREMAN_SERVICE_PORT
+                              value: '8080'
+                          args:
+                            - /usr/bin/register.sh
+                          image: projgriffin/foreman-foreman-proxy-register:latest
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: puppet
+              labels:
+                  app: foreman
+                  service: puppet
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: puppet
+                  spec:
+                      containers:
+                        - name: puppet
+                          securityContext: {}
+                          state: present
+                          volumeMounts:
+                            - readOnly: false
+                              mountPath: /etc/puppet
+                              name: puppet-data
+                          image: puppet/puppetserver
+                      volumes:
+                        - name: puppet-data
+                          persistentVolumeClaim:
+                              claimName: puppet-data
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: present
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: postgres
+              labels:
+                  app: foreman
+                  service: postgres
+              namespace: foreman
+          spec:
+              template:
+                  metadata:
+                      labels:
+                          app: foreman
+                          service: postgres
+                  spec:
+                      containers:
+                        - name: postgres
+                          securityContext: {}
+                          state: present
+                          env:
+                            - name: POSTGRES_DB
+                              value: foreman
+                            - name: POSTGRES_USER
+                              value: foreman
+                            - name: POSTGRES_PASS
+                              value: foreman
+                            - name: PGDATA
+                              value: /var/lib/pgsql/data/userdata
+                          volumeMounts:
+                            - readOnly: false
+                              mountPath: /var/lib/pgsql/data
+                              name: postgres-data
+                          image: ansible/postgresql
+                      volumes:
+                        - name: postgres-data
+                          persistentVolumeClaim:
+                              claimName: postgres-data
+              replicas: 1
+              strategy:
+                  type: Rolling
+  tags:
+    - start
+    - restart
