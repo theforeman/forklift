@@ -66,6 +66,7 @@ This use case assumes that you are on a box that has SSH access to the target bo
 1. Ensure Ansible is installed
 2. Clone this repository - `git clone https://github.com/theforeman/forklift.git`
 3. Enter the repository - `cd forklift`
+4. [Create an inventory file](https://docs.ansible.com/ansible/latest/intro_inventory.html) with your hosts in the `inventories` subfolder. You can also pass a different inventory to `ansible-playbook` using `--inventory` or `-i`.
 
 For a release version in production:
 
