@@ -26,6 +26,8 @@
                           args:
                             - /usr/bin/startup.sh
                           image: projgriffin/foreman-qpid:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
               replicas: 1
               strategy:
                   type: Rolling
@@ -59,6 +61,8 @@
                           args:
                             - /usr/bin/startup.sh
                           image: projgriffin/foreman-qpid:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
               replicas: 0
               strategy:
                   type: Rolling

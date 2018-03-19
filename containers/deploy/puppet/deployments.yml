@@ -28,6 +28,8 @@
                               mountPath: /etc/puppet
                               name: puppet-data
                           image: puppet/puppetserver
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - name: puppet-data
                           persistentVolumeClaim:
@@ -67,6 +69,8 @@
                               mountPath: /etc/puppet
                               name: puppet-data
                           image: puppet/puppetserver
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - name: puppet-data
                           persistentVolumeClaim:
