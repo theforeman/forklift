@@ -35,6 +35,8 @@
                           command:
                             - /usr/bin/entrypoint.sh
                           image: projgriffin/foreman-pulp:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - secret:
                               items: &id006
@@ -90,6 +92,8 @@
                               mountPath: /etc/puppet
                               name: puppet-data
                           image: projgriffin/foreman-pulp-worker:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - name: pulp-data
                           persistentVolumeClaim:
@@ -130,6 +134,8 @@
                           command:
                             - /usr/bin/entrypoint.sh
                           image: projgriffin/foreman-pulp-celerybeat:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
               replicas: 0
               strategy:
                   type: Rolling
@@ -163,6 +169,8 @@
                           command:
                             - /usr/bin/entrypoint.sh
                           image: projgriffin/foreman-pulp-resource-manager:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
               replicas: 0
               strategy:
                   type: Rolling
@@ -246,6 +254,8 @@
                           args:
                             - /usr/bin/startup.sh
                           image: projgriffin/foreman-qpid:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
               replicas: 0
               strategy:
                   type: Rolling
@@ -292,6 +302,8 @@
                             - protocol: TCP
                               containerPort: 8080
                           image: projgriffin/foreman-content-server:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - secret:
                               items: &id008
@@ -352,6 +364,8 @@
                           command:
                             - /usr/bin/entrypoint.sh
                           image: projgriffin/foreman-pulp:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - secret:
                               items: *id006
@@ -401,6 +415,8 @@
                               mountPath: /etc/puppet
                               name: puppet-data
                           image: projgriffin/foreman-pulp-worker:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - name: pulp-data
                           persistentVolumeClaim:
@@ -441,6 +457,8 @@
                           command:
                             - /usr/bin/entrypoint.sh
                           image: projgriffin/foreman-pulp-celerybeat:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
               replicas: 1
               strategy:
                   type: Rolling
@@ -474,6 +492,8 @@
                           command:
                             - /usr/bin/entrypoint.sh
                           image: projgriffin/foreman-pulp-resource-manager:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
               replicas: 1
               strategy:
                   type: Rolling
@@ -570,6 +590,8 @@
                             - protocol: TCP
                               containerPort: 8080
                           image: projgriffin/foreman-content-server:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - secret:
                               items: *id008

@@ -13,6 +13,8 @@
 
     - import_tasks: deploy/secrets/secrets.yml
 
+    - import_tasks: deploy/service_accounts.yml
+
     - import_tasks: deploy/qpid/services.yml
     - import_tasks: deploy/qpid/deployments.yml
 

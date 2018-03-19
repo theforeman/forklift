@@ -51,6 +51,8 @@
                             - protocol: TCP
                               containerPort: 8080
                           image: projgriffin/foreman-foreman:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - secret:
                               items: &id001
@@ -119,6 +121,8 @@
                           command:
                             - /usr/bin/entrypoint.sh
                           image: projgriffin/foreman-dynflow:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - secret:
                               items: &id003
@@ -225,6 +229,8 @@
                             - protocol: TCP
                               containerPort: 8080
                           image: projgriffin/foreman-foreman:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - secret:
                               items: *id001
@@ -285,6 +291,8 @@
                           command:
                             - /usr/bin/entrypoint.sh
                           image: projgriffin/foreman-dynflow:latest
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       volumes:
                         - secret:
                               items: *id003
