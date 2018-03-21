@@ -8,6 +8,7 @@
     - secrets.yml
   vars:
     pulp_worker_count: 2
+    registry: projgriffin
   tasks:
     - import_tasks: deploy/project.yml
 
