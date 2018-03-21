@@ -1,295 +1,49 @@
 ---
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
-      state: present
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
-              name: pulp
-              labels:
-                  app: foreman
-                  service: pulp
-              namespace: foreman
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: pulp
-                  spec:
-                      containers:
-                        - name: pulp
-                          securityContext: {}
-                          state: present
-                          volumeMounts:
-                            - readOnly: true
-                              mountPath: /etc/pki/pulp/private
-                              name: keys
-                            - readOnly: true
-                              mountPath: /etc/pki/pulp/certs
-                              name: certs
-                          args:
-                            - /usr/bin/start_httpd.sh
-                          command:
-                            - /usr/bin/entrypoint.sh
-                          image: projgriffin/foreman-pulp:latest
-                      serviceAccount: anyuid
-                      serviceAccountName: anyuid
-                      volumes:
-                        - secret:
-                              items: &id006
-                                - path: pulp.key
-                                  key: pulp.key
-                              secretName: keys
-                          name: keys
-                        - secret:
-                              items: &id007
-                                - path: ca.crt
-                                  key: ca.crt
-                                - path: pulp.crt
-                                  key: pulp.crt
-                              secretName: certs
-                          name: certs
-              replicas: 0
-              strategy:
-                  type: Rolling
+      name: pulp
+      namespace: foreman
+      replicas: 0
   tags:
     - stop
     - restart
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
-      state: present
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
-              name: pulp-worker
-              labels:
-                  app: foreman
-                  service: pulp-worker
-              namespace: foreman
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: pulp-worker
-                  spec:
-                      containers:
-                        - name: pulp-worker
-                          securityContext: {}
-                          state: present
-                          command:
-                            - /usr/bin/entrypoint.sh
-                          volumeMounts:
-                            - readOnly: false
-                              mountPath: /var/lib/pulp
-                              name: pulp-data
-                            - readOnly: false
-                              mountPath: /etc/puppet
-                              name: puppet-data
-                          image: projgriffin/foreman-pulp-worker:latest
-                      serviceAccount: anyuid
-                      serviceAccountName: anyuid
-                      volumes:
-                        - name: pulp-data
-                          persistentVolumeClaim:
-                              claimName: pulp-data
-                        - name: puppet-data
-                          persistentVolumeClaim:
-                              claimName: puppet-data
-              replicas: 0
-              strategy:
-                  type: Rolling
+      name: pulp-worker
+      namespace: foreman
+      replicas: 0
   tags:
     - stop
     - restart
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
-      state: present
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
-              name: pulp-celerybeat
-              labels:
-                  app: foreman
-                  service: pulp-celerybeat
-              namespace: foreman
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: pulp-celerybeat
-                  spec:
-                      containers:
-                        - name: pulp-celerybeat
-                          securityContext: {}
-                          state: present
-                          command:
-                            - /usr/bin/entrypoint.sh
-                          image: projgriffin/foreman-pulp-celerybeat:latest
-                      serviceAccount: anyuid
-                      serviceAccountName: anyuid
-              replicas: 0
-              strategy:
-                  type: Rolling
+      name: pulp-celerybeat
+      namespace: foreman
+      replicas: 0
   tags:
     - stop
     - restart
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
-      state: present
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
-              name: pulp-resource-manager
-              labels:
-                  app: foreman
-                  service: pulp-resource-manager
-              namespace: foreman
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: pulp-resource-manager
-                  spec:
-                      containers:
-                        - name: pulp-resource-manager
-                          securityContext: {}
-                          state: present
-                          command:
-                            - /usr/bin/entrypoint.sh
-                          image: projgriffin/foreman-pulp-resource-manager:latest
-                      serviceAccount: anyuid
-                      serviceAccountName: anyuid
-              replicas: 0
-              strategy:
-                  type: Rolling
+      name: pulp-resource-manager
+      namespace: foreman
+      replicas: 0
   tags:
     - stop
     - restart
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
-      state: present
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
-              name: mongodb
-              labels:
-                  app: foreman
-                  service: mongodb
-              namespace: foreman
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: mongodb
-                  spec:
-                      containers:
-                        - name: mongodb
-                          securityContext: {}
-                          state: present
-                          env:
-                            - name: MONGODB_USER
-                              value: admin
-                            - name: MONGODB_PASSWORD
-                              value: admin
-                            - name: MONGODB_DATABASE
-                              value: pulp_database
-                            - name: MONGODB_ADMIN_PASSWORD
-                              value: admin
-                          args:
-                            - run-mongod
-                          volumeMounts:
-                            - readOnly: false
-                              mountPath: /var/lib/mongodb/data
-                              name: mongodb-data
-                          image: projgriffin/foreman-mongodb:latest
-                      volumes:
-                        - name: mongodb-data
-                          persistentVolumeClaim:
-                              claimName: mongodb-data
-              replicas: 0
-              strategy:
-                  type: Rolling
+      name: mongodb
+      namespace: foreman
+      replicas: 0
   tags:
     - stop
     - restart
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
-      state: present
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
-              name: content-server
-              labels:
-                  app: foreman
-                  service: content-server
-              namespace: foreman
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: content-server
-                  spec:
-                      containers:
-                        - name: content-server
-                          securityContext: {}
-                          state: present
-                          volumeMounts:
-                            - readOnly: true
-                              mountPath: /etc/pki/pulp/private
-                              name: keys
-                            - readOnly: true
-                              mountPath: /etc/pki/pulp/certs
-                              name: certs
-                            - readOnly: false
-                              mountPath: /var/lib/pulp
-                              name: pulp-data
-                          args:
-                            - /usr/bin/start_httpd.sh
-                          ports:
-                            - protocol: TCP
-                              containerPort: 8080
-                          image: projgriffin/foreman-content-server:latest
-                      serviceAccount: anyuid
-                      serviceAccountName: anyuid
-                      volumes:
-                        - secret:
-                              items: &id008
-                                - path: pulp.key
-                                  key: pulp.key
-                              secretName: keys
-                          name: keys
-                        - secret:
-                              items: &id009
-                                - path: ca.crt
-                                  key: ca.crt
-                                - path: pulp.crt
-                                  key: pulp.crt
-                              secretName: certs
-                          name: certs
-                        - name: pulp-data
-                          persistentVolumeClaim:
-                              claimName: pulp-data
-              replicas: 0
-              strategy:
-                  type: Rolling
+      name: content-server
+      namespace: foreman
+      replicas: 0
   tags:
     - stop
     - restart
@@ -333,11 +87,17 @@
                       serviceAccountName: anyuid
                       volumes:
                         - secret:
-                              items: *id006
+                              items:
+                                - path: pulp.key
+                                  key: pulp.key
                               secretName: keys
                           name: keys
                         - secret:
-                              items: *id007
+                              items:
+                                - path: ca.crt
+                                  key: ca.crt
+                                - path: pulp.crt
+                                  key: pulp.crt
                               secretName: certs
                           name: certs
               replicas: 1
@@ -559,11 +319,17 @@
                       serviceAccountName: anyuid
                       volumes:
                         - secret:
-                              items: *id008
+                              items:
+                                - path: pulp.key
+                                  key: pulp.key
                               secretName: keys
                           name: keys
                         - secret:
-                              items: *id009
+                              items:
+                                - path: ca.crt
+                                  key: ca.crt
+                                - path: pulp.crt
+                                  key: pulp.crt
                               secretName: certs
                           name: certs
                         - name: pulp-data
