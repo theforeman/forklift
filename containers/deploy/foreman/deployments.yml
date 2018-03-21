@@ -1,179 +1,25 @@
 ---
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
-      state: present
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
-              name: foreman
-              labels:
-                  app: foreman
-                  service: foreman
-              namespace: foreman
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: foreman
-                  spec:
-                      containers:
-                        - name: foreman
-                          securityContext: {}
-                          state: present
-                          volumeMounts:
-                            - readOnly: true
-                              mountPath: /etc/pki/katello/private
-                              name: keys
-                            - readOnly: true
-                              mountPath: /etc/pki/katello/certs
-                              name: certs
-                          env:
-                            - name: POSTGRES_DB
-                              value: foreman
-                            - name: POSTGRES_USER
-                              value: foreman
-                            - name: POSTGRES_PASSWORD
-                              value: foreman
-                            - name: SEED_ADMIN_USER
-                              value: admin
-                            - name: SEED_ADMIN_PASSWORD
-                              value: changeme
-                            - name: RAILS_ENV
-                              value: production
-                          args:
-                            - /usr/bin/start-foreman.sh
-                          command:
-                            - /usr/bin/entrypoint.sh
-                          ports:
-                            - protocol: TCP
-                              containerPort: 8080
-                          image: projgriffin/foreman-foreman:latest
-                      serviceAccount: anyuid
-                      serviceAccountName: anyuid
-                      volumes:
-                        - secret:
-                              items: &id001
-                                - path: ca.key
-                                  key: ca.key
-                                - path: pulp-client.key
-                                  key: pulp-client.key
-                              secretName: keys
-                          name: keys
-                        - secret:
-                              items: &id002
-                                - path: ca.crt
-                                  key: ca.crt
-                                - path: pulp-client.crt
-                                  key: pulp-client.crt
-                              secretName: certs
-                          name: certs
-              replicas: 0
-              strategy:
-                  type: Rolling
+      name: foreman
+      namespace: foreman
+      replicas: 0
   tags:
     - stop
     - restart
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
-      state: present
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
-              name: dynflow
-              labels:
-                  app: foreman
-                  service: dynflow
-              namespace: foreman
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: dynflow
-                  spec:
-                      containers:
-                        - name: dynflow
-                          securityContext: {}
-                          state: present
-                          volumeMounts:
-                            - readOnly: true
-                              mountPath: /etc/pki/katello/private
-                              name: keys
-                            - readOnly: true
-                              mountPath: /etc/pki/katello/certs
-                              name: certs
-                          env:
-                            - name: POSTGRES_DB
-                              value: foreman
-                            - name: POSTGRES_USER
-                              value: foreman
-                            - name: POSTGRES_PASSWORD
-                              value: foreman
-                            - name: RAILS_ENV
-                              value: production
-                          args:
-                            - /usr/bin/start-dynflowd.sh
-                          command:
-                            - /usr/bin/entrypoint.sh
-                          image: projgriffin/foreman-dynflow:latest
-                      serviceAccount: anyuid
-                      serviceAccountName: anyuid
-                      volumes:
-                        - secret:
-                              items: &id003
-                                - path: ca.key
-                                  key: ca.key
-                                - path: pulp-client.key
-                                  key: pulp-client.key
-                              secretName: keys
-                          name: keys
-                        - secret:
-                              items: &id004
-                                - path: ca.crt
-                                  key: ca.crt
-                                - path: pulp-client.crt
-                                  key: pulp-client.crt
-                              secretName: certs
-                          name: certs
-              replicas: 0
-              strategy:
-                  type: Rolling
+      name: dynflow
+      namespace: foreman
+      replicas: 0
   tags:
     - stop
     - restart
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
-      state: present
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
-              name: memcached
-              labels:
-                  app: foreman
-                  service: memcached
-              namespace: foreman
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: memcached
-                  spec:
-                      containers:
-                        - name: memcached
-                          securityContext: {}
-                          state: present
-                          image: manageiq/memcached
-              replicas: 0
-              strategy:
-                  type: Rolling
+      name: memcached
+      namespace: foreman
+      replicas: 0
   tags:
     - stop
     - restart
@@ -233,11 +79,19 @@
                       serviceAccountName: anyuid
                       volumes:
                         - secret:
-                              items: *id001
+                              items:
+                                - path: ca.key
+                                  key: ca.key
+                                - path: pulp-client.key
+                                  key: pulp-client.key
                               secretName: keys
                           name: keys
                         - secret:
-                              items: *id002
+                              items:
+                                - path: ca.crt
+                                  key: ca.crt
+                                - path: pulp-client.crt
+                                  key: pulp-client.crt
                               secretName: certs
                           name: certs
               replicas: 1
@@ -295,11 +149,19 @@
                       serviceAccountName: anyuid
                       volumes:
                         - secret:
-                              items: *id003
+                              items:
+                                - path: ca.key
+                                  key: ca.key
+                                - path: pulp-client.key
+                                  key: pulp-client.key
                               secretName: keys
                           name: keys
                         - secret:
-                              items: *id004
+                              items:
+                                - path: ca.crt
+                                  key: ca.crt
+                                - path: pulp-client.crt
+                                  key: pulp-client.crt
                               secretName: certs
                           name: certs
               replicas: 1
