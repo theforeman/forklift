@@ -51,6 +51,10 @@ vagrant up centos7-devel
 
 You can find more thorough guides in the [docs folder](https://github.com/theforeman/forklift/tree/master/docs).
 
+### Credentials
+
+By default `forklift` deploys Foreman with `admin`/`changeme` as username and password, please change this on production installs (either after the install, or by setting `foreman_installer_admin_password` during the initial deployment).
+
 ### Poor man's DNS a.k.a /etc/hosts
 
 For the multi-host setup, one of the easiest way of making the name
