@@ -1,7 +1,7 @@
 ---
 - name: Create route
   openshift_v1_route:
-      state: present
+      state: "{{ deployment_state }}"
       force: false
       resource_definition:
           apiVersion: v1
@@ -20,3 +20,4 @@
                   targetPort: port-8080-tcp
   tags:
     - start
+    - destroy

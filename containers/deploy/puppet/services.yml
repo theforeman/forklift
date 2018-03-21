@@ -1,7 +1,7 @@
 ---
 - name: Create service
   k8s_v1_service:
-      state: present
+      state: "{{ deployment_state }}"
       force: false
       resource_definition:
           apiVersion: v1
@@ -23,3 +23,4 @@
                   port: 8140
   tags:
     - start
+    - destroy

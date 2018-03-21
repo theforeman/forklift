@@ -25,7 +25,7 @@
     - restart
 - name: Create deployment, and scale replicas up
   openshift_v1_deployment_config:
-      state: present
+      state: "{{ deployment_state }}"
       force: false
       resource_definition:
           apiVersion: v1
@@ -100,9 +100,10 @@
   tags:
     - start
     - restart
+    - destroy
 - name: Create deployment, and scale replicas up
   openshift_v1_deployment_config:
-      state: present
+      state: "{{ deployment_state }}"
       force: false
       resource_definition:
           apiVersion: v1
@@ -170,9 +171,10 @@
   tags:
     - start
     - restart
+    - destroy
 - name: Create deployment, and scale replicas up
   openshift_v1_deployment_config:
-      state: present
+      state: "{{ deployment_state }}"
       force: false
       resource_definition:
           apiVersion: v1
@@ -201,3 +203,4 @@
   tags:
     - start
     - restart
+    - destroy

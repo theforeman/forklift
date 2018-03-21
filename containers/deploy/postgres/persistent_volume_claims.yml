@@ -1,7 +1,7 @@
 ---
 - name: Create PVC
   k8s_v1_persistent_volume_claim:
-      state: present
+      state: "{{ deployment_state }}"
       force: false
       resource_definition:
           apiVersion: v1
@@ -17,3 +17,4 @@
                 - ReadWriteOnce
   tags:
     - start
+    - destroy

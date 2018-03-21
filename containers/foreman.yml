@@ -10,6 +10,17 @@
     pulp_worker_count: 2
     registry: projgriffin
   tasks:
+    - set_fact:
+        deployment_state: present
+      tags:
+        - restart
+        - start
+        - stop
+    - set_fact:
+        deployment_state: absent
+      tags:
+        - destroy
+
     - import_tasks: deploy/project.yml
 
     - import_tasks: deploy/secrets/secrets.yml
