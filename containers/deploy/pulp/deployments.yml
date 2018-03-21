@@ -98,7 +98,7 @@
                             - /usr/bin/start_httpd.sh
                           command:
                             - /usr/bin/entrypoint.sh
-                          image: projgriffin/foreman-pulp:latest
+                          image: "{{ registry }}/foreman-pulp:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
                       volumes:
@@ -142,11 +142,11 @@
                           app: foreman
                           service: pulp-worker
                   spec:
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       containers:
                         - name: pulp-worker
                           securityContext: {}
-                          serviceAccount: anyuid
-                          serviceAccountName: anyuid
                           state: present
                           command:
                             - /usr/bin/entrypoint.sh
@@ -157,7 +157,7 @@
                             - readOnly: false
                               mountPath: /etc/puppet
                               name: puppet-data
-                          image: projgriffin/foreman-pulp-worker:latest
+                          image: "{{ registry }}/foreman-pulp-worker:latest"
                       volumes:
                         - name: pulp-data
                           persistentVolumeClaim:
@@ -197,7 +197,7 @@
                           state: present
                           command:
                             - /usr/bin/entrypoint.sh
-                          image: projgriffin/foreman-pulp-celerybeat:latest
+                          image: "{{ registry }}/foreman-pulp-celerybeat:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
               replicas: 1
@@ -232,7 +232,7 @@
                           state: present
                           command:
                             - /usr/bin/entrypoint.sh
-                          image: projgriffin/foreman-pulp-resource-manager:latest
+                          image: "{{ registry }}/foreman-pulp-resource-manager:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
               replicas: 1
@@ -280,7 +280,7 @@
                             - readOnly: false
                               mountPath: /var/lib/mongodb/data
                               name: mongodb-data
-                          image: projgriffin/foreman-mongodb:latest
+                          image: "{{ registry }}/foreman-mongodb:latest"
                       volumes:
                         - name: mongodb-data
                           persistentVolumeClaim:
@@ -330,7 +330,7 @@
                           ports:
                             - protocol: TCP
                               containerPort: 8080
-                          image: projgriffin/foreman-content-server:latest
+                          image: "{{ registry }}/foreman-content-server:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
                       volumes:
@@ -389,7 +389,9 @@
                           ports:
                             - protocol: TCP
                               containerPort: 3128
-                          image: projgriffin/foreman-squid:latest
+                          image: "{{ registry }}/foreman-squid:latest"
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
               replicas: 1
               strategy:
                   type: Rolling
@@ -426,7 +428,9 @@
                           ports:
                             - protocol: TCP
                               containerPort: 8751
-                          image: projgriffin/foreman-pulp-streamer:latest
+                          image: "{{ registry }}/foreman-pulp-streamer:latest"
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
               replicas: 1
               strategy:
                   type: Rolling

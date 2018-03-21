@@ -41,7 +41,7 @@
                           state: present
                           args:
                             - /usr/bin/start-foreman-proxy.sh
-                          image: projgriffin/foreman-foreman-proxy:latest
+                          image: "{{ registry }}/foreman-foreman-proxy:latest"
               replicas: 1
               strategy:
                   type: Rolling
@@ -83,7 +83,7 @@
                               value: '8080'
                           args:
                             - /usr/bin/register.sh
-                          image: projgriffin/foreman-foreman-proxy-register:latest
+                          image: "{{ registry }}/foreman-foreman-proxy-register:latest"
               replicas: 1
               strategy:
                   type: Rolling

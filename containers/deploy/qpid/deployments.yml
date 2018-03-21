@@ -33,7 +33,7 @@
                           state: present
                           args:
                             - /usr/bin/startup.sh
-                          image: projgriffin/foreman-qpid:latest
+                          image: "{{ registry }}/foreman-qpid:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
               replicas: 1

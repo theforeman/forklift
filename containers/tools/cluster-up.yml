@@ -18,24 +18,3 @@
           --public-hostname={{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
       when: cluster_status | failed
       register: cluster_up
-
-    - name: "Login as system admin to OpenShift"
-      command: oc login -u system:admin
-
-    - name: 'Set security context'
-      command: oadm policy add-scc-to-group anyuid system:authenticated
-
-    - name: 'Give developer cluster-admin'
-      command: oadm policy add-cluster-role-to-user cluster-admin developer
-
-    - name: "Login back in as developer"
-      command: oc login -u developer -p a
-
-    - name: 'Check for Foreman project'
-      command: oc project foreman
-      register: project_exists
-      ignore_errors: true
-
-    - name: 'Create Foreman project'
-      command: oc new-project foreman
-      when: project_exists | failed

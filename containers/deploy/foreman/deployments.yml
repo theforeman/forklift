@@ -74,7 +74,7 @@
                           ports:
                             - protocol: TCP
                               containerPort: 8080
-                          image: projgriffin/foreman-foreman:latest
+                          image: "{{ registry }}/foreman-foreman:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
                       volumes:
@@ -144,7 +144,7 @@
                             - /usr/bin/start-dynflowd.sh
                           command:
                             - /usr/bin/entrypoint.sh
-                          image: projgriffin/foreman-dynflow:latest
+                          image: "{{ registry }}/foreman-dynflow:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
                       volumes:
