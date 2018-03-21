@@ -235,41 +235,6 @@
           apiVersion: v1
           kind: deployment_config
           metadata:
-              name: qpid
-              labels:
-                  app: foreman
-                  service: qpid
-              namespace: foreman
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: qpid
-                  spec:
-                      containers:
-                        - name: qpid
-                          securityContext: {}
-                          state: present
-                          args:
-                            - /usr/bin/startup.sh
-                          image: projgriffin/foreman-qpid:latest
-                      serviceAccount: anyuid
-                      serviceAccountName: anyuid
-              replicas: 0
-              strategy:
-                  type: Rolling
-  tags:
-    - stop
-    - restart
-- name: Stop running containers by scaling replicas down to 0
-  openshift_v1_deployment_config:
-      state: present
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
               name: content-server
               labels:
                   app: foreman
