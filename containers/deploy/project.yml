@@ -7,10 +7,3 @@
       state: present
   tags:
     - start
-
-- name: Destroy the application by removing project foreman
-  openshift_v1_project:
-      name: foreman
-      state: absent
-  tags:
-    - destroy
