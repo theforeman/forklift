@@ -1,2 +1,3 @@
 ---
 vagrant_user: vagrant
+# vagrant_user_import_ssh_pub_key: 

@@ -15,6 +15,25 @@
     create: yes
   become: true
 
+- name: "Create {{ vagrant_user }} .ssh"
+  file:
+    path: "/home/{{ vagrant_user }}/.ssh"
+    owner: "{{ vagrant_user }}"
+    group: root
+    state: directory
+    mode: 0700
+  become: true
+
+- lineinfile:
+    line:  "{{ lookup('file', vagrant_user_import_ssh_pub_key) }}"
+    path:  "/home/{{ vagrant_user }}/.ssh/authorized_keys"
+    create: yes
+    mode: 0600
+    owner: "{{ vagrant_user }}"
+    state: present
+  when: vagrant_user_import_ssh_pub_key | default(False)
+  become: true
+
 - name: "Check /home/{{ vagrant_user }}/.ssh/authorized_keys"
   stat:
     path: /home/{{ vagrant_user }}/.ssh/authorized_keys
@@ -22,25 +41,21 @@
   become: true
 
 - block:
-    - name: "Create {{ vagrant_user }} .ssh"
-      file:
-        path: "/home/{{ vagrant_user }}/.ssh"
-        owner: "{{ vagrant_user }}"
-        group: root
-        state: directory
-        mode: 0700
+    - name: "Check /root/.ssh/authorized_keys"
+      stat:
+        path: /root/.ssh/authorized_keys
+      register: root_authorized_keys_file
 
-    - name: "Copy .ssh/authorized_keys"
+    - name: "Copy /root/.ssh/authorized_keys"
       copy:
         remote_src: true
         src:  /root/.ssh/authorized_keys
-        dest: "/home/{{ vagrant_user }}/.ssh/authorized_keys"
-
-    - name: "Set rights for .ssh/authorized_keys"
-      file:
-        mode: 0600
         owner: "{{ vagrant_user }}"
-        path: "/home/{{ vagrant_user }}/.ssh/authorized_keys"
-  when: authorized_keys_file.stat.exists == False
+        mode: 0600
+        dest: "/home/{{ vagrant_user }}/.ssh/authorized_keys"
+      when: root_authorized_keys_file.stat.exists == True
+
+  when: authorized_keys_file.stat.exists == False and 
+        vagrant_user_import_ssh_pub_key | default(True)
   become: true
 
