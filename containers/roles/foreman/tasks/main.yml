@@ -51,10 +51,13 @@
     src: "{{ role_path }}/files/settings.yaml"
     dest: "/etc/foreman/settings.yaml"
 
-- name: 'Deploy katello.yaml'
+- name: 'Deploy plugin settings'
   copy:
-    src: "{{ role_path }}/files/katello.yaml"
-    dest: "/etc/foreman/plugins/katello.yaml"
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/etc/foreman/plugins/{{ item }}"
+  with_items:
+    - katello.yaml
+    - foreman_memcache.yaml
 
 - include_tasks: apipie-cache-index.yml
 

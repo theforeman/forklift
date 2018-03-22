@@ -1,0 +1,8 @@
+---
+:memcache:
+  :hosts:
+    - memcached
+  :options:
+    :namespace: foreman
+    :expires_in: 86400
+    :compress: true
