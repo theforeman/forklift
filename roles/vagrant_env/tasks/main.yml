@@ -3,6 +3,7 @@
   user:
     name: "{{ vagrant_user }}"
     comment: "John Vagrant"
+  become: true
 
 - name: "Add {{ vagrant_user }} to sudoers"
   lineinfile:
@@ -12,11 +13,13 @@
     line: '{{ vagrant_user }} ALL=(ALL) NOPASSWD: ALL'
     validate: 'visudo -cf %s'
     create: yes
+  become: true
 
 - name: "Check /home/{{ vagrant_user }}/.ssh/authorized_keys"
   stat:
     path: /home/{{ vagrant_user }}/.ssh/authorized_keys
   register: authorized_keys_file
+  become: true
 
 - block:
     - name: "Create {{ vagrant_user }} .ssh"
@@ -39,4 +42,5 @@
         owner: "{{ vagrant_user }}"
         path: "/home/{{ vagrant_user }}/.ssh/authorized_keys"
   when: authorized_keys_file.stat.exists == False
+  become: true
 
