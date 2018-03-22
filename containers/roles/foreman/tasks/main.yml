@@ -30,12 +30,13 @@
     update_cache: yes
   with_items:
     - tfm-rubygem-katello
-    #- tfm-rubygem-foreman_discovery
-    #- tfm-rubygem-foreman_remote_execution
-    #- tfm-rubygem-foreman_openscap
-    #- tfm-rubygem-foreman_ansible
+    - tfm-rubygem-foreman_ansible
+    - tfm-rubygem-foreman_discovery
     - tfm-rubygem-foreman_hooks
     - tfm-rubygem-foreman_memcache
+    - tfm-rubygem-foreman_openscap
+    - tfm-rubygem-foreman_remote_execution
+    - tfm-rubygem-foreman_templates
     - tfm-ror51-rubygem-tilt
     - tfm-ror51-rubygem-sinatra
 
