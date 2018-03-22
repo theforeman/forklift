@@ -1,8 +1,8 @@
 ---
 - hosts: all
-  become: yes
   roles:
     - etc_hosts
     - git
-    - ruby_scl
+    - role: ruby_scl
+      become: yes
     - hammer_devel
