@@ -19,6 +19,11 @@
   with_items:
     - foreman
 
+- name: 'Install qpid-tools'
+  yum:
+    name: qpid-tools
+    update_cache: yes
+
 - name: 'Install plugins'
   yum:
     name: "{{ item }}"
