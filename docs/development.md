@@ -85,7 +85,8 @@ The Koji role and task ID variable can be added to download and configure a repo
 ```yaml
 - hosts: server
   vars:
-    koji_task_id: 321231
+    koji_task_ids:
+      - 321231
   roles:
     - etc_hosts
     - koji
