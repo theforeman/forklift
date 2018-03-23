@@ -10,7 +10,7 @@
     state: 'directory'
 
 - name: 'Download RPMs'
-  command: "koji --server {{ koji_host }} download-task --topurl {{ koji_topurl }} {{ item }}"
+  command: "koji --server {{ koji_host }} --topurl {{ koji_topurl }} download-task {{ item }}"
   args:
     chdir: "{{ koji_repo_directory }}"
   with_items: "{{ koji_task_ids }}"
