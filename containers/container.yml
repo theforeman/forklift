@@ -67,7 +67,6 @@ services:
     from: foreman-pulp-base:latest
     roles:
       - noop
-    user: apache
   pulp-worker:
     from: foreman-pulp-base:latest
     roles:
@@ -107,7 +106,6 @@ services:
     roles:
       - content-server
       - registration-gateway
-    user: apache
 
 registries:
   oc-cluster:
