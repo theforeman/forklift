@@ -27,6 +27,8 @@
                           app: foreman
                           service: candlepin
                   spec:
+                      serviceAccount: anyuid
+                      serviceAccountName: anyuid
                       containers:
                         - name: candlepin
                           securityContext: {}
