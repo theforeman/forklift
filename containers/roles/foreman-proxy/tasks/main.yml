@@ -20,6 +20,7 @@
     src: "{{ role_path }}/files/{{ item }}"
     dest: "/etc/foreman-proxy/settings.d/{{ item }}"
   with_items:
+    - logs.yml
     - pulp.yml
     - puppet.yml
     - puppet_proxy_puppet_api.yml
