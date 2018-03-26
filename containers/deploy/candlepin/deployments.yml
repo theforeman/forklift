@@ -2,7 +2,7 @@
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: candlepin
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -19,7 +19,7 @@
               labels:
                   app: foreman
                   service: candlepin
-              namespace: foreman
+              namespace: "{{ project_name }}"
           spec:
               template:
                   metadata:

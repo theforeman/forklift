@@ -8,7 +8,7 @@
           kind: Service
           metadata:
               name: qpid
-              namespace: foreman
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: qpid

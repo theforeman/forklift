@@ -8,7 +8,7 @@
           kind: Service
           metadata:
               name: pulp
-              namespace: foreman
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: pulp
@@ -33,7 +33,7 @@
           kind: Service
           metadata:
               name: mongodb
-              namespace: foreman
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: mongodb
@@ -58,7 +58,7 @@
           kind: Service
           metadata:
               name: content-server
-              namespace: foreman
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: content-server

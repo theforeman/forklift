@@ -2,7 +2,7 @@
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: pulp
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -10,7 +10,7 @@
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: pulp-worker
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -18,7 +18,7 @@
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: pulp-celerybeat
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -26,7 +26,7 @@
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: pulp-resource-manager
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -34,7 +34,7 @@
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: mongodb
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -42,7 +42,7 @@
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: content-server
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -50,7 +50,7 @@
 - name: Stop squid containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: squid
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -58,7 +58,7 @@
 - name: Stop pulp-streamer containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: pulp-streamer
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -72,10 +72,10 @@
           kind: deployment_config
           metadata:
               name: pulp
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: pulp
-              namespace: foreman
           spec:
               template:
                   metadata:
@@ -132,10 +132,10 @@
           kind: deployment_config
           metadata:
               name: pulp-worker
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: pulp-worker
-              namespace: foreman
           spec:
               template:
                   metadata:
@@ -182,10 +182,10 @@
           kind: deployment_config
           metadata:
               name: pulp-celerybeat
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: pulp-celerybeat
-              namespace: foreman
           spec:
               template:
                   metadata:
@@ -218,10 +218,10 @@
           kind: deployment_config
           metadata:
               name: pulp-resource-manager
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: pulp-resource-manager
-              namespace: foreman
           spec:
               template:
                   metadata:
@@ -254,10 +254,10 @@
           kind: deployment_config
           metadata:
               name: mongodb
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: mongodb
-              namespace: foreman
           spec:
               template:
                   metadata:
@@ -305,10 +305,10 @@
           kind: deployment_config
           metadata:
               name: content-server
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: content-server
-              namespace: foreman
           spec:
               template:
                   metadata:
@@ -372,10 +372,10 @@
           kind: deployment_config
           metadata:
               name: squid
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: squid
-              namespace: foreman
           spec:
               template:
                   metadata:
@@ -413,10 +413,10 @@
           kind: deployment_config
           metadata:
               name: pulp-streamer
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: pulp-streamer
-              namespace: foreman
           spec:
               template:
                   metadata:

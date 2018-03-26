@@ -8,7 +8,7 @@
           kind: Route
           metadata:
               name: content-server-8080
-              namespace: foreman
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: content-server

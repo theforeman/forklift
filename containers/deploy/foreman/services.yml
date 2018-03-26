@@ -8,7 +8,7 @@
           kind: Service
           metadata:
               name: foreman
-              namespace: foreman
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: foreman
@@ -33,7 +33,7 @@
           kind: Service
           metadata:
               name: memcached
-              namespace: foreman
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: memcached
@@ -58,7 +58,7 @@
           kind: Service
           metadata:
               name: puppet
-              namespace: foreman
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: puppet

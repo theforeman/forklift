@@ -2,7 +2,7 @@
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: qpid
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -16,10 +16,10 @@
           kind: deployment_config
           metadata:
               name: qpid
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: qpid
-              namespace: foreman
           spec:
               template:
                   metadata:
