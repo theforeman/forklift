@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     database_is_migrated = False
     tries = 0
-    print ("Waiting on databsae to be migrated...")
+    print ("Waiting on database to be migrated...")
     while not database_is_migrated and tries < 60:
         tries += 1
         try:
