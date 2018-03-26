@@ -8,7 +8,7 @@
           kind: Service
           metadata:
               name: puppet
-              namespace: foreman
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: puppet

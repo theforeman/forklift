@@ -8,7 +8,7 @@
           kind: Service
           metadata:
               name: postgres
-              namespace: foreman
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: postgres

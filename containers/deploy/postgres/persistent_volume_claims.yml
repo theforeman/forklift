@@ -8,7 +8,7 @@
           kind: PersistentVolumeClaim
           metadata:
               name: postgres-data
-              namespace: foreman
+              namespace: "{{ project_name }}"
           spec:
               resources:
                   requests:

@@ -2,7 +2,7 @@
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: foreman-proxy
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -10,7 +10,7 @@
 - name: Stop running containers by scaling replicas down to 0
   openshift_v1_deployment_config:
       name: foreman-proxy-register
-      namespace: foreman
+      namespace: "{{ project_name }}"
       replicas: 0
   tags:
     - stop
@@ -24,10 +24,10 @@
           kind: deployment_config
           metadata:
               name: foreman-proxy
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: foreman-proxy
-              namespace: foreman
           spec:
               template:
                   metadata:
@@ -58,10 +58,10 @@
           kind: deployment_config
           metadata:
               name: foreman-proxy-register
+              namespace: "{{ project_name }}"
               labels:
                   app: foreman
                   service: foreman-proxy-register
-              namespace: foreman
           spec:
               template:
                   metadata:

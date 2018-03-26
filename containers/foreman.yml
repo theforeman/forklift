@@ -20,6 +20,10 @@
         deployment_state: absent
       tags:
         - destroy
+    - set_fact:
+        project_name: "{{ project_name | default('foreman') }}"
+      tags:
+        - always
 
     - import_tasks: deploy/project.yml
 

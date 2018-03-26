@@ -8,7 +8,7 @@
           kind: PersistentVolumeClaim
           metadata:
               name: puppet-data
-              namespace: foreman
+              namespace: "{{ project_name }}"
           spec:
               resources:
                   requests:
@@ -27,7 +27,7 @@
           kind: PersistentVolumeClaim
           metadata:
               name: mongodb-data
-              namespace: foreman
+              namespace: "{{ project_name }}"
           spec:
               resources:
                   requests:
@@ -46,7 +46,7 @@
           kind: PersistentVolumeClaim
           metadata:
               name: pulp-data
-              namespace: foreman
+              namespace: "{{ project_name }}"
           spec:
               resources:
                   requests:
