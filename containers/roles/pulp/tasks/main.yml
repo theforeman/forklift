@@ -13,6 +13,7 @@
     - pulp-rpm-plugins
     - pulp-puppet-plugins
     - pulp-docker-plugins
+    - pulp-katello
 
 - name: 'Add pulp-db-manage dry-run patch'
   get_url:
