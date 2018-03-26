@@ -93,6 +93,13 @@
     src: /etc/pki/pulp/certs/ca.crt
     dest: /etc/pki/pulp/ca.crt
 
+- name: 'Add link to ca.key'
+  file:
+    state: link
+    force: yes
+    src: /etc/pki/pulp/private/ca.key
+    dest: /etc/pki/pulp/ca.key
+
 - name: 'Add SSL auth directive to Apache pulp.conf'
   blockinfile:
     path: /etc/httpd/conf.d/pulp.conf

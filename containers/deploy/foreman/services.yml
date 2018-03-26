@@ -74,3 +74,30 @@
   tags:
     - start
     - destroy
+
+- name: Create service
+  k8s_v1_service:
+      state: "{{ deployment_state }}"
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+              name: httpd
+              namespace: "{{ project_name }}"
+              labels:
+                  app: foreman
+                  service: httpd
+          spec:
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: 80
+                - name: https
+                  port: 443
+                  targetPort: 443
+              selector:
+                  name: httpd
+  tags:
+    - start
+    - destroy

@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  tasks:
+    - name: 'Set hostname for hammer'
+      replace:
+        path: /etc/hammer/cli.modules.d/foreman.yml
+        regexp: localhost
+        replace: "{{ foreman_hostname }}"

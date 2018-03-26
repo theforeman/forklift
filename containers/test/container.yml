@@ -1,0 +1,24 @@
+---
+version: "2"
+
+settings:
+  conductor:
+    base: centos:7
+    roles_path:
+      - ./roles
+      - ../roles
+      - ../../roles/
+    environment:
+      DOCKER_CLIENT_TIMEOUT: '600'
+
+services:
+  bats:
+    from: centos:7
+    command: /usr/bin/run-tests.sh
+    roles:
+      - epel_repositories
+      - foreman_repositories
+      - katello_repositories
+      - role: bats
+        bats_run: false
+      - test

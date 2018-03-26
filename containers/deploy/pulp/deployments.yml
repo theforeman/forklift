@@ -94,6 +94,12 @@
                             - readOnly: true
                               mountPath: /etc/pki/pulp/certs
                               name: certs
+                            - readOnly: false
+                              mountPath: /var/lib/pulp
+                              name: pulp-data
+                            - readOnly: false
+                              mountPath: /etc/puppet
+                              name: puppet-data
                           args:
                             - /usr/bin/start_httpd.sh
                           command:
@@ -102,12 +108,14 @@
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
                       volumes:
-                        - secret:
+                        - name: keys
+                          secret:
                               items:
                                 - path: pulp.key
                                   key: pulp.key
+                                - path: ca.key
+                                  key: ca.key
                               secretName: keys
-                          name: keys
                         - secret:
                               items:
                                 - path: ca.crt
@@ -116,6 +124,12 @@
                                   key: pulp.crt
                               secretName: certs
                           name: certs
+                        - name: pulp-data
+                          persistentVolumeClaim:
+                              claimName: pulp-data
+                        - name: puppet-data
+                          persistentVolumeClaim:
+                              claimName: puppet-data
               replicas: 1
               strategy:
                   type: Rolling

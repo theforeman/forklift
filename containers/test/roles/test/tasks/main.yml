@@ -1,0 +1,46 @@
+---
+- name: 'Install Ansible'
+  package:
+    name: ansible
+    state: present
+
+- name: 'Install hammer'
+  package:
+    name: tfm-rubygem-hammer_cli_katello
+    state: present
+
+- name: 'Install bats playbook'
+  copy:
+    dest: /root/bats.yml
+    src: "{{ role_path }}/files/bats.yml"
+
+- name: 'Turn verify ssl off for hammer'
+  lineinfile:
+    path: /etc/hammer/cli_config.yml
+    line: ":verify_ssl: false"
+
+- name: 'Turn verify ssl off for hammer'
+  replace:
+    path: /etc/hammer/cli.modules.d/foreman.yml
+    regexp: "#:password: 'example'"
+    replace: ":password: changeme"
+
+- name: Copy test files
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/root/{{ item }}"
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - container.bats
+
+- name: Copy entrypoint
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - run-tests.sh

@@ -7,17 +7,20 @@
           apiVersion: v1
           kind: Route
           metadata:
-              name: foreman-8080
+              name: foreman-443
               namespace: "{{ project_name }}"
               labels:
                   app: foreman
-                  service: foreman
+                  service: httpd
           spec:
               to:
                   kind: Service
-                  name: foreman
+                  name: httpd
               port:
-                  targetPort: port-8080-tcp
+                  targetPort: https
+              tls:
+                termination: passthrough
   tags:
     - start
+    - restart
     - destroy
