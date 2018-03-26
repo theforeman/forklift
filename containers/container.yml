@@ -105,6 +105,10 @@ services:
     roles:
       - content-server
       - registration-gateway
+  httpd:
+    from: manageiq/httpd:latest
+    roles:
+      - httpd
 
 registries:
   oc-cluster:

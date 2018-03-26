@@ -23,6 +23,15 @@
   tags:
     - stop
     - restart
+- name: Stop running containers by scaling replicas down to 0
+  openshift_v1_deployment_config:
+      name: httpd
+      namespace: "{{ project_name }}"
+      replicas: 0
+  tags:
+    - stop
+    - restart
+
 - name: Create deployment, and scale replicas up
   openshift_v1_deployment_config:
       state: "{{ deployment_state }}"
@@ -200,6 +209,86 @@
               replicas: 1
               strategy:
                   type: Rolling
+  tags:
+    - start
+    - restart
+    - destroy
+
+- name: Create deployment, and scale replicas up
+  openshift_v1_deployment_config:
+      state: "{{ deployment_state }}"
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: deployment_config
+          metadata:
+              name: httpd
+              namespace: "{{ project_name }}"
+              labels:
+                  app: foreman
+                  service: httpd
+          spec:
+            selector:
+                name: httpd
+            strategy:
+                type: Recreate
+                recreateParams:
+                    timeoutSeconds: 1200
+            triggers:
+                - type: ConfigChange
+            replicas: 1
+            template:
+                metadata:
+                    name: "httpd"
+                    labels:
+                        name: "httpd"
+                spec:
+                    serviceAccount: anyuid
+                    serviceAccountName: anyuid
+                    volumes:
+                      - name: httpd-config
+                        configMap:
+                            name: "httpd-configs"
+                      - name: certs
+                        secret:
+                            secretName: certs
+                            items:
+                              - path: katello-default-ca.crt
+                                key: ca.crt
+                              - path: katello-server.crt
+                                key: pulp.crt
+                      - name: keys
+                        secret:
+                            secretName: keys
+                            items:
+                              - path: katello-default-ca.key
+                                key: ca.key
+                              - path: katello-server.key
+                                key: pulp.key
+                    containers:
+                      - name: httpd
+                        image: "{{ registry }}/foreman-httpd:latest"
+                        command:
+                          - /usr/sbin/init
+                        ports:
+                          - containerPort: 80
+                            protocol: TCP
+                          - containerPort: 443
+                            protocol: TCP
+                        volumeMounts:
+                          - name: httpd-config
+                            mountPath: "/etc/httpd/conf.d"
+                          - readOnly: true
+                            mountPath: /etc/pki/katello/private
+                            name: keys
+                          - readOnly: true
+                            mountPath: /etc/pki/katello/certs
+                            name: certs
+                        lifecycle:
+                            postStart:
+                                _exec:
+                                    command:
+                                      - "/usr/bin/save-container-environment"
   tags:
     - start
     - restart
