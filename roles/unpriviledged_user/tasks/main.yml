@@ -1,0 +1,60 @@
+---
+- name: "Creating of {{ unpriviledged_user_username }} user"
+  user:
+    name: "{{ unpriviledged_user_username }}"
+    comment: "John Vagrant"
+  become: true
+
+- name: "Add {{ unpriviledged_user_username }} to sudoers"
+  lineinfile:
+    dest: "/etc/sudoers.d/{{ unpriviledged_user_username }}"
+    state: present
+    regexp: '^{{ unpriviledged_user_username }}'
+    line: '{{ unpriviledged_user_username }} ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+    create: yes
+  become: true
+
+- name: "Create {{ unpriviledged_user_username }} .ssh"
+  file:
+    path: "/home/{{ unpriviledged_user_username }}/.ssh"
+    owner: "{{ unpriviledged_user_username }}"
+    group: root
+    state: directory
+    mode: 0700
+  become: true
+
+- lineinfile:
+    line:  "{{ lookup('file', unpriviledged_user_import_ssh_pub_key) }}"
+    path:  "/home/{{ unpriviledged_user_username }}/.ssh/authorized_keys"
+    create: yes
+    mode: 0600
+    owner: "{{ unpriviledged_user_username }}"
+    state: present
+  when: unpriviledged_user_import_ssh_pub_key | default(False)
+  become: true
+
+- name: "Check /home/{{ unpriviledged_user_username }}/.ssh/authorized_keys"
+  stat:
+    path: /home/{{ unpriviledged_user_username }}/.ssh/authorized_keys
+  register: authorized_keys_file
+  become: true
+
+- block:
+    - name: "Check /root/.ssh/authorized_keys"
+      stat:
+        path: /root/.ssh/authorized_keys
+      register: root_authorized_keys_file
+
+    - name: "Copy /root/.ssh/authorized_keys"
+      copy:
+        remote_src: true
+        src:  /root/.ssh/authorized_keys
+        owner: "{{ unpriviledged_user_username }}"
+        mode: 0600
+        dest: "/home/{{ unpriviledged_user_username }}/.ssh/authorized_keys"
+      when: root_authorized_keys_file.stat.exists == True
+
+  when: authorized_keys_file.stat.exists == False and
+        unpriviledged_user_import_ssh_pub_key | default(True)
+  become: true
