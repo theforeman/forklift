@@ -11,7 +11,6 @@
 - name: 'Register client with subscription-manager as user {{ katello_client_username }}'
   redhat_subscription:
     state: "present"
-    org_id: "{{ katello_client_organization }}"
     environment: "{{ katello_client_environment }}"
     username: "{{ katello_client_username }}"
     password: "{{ katello_client_password }}"
