@@ -59,9 +59,9 @@ cd foreman
 bundle exec foreman start
 ```
 
-### Webpack dev server & Firefox
+### Webpack dev server
 
-When using the dev server on Firefox you need to accept the self-signed certificate. You should go to `https://centos7-devel.example.com:3808` (or your equivalent) and add an exception for this certificate. Chrome does not throw any warnings if you have accepted the same certificate already for `https://centos7-devel.example.com`.
+When using the dev server you need to accept the self-signed certificate. You should go to `https://centos7-devel.example.com:3808` (or your equivalent) and add an exception for this certificate. 
 
 
 ## Koji Scratch Builds
