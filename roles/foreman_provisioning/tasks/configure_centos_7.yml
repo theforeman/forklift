@@ -1,6 +1,7 @@
 - name: 'associate CentOS 7 media'
   shell: >
     {{ foreman_provisioning_hammer }} medium update --name "CentOS mirror" --organization-titles "{{ foreman_provisioning_organization }}" --location-titles "{{ foreman_provisioning_location }}"
+  when: foreman_repositories_version == 'nightly'
 
 - name: 'create CentOS 7'
   shell: >

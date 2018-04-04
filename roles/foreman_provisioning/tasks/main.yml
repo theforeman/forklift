@@ -3,6 +3,7 @@
 - name: 'disable default context for admin'
   shell: >
     {{ foreman_provisioning_hammer }} user update --login admin --default-organization-id 0 --default-location-id 0
+  when: foreman_provisioning_foreman_version == 'nightly' or foreman_provisioning_foreman_version is version_compare('1.17', '>=')
 
 # Get the smart proxy ID of the local katello:
 - name: 'get smart proxy id'
@@ -150,7 +151,6 @@
   shell: >
     {{ foreman_provisioning_hammer }} settings set --name query_local_nameservers --value true
 
-
 # make installation media available
 # until it's done by seed - http://projects.theforeman.org/issues/22661
 - name: 'assign organization and location to all seeded media'
@@ -165,6 +165,7 @@
     - Ubuntu mirror
   shell: >
     {{ foreman_provisioning_hammer }} medium update --name "{{ item }}" --organization-titles "{{ foreman_provisioning_organization }}" --location-titles "{{ foreman_provisioning_location }}"
+  when: foreman_provisioning_foreman_version == 'nightly'
 
 
 - name: 'Setup CentOS 7 provisioning'
@@ -190,6 +191,10 @@
   register: foreman_provisioning_hostgroup_base
   ignore_errors: True
 
+- name: 'prepare compute resource option'
+  set_fact:
+    foreman_provisioning_compute_resource_option: "{{ '--compute-resource libvirt' if foreman_provisioning_foreman_version == 'nightly' else '' }}"
+
 # TODO compute-profile can't be specified by name until http://projects.theforeman.org/issues/21580/ so we hardcode 1
 - name: 'create hostgroup Base'
   shell: >
@@ -202,7 +207,7 @@
     --puppet-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
     --subnet '{{ foreman_provisioning_network }}/24'
     --compute-profile-id 1
-    --compute-resource 'libvirt'
+    {{ foreman_provisioning_compute_resource_option }}
     --root-pass changeme
     --pxe-loader "PXELinux BIOS"
     {{ foreman_provisioning_hammer_taxonomy_params }}
