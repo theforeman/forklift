@@ -1,6 +1,7 @@
 - name: 'associate Fedora 27 media'
   shell: >
     {{ foreman_provisioning_hammer }} medium update --name "Fedora mirror" --organization-titles "{{ foreman_provisioning_organization }}" --location-titles "{{ foreman_provisioning_location }}"
+  when: foreman_repositories_version == 'nightly'
 
 - name: 'create Fedora 27'
   shell: >

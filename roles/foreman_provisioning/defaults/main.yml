@@ -11,3 +11,4 @@ foreman_provisioning_dhcp_end: 192.168.73.254
 foreman_provisioning_network: 192.168.73.0
 foreman_provisioning_installer_options: []
 foreman_provisioning_domain: "{{ ansible_domain }}"
+foreman_provisioning_foreman_version: "{{ foreman_repositories_version | default('nightly') }}"
