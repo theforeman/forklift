@@ -4,9 +4,3 @@
   tasks:
     - name: "Start minishift"
       command: minishift start --memory 10GB --cpus 4 --iso-url centos
-
-    - name: 'Link oc binary'
-      shell: "eval $(minishift oc-env)"
-
-    - name: 'Link docker binary'
-      shell: "eval $(minishift docker-env)"
