@@ -1,5 +1,5 @@
 ---
-- name: "Build hosts file"
+- name: "Build hosts file (vagrant)"
   lineinfile:
     dest: /etc/hosts
     regexp: ".*{{ item.replace('.', '-') }}$"
@@ -10,3 +10,12 @@
   with_items: "{{ groups['all'] }}"
   tags:
     - env_setup
+
+- name: "Build hosts file (OpenStack)"
+  lineinfile:
+    dest: /etc/hosts
+    regexp: ".* {{ ansible_fqdn }}$"
+    line: "{{ facter_ec2_metadata['local-ipv4'] }} {{ ansible_fqdn }}"
+    state: present
+  when: facter_ec2_metadata is defined and facter_ec2_metadata['local-ipv4'] != facter_ec2_metadata['public-ipv4']
+  become: yes
