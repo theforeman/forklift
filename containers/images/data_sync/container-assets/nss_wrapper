@@ -1,0 +1,10 @@
+# Based on http://blog.dscpl.com.au/2015/12/unknown-user-when-running-docker.html
+
+mkdir /tmp/datasync
+
+USER_ID=$(id -u)
+
+export NSS_WRAPPER_PASSWD=/tmp/passwd.nss_wrapper
+export NSS_WRAPPER_GROUP=/etc/group
+echo "datasync:x:$USER_ID:0:datasync,,,:/tmp/datasync:/bin/bash" >> $NSS_WRAPPER_PASSWD
+export LD_PRELOAD=/usr/lib64/libnss_wrapper.so
