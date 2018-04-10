@@ -44,7 +44,7 @@ The same can be quickly done for a development environment where GITHUB_NICK is 
 ```
 git clone https://github.com/theforeman/forklift.git
 cd forklift
-cp boxes.d/99-local.yaml.example boxes.d/99-local.yaml
+cp vagrant/boxes.d/99-local.yaml.example vagrant/boxes.d/99-local.yaml
 sed -i "s/<REPLACE ME>/GITHUB_NICK/g" boxes.d/99-local.yaml
 vagrant up centos7-devel
 ```
