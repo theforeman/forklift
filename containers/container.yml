@@ -28,7 +28,7 @@ services:
     roles:
       - noop
   dynflow:
-    from: foreman-foreman-base:latest
+    from: projgriffin/foreman-foreman-base:latest
     roles:
       - dynflow
   memcached:
