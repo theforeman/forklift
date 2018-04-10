@@ -7,5 +7,6 @@
     group: root
     mode: 0775
   with_items:
+    - wait_on_migrations.py
     - entrypoint.sh
     - start-dynflowd.sh
