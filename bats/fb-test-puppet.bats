@@ -61,8 +61,7 @@ fi
 }
 
 @test "import ntp puppet class" {
-  id=$(hammer --csv proxy list | tail -n1 | cut -d, -f1)
-  hammer proxy import-classes --id $id
+  hammer proxy import-classes --name $(hostname -f)
   count=$(hammer --csv puppet-class list --search 'name = ntp' | wc -l)
   [ $count -gt 1 ]
 }
