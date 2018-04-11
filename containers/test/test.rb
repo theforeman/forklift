@@ -3,6 +3,8 @@
 require 'json'
 require 'pp'
 
+`oc project foreman`
+
 routes = JSON.parse(`oc get routes --output json`)
 
 foreman_route = routes['items'].find do |route|
@@ -38,4 +40,4 @@ if output['status'] == 'FAIL'
   abort('Katello ping API is failing')
 end
 
-system("docker run -e FOREMAN_HOSTNAME=#{foreman_route} test-bats")
+system("docker run -e FOREMAN_HOSTNAME=#{foreman_route} test-bats") if ARGV[0] == '--smoke'
