@@ -42,7 +42,7 @@
   delegate_to: "{{ foreman_proxy_content_server }}"
 
 - name: 'Generate Certs'
-  command: foreman-proxy-certs-generate --foreman-proxy-fqdn {{ ansible_nodename }} --certs-tar {{ foreman_proxy_content_certs_tar }}
+  command: foreman-proxy-certs-generate --foreman-proxy-fqdn {{ ansible_nodename }} --certs-tar {{ foreman_proxy_content_certs_tar }} {{ foreman_proxy_content_certs_args }}
   delegate_to: "{{ foreman_proxy_content_server }}"
   when: foreman_proxy_certs_generate_exists.rc == 0
 
