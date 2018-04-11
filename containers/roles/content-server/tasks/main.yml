@@ -43,6 +43,11 @@
     - /etc/pki/tls/certs/localhost.crt
     - /etc/pki/tls/private/localhost.key
 
+- name: 'Add alias'
+  copy:
+    content: Alias /pub /var/www/html/pub
+    dest: /etc/httpd/conf.d/pub.conf
+
 - name: 'Add links to certs'
   file:
     state: link

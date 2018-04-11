@@ -344,6 +344,9 @@
                             - readOnly: false
                               mountPath: /var/lib/pulp
                               name: pulp-data
+                            - readOnly: true
+                              mountPath: /var/www/html/pub/
+                              name: pub-data
                           args:
                             - /usr/bin/start_httpd.sh
                           ports:
@@ -370,6 +373,9 @@
                         - name: pulp-data
                           persistentVolumeClaim:
                               claimName: pulp-data
+                        - name: pub-data
+                          persistentVolumeClaim:
+                              claimName: pub-data
               replicas: 1
               strategy:
                   type: Rolling

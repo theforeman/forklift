@@ -26,6 +26,9 @@
                 ProxyPass /pulp https://content-server/pulp retry=0
                 ProxyPassReverse /pulp https://content-server/pulp
 
+                ProxyPass /pub https://content-server/pub retry=0
+                ProxyPassReverse /pub https://content-server/pub
+
                 ProxyPass / http://foreman:8080/ retry=0
                 ProxyPassReverse / http://foreman:8080/
 

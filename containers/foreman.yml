@@ -33,6 +33,7 @@
 
     - import_tasks: deploy/service_accounts.yml
 
+    - import_tasks: deploy/foreman/persistent_volume_claims.yml
     - import_tasks: deploy/postgres/persistent_volume_claims.yml
     - import_tasks: deploy/pulp/persistent_volume_claims.yml
 
@@ -43,6 +44,8 @@
     - import_tasks: deploy/pulp/services.yml
     - import_tasks: deploy/puppet/services.yml
     - import_tasks: deploy/qpid/services.yml
+
+    - import_tasks: deploy/foreman/jobs.yml
 
     - import_tasks: deploy/candlepin/deployments.yml
     - import_tasks: deploy/foreman-proxy/deployments.yml

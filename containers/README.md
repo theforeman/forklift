@@ -8,6 +8,7 @@ Table of Contents
 
  * [Build](./docs/build.md)
  * [Deploy](./docs/deploy.md)
+ * [Deploy](./docs/environment.md)
  * [Architecture](./docs/architecture.md)
  * [Issues to be Addressed](#issues)
 

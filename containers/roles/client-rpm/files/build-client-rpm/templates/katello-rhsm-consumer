@@ -8,7 +8,7 @@ read -r -d '' KATELLO_SERVER_CA_DATA << EOM
 "{{ ca_crt }}"
 EOM
 
-KATELLO_SERVER="{{ client_rpm_hostname }}"
+KATELLO_SERVER="$FOREMAN_HOSTNAME"
 KATELLO_SERVER_CA_CERT=katello-server-ca.pem
 KATELLO_DEFAULT_CA_CERT=katello-default-ca.pem
 KATELLO_CERT_DIR=/etc/rhsm/ca

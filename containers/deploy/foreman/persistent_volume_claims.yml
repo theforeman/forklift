@@ -1,0 +1,20 @@
+---
+- name: Create PVC
+  k8s_v1_persistent_volume_claim:
+      state: "{{ deployment_state }}"
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+              name: pub-data
+              namespace: "{{ project_name }}"
+          spec:
+              resources:
+                  requests:
+                      storage: 1Gi
+              accessModes:
+                - ReadWriteOnce
+  tags:
+    - start
+    - destroy
