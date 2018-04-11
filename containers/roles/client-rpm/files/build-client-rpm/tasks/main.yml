@@ -1,0 +1,34 @@
+---
+- name: 'Make build directory'
+  file:
+    state: directory
+    path: "/root/build"
+
+- name: 'Read ca.crt'
+  set_fact:
+    ca_crt: "{{ lookup('file', '/etc/pki/katello/certs/katello-default-ca.crt') }}"
+
+- name: 'Process reconfigure script'
+  template:
+    src: templates/katello-rhsm-consumer
+    dest: "/root/build/katello-rhsm-consumer"
+
+- name: 'Tar up reconfigure script'
+  command: "tar -zcf katello-rhsm-consumer-1.0.tar.gz katello-rhsm-consumer"
+  args:
+    chdir: "/root/build"
+
+- name: 'Deploy spec file'
+  copy:
+    src: "{{ role_path }}/files/consumer_rpm.spec"
+    dest: "/root/build/katello-rhsm-consumer.spec"
+
+- name: 'Create SRPM'
+  command: "rpmbuild -ba /root/build/katello-rhsm-consumer.spec --define \"_topdir /root/build\" --define \"_build_dir /root/build\" --define \"_sourcedir /root/build\" --define \"_specdir /root/build\" --define \"_rpmdir /root/build\" --define \"_srcrpmdir /root/build\""
+  args:
+    chdir: "/root/build"
+
+- name: 'Copy SRPM'
+  copy:
+    src: '/root/build/noarch/katello-rhsm-consumer-1.0-1.noarch.rpm'
+    dest: '/var/www/html/pub/katello-rhsm-consumer-1.0-1.noarch.rpm'

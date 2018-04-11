@@ -74,7 +74,7 @@
                 - protocol: TCP
                   targetPort: 443
                   name: port-443-tcp
-                  port: 8080
+                  port: 443
   tags:
     - start
     - destroy

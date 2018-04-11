@@ -1,0 +1,19 @@
+---
+- name: 'Install packages'
+  yum:
+    package: "{{ item }}"
+    state: present
+  with_items:
+    - ansible
+    - rpm-build
+
+- name: 'Copy build role'
+  copy:
+    src: "{{ role_path }}/files/build-client-rpm"
+    dest: "/root/"
+
+- name: 'Copy build playbook'
+  copy:
+    src: "{{ role_path }}/files/build.yml"
+    dest: "/root/build.yml"
+

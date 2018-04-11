@@ -28,11 +28,5 @@ install --verbose katello-rhsm-consumer $RPM_BUILD_ROOT/usr/bin/katello-rhsm-con
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-/bin/bash /usr/bin/katello-rhsm-consumer
-
-%postun
-test -f /etc/rhsm/rhsm.conf.kat-backup && command cp /etc/rhsm/rhsm.conf.kat-backup /etc/rhsm/rhsm.conf
-
 %files
 %attr(755,-,-) /usr/bin/katello-rhsm-consumer
