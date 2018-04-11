@@ -27,6 +27,10 @@ services:
     from: foreman-foreman-base:latest
     roles:
       - noop
+  foreman-providers:
+    from: foreman-foreman:latest
+    roles:
+      - foreman_providers
   dynflow:
     from: projgriffin/foreman-foreman-base:latest
     roles:

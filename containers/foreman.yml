@@ -10,6 +10,7 @@
     minishift: true
     pulp_worker_count: 2
     registry: projgriffin
+    foreman_providers: false
   tasks:
     - set_fact:
         deployment_state: present

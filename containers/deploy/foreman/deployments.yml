@@ -83,7 +83,7 @@
                           ports:
                             - protocol: TCP
                               containerPort: 8080
-                          image: "{{ registry }}/foreman-foreman:latest"
+                          image: "{{ registry }}/foreman-foreman:{{ 'providers' if foreman_providers else 'latest' }}"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
                       volumes:
