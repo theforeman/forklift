@@ -24,9 +24,9 @@
 - name: "install module PR into installer directory"
   shell: >
       cd {{ (item.split("/")[0] == 'theforeman') | ternary("/usr/share/foreman-installer/modules", "/usr/share/katello-installer-base/modules") }} &&
-      rm -rf {{ item.split("/")[1] }} &&
-      git clone https://github.com/{{ item.split("/")[0] }}/puppet-{{ item.split("/")[1] }} {{ item.split("/")[1] }} &&
-      cd {{ item.split("/")[1] }} &&
+      rm -rf {{ item.split("/")[1] | replace("puppet-", "") }} &&
+      git clone https://github.com/{{ item.split("/")[0] }}/puppet-{{ item.split("/")[1] | replace("puppet-", "") }} {{ item.split("/")[1] | replace("puppet-", "") }} &&
+      cd {{ item.split("/")[1] | replace("puppet-", "") }} &&
       git fetch origin pull/{{ item.split("/")[2] }}/head:pr &&
       git {{ foreman_installer_module_prs_strategy }} pr
   with_items: "{{ foreman_installer_module_prs.split(',') }}"
