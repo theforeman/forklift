@@ -13,6 +13,7 @@
                   app: foreman
                   service: httpd
           spec:
+              host: "{{ application_hostname }}"
               to:
                   kind: Service
                   name: httpd

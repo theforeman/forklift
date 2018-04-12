@@ -26,6 +26,10 @@
         project_name: "{{ project_name | default('foreman') }}"
       tags:
         - always
+    - set_fact:
+        application_hostname: "{{ application_hostname | default('') }}"
+      tags:
+        - always
 
     - import_tasks: deploy/project.yml
 
