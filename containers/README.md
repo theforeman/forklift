@@ -8,7 +8,7 @@ Table of Contents
 
  * [Build](./docs/build.md)
  * [Deploy](./docs/deploy.md)
- * [Deploy](./docs/environment.md)
+ * [Environment](./docs/environment.md)
  * [Architecture](./docs/architecture.md)
  * [Issues to be Addressed](#issues)
 
@@ -16,15 +16,17 @@ For diagrams outlining the architecture, please see the diagrams in the `docs/` 
 
 ## Quick Start Guide
 
+This guide assumes that you are in the `containers/` folder for all operations.
+
 This quickstart guide requires that the following are installed already:
 
  * [Ansible](http://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
  * [Minishift](https://docs.openshift.org/latest/minishift/getting-started/installing.html)
 
-In addition the following stpes need to be taken to install a few dependencies:
+In addition the following steps need to be taken to install a few dependencies:
 
     pip install openshift
-    ansible-galaxy -r requirements.yml
+    ansible-galaxy install -r requirements.yml
 
 System Requirements:
 
