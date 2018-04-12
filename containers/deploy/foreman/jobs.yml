@@ -42,6 +42,9 @@
                           args:
                             - build.yml
                           image: "{{ registry }}/foreman-client-rpm:latest"
+                          env:
+                            - name: FOREMAN_HOSTNAME
+                              value: "{{ application_hostname }}"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
                       volumes:
