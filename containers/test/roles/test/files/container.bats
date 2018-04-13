@@ -135,10 +135,10 @@ EOF
   run yum erase -y 'katello-ca-consumer-*'
   echo "rc=${status}"
   echo "${output}"
-  run rpm -Uvh http://$FOREMAN_HOSTNAME/pub/katello-ca-consumer-latest.noarch.rpm
+  run rpm -Uvh http://$FOREMAN_HOSTNAME/pub/katello-rhsm-consumer-1.0-1.noarch.rpm
   echo "rc=${status}"
   echo "${output}"
-  subscription-manager register --force --org="${ORGANIZATION_LABEL}" --username=admin --password=changeme --env=Library
+  subscription-manager register --insecure --force --org="${ORGANIZATION_LABEL}" --username=admin --password=changeme --env=Library
 }
 
 @test "register subscription manager with activation key" {
@@ -148,7 +148,7 @@ EOF
   run subscription-manager clean
   echo "rc=${status}"
   echo "${output}"
-  run subscription-manager register --force --org="${ORGANIZATION_LABEL}" --activationkey="${ACTIVATION_KEY}"
+  run subscription-manager register --insecure --force --org="${ORGANIZATION_LABEL}" --activationkey="${ACTIVATION_KEY}"
   echo "rc=${status}"
   echo "${output}"
   subscription-manager list --consumed | grep "${PRODUCT}"
