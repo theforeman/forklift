@@ -7,7 +7,7 @@
           apiVersion: v1
           kind: Route
           metadata:
-              name: foreman-443
+              name: foreman
               namespace: "{{ project_name }}"
               labels:
                   app: foreman
@@ -20,7 +20,16 @@
               port:
                   targetPort: https
               tls:
-                termination: passthrough
+                  termination: reencrypt
+                  insecureEdgeTerminationPolicy: Allow
+                  key: |-
+                    {{ pulp_key }}
+                  certificate: |-
+                    {{ pulp_crt }}
+                  ca_certificate: |-
+                    {{ ca_crt }}
+                  destination_c_a_certificate: |-
+                    {{ ca_crt }}
   tags:
     - start
     - restart

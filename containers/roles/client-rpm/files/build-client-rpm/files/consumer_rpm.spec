@@ -28,5 +28,8 @@ install --verbose katello-rhsm-consumer $RPM_BUILD_ROOT/usr/bin/katello-rhsm-con
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+/usr/bin/katello-rhsm-consumer
+
 %files
 %attr(755,-,-) /usr/bin/katello-rhsm-consumer

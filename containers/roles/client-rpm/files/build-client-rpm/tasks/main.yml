@@ -7,6 +7,7 @@
 - name: 'Read ca.crt'
   set_fact:
     ca_crt: "{{ lookup('file', '/etc/pki/katello/certs/katello-default-ca.crt') }}"
+    application_hostname: "{{ lookup('ENV', 'APPLICATION_HOSTNAME') }}"
 
 - name: 'Process reconfigure script'
   template:

@@ -30,6 +30,11 @@
         application_hostname: "{{ application_hostname | default('') }}"
       tags:
         - always
+    - set_fact:
+        application_hostname: "foreman.{{ lookup('pipe', 'minishift ip') }}.nip.io"
+      when: application_hostname == '' and minishift == true
+      tags:
+        - always
 
     - import_tasks: deploy/project.yml
 

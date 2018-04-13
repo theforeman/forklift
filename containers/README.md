@@ -25,7 +25,7 @@ This quickstart guide requires that the following are installed already:
 
 In addition the following steps need to be taken to install a few dependencies:
 
-    pip install openshift
+    pip install git+https://github.com/ehelms/openshift-restclient-python.git@fix-destination-ca
     ansible-galaxy install -r requirements.yml
 
 System Requirements:
