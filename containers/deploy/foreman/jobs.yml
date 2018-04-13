@@ -43,7 +43,7 @@
                             - build.yml
                           image: "{{ registry }}/foreman-client-rpm:latest"
                           env:
-                            - name: FOREMAN_HOSTNAME
+                            - name: APPLICATION_HOSTNAME
                               value: "{{ application_hostname }}"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid

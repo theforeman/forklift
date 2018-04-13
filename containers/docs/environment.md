@@ -4,10 +4,4 @@ After deployment, the UI can be accessed at `https://foreman-443-foreman.$(minis
 
 ## Registering a Client
 
-The workflow to register an RHSM client differs slightly from a standard installation.
-
-```
-wget --no-check-certificate https://<hostname>/pub/katello-rhsm-consumer-1.0-1.noarch.rpm
-yum install katello-rhsm-consumer-1.0-1.noarch.rpm
-FOREMAN_HOSTNAME=<hostname> /usr/bin/katello-rhsm-consumer
-```
+The workflow to register an RHSM client differs slightly from a standard installation. Currently `/etc/rhsm/rhsm.conf` needs to be set to `insecure = 1`.
