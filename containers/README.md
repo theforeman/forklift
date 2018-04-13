@@ -42,6 +42,10 @@ A playbook is also provided that can be used:
 
     ansible-playbook tools/minishift-start.yml
 
+Ensure you login to minishift to start:
+
+    oc login -u developer -p a
+
 Set the context for the Openshift client to talk to minishift:
 
     eval $(minishift oc-env)
