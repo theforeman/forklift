@@ -14,6 +14,9 @@
       haproxy01:
         box: centos7
         memory: 3072
+      client01:
+        box: centos7
+        memory: 3072
   roles:
     - forklift
 
@@ -186,3 +189,50 @@
   roles:
     - selinux
     - haproxy
+
+- hosts:
+  - client01
+  become: yes
+  vars:
+    lbname: capsule.example.test
+  roles:
+    - etc_hosts
+    - puppet_repositories
+    - katello_repositories
+    - disable_firewall
+  tasks:
+    - name: discover facts from the other machines
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: yes
+      with_items:
+        - haproxy01
+        - katello01
+        - proxy01
+        - proxy02
+    - name: add {{ lbname }} hosts entry
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ hostvars['haproxy01'].ansible_default_ipv4.address }} {{ lbname }}"
+    - name: add puppet autosign entry
+      lineinfile:
+        path: /etc/puppetlabs/puppet/autosign.conf
+        line: "{{ ansible_fqdn }}"
+      delegate_to: proxy01
+    - name: fetch bootstrap.py
+      get_url:
+        url: https://raw.githubusercontent.com/Katello/katello-client-bootstrap/master/bootstrap.py
+        dest: /root/bootstrap.py
+        force: True
+    - name: execute bootstrap.py
+      command: python /root/bootstrap.py -l admin -p changeme -s {{ lbname }} -o 'Default Organization' -L 'Default Location' -g My_Hostgroup -a My_Activation_Key --unmanaged --puppet-ca-port 8141
+    - name: install ssh keys
+      authorized_key:
+        user: root
+        state: present
+        key: https://{{ hostvars[item].ansible_fqdn }}:9090/ssh/pubkey
+        validate_certs: False
+      with_items:
+        - proxy01
+        - proxy02
+        - katello01
