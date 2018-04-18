@@ -3,7 +3,7 @@
 - name: 'disable default context for admin'
   shell: >
     {{ foreman_provisioning_hammer }} user update --login admin --default-organization-id 0 --default-location-id 0
-  when: foreman_provisioning_foreman_version == 'nightly' or foreman_provisioning_foreman_version is version_compare('1.17', '>=')
+  when: foreman_provisioning_use_taxonomies and (foreman_provisioning_foreman_version == 'nightly' or foreman_provisioning_foreman_version is version_compare('1.17', '>='))
 
 # Get the smart proxy ID of the local katello:
 - name: 'get smart proxy id'
@@ -165,7 +165,7 @@
     - Ubuntu mirror
   shell: >
     {{ foreman_provisioning_hammer }} medium update --name "{{ item }}" --organization-titles "{{ foreman_provisioning_organization }}" --location-titles "{{ foreman_provisioning_location }}"
-  when: foreman_provisioning_foreman_version == 'nightly'
+  when: foreman_provisioning_use_taxonomies and foreman_provisioning_foreman_version == 'nightly'
 
 
 - name: 'Setup CentOS 7 provisioning'
