@@ -4,7 +4,7 @@
     forklift_boxes:
       katello01:
         box: centos7
-        memory: 6144
+        memory: 8192
       proxy01:
         box: centos7
         memory: 3072
@@ -13,10 +13,10 @@
         memory: 3072
       haproxy01:
         box: centos7
-        memory: 3072
+        memory: 2048
       client01:
         box: centos7
-        memory: 3072
+        memory: 2048
   roles:
     - forklift
 
