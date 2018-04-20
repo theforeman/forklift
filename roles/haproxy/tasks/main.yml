@@ -1,0 +1,23 @@
+---
+- name: discover foreman proxies
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: yes
+  with_items:
+    - "{{ foreman_proxies }}"
+- name: install haproxy
+  package:
+    name: haproxy
+    state: present
+- name: configure haproxy
+  template:
+    dest: /etc/haproxy/haproxy.cfg
+    src: haproxy.cfg.j2
+    validate: haproxy -c -f %s
+  notify:
+    - restart haproxy
+- name: enable haproxy
+  service:
+    name: haproxy
+    state: started
+    enabled: yes

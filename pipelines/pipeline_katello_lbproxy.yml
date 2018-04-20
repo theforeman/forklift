@@ -1,0 +1,238 @@
+- hosts: localhost
+  vars:
+    forklift_name: pipeline-katello-lbproxy
+    forklift_boxes:
+      katello01:
+        box: centos7
+        memory: 8192
+      proxy01:
+        box: centos7
+        memory: 3072
+      proxy02:
+        box: centos7
+        memory: 3072
+      haproxy01:
+        box: centos7
+        memory: 2048
+      client01:
+        box: centos7
+        memory: 2048
+  roles:
+    - forklift
+
+- hosts:
+  - katello01
+  - proxy01
+  - proxy02
+  - haproxy01
+  become: yes
+  roles:
+    - umask
+    - selinux
+    - etc_hosts
+    - update_os_packages
+    - epel_repositories
+    - haveged
+    - disable_firewall
+
+- hosts:
+  - katello01
+  - proxy01
+  - proxy02
+  become: yes
+  vars:
+    puppet_repositories_version: 4
+    katello_repositories_version: 3.6
+    foreman_repositories_version: 1.17
+    foreman_repositories_environment: staging
+    katello_repositories_environment: staging
+    foreman_installer_skip_installer: true
+  roles:
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer
+
+- hosts: katello01
+  become: yes
+  vars:
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+      - "--enable-foreman-plugin-remote-execution"
+      - "--enable-foreman-proxy-plugin-remote-execution-ssh"
+    foreman_installer_additional_packages:
+      - katello
+  roles:
+    - foreman_installer
+  tasks:
+    - name: create hostgroup
+      command: "hammer hostgroup create --name My_Hostgroup --organizations 'Default Organization'"
+      ignore_errors: True
+    - name: create ak
+      command: "hammer activation-key create --name My_Activation_Key --organization 'Default Organization' --lifecycle-environment 'Library' --content-view 'Default Organization View'"
+      ignore_errors: True
+    - name: create domain
+      command: "hammer domain create --name {{ ansible_domain }}"
+      ignore_errors: True
+    - name: add domain to org
+      command: "hammer domain update --name {{ ansible_domain }} --organizations 'Default Organization' --locations 'Default Location'"
+      ignore_errors: True
+
+- hosts:
+  - proxy01
+  - proxy02
+  become: yes
+  serial: 1
+  vars:
+    lbname: capsule.example.test
+    foreman_proxy_content_server: katello01
+    foreman_installer_scenario: foreman-proxy-content
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--foreman-proxy-trusted-hosts {{ server_fqdn.stdout }}"
+      - "--foreman-proxy-trusted-hosts {{ ansible_nodename }}"
+      - "--foreman-proxy-foreman-base-url https://{{ server_fqdn.stdout }}"
+      - "--foreman-proxy-register-in-foreman true"
+      - "--foreman-proxy-oauth-consumer-key {{ oauth_consumer_key.stdout }}"
+      - "--foreman-proxy-oauth-consumer-secret {{ oauth_consumer_secret.stdout }}"
+      - "--foreman-proxy-content-certs-tar {{ foreman_proxy_content_certs_tar }}"
+      - "--foreman-proxy-content-parent-fqdn {{ server_fqdn.stdout }}"
+      - "--puppet-server-foreman-url https://{{ server_fqdn.stdout }}"
+      - "--puppet-dns-alt-names {{ lbname }}"
+      - "--puppet-ca-server {{ hostvars['proxy01'].ansible_fqdn }}"
+      - "--foreman-proxy-puppetca {{ (inventory_hostname == 'proxy01') | ternary('true','false') }}"
+      - "--puppet-server-ca {{ (inventory_hostname == 'proxy01') | ternary('true','false') }}"
+      - "--enable-foreman-proxy-plugin-remote-execution-ssh"
+    foreman_installer_additional_packages:
+      - foreman-installer-katello
+    foreman_proxy_content_certs_args: "--foreman-proxy-cname {{ lbname }}"
+    foreman_installer_custom_hiera: |
+      pulp::lazy_redirect_host: {{ lbname }}
+    foreman_proxies:
+      - proxy01
+      - proxy02
+  pre_tasks:
+    - block:
+      - name: install puppetserver for the puppet user
+        yum:
+          name: puppetserver
+          state: present
+      - name: create cert folders
+        file:
+          path: "/etc/puppetlabs/puppet/ssl/{{ item }}/"
+          state: directory
+          mode: 0750
+          owner: puppet
+          group: puppet
+        with_items:
+          - ['certs', 'private_keys', 'public_keys']
+      - name: copy the CA cert
+        copy:
+          src: /tmp/proxycerts/certs/ca.pem
+          dest: /etc/puppetlabs/puppet/ssl/certs/ca.pem
+          owner: puppet
+          group: puppet
+      - name: copy the prepared puppet certs
+        copy:
+          src: "/tmp/proxycerts/{{ item }}/{{ ansible_fqdn }}.pem"
+          dest: "/etc/puppetlabs/puppet/ssl/{{ item }}/{{ ansible_fqdn }}.pem"
+          owner: puppet
+          group: puppet
+        with_items:
+          - ['certs', 'private_keys', 'public_keys']
+      - name: restore context of /etc/puppetlabs/puppet/ssl/
+        command: restorecon -Rv /etc/puppetlabs/puppet/ssl/
+      when:
+        - inventory_hostname != 'proxy01'
+  roles:
+    - foreman_proxy_content
+    - foreman_installer
+  tasks:
+    - block:
+      - name: create certs for the other proxies
+        command: "puppet cert generate {{ hostvars[item].ansible_fqdn }} --dns_alt_names={{ lbname }}"
+        environment:
+          PATH: "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin:/root/bin"
+        args:
+          creates: /etc/puppetlabs/puppet/ssl/certs/{{ hostvars[item].ansible_fqdn }}.pem
+        with_items:
+          - proxy02
+      - name: fetch the certs
+        fetch:
+          src: "/etc/puppetlabs/puppet/ssl/{{ item[0] }}/{{ hostvars[item[1]].ansible_fqdn }}.pem"
+          dest: "/tmp/proxycerts/{{ item[0] }}/{{ hostvars[item[1]].ansible_fqdn }}.pem"
+          flat: True
+        with_nested:
+          - ['certs', 'private_keys', 'public_keys']
+          - ['proxy02']
+      - name: fetch the CA cert
+        fetch:
+          src: /etc/puppetlabs/puppet/ssl/certs/ca.pem
+          dest: /tmp/proxycerts/certs/ca.pem
+          flat: True
+      when:
+        - inventory_hostname == 'proxy01'
+    - name: assign organization and location
+      command: "hammer proxy update --name {{ ansible_fqdn }} --organizations 'Default Organization' --locations 'Default Location'"
+      delegate_to: katello01
+
+- hosts:
+  - haproxy01
+  become: yes
+  vars:
+    selinux_state: 'permissive'
+    foreman_proxies:
+      - proxy01
+      - proxy02
+  roles:
+    - selinux
+    - haproxy
+
+- hosts:
+  - client01
+  become: yes
+  vars:
+    lbname: capsule.example.test
+  roles:
+    - etc_hosts
+    - puppet_repositories
+    - katello_repositories
+    - disable_firewall
+  tasks:
+    - name: discover facts from the other machines
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: yes
+      with_items:
+        - haproxy01
+        - katello01
+        - proxy01
+        - proxy02
+    - name: add {{ lbname }} hosts entry
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ hostvars['haproxy01'].ansible_default_ipv4.address }} {{ lbname }}"
+    - name: add puppet autosign entry
+      lineinfile:
+        path: /etc/puppetlabs/puppet/autosign.conf
+        line: "{{ ansible_fqdn }}"
+      delegate_to: proxy01
+    - name: fetch bootstrap.py
+      get_url:
+        url: https://raw.githubusercontent.com/Katello/katello-client-bootstrap/master/bootstrap.py
+        dest: /root/bootstrap.py
+        force: True
+    - name: execute bootstrap.py
+      command: python /root/bootstrap.py -l admin -p changeme -s {{ lbname }} -o 'Default Organization' -L 'Default Location' -g My_Hostgroup -a My_Activation_Key --unmanaged --puppet-ca-port 8141
+    - name: install ssh keys
+      authorized_key:
+        user: root
+        state: present
+        key: https://{{ hostvars[item].ansible_fqdn }}:9090/ssh/pubkey
+        validate_certs: False
+      with_items:
+        - proxy01
+        - proxy02
+        - katello01

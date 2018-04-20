@@ -1,0 +1,177 @@
+#---------------------------------------------------------------------
+# Example configuration for a possible web application.  See the
+# full configuration options online.
+#
+#   http://haproxy.1wt.eu/download/1.4/doc/configuration.txt
+#
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    # to have these messages end up in /var/log/haproxy.log you will
+    # need to:
+    #
+    # 1) configure syslog to accept network log events.  This is done
+    #    by adding the '-r' option to the SYSLOGD_OPTIONS in
+    #    /etc/sysconfig/syslog
+    #
+    # 2) configure local2 events to go to the /var/log/haproxy.log
+    #   file. A line like the following can be added to
+    #   /etc/sysconfig/syslog
+    #
+    #    local2.*                       /var/log/haproxy.log
+    #
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+	log                 	global
+	retries             	3
+	timeout http-request	10s
+	timeout queue       	1m
+	timeout connect     	10s
+	timeout client      	1m
+	timeout server      	1m
+	timeout http-keep-alive 10s
+	timeout check       	10s
+	maxconn             	3000
+
+#https
+frontend https
+   bind *:443
+   mode tcp
+   option              	tcplog
+   default_backend f-proxy-https
+
+backend f-proxy-https
+   option tcp-check
+   balance source
+{% for host in foreman_proxies %}
+   server f-proxy-https-{{loop.index}} {{ hostvars[host].ansible_default_ipv4.address }}:443 check
+{% endfor %}
+
+#http
+frontend http
+   bind *:80
+   mode tcp
+   option              	tcplog
+   default_backend f-proxy-http
+
+backend f-proxy-http
+   option tcp-check
+   balance roundrobin
+{% for host in foreman_proxies %}
+   server f-proxy-http-{{loop.index}} {{ hostvars[host].ansible_default_ipv4.address }}:80 check
+{% endfor %}
+
+#amqp
+frontend amqp
+   bind *:5647
+   mode tcp
+   option              	tcplog
+   default_backend f-proxy-amqp
+
+backend f-proxy-amqp
+   option tcp-check
+   balance roundrobin
+{% for host in foreman_proxies %}
+   server f-proxy-amqp-{{loop.index}} {{ hostvars[host].ansible_default_ipv4.address }}:5647 check
+{% endfor %}
+
+
+#anaconda
+frontend anaconda
+   bind *:8000
+   mode tcp
+   option              	tcplog
+   default_backend f-proxy-anaconda
+
+backend f-proxy-anaconda
+   option tcp-check
+   balance roundrobin
+{% for host in foreman_proxies %}
+   server f-proxy-anaconda-{{loop.index}} {{ hostvars[host].ansible_default_ipv4.address }}:8000 check
+{% endfor %}
+
+#puppet
+frontend puppet
+   bind *:8140
+   mode tcp
+   option              	tcplog
+   default_backend f-proxy-puppet
+
+backend f-proxy-puppet
+   option tcp-check
+   balance roundrobin
+{% for host in foreman_proxies %}
+   server f-proxy-puppet-{{loop.index}} {{ hostvars[host].ansible_default_ipv4.address }}:8140 check
+{% endfor %}
+
+#puppet-ca
+frontend puppet-ca
+   bind *:8141
+   mode tcp
+   option              	tcplog
+   default_backend f-proxy-puppet-ca
+
+backend f-proxy-puppet-ca
+   option tcp-check
+   balance roundrobin
+   server f-proxy-puppet-ca-1 {{ hostvars[foreman_proxies[0]].ansible_default_ipv4.address }}:8140 check
+
+#rhsm
+frontend rhsm
+   bind *:8443
+   mode tcp
+   option              	tcplog
+   default_backend f-proxy-rhsm
+
+backend f-proxy-rhsm
+   option tcp-check
+   balance roundrobin
+{% for host in foreman_proxies %}
+   server f-proxy-rhsm-{{loop.index}} {{ hostvars[host].ansible_default_ipv4.address }}:8443 check
+{% endfor %}
+
+#scap
+frontend scap
+   bind *:9090
+   mode tcp
+   option              	tcplog
+   default_backend f-proxy-scap
+
+backend f-proxy-scap
+   option tcp-check
+   balance roundrobin
+{% for host in foreman_proxies %}
+   server f-proxy-scap-{{loop.index}} {{ hostvars[host].ansible_default_ipv4.address }}:9090 check
+{% endfor %}
+
+#docker
+frontend docker
+   bind *:5000
+   mode tcp
+   option              	tcplog
+   default_backend f-proxy-docker
+
+backend f-proxy-docker
+   option tcp-check
+   balance roundrobin
+{% for host in foreman_proxies %}
+   server f-proxy-docker-{{loop.index}} {{ hostvars[host].ansible_default_ipv4.address }}:5000 check
+{% endfor %}
