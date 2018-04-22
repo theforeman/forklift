@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - epel_repositories
+  tasks:
+    - name: 'Install docker'
+      yum:
+        name: docker
+        state: present
+
+    - name: 'Configure insecure registry'
+      lineinfile:
+        dest: /etc/sysconfig/docker
+        line: INSECURE_REGISTRY='--insecure-registry 172.30.0.0/16'
+        regexp: "^INSECURE_REGISTRY"
+      notify:
+        - 'Restart docker'
+  handlers:
+    - name: 'Restart docker'
+      service:
+        name: docker
+        state: restarted

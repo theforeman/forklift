@@ -1,0 +1,30 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: 'Check if firewalld is running'
+      command: systemctl status firewalld
+      register: firewalld_status
+      ignore_errors: true
+
+    - block:
+        - name: 'Check for dockerc firewall zone'
+          command: 'firewall-cmd --permanent --get-zones'
+          register: firewall_zones
+
+        - name: 'Add dockerc firewall zone'
+          command: 'firewall-cmd --permanent --new-zone dockerc'
+          when: "'dockerc' not in firewall_zones.stdout"
+
+        - name: 'Add dockerc firewall configs'
+          command: "{{ item }}"
+          with_items:
+            - firewall-cmd --permanent --zone dockerc --add-source 172.17.0.0/16
+            - firewall-cmd --permanent --zone dockerc --add-port 8443/tcp
+            - firewall-cmd --permanent --zone dockerc --add-port 53/udp
+            - firewall-cmd --permanent --zone dockerc --add-port 8053/udp
+
+        - name: 'Reload firewall'
+          command: firewall-cmd --reload
+
+      when: firewalld_status | success

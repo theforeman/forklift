@@ -5,6 +5,7 @@
   yum:
     name: foreman-release-scl
     state: latest
+    update_cache: yes
   tags:
     - packages
   when: ansible_os_family == 'RedHat'

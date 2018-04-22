@@ -2,7 +2,7 @@
 - name: 'Install packages'
   yum:
     name: "{{ item }}"
-    state: "latest"
+    state: present
     update_cache: yes
   with_items:
     - pulp-server
@@ -99,6 +99,15 @@
       <Location /pulp/api>
         SSLUsername SSL_CLIENT_S_DN_CN
       </Location>
+
+- name: 'Remove file logging for SSL'
+  lineinfile:
+    path: /etc/httpd/conf.d/ssl.conf
+    line: "{{ item }}"
+    state: absent
+  with_items:
+    - "ErrorLog logs/ssl_error_log"
+    - "TransferLog logs/ssl_access_log"
 
 - name: Copy entrypoint
   copy:
