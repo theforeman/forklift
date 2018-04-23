@@ -23,6 +23,13 @@ boxes:
         - 'playbooks/katello_provisioning.yml'
       group: 'server'
 
+  centos7-fips:
+    box:   'centos7'
+    memory: 8096
+    ansible:
+      playbook: 'playbooks/fips.yml'
+      group: 'fips'
+
   runcible:
     box: centos7
     ansible:

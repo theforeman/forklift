@@ -1,0 +1,29 @@
+---
+- name: 'Install dracut-fips'
+  package: 
+    name: dracut-fips
+    state: present
+
+- name: 'Run dracut to rebuild initramfs'
+  command: dracut --force
+
+- name: 'Get boot_uuid'
+  command: 'findmnt -no uuid /boot'
+  register: result
+
+- name: 'Edit kernel command-line to include the fips=1 and boot=UUID=XXXX or boot=LABEL=XXXX or boot=/dev/DEVICE argument'
+  shell: 'grubby --update-kernel=DEFAULT --args="fips=1 boot=UUID={{ result.stdout }}"'
+
+- name: reboot vm
+  shell: sleep 2 && shutdown -r +1 "Ansible reboot"
+  async: 0
+  poll: 0
+  ignore_errors: true
+
+- name: Waiting for reboot
+  local_action: wait_for 
+                host={{ ansible_ssh_host }}
+                state=started
+
+- name: 'Verify FIPS enabled - If failed means the machine is not FIPS enabled'
+  shell: cat /proc/sys/crypto/fips_enabled | grep 1
