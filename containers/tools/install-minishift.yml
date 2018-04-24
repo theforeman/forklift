@@ -1,0 +1,49 @@
+---
+- hosts: all
+  gather_facts: no
+  vars:
+    minishift_version: 1.16.1
+  tasks:
+    - name: 'Download Minishift'
+      unarchive:
+        src: "https://github.com/minishift/minishift/releases/download/v{{ minishift_version }}/minishift-{{ minishift_version }}-linux-amd64.tgz"
+        dest: /tmp
+        remote_src: yes
+
+    - name: 'Copy minishift to bin_dir'
+      become: true
+      copy:
+        src: "/tmp/minishift-{{ minishift_version }}-linux-amd64/minishift"
+        dest: "{{ bin_dir }}/minishift"
+        remote_src: true
+
+    - name: 'Set file permissions'
+      file:
+        state: file
+        path: "{{ bin_dir }}/minishift"
+        mode: 755
+
+    - name: "Download docker-machine-driver-kvm"
+      get_url:
+        url: https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.7.0/docker-machine-driver-kvm
+        dest: "{{ bin_dir }}/docker-machine-driver-kvm"
+
+    - name: 'Set file permissions'
+      file:
+        state: file
+        path: "{{ bin_dir }}/docker-machine-driver-kvm"
+        mode: 755
+
+    - name: 'Install kvm'
+      become: true
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - libvirt
+        - qemu-kvm
+
+    - name: 'Start libvirtd'
+      service:
+        name: libvirtd
+        state: started

@@ -2,7 +2,54 @@
 - hosts: all
   gather_facts: no
   tasks:
+    - name: 'Install git'
+      package:
+        name: git
+        state: present
+
+    - name: 'Install epel'
+      package:
+        name: epel-release
+        state: present
+
+    - name: 'Install pip'
+      package:
+        name: python-pip
+        state: present
+
+    - name: 'Update setuptools'
+      command: 'pip install setuptools --upgrade'
+
+    - name: 'Install python openshift'
+      command: pip install git+https://github.com/ehelms/openshift-restclient-python.git@fix-destination-ca
+
+    - name: 'Install kubernetes modules'
+      command: 'ansible-galaxy install -r requirements.yml'
+      args:
+        chdir: "{{ working_dir }}"
+
+    - name: 'Get minishift oc-env'
+      command: minishift oc-env
+      register: oc_env
+
+    - name: Add another bin dir to system-wide $PATH.
+      copy:
+        dest: /etc/profile.d/oc-env.sh
+        content: "{{ oc_env.stdout }}"
+
+    - name: 'Get minishift docker-env'
+      command: minishift docker-env
+      register: docker_env
+
+    - name: Add another bin dir to system-wide $PATH.
+      copy:
+        dest: /etc/profile.d/docker-env.sh
+        content: "{{ docker_env.stdout }}"
+
+- hosts: all
+  gather_facts: no
+  tasks:
     - name: 'Deploy to Openshift'
-      command: 'ansible-playbook -l localhost ansible-deployment/foreman.yml --tags start'
+      command: 'ansible-playbook -l localhost foreman.yml --tags start'
       args:
         chdir: "{{ working_dir }}"

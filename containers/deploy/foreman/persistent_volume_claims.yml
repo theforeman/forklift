@@ -1,5 +1,5 @@
 ---
-- name: Create PVC
+- name: Create Pub PVC
   k8s_v1_persistent_volume_claim:
       state: "{{ deployment_state }}"
       force: false

@@ -7,7 +7,7 @@ The following is currently a proof of concept for running Foreman, Katello and t
 Table of Contents
 
  * [Build](./docs/build.md)
- * [Deploy](./docs/deploy.md)
+ * [Deploy](#quick-start-guide)
  * [Environment](./docs/environment.md)
  * [Architecture](./docs/architecture.md)
  * [Issues to be Addressed](#issues)
@@ -27,6 +27,8 @@ In addition the following steps need to be taken to install a few dependencies:
 
     pip install git+https://github.com/ehelms/openshift-restclient-python.git@fix-destination-ca
     ansible-galaxy install -r requirements.yml
+
+Note that the special version of the OpenShift python client is needed for this [fix](https://github.com/openshift/openshift-restclient-python/pull/166).
 
 System Requirements:
 

@@ -1,5 +1,5 @@
 ---
-- name: Create PVC
+- name: Create Puppet PVC
   k8s_v1_persistent_volume_claim:
       state: "{{ deployment_state }}"
       force: false
@@ -18,7 +18,7 @@
   tags:
     - start
     - destroy
-- name: Create PVC
+- name: Create MongoDB PVC
   k8s_v1_persistent_volume_claim:
       state: "{{ deployment_state }}"
       force: false
@@ -37,7 +37,7 @@
   tags:
     - start
     - destroy
-- name: Create PVC
+- name: Create Pulp Content PVC
   k8s_v1_persistent_volume_claim:
       state: "{{ deployment_state }}"
       force: false

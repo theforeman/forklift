@@ -1,5 +1,5 @@
 ---
-- name: Stop running containers by scaling replicas down to 0
+- name: Scale Foreman Proxy to 0
   openshift_v1_deployment_config:
       name: foreman-proxy
       namespace: "{{ project_name }}"
@@ -7,15 +7,8 @@
   tags:
     - stop
     - restart
-- name: Stop running containers by scaling replicas down to 0
-  openshift_v1_deployment_config:
-      name: foreman-proxy-register
-      namespace: "{{ project_name }}"
-      replicas: 0
-  tags:
-    - stop
-    - restart
-- name: Create deployment, and scale replicas up
+
+- name: Create Foreman Proxy deployment
   openshift_v1_deployment_config:
       state: "{{ deployment_state }}"
       force: false
@@ -41,53 +34,18 @@
                           state: present
                           args:
                             - /usr/bin/start-foreman-proxy.sh
-                          image: "{{ registry }}/foreman-foreman-proxy:latest"
+                          image: "{{ registry }}/foreman-proxy:latest"
               replicas: 1
               strategy:
                   type: Rolling
-  tags:
-    - start
-    - restart
-    - destroy
-- name: Create deployment, and scale replicas up
-  openshift_v1_deployment_config:
-      state: "{{ deployment_state }}"
-      force: false
-      resource_definition:
-          apiVersion: v1
-          kind: deployment_config
-          metadata:
-              name: foreman-proxy-register
-              namespace: "{{ project_name }}"
-              labels:
-                  app: foreman
-                  service: foreman-proxy-register
-          spec:
-              template:
-                  metadata:
-                      labels:
-                          app: foreman
-                          service: foreman-proxy-register
-                  spec:
-                      containers:
-                        - name: foreman-proxy-register
-                          securityContext: {}
-                          state: present
-                          env:
-                            - name: FOREMAN_PROXY_SERVICE_HOST
-                              value: foreman-proxy
-                            - name: FOREMAN_PROXY_SERVICE_PORT
-                              value: '8080'
-                            - name: FOREMAN_SERVICE_HOST
-                              value: foreman
-                            - name: FOREMAN_SERVICE_PORT
-                              value: '8080'
-                          args:
+                  rollingParams:
+                      timeoutSeconds: 900
+                      post:
+                        failurePolicy: Ignore
+                        execNewPod:
+                          containerName: foreman-proxy
+                          command:
                             - /usr/bin/register.sh
-                          image: "{{ registry }}/foreman-foreman-proxy-register:latest"
-              replicas: 1
-              strategy:
-                  type: Rolling
   tags:
     - start
     - restart

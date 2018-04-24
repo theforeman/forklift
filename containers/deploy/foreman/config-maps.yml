@@ -17,7 +17,7 @@
               Options SymLinksIfOwnerMatch
               Listen 443
               <VirtualHost *:443>
-               RequestHeader set X_FORWARDED_PROTO 'https'
+                RequestHeader set X_FORWARDED_PROTO 'https'
 
                 ## Proxy rules
                 ProxyRequests Off
@@ -45,6 +45,7 @@
                 SSLOptions +StdEnvVars
 
                 # SSL Proxy directives
+                # TODO: Potentially turn these Checks back on
                 SSLProxyEngine On
                 SSLProxyCheckPeerCN off
                 SSLProxyCheckPeerName off

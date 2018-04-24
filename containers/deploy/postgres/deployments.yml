@@ -1,5 +1,5 @@
 ---
-- name: Stop running containers by scaling replicas down to 0
+- name: Scale Postgres to 0
   openshift_v1_deployment_config:
       name: postgres
       namespace: "{{ project_name }}"
@@ -7,7 +7,8 @@
   tags:
     - stop
     - restart
-- name: Create deployment, and scale replicas up
+
+- name: Create Postgres deployment
   openshift_v1_deployment_config:
       state: "{{ deployment_state }}"
       force: false
@@ -52,6 +53,8 @@
               replicas: 1
               strategy:
                   type: Rolling
+                  rollingParams:
+                      timeoutSeconds: 900
   tags:
     - start
     - restart

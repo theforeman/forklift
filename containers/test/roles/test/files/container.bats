@@ -7,6 +7,8 @@ load forklift/bats/os_helper
 load forklift/bats/foreman_helper
 load forklift/bats/fixtures/content
 
+LOCATION="Earth"
+
 setup() {
   tSetOSVersion
 }
@@ -23,6 +25,10 @@ setup() {
 
 @test "create an Organization" {
   hammer --verify-ssl false organization create --name="${ORGANIZATION}" | grep -q "Organization created"
+}
+
+@test "create a Location" {
+  hammer --verify-ssl false location create --name="${LOCATION}" | grep -q "Location created"
 }
 
 @test "create a product" {
