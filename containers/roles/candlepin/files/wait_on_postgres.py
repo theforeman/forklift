@@ -10,7 +10,7 @@ if __name__ == '__main__':
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tries = 0
     print ("Waiting on postgresql to start...")
-    while not postgres_is_alive and tries < 20:
+    while not postgres_is_alive and tries < 200:
         tries += 1
         try:
             s.connect(('postgres', 5432))

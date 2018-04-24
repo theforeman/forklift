@@ -8,8 +8,9 @@
     - secrets.yml
   vars:
     minishift: true
+    cluster_up: false
     pulp_worker_count: 2
-    registry: projgriffin
+    registry: quay.io/foreman
     foreman_providers: false
   tasks:
     - set_fact:
@@ -22,17 +23,29 @@
         deployment_state: absent
       tags:
         - destroy
+
     - set_fact:
         project_name: "{{ project_name | default('foreman') }}"
       tags:
         - always
+
     - set_fact:
         application_hostname: "{{ application_hostname | default('') }}"
       tags:
         - always
+    - shell: minishift ip
+      register: minishift_ip
+      when: minishift == true
+      tags:
+        - always
     - set_fact:
-        application_hostname: "foreman.{{ lookup('pipe', 'minishift ip') }}.nip.io"
-      when: application_hostname == '' and minishift == true
+        application_hostname: "foreman.{{ minishift_ip.stdout }}.nip.io"
+      when: application_hostname == '' and minishift == true and cluster_up == false
+      tags:
+        - always
+    - set_fact:
+        application_hostname: "foreman.{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.nip.io"
+      when: application_hostname == '' and cluster_up == true and minishift == false
       tags:
         - always
 

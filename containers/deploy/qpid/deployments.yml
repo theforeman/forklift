@@ -1,5 +1,5 @@
 ---
-- name: Stop running containers by scaling replicas down to 0
+- name: Scale Qpid pods to 0
   openshift_v1_deployment_config:
       name: qpid
       namespace: "{{ project_name }}"
@@ -7,7 +7,8 @@
   tags:
     - stop
     - restart
-- name: Create deployment, and scale replicas up
+
+- name: Create Qpid deployment
   openshift_v1_deployment_config:
       state: "{{ deployment_state }}"
       force: false
@@ -33,12 +34,14 @@
                           state: present
                           args:
                             - /usr/bin/startup.sh
-                          image: "{{ registry }}/foreman-qpid:latest"
+                          image: "{{ registry }}/qpid:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
               replicas: 1
               strategy:
                   type: Rolling
+                  rollingParams:
+                      timeoutSeconds: 900
   tags:
     - start
     - restart

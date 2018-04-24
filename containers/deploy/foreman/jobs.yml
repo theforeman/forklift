@@ -41,7 +41,7 @@
                             - ansible-playbook
                           args:
                             - build.yml
-                          image: "{{ registry }}/foreman-client-rpm:latest"
+                          image: "{{ registry }}/client-rpm:latest"
                           env:
                             - name: APPLICATION_HOSTNAME
                               value: "{{ application_hostname }}"

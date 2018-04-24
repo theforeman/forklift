@@ -26,7 +26,7 @@ Using pip:
 
 ### Setup Docker
 
-In order to build the containers, a running docker daemo needs to be present.
+In order to build the containers, a running docker daemon needs to be present.
 
     ansible-playbook tools/install-docker.yml
 
@@ -43,7 +43,7 @@ Now build the containers (and grab a coffee):
 
     ansible-playbook tools/build.yml
 
-To build an individual (or multiple individual) services pass the name(s) space separated:
+To build one or more services pass the name(s) space separated:
 
     ansible-playbook tools/build.yml -e services='foreman dynflow'
 

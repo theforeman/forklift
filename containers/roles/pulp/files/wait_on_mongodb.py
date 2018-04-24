@@ -10,7 +10,7 @@ if __name__ == '__main__':
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tries = 0
     print ("Waiting on mongodb to start...")
-    while not mongodb_is_alive and tries < 20:
+    while not mongodb_is_alive and tries < 100:
         tries += 1
         try:
             s.connect(('mongodb', 27017))

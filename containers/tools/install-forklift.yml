@@ -2,6 +2,16 @@
 - hosts: all
   gather_facts: no
   tasks:
+    - name: 'Install Ansible'
+      package:
+        name: 'ansible'
+        state: present
+
+    - name: 'Install rsync'
+      package:
+        name: 'rsync'
+        state: present
+
     - name: 'Copy forklift to node'
       synchronize:
         src: "{{ lookup('pipe', 'pwd') }}/../../"

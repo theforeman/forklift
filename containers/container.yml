@@ -55,8 +55,7 @@ services:
     from: centos:7
     roles:
       - epel_repositories
-      - role: katello_repositories
-        katello_repositories_environment: staging
+      - katello_repositories
       - candlepin
   postgres:
     from: ansible/postgresql:latest

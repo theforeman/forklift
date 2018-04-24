@@ -1,5 +1,5 @@
 ---
-- name: Stop running containers by scaling replicas down to 0
+- name: Scale Pulp to 0
   openshift_v1_deployment_config:
       name: pulp
       namespace: "{{ project_name }}"
@@ -7,7 +7,7 @@
   tags:
     - stop
     - restart
-- name: Stop running containers by scaling replicas down to 0
+- name: Scale Pulp Worker to 0
   openshift_v1_deployment_config:
       name: pulp-worker
       namespace: "{{ project_name }}"
@@ -15,7 +15,7 @@
   tags:
     - stop
     - restart
-- name: Stop running containers by scaling replicas down to 0
+- name: Scale Pulp Celerybeat to 0
   openshift_v1_deployment_config:
       name: pulp-celerybeat
       namespace: "{{ project_name }}"
@@ -23,7 +23,7 @@
   tags:
     - stop
     - restart
-- name: Stop running containers by scaling replicas down to 0
+- name: Scale Pulp Resource Manager to 0
   openshift_v1_deployment_config:
       name: pulp-resource-manager
       namespace: "{{ project_name }}"
@@ -31,7 +31,7 @@
   tags:
     - stop
     - restart
-- name: Stop running containers by scaling replicas down to 0
+- name: Scale Mongodb to 0
   openshift_v1_deployment_config:
       name: mongodb
       namespace: "{{ project_name }}"
@@ -39,7 +39,7 @@
   tags:
     - stop
     - restart
-- name: Stop running containers by scaling replicas down to 0
+- name: Scale Content Server to 0
   openshift_v1_deployment_config:
       name: content-server
       namespace: "{{ project_name }}"
@@ -47,7 +47,7 @@
   tags:
     - stop
     - restart
-- name: Stop squid containers by scaling replicas down to 0
+- name: Scale Squid to 0
   openshift_v1_deployment_config:
       name: squid
       namespace: "{{ project_name }}"
@@ -55,7 +55,7 @@
   tags:
     - stop
     - restart
-- name: Stop pulp-streamer containers by scaling replicas down to 0
+- name: Scale Pulp Streamer to 0
   openshift_v1_deployment_config:
       name: pulp-streamer
       namespace: "{{ project_name }}"
@@ -63,7 +63,8 @@
   tags:
     - stop
     - restart
-- name: Create deployment, and scale replicas up
+
+- name: Create Pulp deployment
   openshift_v1_deployment_config:
       state: "{{ deployment_state }}"
       force: false
@@ -104,7 +105,7 @@
                             - /usr/bin/start_httpd.sh
                           command:
                             - /usr/bin/entrypoint.sh
-                          image: "{{ registry }}/foreman-pulp:latest"
+                          image: "{{ registry }}/pulp:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
                       volumes:
@@ -133,11 +134,13 @@
               replicas: 1
               strategy:
                   type: Rolling
+                  rollingParams:
+                      timeoutSeconds: 900
   tags:
     - start
     - restart
     - destroy
-- name: Create deployment, and scale replicas up
+- name: Create Pulp Worker deployment
   openshift_v1_deployment_config:
       state: "{{ deployment_state }}"
       force: false
@@ -172,7 +175,7 @@
                             - readOnly: false
                               mountPath: /etc/puppet
                               name: puppet-data
-                          image: "{{ registry }}/foreman-pulp-worker:latest"
+                          image: "{{ registry }}/pulp-worker:latest"
                       volumes:
                         - name: pulp-data
                           persistentVolumeClaim:
@@ -183,11 +186,13 @@
               replicas: "{{ pulp_worker_count }}"
               strategy:
                   type: Rolling
+                  rollingParams:
+                      timeoutSeconds: 900
   tags:
     - start
     - restart
     - destroy
-- name: Create deployment, and scale replicas up
+- name: Create Pulp Celeybeat deployment
   openshift_v1_deployment_config:
       state: "{{ deployment_state }}"
       force: false
@@ -213,17 +218,19 @@
                           state: present
                           command:
                             - /usr/bin/entrypoint.sh
-                          image: "{{ registry }}/foreman-pulp-celerybeat:latest"
+                          image: "{{ registry }}/pulp-celerybeat:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
               replicas: 1
               strategy:
                   type: Rolling
+                  rollingParams:
+                      timeoutSeconds: 900
   tags:
     - start
     - restart
     - destroy
-- name: Create deployment, and scale replicas up
+- name: Create Pulp Resource Manager deployment
   openshift_v1_deployment_config:
       state: "{{ deployment_state }}"
       force: false
@@ -249,17 +256,19 @@
                           state: present
                           command:
                             - /usr/bin/entrypoint.sh
-                          image: "{{ registry }}/foreman-pulp-resource-manager:latest"
+                          image: "{{ registry }}/pulp-resource-manager:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
               replicas: 1
               strategy:
                   type: Rolling
+                  rollingParams:
+                      timeoutSeconds: 900
   tags:
     - start
     - restart
     - destroy
-- name: Create deployment, and scale replicas up
+- name: Create Mongodb deployment
   openshift_v1_deployment_config:
       state: "{{ deployment_state }}"
       force: false
@@ -298,7 +307,7 @@
                             - readOnly: false
                               mountPath: /var/lib/mongodb/data
                               name: mongodb-data
-                          image: "{{ registry }}/foreman-mongodb:latest"
+                          image: "{{ registry }}/mongodb:latest"
                       volumes:
                         - name: mongodb-data
                           persistentVolumeClaim:
@@ -306,11 +315,13 @@
               replicas: 1
               strategy:
                   type: Rolling
+                  rollingParams:
+                      timeoutSeconds: 900
   tags:
     - start
     - restart
     - destroy
-- name: Create deployment, and scale replicas up
+- name: Create Content Server deployment
   openshift_v1_deployment_config:
       state: "{{ deployment_state }}"
       force: false
@@ -352,7 +363,7 @@
                           ports:
                             - protocol: TCP
                               containerPort: 8080
-                          image: "{{ registry }}/foreman-content-server:latest"
+                          image: "{{ registry }}/content-server:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
                       volumes:
@@ -379,6 +390,8 @@
               replicas: 1
               strategy:
                   type: Rolling
+                  rollingParams:
+                      timeoutSeconds: 900
   tags:
     - start
     - restart
@@ -414,12 +427,14 @@
                           ports:
                             - protocol: TCP
                               containerPort: 3128
-                          image: "{{ registry }}/foreman-squid:latest"
+                          image: "{{ registry }}/squid:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
               replicas: 1
               strategy:
                   type: Rolling
+                  rollingParams:
+                      timeoutSeconds: 900
   tags:
     - start
     - restart
@@ -453,12 +468,14 @@
                           ports:
                             - protocol: TCP
                               containerPort: 8751
-                          image: "{{ registry }}/foreman-pulp-streamer:latest"
+                          image: "{{ registry }}/pulp-streamer:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
               replicas: 1
               strategy:
                   type: Rolling
+                  rollingParams:
+                      timeoutSeconds: 900
   tags:
     - start
     - restart

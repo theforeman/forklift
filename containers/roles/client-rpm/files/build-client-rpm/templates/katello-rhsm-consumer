@@ -46,7 +46,8 @@ then
     --server.prefix="$PREFIX" \
     --server.port="$PORT" \
     --rhsm.repo_ca_cert="%(ca_cert_dir)s$KATELLO_SERVER_CA_CERT" \
-    --rhsm.baseurl="$BASEURL"
+    --rhsm.baseurl="$BASEURL" \
+		--server.insecure="1"
 else
   # rhel setup
   BASEURL=https://$KATELLO_SERVER/pulp/repos
@@ -67,7 +68,8 @@ else
       --server.prefix="$PREFIX" \
       --server.port="$PORT" \
       --rhsm.repo_ca_cert="%(ca_cert_dir)s$KATELLO_SERVER_CA_CERT" \
-      --rhsm.baseurl="$BASEURL"
+      --rhsm.baseurl="$BASEURL" \
+			--server.insecure="1"
   else
     sed -i "s/^hostname\s*=.*/hostname = $KATELLO_SERVER/g" $CFG
     sed -i "s/^port\s*=.*/port = $PORT/g" $CFG

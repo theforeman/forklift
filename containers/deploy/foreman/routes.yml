@@ -1,5 +1,5 @@
 ---
-- name: Create route
+- name: Create HTTPS route for Foreman and Pulp
   openshift_v1_route:
       state: "{{ deployment_state }}"
       force: false
@@ -7,7 +7,7 @@
           apiVersion: v1
           kind: Route
           metadata:
-              name: foreman
+              name: foreman-https
               namespace: "{{ project_name }}"
               labels:
                   app: foreman
@@ -20,16 +20,59 @@
               port:
                   targetPort: https
               tls:
-                  termination: reencrypt
-                  insecureEdgeTerminationPolicy: Allow
-                  key: |-
-                    {{ pulp_key }}
-                  certificate: |-
-                    {{ pulp_crt }}
-                  ca_certificate: |-
-                    {{ ca_crt }}
-                  destination_c_a_certificate: |-
-                    {{ ca_crt }}
+                  termination: passthrough
+  tags:
+    - start
+    - restart
+    - destroy
+
+- name: Create HTTP route for Pub
+  openshift_v1_route:
+      state: "{{ deployment_state }}"
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Route
+          metadata:
+              name: foreman-http-pub
+              namespace: "{{ project_name }}"
+              labels:
+                  app: foreman
+                  service: httpd
+          spec:
+              host: "{{ application_hostname }}"
+              path: /pub
+              to:
+                  kind: Service
+                  name: httpd
+              port:
+                  targetPort: http
+  tags:
+    - start
+    - restart
+    - destroy
+
+- name: Create HTTP route for Pulp Content
+  openshift_v1_route:
+      state: "{{ deployment_state }}"
+      force: false
+      resource_definition:
+          apiVersion: v1
+          kind: Route
+          metadata:
+              name: foreman-http-pulp
+              namespace: "{{ project_name }}"
+              labels:
+                  app: foreman
+                  service: httpd
+          spec:
+              host: "{{ application_hostname }}"
+              path: /pulp
+              to:
+                  kind: Service
+                  name: httpd
+              port:
+                  targetPort: http
   tags:
     - start
     - restart
