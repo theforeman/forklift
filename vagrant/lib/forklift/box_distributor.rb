@@ -85,6 +85,7 @@ module Forklift
         configure_virtualbox(machine, box, networks)
         configure_rackspace(machine, box)
         configure_openstack_provider(machine, box)
+        configure_google_provider(machine, box)
         configure_synced_folders(machine, box)
         configure_sshfs(config, box)
         configure_nfs(config, box)
@@ -282,6 +283,22 @@ module Forklift
         p.image                = box.fetch('image_name')
 
         box.fetch('openstack_options', []).each do |opt, val|
+          p.instance_variable_set("@#{opt}", val)
+        end
+      end
+    end
+
+    def configure_google_provider(machine, box)
+      machine.vm.provider :google do |p, override|
+        override.ssh.private_key_path = '~/.ssh/id_rsa'
+
+        p.google_project_id = @settings['google_project_id']
+        p.google_client_email = @settings['google_client_email']
+        p.google_json_key_location = @settings['google_json_key_location']
+
+        override.vm.box = 'google/gce'
+
+        box.fetch('google_options', []).each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
       end
