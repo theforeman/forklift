@@ -37,8 +37,8 @@
 
                 ## SSL directives
                 SSLEngine on
-                SSLCertificateFile      "/etc/pki/katello/certs/katello-server.crt"
-                SSLCertificateKeyFile   "/etc/pki/katello/private/katello-server.key"
+                SSLCertificateFile      "/etc/pki/katello/certs/server.crt"
+                SSLCertificateKeyFile   "/etc/pki/katello/private/server.key"
                 SSLVerifyClient         optional
                 SSLCACertificateFile    "/etc/pki/katello/certs/katello-default-ca.crt"
                 SSLVerifyDepth          3

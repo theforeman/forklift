@@ -6,7 +6,7 @@
 
 - name: 'Read ca.crt'
   set_fact:
-    ca_crt: "{{ lookup('file', '/etc/pki/katello/certs/katello-default-ca.crt') }}"
+    ca_crt: "{{ lookup('file', certificates_ca_directory_certs + '/ca.crt') }}"
     application_hostname: "{{ lookup('ENV', 'APPLICATION_HOSTNAME') }}"
 
 - name: 'Process reconfigure script'
@@ -28,6 +28,11 @@
   command: "rpmbuild -ba /root/build/katello-rhsm-consumer.spec --define \"_topdir /root/build\" --define \"_build_dir /root/build\" --define \"_sourcedir /root/build\" --define \"_specdir /root/build\" --define \"_rpmdir /root/build\" --define \"_srcrpmdir /root/build\""
   args:
     chdir: "/root/build"
+
+- name: 'Ensure pub exists'
+  file:
+    state: directory
+    path: '/var/www/html/pub'
 
 - name: 'Copy SRPM'
   copy:

@@ -48,3 +48,11 @@
       -out "{{ certificates_ca_directory_certs }}/ca.crt"
   args:
     creates: "{{ certificates_ca_directory_certs }}/ca.crt"
+
+- name: 'Ensure deploy directory'
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - "{{ certificates_deploy_directory_certs }}"
+    - "{{ certificates_deploy_directory_keys }}"

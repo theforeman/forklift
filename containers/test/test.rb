@@ -35,10 +35,11 @@ while waiting < 900
   sleep 10
 end
 
+system("oc get pods")
 abort("Ping failed") unless up
 
 if ARGV[0] == '--smoke'
-  smoke = system("docker run -e FOREMAN_HOSTNAME=#{foreman_route} projgriffin/test-bats")
+  smoke = system("docker run -e FOREMAN_HOSTNAME=#{foreman_route} projgriffin/test-bats:latest")
 
   exit 1 unless smoke
 end

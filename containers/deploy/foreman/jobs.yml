@@ -1,39 +1,36 @@
 ---
-- name: Remove existing client-rpm job
+- name: Remove existing certificates job
   k8s_v1_job:
     state: absent
     namespace: foreman
-    name: "client-rpm"
+    name: "certificates"
   tags:
     - destroy
 
-- name: Create Job for client-rpm
+- name: Create Job for certificates
   k8s_v1_job:
       state: "{{ deployment_state }}"
       resource_definition:
           apiVersion: batch/v1
           kind: Job
           metadata:
-              name: client-rpm
+              name: certificates
               namespace: "{{ project_name }}"
               labels:
                   app: foreman
-                  service: client-rpm
+                  service: certificates
           spec:
               template:
                   metadata:
                       labels:
                           app: foreman
-                          service: client-rpm
+                          service: clie
                   spec:
                       containers:
-                        - name: client-rpm
+                        - name: certificates
                           securityContext: {}
                           state: present
                           volumeMounts:
-                            - readOnly: true
-                              mountPath: /etc/pki/katello/certs
-                              name: certs
                             - readOnly: false
                               mountPath: /var/www/html/pub/
                               name: pub-data
@@ -41,19 +38,14 @@
                             - ansible-playbook
                           args:
                             - build.yml
-                          image: "{{ registry }}/client-rpm:latest"
+                            - deploy.yml
+                          image: "{{ registry }}/certificates:latest"
                           env:
                             - name: APPLICATION_HOSTNAME
                               value: "{{ application_hostname }}"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
                       volumes:
-                        - secret:
-                              items:
-                                - path: katello-default-ca.crt
-                                  key: ca.crt
-                              secretName: certs
-                          name: certs
                         - name: pub-data
                           persistentVolumeClaim:
                               claimName: pub-data

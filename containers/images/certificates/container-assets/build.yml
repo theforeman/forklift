@@ -1,8 +1,22 @@
 ---
-- hosts: all
+- hosts: localhost
+  vars:
+    certificates_services:
+      - name: pulp
+        common_name: pulp
+      - name: pulp-client
+        common_name: admin
+      - name: server
+        common_name: "{{ lookup('ENV', 'APPLICATION_HOSTNAME') }}"
+  roles:
+    - certificates
+    - client-rpm
+
+- hosts: localhost
   gather_facts: no
-  vars_files:
-    - ../vars/local.yml
+  vars:
+    working_dir: /root
+    certificates_ca_directory: "{{ working_dir }}/certificates"
   tasks:
     - slurp:
         src: "{{ certificates_ca_directory + '/certs/' + item }}"
@@ -11,6 +25,7 @@
         - ca.crt
         - pulp.crt
         - pulp-client.crt
+        - server.crt
 
     - name:
       set_fact:
@@ -25,6 +40,7 @@
         - ca.key
         - pulp.key
         - pulp-client.key
+        - server.key
 
     - name:
       set_fact:
@@ -35,4 +51,4 @@
     - name: 'Write secrets to file'
       copy:
         content: "{{ certs | combine(keys) | to_nice_yaml }}"
-        dest: "{{ working_dir  }}/secrets.yml"
+        dest: "{{ working_dir }}/secrets.yml"

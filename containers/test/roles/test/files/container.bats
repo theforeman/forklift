@@ -37,7 +37,7 @@ setup() {
 
 @test "create package repository" {
   hammer --verify-ssl false repository create --organization="${ORGANIZATION}" \
-    --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY}" \
+    --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY}" --download-policy immediate \
     --url https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/ | grep -q "Repository created"
 }
 
@@ -166,4 +166,24 @@ EOF
 
 @test "enable content view repo" {
   subscription-manager repos --enable="${ORGANIZATION_LABEL}_${PRODUCT_LABEL}_${YUM_REPOSITORY_LABEL}" | grep -q "is enabled for this system"
+}
+
+@test "install katello-host-tools" {
+  tPackageInstall katello-host-tools && tPackageExists katello-host-tools
+}
+
+@test "install package locally" {
+  run yum -y remove walrus
+  tPackageInstall walrus-0.71 && tPackageExists walrus-0.71
+}
+
+@test "check available errata" {
+  local next_wait_time=0
+  until hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'; do
+    if [ $next_wait_time -eq 14 ]; then
+      # make one last try, also makes the error nice
+      hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'
+    fi
+    sleep $(( next_wait_time++ ))
+  done
 }
