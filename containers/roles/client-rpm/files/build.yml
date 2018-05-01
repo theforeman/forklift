@@ -1,4 +1,0 @@
----
-- hosts: localhost
-  roles:
-    - build-client-rpm

@@ -261,16 +261,14 @@
                             items:
                               - path: katello-default-ca.crt
                                 key: ca.crt
-                              - path: katello-server.crt
-                                key: pulp.crt
+                              - path: server.crt
+                                key: server.crt
                       - name: keys
                         secret:
                             secretName: keys
                             items:
-                              - path: katello-default-ca.key
-                                key: ca.key
-                              - path: katello-server.key
-                                key: pulp.key
+                              - path: server.key
+                                key: server.key
                     containers:
                       - name: httpd
                         image: "{{ registry }}/httpd:latest"

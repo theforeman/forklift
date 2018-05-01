@@ -111,11 +111,6 @@ services:
     from: manageiq/httpd:latest
     roles:
       - httpd
-  client-rpm:
-    from: centos:7
-    working_dir: /root
-    roles:
-      - client-rpm
 
 registries:
   oc-cluster:
