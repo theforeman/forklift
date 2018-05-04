@@ -39,10 +39,9 @@ centos7-devel:
     group: 'devel'
     variables:
       katello_devel_github_username: <REPLACE ME>
-      foreman_installer_options: "
-        --katello-devel-extra-plugins theforeman/foreman_remote_execution
-        --katello-devel-extra-plugins theforeman/foreman_discovery
-        "
+      foreman_installer_options:
+        - "--katello-devel-extra-plugins theforeman/foreman_remote_execution"
+        - "--katello-devel-extra-plugins theforeman/foreman_discovery"
 ```
 
 Lastly, spin up the box:

@@ -18,6 +18,6 @@ foreman_installer_module_prs_strategy: "merge"
 # put it in internal_use_only. It's an array. foreman_installer_options
 # is just a string appended to the installer, because vagrant can't
 # pass structured data through via the host variables interface.
-foreman_installer_options: ""
+foreman_installer_options: []
 foreman_installer_options_internal_use_only:
   - "--foreman-admin-password {{ foreman_installer_admin_password }}"

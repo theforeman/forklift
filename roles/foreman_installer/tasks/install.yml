@@ -1,10 +1,14 @@
 ---
+- name: 'Check if foreman_installer_options is a string'
+  fail:
+    msg: 'foreman_installer_options must be an array'
+  when: foreman_installer_options is string
+
 - name: 'Run installer'
   shell: >
       {{ foreman_installer_command }} {{ (foreman_installer_verbose == True) | ternary("-v", "") }}
       --scenario "{{ foreman_installer_scenario }}"
-      {{ foreman_installer_options | join(" ") if foreman_installer_options is iterable else '' }}
-      {{ foreman_installer_options if foreman_installer_options is string else '' }}
+      {{ foreman_installer_options | join(" ") }}
       {{ foreman_installer_options_internal_use_only | join(" ") }}
   when: not foreman_installer_skip_installer
   tags:

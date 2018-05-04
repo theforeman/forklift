@@ -15,19 +15,19 @@
     bats_update_forklift: "no"
     bats_tests:
       - "fb-proxy-dns.bats"
-    foreman_installer_options: "
-       --no-enable-foreman
-       --no-enable-foreman-cli
-       --no-enable-foreman-plugin-setup
-       --foreman-proxy-register-in-foreman=false
-       --foreman-proxy-dns=true
-       --foreman-proxy-dns-managed=false
-       --foreman-proxy-dns-provider=powerdns
-       --enable-foreman-proxy-plugin-dns-powerdns
-       --foreman-proxy-plugin-dns-powerdns-backend=mysql
-       --foreman-proxy-plugin-dns-powerdns-manage-database=true
-       --foreman-proxy-plugin-dns-powerdns-mysql-password=ajooy7HeeCh8loo
-       --foreman-proxy-plugin-dns-powerdns-pdnssec=pdnsutil"
+    foreman_installer_options:
+       - "--no-enable-foreman"
+       - "--no-enable-foreman-cli"
+       - "--no-enable-foreman-plugin-setup"
+       - "--foreman-proxy-register-in-foreman=false"
+       - "--foreman-proxy-dns=true"
+       - "--foreman-proxy-dns-managed=false"
+       - "--foreman-proxy-dns-provider=powerdns"
+       - "--enable-foreman-proxy-plugin-dns-powerdns"
+       - "--foreman-proxy-plugin-dns-powerdns-backend=mysql"
+       - "--foreman-proxy-plugin-dns-powerdns-manage-database=true"
+       - "--foreman-proxy-plugin-dns-powerdns-mysql-password=ajooy7HeeCh8loo"
+       - "--foreman-proxy-plugin-dns-powerdns-pdnssec=pdnsutil"
     powerdns_db_pass: "ajooy7HeeCh8loo"
     powerdns_conf_mode: "0644"
     powerdns_zones:
