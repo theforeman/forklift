@@ -1,0 +1,15 @@
+#! /bin/bash -e
+
+# Setting up repositories
+echo "tsflags=nodocs" >> /etc/yum.conf
+
+# enabling SCL and EPEL
+yum -y install centos-release-scl epel-release
+
+# Installing software collections and required packages
+yum -y install rh-ruby24 rh-nodejs8-nodejs \
+    rh-ruby24-ruby{,gems} rh-ruby24-rubygem-{bundler,rdoc} \
+    redhat-rpm-config hostname git postgresql qpid-tools
+
+# Installing packages that are only required during container build time
+yum -y install ${TEMP_PACKAGES} 

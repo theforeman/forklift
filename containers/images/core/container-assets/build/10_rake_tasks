@@ -1,0 +1,40 @@
+#! /bin/bash -e
+
+# Enabling collections
+. /opt/rh/rh-ruby24/enable
+. /opt/rh/rh-nodejs8/enable
+
+export TASKS="db:migrate apipie:cache:index assets:precompile"
+
+# WORKAROUND for dynflow requiring DB access
+# http://projects.theforeman.org/issues/23520
+
+yum -y install sqlite-devel
+bundle install --with sqlite
+
+mv config/database.yml config/database.yml.org
+cat <<'EOF' >> config/database.yml
+production:
+  adapter: sqlite3
+  database: tmp/test.sqlite3
+  pool: 5
+  timeout: 5000
+EOF
+
+# use sample settings to avoid memcache miss in logs
+mv config/settings.yaml config/settings.yaml.org
+mv config/settings.yaml.example config/settings.yaml
+# enable organization to true as required by katello
+sed -i 's/\:organizations_enabled\: false/\:organizations_enabled\: true/' config/settings.yaml
+
+bundle exec rake ${TASKS}
+
+mv config/settings.yaml.org config/settings.yaml
+mv config/database.yml.org config/database.yml
+
+bundle install --without sqlite assets
+bundle clean --force
+
+yum -y history undo `yum history package sqlite-devel |grep Install | awk '{print $1}'`
+
+# END OF WORKAROUND

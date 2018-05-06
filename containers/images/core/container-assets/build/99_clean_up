@@ -1,0 +1,9 @@
+#! /bin/bash -e
+
+# Clean up tasks
+rm -rf /${HOME}/{.bundle,.npm*} /var/cache/yum webpack node_modules test tmp/*
+
+yum -y history undo `yum history package make |grep Install | awk '{print $1}'`
+
+# ensure that yum history undo didn't downgrade any package.
+yum -y upgrade

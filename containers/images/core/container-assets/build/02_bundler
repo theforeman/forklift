@@ -1,0 +1,10 @@
+#! /bin/bash -e
+
+# Enabling collections
+. /opt/rh/rh-ruby24/enable
+
+# Downloading required ruby gems
+echo "gem: --no-document" >> ~/.gemrc
+
+export LC_ALL="en_US.UTF-8"; LANG="en_US.UTF-8"
+bundle --no-cache --jobs=8 --without ${BUNDLER_SKIPPED_GROUPS}

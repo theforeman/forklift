@@ -1,0 +1,28 @@
+#! /bin/bash -e
+
+# Enabling collections
+. /opt/rh/rh-ruby24/enable
+. /opt/rh/rh-nodejs8/enable
+
+# Download required npm packages
+npm i --no-optional
+
+# Asset compliations
+PLUGINS_PATHS=`./script/plugin_webpack_directories.rb | ruby -rjson -e "puts JSON.parse(STDIN.read)['paths'].join(' ')"`
+
+# run npm for each plugin and remove custom babel configuration
+for plugin in $PLUGINS_PATHS; do
+cd $plugin/..
+rm -f .babelrc
+npm i --no-optional
+cd -
+done
+
+NODE_ENV=production ./node_modules/.bin/webpack --config config/webpack.config.js
+
+# clean up plugins
+for plugin in $PLUGINS_PATHS; do
+cd $plugin/..
+rm -rf node_modules test tmp/* .git webpack
+cd -
+done

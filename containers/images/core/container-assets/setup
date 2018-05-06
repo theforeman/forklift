@@ -1,0 +1,8 @@
+#! /bin/bash -e
+
+export WORKDIR=`pwd`
+for script in `\ls -1 tmp/build`; do
+echo "executing ${script}"
+cd $WORKDIR
+bash -e tmp/build/${script}
+done
