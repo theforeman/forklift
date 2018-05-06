@@ -8,15 +8,17 @@ require "#{VAGRANTFILE_DIR}/vagrant/lib/forklift"
 
 def migrate_boxes!
   old = "#{VAGRANTFILE_DIR}/boxes.d/99-local.yaml"
+  older = "#{VAGRANTFILE_DIR}/boxes.yaml"
   new = "#{VAGRANTFILE_DIR}/vagrant/boxes.d/99-local.yaml"
 
-  return if File.symlink?(old) || !File.exist?(old)
+  return if File.symlink?(old) || !File.exist?(old) || !File.exist?(older)
 
   if File.exist?(new)
     raise "File #{new} already exists, refusing to overwrite. Remove boxes.d/99-local.yaml in favor of vagrant/boxes.d/99-local.yaml"
   end
 
-  File.rename(old, new)
+  File.rename(older, new) if File.exist?(older)
+  File.rename(old, new) if File.exist?(old)
 end
 
 def migrate_settings!
