@@ -4,6 +4,11 @@
     name: git
     state: present
 
+- name: 'Ensure /etc/foreman-installer'
+  file:
+    state: directory
+    path: /etc/foreman-installer/scenarios.d
+
 - name: 'Copy scenario files'
   copy:
     src: "{{ role_path }}/files/{{ item }}"

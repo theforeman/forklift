@@ -4,9 +4,12 @@
   vars:
     katello_repositories_version: nightly
     katello_repositories_environment: staging
-    foreman_installer_skip_installer: true
+    foreman_installer_scenario: katello-devel
     foreman_installer_additional_packages:
       - foreman-installer-katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--katello-devel-enable-ostree=true"
   roles:
     - etc_hosts
     - epel_repositories
@@ -14,15 +17,5 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
-    - foreman_installer
-
-- hosts: all
-  become: true
-  vars:
-    foreman_installer_scenario: katello-devel
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
-      - "--katello-devel-enable-ostree=true"
-  roles:
     - foreman_installer_devel_scenario
     - foreman_installer
