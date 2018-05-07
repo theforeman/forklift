@@ -32,7 +32,7 @@ services:
     roles:
       - foreman_providers
   dynflow:
-    from: projgriffin/foreman-foreman-base:latest
+    from: quay.io/foreman/foreman-base:latest
     roles:
       - dynflow
   memcached:
@@ -116,6 +116,3 @@ registries:
   oc-cluster:
     url: 172.30.1.1:5000
     namespace: foreman
-  docker:
-    url: https://index.docker.io/v1/
-    namespace: projgriffin

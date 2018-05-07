@@ -18,7 +18,7 @@
 
     - name: 'Pull test image'
       docker_image:
-        name: 'projgriffin/test-bats'
+        name: 'quay.io/foreman/smoke-tests'
 
     - name: 'Run tests'
       shell: "./test.rb --smoke"
