@@ -6,3 +6,14 @@
   tags:
     - packages
   when: ansible_os_family == 'RedHat'
+
+- name: 'Enable CentOS-CR Repository'
+  ini_file:
+    path: /etc/yum.repos.d/CentOS-CR.repo
+    section: cr
+    option: enabled
+    value: 1
+    no_extra_spaces: True
+  tags:
+    - packages
+  when: ansible_distribution == 'CentOS'
