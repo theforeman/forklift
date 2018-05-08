@@ -1,6 +1,6 @@
 ---
 - name: 'Destroy boxes'
-  command: "vagrant destroy {{ forklift_boxes.keys()|join(' ') }}"
+  command: "vagrant destroy -f {{ forklift_boxes.keys()|join(' ') }}"
   args:
     chdir: "{{ current_directory }}"
 
