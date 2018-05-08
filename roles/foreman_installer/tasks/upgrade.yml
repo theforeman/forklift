@@ -14,6 +14,11 @@
     update_cache: yes
     state: latest
 
+- name: 'Check if foreman_installer_options is a string'
+  fail:
+    msg: 'foreman_installer_options must be an array'
+  when: foreman_installer_options is string
+
 - name: 'Run installer upgrade'
   command: >
     {{ foreman_installer_command }} {{ (foreman_installer_verbose == True) | ternary("-v", "") }}
@@ -21,6 +26,6 @@
     --upgrade
     --scenario "{{ foreman_installer_scenario }}"
     --certs-update-all
-    {{ foreman_installer_options }}
+    {{ foreman_installer_options | join(" ") }}
     {{ foreman_installer_options_internal_use_only | join(" ") }}
   when: not foreman_installer_skip_installer
