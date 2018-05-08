@@ -1,5 +1,6 @@
 #! /bin/bash -e
 
+export BUILD_PACKAGES="curl postgresql-devel gcc-c++ make rh-nodejs8-npm libxml2-devel libcurl-devel qpid-cpp-client-devel rh-ruby24-ruby-devel"
 # Setting up repositories
 echo "tsflags=nodocs" >> /etc/yum.conf
 
@@ -12,4 +13,4 @@ yum -y install rh-ruby24 rh-nodejs8-nodejs \
     redhat-rpm-config hostname git postgresql qpid-tools
 
 # Installing packages that are only required during container build time
-yum -y install ${TEMP_PACKAGES} 
+yum -y install ${BUILD_PACKAGES} ${ADDITIONAL_BUILD_PACKAGES}

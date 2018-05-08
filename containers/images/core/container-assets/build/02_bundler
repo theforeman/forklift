@@ -7,4 +7,4 @@
 echo "gem: --no-document" >> ~/.gemrc
 
 export LC_ALL="en_US.UTF-8"; LANG="en_US.UTF-8"
-bundle --no-cache --jobs=8 --without ${BUNDLER_SKIPPED_GROUPS}
+bundle --retry 2 --no-cache --jobs=8 --without ${BUNDLER_SKIPPED_GROUPS} --path ./bundle

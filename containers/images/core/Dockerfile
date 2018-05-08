@@ -4,7 +4,8 @@ ENV RAILS_ENV="production"
 ENV FOREMAN_APIPIE_LANGS="en"
 ARG REPO="theforeman/foreman"
 ARG BRANCH="develop"
-ARG TEMP_PACKAGES="curl postgresql-devel gcc-c++ make rh-nodejs8-npm libxml2-devel libcurl-devel qpid-cpp-client-devel rh-ruby24-ruby-devel"
+# Allow adding additional build packages
+ARG ADDITIONAL_BUILD_PACKAGES=""
 ARG BUNDLER_SKIPPED_GROUPS="mysql:test:mysql2:development:sqlite:jenkins:openid:libvirt:journald"
 
 WORKDIR /usr/share/foreman
@@ -28,3 +29,4 @@ ADD container-assets/build tmp/build
 RUN tmp/setup
 
 EXPOSE 3000/tcp
+CMD ["bin/rails", "server", "-b", "0.0.0.0"]
