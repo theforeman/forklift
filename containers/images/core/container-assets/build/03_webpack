@@ -15,7 +15,7 @@ for plugin in $PLUGINS_PATHS ; do
   (
    cd $plugin/..
    rm -f .babelrc
-   npm i --no-optional
+   npm i --no-optional --production
    cd -
   )
 done

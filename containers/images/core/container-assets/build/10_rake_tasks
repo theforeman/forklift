@@ -10,7 +10,7 @@ export TASKS="db:migrate apipie:cache:index assets:precompile"
 # http://projects.theforeman.org/issues/23520
 
 yum -y install sqlite-devel
-bundle install --with sqlite
+su foreman -s /bin/bash -c 'bundle install --with sqlite'
 
 # use sample settings to avoid memcache miss in logs
 mv config/settings.yaml config/settings.yaml.org
@@ -22,7 +22,7 @@ DATABASE_URL=sqlite3::memory: bundle exec rake ${TASKS}
 
 mv config/settings.yaml.org config/settings.yaml
 
-bundle install --without sqlite assets
+su foreman -s /bin/bash -c 'bundle install --without sqlite assets'
 
 yum -y history undo `yum history package sqlite-devel |grep Install | awk '{print $1}'`
 

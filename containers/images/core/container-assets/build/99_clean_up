@@ -4,12 +4,12 @@
 . /opt/rh/rh-ruby24/enable
 
 # Clean up tasks
-rm -rf /${HOME}/{.bundle,.npm*} /var/cache/yum webpack node_modules test tmp/*
+rm -rf /{${HOME},/usr/share/foreman}/npm* /var/cache/yum webpack node_modules test tmp/* log/*
 
 yum -y history undo `yum history package make |grep Install | awk '{print $1}'`
 
 # ensure that yum history undo didn't downgrade any package.
 yum -y upgrade
 
-bundle clean --force
-bundle config --global frozen 1
+su foreman -s /bin/bash -c 'bundle clean --force'
+su foreman -s /bin/bash -c 'bundle config --global frozen 1'

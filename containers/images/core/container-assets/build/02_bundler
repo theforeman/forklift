@@ -6,5 +6,6 @@
 # Downloading required ruby gems
 echo "gem: --no-document" >> ~/.gemrc
 
-export LC_ALL="en_US.UTF-8"; LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
 bundle --retry 2 --no-cache --jobs=8 --without ${BUNDLER_SKIPPED_GROUPS} --path ./bundle
