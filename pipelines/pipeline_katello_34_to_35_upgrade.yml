@@ -1,3 +1,4 @@
+# Bring up boxes
 - hosts: localhost
   vars:
     forklift_name: pipeline-katello-3.4-3.5
@@ -11,6 +12,7 @@
   roles:
     - forklift
 
+# Install Katello 3.4, Puppet 4
 - hosts:
   - pipeline-katello-3.4-3.5-centos7
   - pipeline-proxy-3.4-3.5-centos7
@@ -67,6 +69,7 @@
     - foreman_proxy_content
     - foreman_installer
 
+# Ensure bats passes on 3.4 to generate some data
 - hosts: pipeline-katello-3.4-3.5-centos7
   become: true
   vars:
@@ -76,9 +79,21 @@
   roles:
     - bats
 
+# Hack in case walrus is still on the machine
+- hosts:
+  - pipeline-katello-3.4-3.5-centos7
+  become: yes
+  tasks:
+    - name: 'Remove walrus package'
+      yum:
+        name: walrus
+        state: absent
+
+# Update to Katello 3.5
 - hosts: pipeline-katello-3.4-3.5-centos7
   become: true
   vars:
+    puppet_repositories_version: 4
     katello_repositories_version: 3.5
     foreman_repositories_version: 1.16
     foreman_installer_upgrade: True
@@ -96,6 +111,7 @@
 - hosts: pipeline-proxy-3.4-3.5-centos7
   become: true
   vars:
+    puppet_repositories_version: 4
     katello_repositories_version: 3.5
     foreman_repositories_version: 1.16
     foreman_installer_upgrade: True
@@ -110,6 +126,69 @@
     - katello_repositories
     - foreman_installer
 
+# Check that we're still good on 3.5 with Puppet 4
+- hosts: pipeline-katello-3.4-3.5-centos7
+  become: true
+  vars:
+    bats_tests:
+      - fb-test-katello.bats
+      - fb-destroy-organization.bats
+      - fb-content-katello.bats
+      - fb-proxy.bats
+      - fb-finish.bats
+  roles:
+    - bats
+
+# Upgrade to Puppet 5
+# http://projects.theforeman.org/projects/foreman/wiki/Upgrading_from_Puppet_4_to_5#Prepare-And-Run-The-Installer
+- hosts:
+  - pipeline-katello-3.4-3.5-centos7
+  - pipeline-proxy-3.4-3.5-centos7
+  become: true
+  vars:
+    puppet_repositories_version: 5
+  roles:
+    - puppet_repositories
+
+- hosts:
+  - pipeline-katello-3.4-3.5-centos7
+  - pipeline-proxy-3.4-3.5-centos7
+  become: true
+  tasks:
+    - name: 'Update packages'
+      yum:
+        name: '*'
+        state: latest
+    - name: 'Reinstall puppet-agent-oauth'
+      command: yum reinstall -y puppet-agent-oauth
+
+- hosts: pipeline-katello-3.4-3.5-centos7
+  become: true
+  vars:
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--reset-puppet-server-jvm-extra-args"
+      - "--reset-puppet-server-puppetserver-version"
+      - "--reset-puppet-server-puppetserver-metrics"
+      - "--reset-puppet-server-puppetserver-experimental"
+  roles:
+    - foreman_installer
+
+- hosts: pipeline-proxy-3.4-3.5-centos7
+  become: true
+  vars:
+    foreman_installer_scenario: foreman-proxy-content
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+      - "--reset-puppet-server-jvm-extra-args"
+      - "--reset-puppet-server-puppetserver-version"
+      - "--reset-puppet-server-puppetserver-metrics"
+      - "--reset-puppet-server-puppetserver-experimental"
+  roles:
+    - foreman_installer
+
+# Check that we're still good on 3.5 with Puppet 5
 - hosts: pipeline-katello-3.4-3.5-centos7
   become: true
   vars:
