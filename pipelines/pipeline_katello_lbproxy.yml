@@ -182,12 +182,10 @@
   - haproxy01
   become: yes
   vars:
-    selinux_state: 'permissive'
     foreman_proxies:
       - proxy01
       - proxy02
   roles:
-    - selinux
     - haproxy
 
 - hosts:

@@ -1,8 +1,11 @@
 ---
 - name: 'Ensure libselinux-python is installed'
   yum:
-    name: 'libselinux-python'
+    name: '{{ item }}'
     state: installed
+  with_items:
+    - libselinux-python
+    - libsemanage-python
   tags:
     - env_setup
   when: ansible_os_family == 'RedHat'
