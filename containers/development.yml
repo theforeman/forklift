@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  vars:
+    foreman_src: "{{lookup('env', 'HOME')}}/foreman"
+  roles:
+    - development

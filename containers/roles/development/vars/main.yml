@@ -1,0 +1,8 @@
+---
+# These are the defaults
+image_name: local
+image_tag: devel
+admin_password: changeme
+foreman_container_name: foreman_devel
+foreman_container_port: 5000
+foreman_src_default: /tmp/foremanq

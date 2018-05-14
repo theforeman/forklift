@@ -1,0 +1,79 @@
+---
+  # Get facts such as database `adapter` and `uid` for the next tasks.
+- include_tasks: facts.yml
+  tags:
+    - always
+
+- name: docker-build image
+  docker_image:
+    name: "{{ image_name }}"
+    tag: "{{ image_tag }}"
+    path: images/develop/foreman
+    buildargs:
+      hostUID: "{{ user_id }}"
+  tags:
+    - build
+
+# reset the bundle configs to download gems as specified
+- name: reset bundle configurations in {{ foreman_src }}/.bundle/config
+  file:
+    state: absent
+    path: "{{ foreman_src }}/.bundle/config"
+  tags:
+    - build
+
+- name: install npm and gem packages
+  docker_container:
+    volumes: "{{ foreman_src }}:/usr/src/app"
+    user: "{{ user_id }}:{{ user_id }}"
+    cleanup: yes
+    detach: false
+    name: "install_npm_and_gem_foreman"
+    image: "{{ image_name }}:{{ image_tag }}"
+    command: "{{ item }}"
+  loop:
+    - bundle install --retry=10000 --path=/usr/src/app/gems --without=libvirt:jenkins:openid
+    - npm install
+  tags:
+    - build
+
+- name: database setup
+  docker_container:
+    volumes: "{{ foreman_src }}:/usr/src/app"
+    user: "{{ user_id }}:{{ user_id }}"
+    cleanup: yes
+    detach: false
+    name: "database_setup"
+    image: "{{ image_name }}:{{ image_tag }}"
+    command: "{{ item }}"
+    env:
+      SEED_ADMIN_PASSWORD: "{{ admin_password }}"
+  loop:
+    - bundle exec rake db:migrate
+    - bundle exec rake db:seed
+  tags:
+    - db_setup
+
+# HACK: allows to start foreman again
+# because tmp/pids/server.pid is not removed when killing the container
+- name: remove {{ foreman_src }}/tmp/pids/server.pid
+  file:
+    path: "{{ foreman_src }}/tmp/pids/server.pid"
+    state: absent
+  tags:
+    - run
+
+- name: run foreman
+  docker_container:
+    state: started
+    restart: yes
+    volumes: "{{ foreman_src }}:/usr/src/app"
+    user: "{{ user_id }}:{{ user_id }}"
+    name: "{{ foreman_container_name }}"
+    image: "{{ image_name }}:{{ image_tag }}"
+    published_ports: "{{ foreman_container_port }}:5000"
+    command: "bundle exec foreman start"
+    env:
+      BIND: 0.0.0.0
+  tags:
+    - run
