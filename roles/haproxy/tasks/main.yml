@@ -9,6 +9,11 @@
   package:
     name: haproxy
     state: present
+- name: set haproxy_connect_any
+  seboolean:
+    name: haproxy_connect_any
+    state: yes
+    persistent: yes
 - name: configure haproxy
   template:
     dest: /etc/haproxy/haproxy.cfg
