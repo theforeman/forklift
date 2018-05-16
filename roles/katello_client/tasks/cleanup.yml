@@ -4,6 +4,11 @@
     name: /etc/rhsm/facts/katello.facts
     state: absent
 
+- name: 'Install subscription-manager'
+  yum:
+    name: "subscription-manager"
+    state: "present"
+
 - name: 'Try to unregister from any old upstream'
   redhat_subscription:
     state: "absent"
