@@ -1,0 +1,19 @@
+---
+- name: Get user data from getent passwd
+  getent:
+    database: passwd
+    key: "{{lookup('env', 'USER')}}"
+  tags:
+    - always
+
+- name: Get user ID from getent
+  set_fact:
+    user_id: "{{getent_passwd[lookup('env', 'USER')][2]}}"
+  tags:
+    - always
+
+- name: set the foreman_src vars if not defined
+  set_fact:
+    foreman_src: "{{foreman_src | default(foreman_src_default)}}"
+  tags:
+    - always

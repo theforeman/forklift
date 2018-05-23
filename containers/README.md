@@ -1,3 +1,108 @@
+# Foreman on Docker
+
+The following use case introduces a way for developers to run `Foreman` using `Docker`.
+
+## Prerequisites
+
+* Docker version `18.03.1-ce` although old versions probably work too
+* Ansible `2.5.2`
+
+## Overview
+
+In general, to run `Foreman` from source:
+1) `Foreman` has to be `git-clone`-ed from Github
+2) binaries such as `ruby` and `nodejs` should be installed (step 1)
+3) node packages and ruby gems have to be downloaded (step 2)
+4) database migration and population should be executed to setup `Foreman` for the first time (step 3)
+
+To make this process easy for developers the last three tasks were automated using `Ansible`.
+
+## Cloning Foreman
+
+If you have `Foreman`, then jump to **Step 1**.
+Otherwise, `git clone https://github.com/theforeman/foreman.git` to `${HOME}`.
+
+## Step 1: Building the development image
+
+**Note**: `<foreman_path>` should be replaced with the path to the cloned `Foreman` mentioned above. For example, if you cloned `Foreman` to `${HOME}` then `<foreman_path>` should be set to `${HOME}/foreman`.
+
+In this step, a new image based on `Fedora 27` is being built. That image includes all the binaries that are necessary
+to setup and run `Foreman`.
+
+To build the image run the following command
+
+```bash
+cd forklift/containers
+cd ansible-playbook -t build -e "foreman_src=<foreman_path>" development.yml
+```
+
+**Note**: If `foreman_src` variable is not set using `-e` Ansible sets it to `${HOME}/foreman` by default.
+
+What is going to happen is a new image called `local:devel` is going to be built from
+[this Dockerfile](images/services/foreman/Dockerfile).
+
+## Step 2: Install packages
+
+In step 1 during the build process, a non root user was created.
+That user has the same user and group IDs that you're using on the host machine. The reason for that is:
+ 1) It is always a good practice to run as non-root
+ 2) Files are going to be added to `foreman_src` and we would like the owner of those files to be the same one on the host.
+
+In this step, node packages are going to be installed in `{{foreman_src}}/node_modules` and the rubygems packages are going to be installed in `{{foreman_src}}/gems`. By doing this, the "state" of the Foreman dependencies is controlled within your development directory and you can run `Foreman` in any new container without `bundle install` or `npm install` again.
+
+To run this step enter the following command (assuming you're in the `containers` directory)
+
+```bash
+ansible-playbook -t install -e "foreman_src=<foreman_path>" development.yml
+```
+
+## Step 3: Database setup
+
+This last step is running all the necessary setups on the database.
+It basically executes database migration and seeds the database.
+
+In case you're using `sqlite` locally then the changes are done in `{{foreman_src}}/db` or where you specified in `foreman_src/config/database.yml`.
+
+In case you're using the `postgresql` adapter, a new container will be deployed with postgres database running in the background.
+
+**Note**: Changing the `development` section in `foreman_src/config/database.yml` may cause running a new container which ends up with deleting the data on the database.
+**Note**: Right now `mysql` and `mysql2` adapters are not supported but will be added soon.
+
+Run the following command to execute this step:
+
+```bash
+ansible-playbook -t db_setup -e "foreman_src=<foreman_path>" development.yml
+```
+
+## Running Foreman
+
+After getting these steps, you can run `Foreman` in a container by executing
+
+```bash
+ansible-playbook -t run -e "foreman_src=<foreman_path>" development.yml
+```
+
+You can open the browser and go to `localhost:5000` to login `Foreman`.
+
+You can even see the logs inside the container by running
+
+```bash
+docker logs -f foreman_devel
+```
+
+To restart the container again, run the same command:
+
+```bash
+ansible-playbook -t run -e "foreman_src=<foreman_path>" development.yml
+```
+
+## Future
+
+* Add `mysql` and `mysql2` support
+* Add Foreman Proxy
+* Explain how to add plugins
+* Updating `foreman` may require doing `bundle update` and `bundle install`
+
 # Foreman on OpenShift
 
 ## NOTE: THIS IS NOT FOR PRODUCTION (yet)
