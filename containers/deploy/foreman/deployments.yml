@@ -271,7 +271,7 @@
                                 key: server.key
                     containers:
                       - name: httpd
-                        image: "{{ registry }}/httpd:latest"
+                        image: "manageiq/httpd:latest"
                         command:
                           - /usr/sbin/init
                         ports:
