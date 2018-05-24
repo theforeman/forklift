@@ -39,7 +39,7 @@ system("oc get pods")
 abort("Ping failed") unless up
 
 if ARGV[0] == '--smoke'
-  smoke = system("docker run -e FOREMAN_HOSTNAME=#{foreman_route} smoke-tests:latest")
+  smoke = system("docker run -e FOREMAN_HOSTNAME=#{foreman_route} quay.io/foreman/smoke-tests:latest")
 
   exit 1 unless smoke
 end
