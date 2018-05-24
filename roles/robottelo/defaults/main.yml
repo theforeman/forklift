@@ -3,5 +3,20 @@ robottelo_url: https://github.com/SatelliteQE/robottelo.git
 robottelo_directory: /root/robottelo
 robottelo_virtualenv_path: /root/robottelo/venv
 robottelo_version: master
-robottelo_test_arguments:
-  - tests/foreman/endtoend/test_api_endtoend.py
+robottelo_junit_file: results.xml
+robottelo_test_type: endtoend # one of [tier1|tier2|tier3|destructive|upgrade|endtoend]
+robottelo_test_endpoints: # [api|ui|cli]
+  - api
+robottelo_test_options:
+  endtoend: not stubbed
+  default: not stubbed and {{ robottelo_test_type }}
+robottelo_test_path:
+  destructive: tests/foreman/sys
+  endtoend: >
+    {% for item in robottelo_test_endpoints %}
+      tests/foreman/{{ robottelo_test_type }}/test_{{ item }}_endtoend.py
+    {% endfor %}
+  default: >
+    {% for item in robottelo_test_endpoints %}
+      tests/foreman/{{ item }}
+    {% endfor %}
