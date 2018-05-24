@@ -4,6 +4,7 @@ This section covers test infrastructure and environments that can be spun up usi
 
  * [Bats Testing](#bats-testing)
  * [Client Testing with Docker](#client-testing-with-docker)
+ * [Running Robottelo Tests](#running-robottelo-tests)
 
 ## Bats Testing
 
@@ -88,3 +89,15 @@ If you want to spin up more than one client, let's say 10 for this example, the 
 ```
 docker-compose scale el6=10
 ```
+
+## Running Robottelo Tests
+
+Robottelo is a test suite for excercising Foreman and Katello. Forklift provides a role for Robottelo to set up and run tests against your machine. Configuration options of interest are `robottelo_test_endpoints` where you can pass a list of endpoints (api, cli or ui), and `robottelo_test_type`, which is one of:
+
+- tier1 to tier4 - base test sets, tier1 tests can resemble unit testing, higher tiers require more extensive setup
+- destructive - tests that restart or rename the server
+- upgrade - a selection of tests from tiers used in post-upgrade testing, should exercise the core functionality in less time consuming way
+- endtoend - testing the essential user scenario, less time-consuming than the upgrade set
+
+ * [Robottelo repository](https://github.com/SatelliteQE/robottelo)
+ * [Robottelo documentation](https://robottelo.readthedocs.io/en/latest/)
