@@ -307,7 +307,7 @@
                             - readOnly: false
                               mountPath: /var/lib/mongodb/data
                               name: mongodb-data
-                          image: "{{ registry }}/mongodb:latest"
+                          image: "centos/mongodb-34-centos7:latest"
                       volumes:
                         - name: mongodb-data
                           persistentVolumeClaim:

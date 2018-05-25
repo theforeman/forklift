@@ -1,7 +1,0 @@
----
-- name: "Set permissions"
-  file:
-    state: directory
-    path: /var/lib/mongodb/data
-    owner: mongodb
-    group: mongodb
