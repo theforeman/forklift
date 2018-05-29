@@ -35,30 +35,18 @@ services:
     from: quay.io/foreman/foreman-base:latest
     roles:
       - dynflow
-  memcached:
-    from: manageiq/memcached:latest
   foreman-proxy:
     from: centos:7
     roles:
       - epel_repositories
       - foreman_repositories
       - foreman-proxy
-  foreman-proxy-register:
-    from: centos:7
-    roles:
-      - epel_repositories
-      - foreman_repositories
-      - foreman-proxy
-  puppet:
-    from: puppet/puppetserver
   candlepin:
     from: centos:7
     roles:
       - epel_repositories
       - katello_repositories
       - candlepin
-  postgres:
-    from: ansible/postgresql:latest
   pulp-base:
     from: centos:7
     roles:
