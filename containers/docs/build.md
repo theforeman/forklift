@@ -1,6 +1,6 @@
 # Build
 
-The build phase is handled by the `ansible-container` project using Ansible roles to build out each container in preparation to push to a registry. This document will walk through how to build the containers.
+This document will walk through how to build the containers.
 
   1. [Install ansible](#install-ansible)
   2. [Setup Docker](#setup-docker)
@@ -26,36 +26,30 @@ Using pip:
 
 ### Setup Docker
 
-In order to build the containers, a running docker daemon needs to be present.
+In order to build the containers, a running docker daemon needs to be present. Follow the official Docker [installation](https://docs.docker.com/install/) guide or use the following Ansible playbook:
 
     ansible-playbook tools/install-docker.yml
-
-### Install ansible-container
-
-This project is currently using the bleeding edge version of `ansible-container` and will be installed from source. To simplify install, an Ansible playbook has been provided to do the installation:
-
-    ansible-playbook tools/install-ansible-container.yml
 
 
 ## Build Containers
 
-Now build the containers (and grab a coffee):
+Now build all the container images (and grab a coffee):
 
-    ansible-playbook tools/build.yml
+    ansible-playbook tools/build-all.yml
 
-To build one or more services pass the name(s) space separated:
+To build a single container image:
 
-    ansible-playbook tools/build.yml -e services='foreman dynflow'
+    ansible-playbook tools/build.yml -e image=foreman
 
-To build just Foreman:
+To build just the Foreman stack:
 
     ansible-playbook tools/build-foreman.yml
 
-To build just Pulp:
+To build just the Pulp stack:
 
     ansible-playbook tools/build-pulp.yml
 
-To build just Candlepin:
+To build just the Candlepin stack:
 
     ansible-playbook tools/build-candlepin.yml
 

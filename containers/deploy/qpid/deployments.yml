@@ -32,8 +32,6 @@
                         - name: qpid
                           securityContext: {}
                           state: present
-                          args:
-                            - /usr/bin/startup.sh
                           image: "{{ registry }}/qpid:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid

@@ -6,7 +6,12 @@
         images: ["{{ image }}"]
       when: image is string
 
-    - include_tasks: tasks/build-image.yml
+    - include_tasks: tasks/tag.yml
+      with_items: "{{ images }}"
+      loop_control:
+        loop_var: image
+
+    - include_tasks: tasks/push.yml
       with_items: "{{ images }}"
       loop_control:
         loop_var: image

@@ -75,11 +75,11 @@
                 ProxyRequests Off
                 ProxyPreserveHost On
 
-                ProxyPass /pulp http://content-server:8080/pulp retry=0
-                ProxyPassReverse /pulp http://content-server:8080/pulp
+                ProxyPass /pulp http://content-server:80/pulp retry=0
+                ProxyPassReverse /pulp http://content-server:80/pulp
 
-                ProxyPass /pub http://content-server:8080/pub retry=0
-                ProxyPassReverse /pub http://content-server:8080/pub
+                ProxyPass /pub http://content-server:80/pub retry=0
+                ProxyPassReverse /pub http://content-server:80/pub
 
                 ## Server aliases
                 ServerAlias foreman

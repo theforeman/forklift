@@ -1,0 +1,4 @@
+---
+- import_playbook: build-candlepin.yml
+- import_playbook: build-pulp.yml
+- import_playbook: build-foreman.yml

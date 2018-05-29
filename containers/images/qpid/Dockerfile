@@ -7,4 +7,4 @@ RUN echo "tsflags=nodocs" >> /etc/yum.conf && \
 
 EXPOSE 5672
 
-CMD ["qpidd", "--auth=no", "-p 5672"]
+CMD ["qpidd", "--auth=no", "-p", "5672"]

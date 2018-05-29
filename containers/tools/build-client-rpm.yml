@@ -1,8 +1,0 @@
----
-- hosts: all
-  gather_facts: no
-  vars_files:
-    - ../secrets.yml
-    - ../vars/local.yml
-  roles:
-    - client_rpm

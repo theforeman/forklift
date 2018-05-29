@@ -33,6 +33,7 @@
   file:
     state: directory
     path: '/var/www/html/pub'
+    mode: 0777
 
 - name: 'Copy SRPM'
   copy:

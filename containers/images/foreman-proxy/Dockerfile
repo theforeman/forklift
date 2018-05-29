@@ -13,6 +13,7 @@ COPY container-assets/pulp.yml /etc/foreman-proxy/settings.d/pulp.yml
 COPY container-assets/puppet.yml /etc/foreman-proxy/settings.d/puppet.yml
 COPY container-assets/puppet_proxy_puppet_api.yml /etc/foreman-proxy/settings.d/puppet_proxy_puppet_api.yml
 COPY container-assets/settings.yml /etc/foreman-proxy/settings.yml
+COPY container-assets/register.sh /usr/bin/register.sh
 
 RUN ln -s /etc/foreman-proxy/settings.d /usr/share/foreman-proxy/config/settings.d
 
