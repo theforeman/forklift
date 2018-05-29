@@ -1,5 +1,0 @@
----
-- name: 'Deploy reverse proxy'
-  copy:
-    content: "{{ lookup('file', 'files/reverse-proxy.conf') }}"
-    dest: /etc/httpd/conf.d/reverse-proxy.conf

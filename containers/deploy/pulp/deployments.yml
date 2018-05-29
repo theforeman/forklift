@@ -362,7 +362,7 @@
                             - /usr/bin/start_httpd.sh
                           ports:
                             - protocol: TCP
-                              containerPort: 8080
+                              containerPort: 80
                           image: "{{ registry }}/content-server:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid
