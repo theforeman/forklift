@@ -1,0 +1,3 @@
+---
+- name: 'Tag image'
+  command: "docker tag {{ image }} quay.io/foreman/{{ image }}:latest"

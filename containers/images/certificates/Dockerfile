@@ -2,7 +2,8 @@ FROM centos:7
 
 RUN echo "tsflags=nodocs" >> /etc/yum.conf && \
     yum -y install epel-release && \
-    yum -y install openssl ansible rpm-build git python-pip
+    yum -y install openssl ansible rpm-build git python-pip && \
+    yum clean all
 
 WORKDIR /root
 

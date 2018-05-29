@@ -1,4 +1,8 @@
 ---
 - import_playbook: build.yml
   vars:
-    services: 'foreman-base foreman foreman-proxy dynflow'
+    images:
+      - foreman
+      - foreman-proxy
+      - dynflow
+      - certificates

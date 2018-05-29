@@ -32,8 +32,6 @@
                         - name: foreman-proxy
                           securityContext: {}
                           state: present
-                          args:
-                            - /usr/bin/start-foreman-proxy.sh
                           image: "{{ registry }}/foreman-proxy:latest"
               replicas: 1
               strategy:

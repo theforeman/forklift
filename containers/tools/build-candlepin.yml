@@ -1,4 +1,6 @@
 ---
 - import_playbook: build.yml
   vars:
-    services: 'candlepin qpid postgresql'
+    images:
+      - candlepin
+      - qpid

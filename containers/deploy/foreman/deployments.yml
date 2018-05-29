@@ -76,10 +76,6 @@
                               value: changeme
                             - name: RAILS_ENV
                               value: production
-                          args:
-                            - /usr/bin/start-foreman.sh
-                          command:
-                            - /usr/bin/entrypoint.sh
                           ports:
                             - protocol: TCP
                               containerPort: 8080
@@ -152,10 +148,6 @@
                               value: foreman
                             - name: RAILS_ENV
                               value: production
-                          args:
-                            - /usr/bin/start-dynflowd.sh
-                          command:
-                            - /usr/bin/entrypoint.sh
                           image: "{{ registry }}/dynflow:latest"
                       serviceAccount: anyuid
                       serviceAccountName: anyuid

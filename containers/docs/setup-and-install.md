@@ -1,14 +1,13 @@
 ## Setup
 
-This setup is done in two phases: build and deployment. The build phase is handled by the `ansible-container` project using Ansible roles to build out each container in preparation to push to Openshift. The deployment phase can either be done locally or to a local or remote Openshift cluster. This README will walk through how to build and run on a local Openshift:
+This setup is done in two phases: build and deployment. The deployment phase can either be done locally or to a local or remote Openshift cluster. This README will walk through how to build and run on a local Openshift:
 
   1. [Install ansible](#install-ansible)
   2. [Install and Configure Docker](#setup-docker)
-  3. [Install ansible-container](#install-ansible-container)
-  4. [Build Containers](#build-containers)
-  5. [Run Containers Locally](#run-containers-locally)
-  6. [Setup and Install Local OpenShift](#setup-and-install-openshift)
-  7. [Deploy Containers to OpenShift](#deploy-containers-to-openshift)
+  3. [Build Containers](#build-containers)
+  4. [Run Containers Locally](#run-containers-locally)
+  5. [Setup and Install Local OpenShift](#setup-and-install-openshift)
+  6. [Deploy Containers to OpenShift](#deploy-containers-to-openshift)
 
 This installation guide assumes that you are working from the `forklift/containers` directory for all actions and that you have a fresh CentOS 7 VM running. Other OSes like Fedora can be used, but some aspects such as configuring docker may be different.
 
@@ -34,17 +33,7 @@ In order to build the containers, run them locally or use OpenShift, Docker need
 
     ansible-playbook tools/install-docker.yml -l centos7 -b -e "@vars/remote.yml"
 
-### Install ansible-container
-
-This project is currently using the bleeding edge version of `ansible-container` and will be installed from source. To simplify install, an Ansible playbook has been provided to do the installation:
-
-    ansible-playbook tools/install-ansible-container.yml -l centos7 -b -e "@vars/remote.yml"
-
 ### Build Containers
-
-Before the containers can be built the local copy of the container code needs to be synced to the CentOS box. This allows for making local changes in the future and having them tested through the various stages on the CentOS box:
-
-    ansible-container tools/install-forklift.yml -l centos7 -b -e "@vars/remote.yml"
 
 Now build the containers (and grab a coffee):
 
