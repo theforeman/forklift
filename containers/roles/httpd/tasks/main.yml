@@ -1,5 +1,0 @@
----
-- name: 'Install mod_ssl'
-  yum:
-    name: mod_ssl
-    state: present
