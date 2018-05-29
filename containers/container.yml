@@ -35,12 +35,6 @@ services:
     from: quay.io/foreman/foreman-base:latest
     roles:
       - dynflow
-  foreman-proxy:
-    from: centos:7
-    roles:
-      - epel_repositories
-      - foreman_repositories
-      - foreman-proxy
   candlepin:
     from: centos:7
     roles:
