@@ -76,10 +76,6 @@ services:
     from: centos:7
     roles:
       - squid
-  content-server:
-    from: foreman-pulp-base:latest
-    roles:
-      - content-server
 
 registries:
   oc-cluster:
