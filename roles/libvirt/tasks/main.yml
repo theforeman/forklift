@@ -1,0 +1,34 @@
+---
+- name: 'install the virtualization hypervisor package group'
+  yum:
+    name: "@Virtualization Hypervisor"
+    state: present
+
+- name: 'install the virtualization tools package group'
+  yum:
+    name: "@Virtualization Tools"
+    state: present
+
+- name: 'install the libvirt-python package'
+  yum:
+    name: "libvirt-python"
+    state: present
+
+- name: 'disable libvirt authentication'
+  lineinfile:
+    dest: /etc/libvirt/libvirtd.conf
+    line: 'auth_unix_rw = "none"'
+
+- name: 'restart libvirt'
+  service: name=libvirtd state=restarted
+
+- name: 'install libvirt-python dependency'
+  yum:
+    name: libvirt-python
+
+- name: 'install python-lxml'
+  yum:
+    name: python-lxml
+
+- include_tasks: 'tftp.yml'
+  when: libvirt_tftp

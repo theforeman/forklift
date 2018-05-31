@@ -1,6 +1,8 @@
 - hosts: all
   become: true
+  vars:
+    libvirt_tftp: true
   roles:
     - katello
-    - libvirt_setup
+    - libvirt
     - katello_provisioning
