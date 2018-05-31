@@ -1,6 +1,8 @@
 - hosts: all
   become: true
+  vars:
+    libvirt_tftp: true
   roles:
     - foreman
-    - libvirt_setup
+    - libvirt
     - foreman_provisioning

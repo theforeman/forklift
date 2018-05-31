@@ -3,4 +3,4 @@ libvirt_setup_ip_address: 192.168.73.1
 libvirt_setup_dhcp_start: 192.168.73.2
 libvirt_setup_dhcp_end: 192.168.73.254
 libvirt_setup_storage_path: /var/lib/libvirt/images
-
+libvirt_tftp: false
