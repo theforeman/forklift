@@ -1,0 +1,8 @@
+---
+- name: 'install vagrant'
+  yum:
+    name: https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}_x86_64.rpm
+    state: present
+
+- include_tasks: 'vagrant_libvirt.yml'
+  when: vagrant_libvirt
