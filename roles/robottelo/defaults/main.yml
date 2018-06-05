@@ -20,3 +20,7 @@ robottelo_test_path:
     {% for item in robottelo_test_endpoints %}
       tests/foreman/{{ item }}
     {% endfor %}
+robottelo_test_arguments:
+  - tests/foreman/endtoend/test_api_endtoend.py
+robottelo_hostname: "{{ ansible_fqdn }}"
+robottelo_ssh_key: /root/.ssh/id_rsa

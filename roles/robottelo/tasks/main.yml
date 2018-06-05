@@ -1,4 +1,6 @@
 ---
+- include_tasks: ssh.yml
+
 - name: Install packages
   package:
     name: "{{ item }}"
@@ -47,17 +49,23 @@
   lineinfile:
     dest: "{{ robottelo_directory }}/robottelo.properties"
     regexp: "^hostname="
-    line: "hostname={{ ansible_fqdn }}"
+    line: "hostname={{ robottelo_hostname }}"
+    state: present
+    backrefs: yes
+
+- name: Set robottelo SSH
+  lineinfile:
+    dest: "{{ robottelo_directory }}/robottelo.properties"
+    regexp: "^ssh_key="
+    line: "ssh_key={{ robottelo_ssh_key }}"
     state: present
     backrefs: yes
 
 - name: Set robottelo logging
-  lineinfile:
+  replace:
     dest: "{{ robottelo_directory }}/logging.conf"
     regexp: "^level=DEBUG"
-    line: "level=INFO"
-    state: present
-    backrefs: yes
+    replace: "level=INFO"
 
 - name: Run tests
   command: "{{ robottelo_virtualenv_path }}/bin/py.test --junit-xml={{ robottelo_junit_file }}

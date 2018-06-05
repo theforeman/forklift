@@ -1,0 +1,11 @@
+---
+- name: 'Create ssh keys'
+  command: "ssh-keygen -b 2048 -t rsa -f {{ robottelo_ssh_key }} -q -N ''"
+  args:
+    creates: "{{ robottelo_ssh_key }}"
+
+- name: 'Add ssh key to authorized_keys'
+  copy:
+    remote_src: true
+    src: "{{ robottelo_ssh_key }}"
+    dest: /root/.ssh/authorized_keys
