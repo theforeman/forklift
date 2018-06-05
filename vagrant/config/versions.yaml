@@ -29,6 +29,7 @@ installers:
     puppet: 5
     boxes:
       - 'centos7'
+      - 'centos7-fips'
       - 'debian8'
       - 'debian9'
       - 'ubuntu1604'
