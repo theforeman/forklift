@@ -1,5 +1,6 @@
 ---
 koji_host: 'http://koji.katello.org/kojihub'
 koji_task_ids: []
+koji_build_ids: []
 koji_repo_directory: "/tmp/koji-repo"
 koji_topurl: 'http://koji.katello.org/kojifiles'
