@@ -9,11 +9,17 @@
     path: '{{ koji_repo_directory }}'
     state: 'directory'
 
-- name: 'Download RPMs'
+- name: 'Download RPMs from tasks'
   command: "koji --server {{ koji_host }} --topurl {{ koji_topurl }} download-task {{ item }}"
   args:
     chdir: "{{ koji_repo_directory }}"
   with_items: "{{ koji_task_ids }}"
+
+- name: 'Download RPMs from builds'
+  command: "koji --server {{ koji_host }} --topurl {{ koji_topurl }} download-build {{ item }}"
+  args:
+    chdir: "{{ koji_repo_directory }}"
+  with_items: "{{ koji_build_ids }}"
 
 - name: 'Install createrepo'
   yum:
