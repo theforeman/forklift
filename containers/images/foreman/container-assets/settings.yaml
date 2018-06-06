@@ -21,7 +21,7 @@
     :enabled: false
 :logging:
   :console_inline: true
-  :level: debug
+  :level: info
 :memcache:
   :hosts:
     - memcache
