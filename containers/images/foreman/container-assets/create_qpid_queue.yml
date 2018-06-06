@@ -1,0 +1,33 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - set_fact:
+        qpid_port: "{{ lookup('env', 'QPID_SERVICE_PORT') | int }}"
+        qpid_host: "{{ lookup('env', 'QPID_SERVICE_HOST') }}"
+
+    - debug:
+        msg: "{{ qpid_host }}:{{ qpid_port | int }}"
+
+    - name: "Wait for Qpid"
+      wait_for:
+        port: "{{ qpid_port }}"
+        host: "{{ qpid_host }}"
+        timeout: 600
+
+    - name: "Check for qpid queue"
+      command: "qpid-config -b {{ qpid_host }}:{{ qpid_port }} queues katello_event_queue"
+      register: queue_exist
+
+    - name: "Add katello_event_queue"
+      command: "qpid-config -b {{ qpid_host }}:{{ qpid_port }} add queue katello_event_queue --durable"
+      when: '"katello_event_queue" not in queue_exist'
+
+    - name: "Bind katello_event_queue to specific events"
+      command: "qpid-config -b {{ qpid_host }}:{{ qpid_port }} bind event katello_event_queue {{ item }}"
+      with_items:
+        - entitlement.created
+        - entitlement.deleted
+        - pool.created
+        - pool.deleted
+        - compliance.created
