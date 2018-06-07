@@ -1,20 +1,21 @@
 ---
 - name: Scale Candlepin to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: candlepin
       namespace: "{{ project_name }}"
       replicas: 0
+      kind: DeploymentConfig
   tags:
     - stop
     - restart
 
 - name: Create Candlepin deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: candlepin
               labels:
@@ -22,6 +23,11 @@
                   service: candlepin
               namespace: "{{ project_name }}"
           spec:
+              replicas: 1
+              strategy:
+                rollingParams:
+                  timeoutSeconds: 900
+                type: Rolling
               template:
                   metadata:
                       labels:
@@ -63,11 +69,6 @@
                                   key: ca.crt
                               secretName: ca
                           name: ca
-              replicas: 1
-              strategy:
-                  type: Rolling
-                  rollingParams:
-                      timeoutSeconds: 900
   tags:
     - start
     - restart

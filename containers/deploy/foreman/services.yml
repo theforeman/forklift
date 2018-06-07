@@ -1,9 +1,9 @@
 ---
 - name: Create service
-  k8s_v1_service:
+  k8s_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
           kind: Service
           metadata:
@@ -25,10 +25,10 @@
     - start
     - destroy
 - name: Create service
-  k8s_v1_service:
+  k8s_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
           kind: Service
           metadata:
@@ -50,10 +50,10 @@
     - start
     - destroy
 - name: Create service
-  k8s_v1_service:
+  k8s_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
           kind: Service
           metadata:
@@ -76,10 +76,10 @@
     - destroy
 
 - name: Create service
-  k8s_v1_service:
+  k8s_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
           kind: Service
           metadata:

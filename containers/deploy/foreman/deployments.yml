@@ -1,6 +1,6 @@
 ---
 - name: Scale Foreman to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: foreman
       namespace: "{{ project_name }}"
       replicas: 0
@@ -8,7 +8,7 @@
     - stop
     - restart
 - name: Scale Dynflow to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: dynflow
       namespace: "{{ project_name }}"
       replicas: 0
@@ -16,7 +16,7 @@
     - stop
     - restart
 - name: Scale Memcached to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: memcached
       namespace: "{{ project_name }}"
       replicas: 0
@@ -24,7 +24,7 @@
     - stop
     - restart
 - name: Scale Apache to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: httpd
       namespace: "{{ project_name }}"
       replicas: 0
@@ -33,12 +33,12 @@
     - restart
 
 - name: Create Foreman deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: foreman
               namespace: "{{ project_name }}"
@@ -109,12 +109,12 @@
     - restart
     - destroy
 - name: Create Dynflow deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: dynflow
               namespace: "{{ project_name }}"
@@ -178,12 +178,12 @@
     - restart
     - destroy
 - name: Create Memcache deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: memcached
               namespace: "{{ project_name }}"
@@ -213,12 +213,12 @@
     - destroy
 
 - name: Create Apache deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: httpd
               namespace: "{{ project_name }}"

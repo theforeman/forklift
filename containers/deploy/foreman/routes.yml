@@ -1,9 +1,9 @@
 ---
 - name: Create HTTPS route for Foreman and Pulp
-  openshift_v1_route:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
           kind: Route
           metadata:
@@ -27,10 +27,10 @@
     - destroy
 
 - name: Create HTTP route for Pub
-  openshift_v1_route:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
           kind: Route
           metadata:
@@ -53,10 +53,10 @@
     - destroy
 
 - name: Create HTTP route for Pulp Content
-  openshift_v1_route:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
           kind: Route
           metadata:

@@ -1,6 +1,6 @@
 ---
 - name: Remove existing certificates job
-  k8s_v1_job:
+  k8s_raw:
     state: absent
     namespace: foreman
     name: "certificates"
@@ -8,9 +8,9 @@
     - destroy
 
 - name: Create Job for certificates
-  k8s_v1_job:
+  k8s_raw:
       state: "{{ deployment_state }}"
-      resource_definition:
+      definition:
           apiVersion: batch/v1
           kind: Job
           metadata:

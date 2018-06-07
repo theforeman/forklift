@@ -1,11 +1,16 @@
 ---
 - hosts: all
-  gather_facts: no
+  roles:
+    - epel_repositories
   tasks:
-    - name: 'Install Ansible'
+    - name: 'Install pip'
       package:
-        name: 'ansible'
+        name: python2-pip
         state: present
+
+    - name: 'Install Ansible'
+      pip:
+        name: 'ansible'
 
     - name: 'Install rsync'
       package:
