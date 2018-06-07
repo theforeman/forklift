@@ -1,9 +1,9 @@
 ---
 - name: Create Pub PVC
-  k8s_v1_persistent_volume_claim:
+  k8s_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
           kind: PersistentVolumeClaim
           metadata:

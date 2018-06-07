@@ -20,13 +20,8 @@ This guide assumes that you are in the `containers/` folder for all operations.
 
 This quickstart guide requires that the following are installed already:
 
- * [Ansible](http://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+ * [Ansible 2.5+](http://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
  * [Minishift](https://docs.openshift.org/latest/minishift/getting-started/installing.html)
-
-In addition the following steps need to be taken to install a few dependencies:
-
-    pip install git+https://github.com/ehelms/openshift-restclient-python.git@fix-destination-ca
-    ansible-galaxy install -r requirements.yml
 
 Note that the special version of the OpenShift python client is needed for this [fix](https://github.com/openshift/openshift-restclient-python/pull/166).
 

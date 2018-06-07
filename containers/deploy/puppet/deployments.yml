@@ -1,6 +1,6 @@
 ---
 - name: Scale Puppet to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: puppet
       namespace: "{{ project_name }}"
       replicas: 0
@@ -9,12 +9,12 @@
     - restart
 
 - name: Create Puppet deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: puppet
               namespace: "{{ project_name }}"

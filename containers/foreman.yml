@@ -2,8 +2,6 @@
   hosts: localhost
   gather_facts: no
   connection: local
-  roles:
-    - role: ansible-kubernetes-modules
   vars:
     minishift: true
     cluster_up: false

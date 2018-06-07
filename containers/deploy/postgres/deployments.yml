@@ -1,20 +1,21 @@
 ---
 - name: Scale Postgres to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: postgres
       namespace: "{{ project_name }}"
       replicas: 0
+      kind: DeploymentConfig
   tags:
     - stop
     - restart
 
 - name: Create Postgres deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: postgres
               namespace: "{{ project_name }}"

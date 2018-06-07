@@ -1,9 +1,9 @@
 ---
 - name: Create ConfigMap
-  k8s_v1_config_map:
+  k8s_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
           kind: ConfigMap
           metadata:

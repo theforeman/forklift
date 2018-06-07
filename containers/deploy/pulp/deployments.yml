@@ -1,6 +1,6 @@
 ---
 - name: Scale Pulp to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: pulp
       namespace: "{{ project_name }}"
       replicas: 0
@@ -8,7 +8,7 @@
     - stop
     - restart
 - name: Scale Pulp Worker to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: pulp-worker
       namespace: "{{ project_name }}"
       replicas: 0
@@ -16,7 +16,7 @@
     - stop
     - restart
 - name: Scale Pulp Celerybeat to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: pulp-celerybeat
       namespace: "{{ project_name }}"
       replicas: 0
@@ -24,7 +24,7 @@
     - stop
     - restart
 - name: Scale Pulp Resource Manager to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: pulp-resource-manager
       namespace: "{{ project_name }}"
       replicas: 0
@@ -32,7 +32,7 @@
     - stop
     - restart
 - name: Scale Mongodb to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: mongodb
       namespace: "{{ project_name }}"
       replicas: 0
@@ -40,7 +40,7 @@
     - stop
     - restart
 - name: Scale Content Server to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: content-server
       namespace: "{{ project_name }}"
       replicas: 0
@@ -48,7 +48,7 @@
     - stop
     - restart
 - name: Scale Squid to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: squid
       namespace: "{{ project_name }}"
       replicas: 0
@@ -56,7 +56,7 @@
     - stop
     - restart
 - name: Scale Pulp Streamer to 0
-  openshift_v1_deployment_config:
+  openshift_raw:
       name: pulp-streamer
       namespace: "{{ project_name }}"
       replicas: 0
@@ -65,12 +65,12 @@
     - restart
 
 - name: Create Pulp deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: pulp
               namespace: "{{ project_name }}"
@@ -137,12 +137,12 @@
     - restart
     - destroy
 - name: Create Pulp Worker deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: pulp-worker
               namespace: "{{ project_name }}"
@@ -187,12 +187,12 @@
     - restart
     - destroy
 - name: Create Pulp Celeybeat deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: pulp-celerybeat
               namespace: "{{ project_name }}"
@@ -223,12 +223,12 @@
     - restart
     - destroy
 - name: Create Pulp Resource Manager deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: pulp-resource-manager
               namespace: "{{ project_name }}"
@@ -259,12 +259,12 @@
     - restart
     - destroy
 - name: Create Mongodb deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: mongodb
               namespace: "{{ project_name }}"
@@ -312,12 +312,12 @@
     - restart
     - destroy
 - name: Create Content Server deployment
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: content-server
               namespace: "{{ project_name }}"
@@ -385,12 +385,12 @@
     - restart
     - destroy
 - name: Create Squid deployment and scale up
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: squid
               namespace: "{{ project_name }}"
@@ -424,12 +424,12 @@
     - restart
     - destroy
 - name: Create Pulp Streamer deployment and scale up
-  openshift_v1_deployment_config:
+  openshift_raw:
       state: "{{ deployment_state }}"
       force: false
-      resource_definition:
+      definition:
           apiVersion: v1
-          kind: deployment_config
+          kind: DeploymentConfig
           metadata:
               name: pulp-streamer
               namespace: "{{ project_name }}"

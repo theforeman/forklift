@@ -1,9 +1,10 @@
 ---
 - name: Create project foreman
-  openshift_v1_project:
-      name: "{{ project_name }}"
-      display_name: Foreman
-      description: Foreman stack
-      state: present
+  openshift_raw:
+    name: "{{ project_name }}"
+    display_name: Foreman
+    description: Foreman stack
+    state: present
+    kind: Project
   tags:
     - start
