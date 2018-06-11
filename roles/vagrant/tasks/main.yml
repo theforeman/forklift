@@ -6,3 +6,6 @@
 
 - include_tasks: 'vagrant_libvirt.yml'
   when: vagrant_libvirt
+
+- include_tasks: 'vagrant_scp.yml'
+  when: vagrant_scp
