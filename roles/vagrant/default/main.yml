@@ -1,3 +1,4 @@
 ---
 vagrant_libvirt: true
 vagrant_version: 2.1.1
+vagrant_scp: true
