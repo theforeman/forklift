@@ -1,0 +1,12 @@
+---
+- name: "Find bats files"
+  find:
+    paths: "{{ bats_output_dir }}"
+    patterns: "*.tap"
+  register: bats_results
+
+- name: "Copy bats results"
+  fetch:
+    src: "{{ item.path }}"
+    dest: "{{ bats_remote_dir }}"
+  with_items: "{{ bats_results.files }}"
