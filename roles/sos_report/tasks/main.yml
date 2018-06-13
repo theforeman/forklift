@@ -1,0 +1,7 @@
+---
+- name: 'Generate sosreport'
+  command: "sosreport --batch --tmp-dir={{ sosreport_output_dir }}"
+  ignore_errors: true
+
+- include_tasks: 'sosreport_fetch_results.yml'
+  when: sosreport_fetch

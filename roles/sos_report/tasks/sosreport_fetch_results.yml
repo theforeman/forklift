@@ -1,0 +1,13 @@
+---
+- name: 'Find sosreport file'
+  find:
+    paths: "{{ sosreport_output_dir }}"
+    patterns: "sosreport*"
+    recurse: no
+  register: sosreport_files
+
+- name: 'Fetch sosreport'
+  fetch:
+    src: "{{ item.path }}"
+    dest: "{{ sosreport_local_dir }}"
+  with_items: "{{ sosreport_files.files }}"
