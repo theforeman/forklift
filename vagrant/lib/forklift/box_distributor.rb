@@ -95,7 +95,7 @@ module Forklift
     end
 
     def create_domain(box)
-      box['domain'] || @settings['domain'] || "#{`hostname -s`.strip}.example.com"
+      box['domain'] || @settings['domain'] || "#{`hostname -s`.strip.downcase}.example.com"
     end
 
     def configure_nfs(config, box)
