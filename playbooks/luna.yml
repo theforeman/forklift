@@ -16,5 +16,13 @@
       - "--enable-foreman-proxy-plugin-discovery"
       - "--enable-foreman-proxy-plugin-ansible"
       - "--enable-foreman-proxy-plugin-openscap"
+      - "--enable-foreman-cli-discovery"
+      - "--enable-foreman-cli-openscap"
+      - "--enable-foreman-cli-remote-execution"
+      - "--enable-foreman-cli-tasks"
+      - "--enable-foreman-cli-templates"
+    foreman_installer_additional_packages:
+      - tfm-rubygem-foreman_virt_who_configure
+      - tfm-rubygem-hammer_cli_foreman_virt_who_configure
   roles:
     - role: katello
