@@ -34,7 +34,6 @@ COPY container-assets/start_foreman.sh /usr/bin/start_foreman.sh
 COPY container-assets/wait_on_postgres.py /usr/bin/wait_on_postgres.py
 COPY container-assets/create_qpid_queue.sh /usr/bin/create_qpid_queue.sh
 
-RUN yum -y reinstall http://koji.katello.org/kojifiles/work/tasks/1420/101420/tfm-rubygem-puma-3.11.4-1.el7.x86_64.rpm
 USER foreman
 
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
