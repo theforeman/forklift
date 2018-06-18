@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: content-server
+  namespace: "{{ project_name }}"
+  labels:
+    app: foreman
+    service: content-server
+spec:
+  template:
+    metadata:
+      labels:
+        app: foreman
+        service: content-server
+    spec:
+      containers:
+        - name: content-server
+          securityContext: {}
+          state: present
+          volumeMounts:
+            - readOnly: true
+              mountPath: /etc/pki/pulp/private
+              name: keys
+            - readOnly: true
+              mountPath: /etc/pki/pulp/certs
+              name: certs
+            - readOnly: false
+              mountPath: /var/lib/pulp
+              name: pulp-data
+            - readOnly: true
+              mountPath: /var/www/html/pub/
+              name: pub-data
+          ports:
+            - protocol: TCP
+              containerPort: 80
+          image: "{{ registry }}/content-server:latest"
+      serviceAccount: anyuid
+      serviceAccountName: anyuid
+      volumes:
+        - secret:
+            items:
+              - path: pulp.key
+                key: pulp.key
+            secretName: keys
+          name: keys
+        - secret:
+            items:
+              - path: ca.crt
+                key: ca.crt
+              - path: pulp.crt
+                key: pulp.crt
+            secretName: certs
+          name: certs
+        - name: pulp-data
+          persistentVolumeClaim:
+            claimName: pulp-data
+        - name: pub-data
+          persistentVolumeClaim:
+            claimName: pub-data
+  replicas: 1
+  strategy:
+    type: Rolling
+    rollingParams:
+      timeoutSeconds: 900

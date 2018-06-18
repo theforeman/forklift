@@ -1,0 +1,8 @@
+---
+- name: project foreman
+  openshift_raw:
+    name: "{{ project_name }}"
+    display_name: Foreman
+    description: Foreman stack
+    state: present
+    kind: Project

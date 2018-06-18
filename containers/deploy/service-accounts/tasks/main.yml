@@ -1,0 +1,28 @@
+---
+- name: Login as system admin
+  command: oc login -u system:admin
+  when: minishift or cluster_up
+
+- name: Add anyuid scc to anyuid service account
+  command: oc adm policy add-scc-to-user anyuid system:serviceaccount:{{ project_name }}:anyuid
+
+- name: Login as developer
+  command: oc login -u developer -p a
+  when: minishift or cluster_up
+
+- name: Ensure on project
+  command: "oc project {{ project_name }}"
+
+- name: anyuid service account
+  k8s_raw:
+    state: present
+    force: false
+    resource_definition:
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: anyuid
+        namespace: "{{ project_name }}"
+
+- name: Allow anyuid service account to create secrets
+  command: oc adm policy add-role-to-user edit -z anyuid

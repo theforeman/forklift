@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: "{{ project_name }}"
+  labels:
+    app: foreman
+    service: mongodb
+spec:
+  selector:
+    app: foreman
+    service: mongodb
+  ports:
+    - protocol: TCP
+      targetPort: 27017
+      name: port-27017-tcp
+      port: 27017

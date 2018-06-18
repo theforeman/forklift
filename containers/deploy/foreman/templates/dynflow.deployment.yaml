@@ -1,0 +1,61 @@
+---
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: dynflow
+  namespace: "{{ project_name }}"
+  labels:
+    app: foreman
+    service: dynflow
+spec:
+  template:
+    metadata:
+      labels:
+        app: foreman
+        service: dynflow
+    spec:
+      containers:
+        - name: dynflow
+          securityContext: {}
+          state: present
+          volumeMounts:
+            - readOnly: true
+              mountPath: /etc/pki/katello/private
+              name: keys
+            - readOnly: true
+              mountPath: /etc/pki/katello/certs
+              name: certs
+          env:
+            - name: POSTGRES_DB
+              value: foreman
+            - name: POSTGRES_USER
+              value: foreman
+            - name: POSTGRES_PASSWORD
+              value: foreman
+            - name: RAILS_ENV
+              value: production
+          image: "{{ registry }}/dynflow:latest"
+      serviceAccount: anyuid
+      serviceAccountName: anyuid
+      volumes:
+        - secret:
+            items:
+              - path: ca.key
+                key: ca.key
+              - path: pulp-client.key
+                key: pulp-client.key
+            secretName: keys
+          name: keys
+        - secret:
+            items:
+              - path: ca.crt
+                key: ca.crt
+              - path: pulp-client.crt
+                key: pulp-client.crt
+            secretName: certs
+          name: certs
+  replicas: 1
+  strategy:
+    type: Rolling
+    rollingParams:
+      timeoutSeconds: 900

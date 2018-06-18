@@ -1,0 +1,14 @@
+---
+- name: qpid service
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.service.yaml') | from_yaml }}"
+  with_items:
+    - qpid
+
+- name: qpid deployment
+  openshift_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
+  with_items:
+    - qpid

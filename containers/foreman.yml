@@ -7,70 +7,24 @@
     cluster_up: false
     pulp_worker_count: 2
     registry: quay.io/foreman
-    foreman_providers: false
-  tasks:
-    - set_fact:
-        deployment_state: present
-      tags:
-        - restart
-        - start
-        - stop
-    - set_fact:
-        deployment_state: absent
-      tags:
-        - destroy
-
+    deployment_state: present
+  pre_tasks:
     - set_fact:
         project_name: "{{ project_name | default('foreman') }}"
-      tags:
-        - always
 
     - set_fact:
         application_hostname: "{{ application_hostname | default('') }}"
-      tags:
-        - always
     - shell: minishift ip
       register: minishift_ip
       when: minishift == true
-      tags:
-        - always
     - set_fact:
         application_hostname: "foreman.{{ minishift_ip.stdout }}.nip.io"
       when: application_hostname == '' and minishift == true and cluster_up == false
-      tags:
-        - always
     - set_fact:
         application_hostname: "foreman.{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.nip.io"
       when: application_hostname == '' and cluster_up == true and minishift == false
-      tags:
-        - always
-
-    - import_tasks: deploy/project.yml
-
-    - import_tasks: deploy/service_accounts.yml
-
-    - import_tasks: deploy/foreman/persistent_volume_claims.yml
-    - import_tasks: deploy/postgres/persistent_volume_claims.yml
-    - import_tasks: deploy/pulp/persistent_volume_claims.yml
-
-    - import_tasks: deploy/foreman/jobs.yml
-
-    - import_tasks: deploy/foreman/config-maps.yml
-
-    - import_tasks: deploy/candlepin/services.yml
-    - import_tasks: deploy/foreman-proxy/services.yml
-    - import_tasks: deploy/foreman/services.yml
-    - import_tasks: deploy/postgres/services.yml
-    - import_tasks: deploy/pulp/services.yml
-    - import_tasks: deploy/puppet/services.yml
-    - import_tasks: deploy/qpid/services.yml
-
-    - import_tasks: deploy/candlepin/deployments.yml
-    - import_tasks: deploy/foreman-proxy/deployments.yml
-    - import_tasks: deploy/foreman/deployments.yml
-    - import_tasks: deploy/postgres/deployments.yml
-    - import_tasks: deploy/pulp/deployments.yml
-    - import_tasks: deploy/puppet/deployments.yml
-    - import_tasks: deploy/qpid/deployments.yml
-
-    - import_tasks: deploy/foreman/routes.yml
+  roles:
+    - project
+    - service-accounts
+    - foreman
+    - foreman-proxy
