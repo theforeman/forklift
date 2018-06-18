@@ -5,7 +5,6 @@
 
 katello-installer*
 foreman-installer*
-puppet-*
 .idea
 repo
 

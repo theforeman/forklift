@@ -1,0 +1,40 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: certificates
+  namespace: "{{ project_name }}"
+  labels:
+    app: foreman
+    service: certificates
+spec:
+  template:
+    metadata:
+      labels:
+        app: foreman
+        service: client
+    spec:
+      containers:
+        - name: certificates
+          securityContext: {}
+          state: present
+          volumeMounts:
+            - readOnly: false
+              mountPath: /var/www/html/pub/
+              name: pub-data
+          command:
+            - ansible-playbook
+          args:
+            - build.yml
+            - deploy.yml
+          image: "{{ registry }}/certificates:latest"
+          env:
+            - name: APPLICATION_HOSTNAME
+              value: "{{ application_hostname }}"
+      serviceAccount: anyuid
+      serviceAccountName: anyuid
+      volumes:
+        - name: pub-data
+          persistentVolumeClaim:
+            claimName: pub-data
+      restartPolicy: Never

@@ -41,6 +41,6 @@
   gather_facts: no
   tasks:
     - name: 'Deploy to Openshift'
-      command: 'ansible-playbook -l localhost foreman.yml --tags start'
+      command: 'ansible-playbook -l localhost foreman.yml'
       args:
         chdir: "{{ working_dir }}"

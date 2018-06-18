@@ -1,0 +1,49 @@
+---
+- name: Create Foreman persistent volume claim
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml') | from_yaml }}"
+  with_items:
+    - pub-data
+
+- name: Create Foreman config maps
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.config-map.yaml') | from_yaml }}"
+  with_items:
+    - httpd
+
+- name: Create Foreman jobs
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.job.yaml') | from_yaml }}"
+  with_items:
+    - certificates
+
+- name: Create Foreman service
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.service.yaml') | from_yaml }}"
+  with_items:
+    - foreman
+    - httpd
+    - memcache
+
+- name: Create Foreman deployment
+  openshift_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
+  with_items:
+    - foreman
+    - dynflow
+    - memcache
+    - httpd
+
+- name: Create Foreman routes
+  openshift_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.route.yaml') | from_yaml }}"
+  with_items:
+    - foreman-https
+    - foreman-http-pub
+    - foreman-http-pulp

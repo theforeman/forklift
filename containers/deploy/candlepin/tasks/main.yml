@@ -1,0 +1,14 @@
+---
+- name: Create Candlepin service
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.service.yaml') | from_yaml }}"
+  with_items:
+    - candlepin
+
+- name: Create Candlepin deployment
+  openshift_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
+  with_items:
+    - candlepin

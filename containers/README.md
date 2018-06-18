@@ -51,7 +51,7 @@ Set the context for the Openshift client to talk to minishift:
 
 Once minishift is up and running, the application can be deployed. This is done by running a playbook:
 
-    ansible-playbook foreman.yml --tags start
+    ansible-playbook foreman.yml
 
 The deployment takes a while the first time so be patient. The health and status of the deployment can be checked by running:
 

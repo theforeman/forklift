@@ -1,0 +1,7 @@
+---
+dependencies:
+  - {role: postgres}
+  - {role: puppet}
+  - {role: pulp}
+  - {role: candlepin}
+  - {role: qpid}

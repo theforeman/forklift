@@ -1,0 +1,21 @@
+---
+- name: Create MongoDB persistent volume claim
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml') | from_yaml }}"
+  with_items:
+    - mongodb
+
+- name: Create MongoDB service
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.service.yaml') | from_yaml }}"
+  with_items:
+    - mongodb
+
+- name: Create MongoDB deployment
+  openshift_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
+  with_items:
+    - mongodb

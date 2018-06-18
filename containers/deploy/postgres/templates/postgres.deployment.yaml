@@ -1,0 +1,43 @@
+---
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: postgres
+  namespace: "{{ project_name }}"
+  labels:
+    app: foreman
+    service: postgres
+spec:
+  template:
+    metadata:
+      labels:
+        app: foreman
+        service: postgres
+    spec:
+      containers:
+        - name: postgres
+          securityContext: {}
+          state: present
+          env:
+            - name: POSTGRES_DB
+              value: foreman
+            - name: POSTGRES_USER
+              value: foreman
+            - name: POSTGRES_PASS
+              value: foreman
+            - name: PGDATA
+              value: /var/lib/pgsql/data/userdata
+          volumeMounts:
+            - readOnly: false
+              mountPath: /var/lib/pgsql/data
+              name: postgres-data
+          image: ansible/postgresql
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-data
+  replicas: 1
+  strategy:
+    type: Rolling
+    rollingParams:
+      timeoutSeconds: 900
