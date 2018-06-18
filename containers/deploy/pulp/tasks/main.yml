@@ -1,0 +1,29 @@
+---
+- name: pulp persistent volume claim
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml') | from_yaml }}"
+  with_items:
+    - pulp-data
+    - puppet-data
+
+- name: pulp service
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.service.yaml') | from_yaml }}"
+  with_items:
+    - pulp
+    - content-server
+
+- name: pulp deployment
+  openshift_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
+  with_items:
+    - pulp
+    - pulp-worker
+    - pulp-celerybeat
+    - pulp-resource-manager
+    - pulp-streamer
+    - squid
+    - content-server

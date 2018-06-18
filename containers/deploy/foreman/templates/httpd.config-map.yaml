@@ -1,0 +1,85 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "httpd-configs"
+  namespace: "{{ project_name }}"
+data:
+  application.conf: |
+    # Timeout: The number of seconds before receives and sends time out.
+    Timeout 120
+    RewriteEngine On
+    Options SymLinksIfOwnerMatch
+    Listen 443
+    <VirtualHost *:443>
+      RequestHeader set X_FORWARDED_PROTO 'https'
+
+      ## Proxy rules
+      ProxyRequests Off
+      ProxyPreserveHost Off
+
+      ProxyPass /pulp https://content-server/pulp retry=0
+      ProxyPassReverse /pulp https://content-server/pulp
+
+      ProxyPass /pub https://content-server/pub retry=0
+      ProxyPassReverse /pub https://content-server/pub
+
+      ProxyPass / http://foreman:8080/ retry=0
+      ProxyPassReverse / http://foreman:8080/
+
+      ## Server aliases
+      ServerAlias foreman
+
+      ## SSL directives
+      SSLEngine on
+      SSLCertificateFile      "/etc/pki/katello/certs/server.crt"
+      SSLCertificateKeyFile   "/etc/pki/katello/private/server.key"
+      SSLVerifyClient         optional
+      SSLCACertificateFile    "/etc/pki/katello/certs/katello-default-ca.crt"
+      SSLVerifyDepth          3
+      SSLOptions +StdEnvVars
+
+      # SSL Proxy directives
+      # TODO: Potentially turn these Checks back on
+      SSLProxyEngine On
+      SSLProxyCheckPeerCN off
+      SSLProxyCheckPeerName off
+
+      ## Custom fragment
+      <LocationMatch /rhsm|/katello/api>
+      # if ssl_client_certa is present set the header, otherwise don't override
+      # a reverse proxy may already be sending the cert through this header
+      SetEnvIf SSL_CLIENT_CERT "^..*" client_cert_present=1
+      RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s" env=!client_cert_present
+      SSLVerifyClient optional
+      SSLRenegBufferSize 16777216
+      SSLVerifyDepth 2
+
+      # report to CLI and RHSM nicely when Katello is down
+      ErrorDocument 500 '{"displayMessage": "Internal error, contact administrator", "errors": ["Internal error, contact administrator"], "status": "500" }'
+      ErrorDocument 503 '{"displayMessage": "Service unavailable or restarting, try later", "errors": ["Service unavailable or restarting, try later"], "status": "503" }'
+      </LocationMatch>
+
+      # Ensures httpd stdout/stderr are seen by 'docker logs'.
+      ErrorLog  "| /usr/bin/tee /proc/1/fd/2 /var/log/httpd/ssl_error_log"
+      CustomLog "| /usr/bin/tee /proc/1/fd/1 /var/log/httpd/ssl_access_log" common
+    </VirtualHost>
+
+    <VirtualHost *:80>
+      ## Proxy rules
+      ProxyRequests Off
+      ProxyPreserveHost On
+
+      ProxyPass /pulp http://content-server:80/pulp retry=0
+      ProxyPassReverse /pulp http://content-server:80/pulp
+
+      ProxyPass /pub http://content-server:80/pub retry=0
+      ProxyPassReverse /pub http://content-server:80/pub
+
+      ## Server aliases
+      ServerAlias foreman
+
+      # Ensures httpd stdout/stderr are seen by 'docker logs'.
+      ErrorLog  "| /usr/bin/tee /proc/1/fd/2 /var/log/httpd/error_log"
+      CustomLog "| /usr/bin/tee /proc/1/fd/1 /var/log/httpd/access_log" common
+    </VirtualHost>
