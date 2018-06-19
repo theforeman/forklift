@@ -7,15 +7,20 @@
   roles:
     - role: libvirt
     - role: vagrant
+    - role: epel_repositories
 
 - hosts: all
   become: true
   tasks:
-    - name: install git
-      yum:
-        name: git
-        state: present
-    - name: clone forklift
+    - name: 'Install ansible'
+      package:
+        name: 'ansible'
+        state: 'present'
+    - name: 'Install git'
+      package:
+        name: 'git'
+        state: 'present'
+    - name: 'Clone Forklift'
       git:
         repo: 'http://github.com/theforeman/forklift'
-        dest: ./forklift
+        dest: './forklift'
