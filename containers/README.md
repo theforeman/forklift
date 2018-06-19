@@ -22,8 +22,8 @@ This quickstart guide requires that the following are installed already:
 
  * [Ansible 2.5+](http://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
  * [Minishift](https://docs.openshift.org/latest/minishift/getting-started/installing.html)
-
-Note that the special version of the OpenShift python client is needed for this [fix](https://github.com/openshift/openshift-restclient-python/pull/166).
+   * Alternatively, minishift can be installed with our playbook: `ansible-playbook tools/install-minishift.yml`
+ * [Openshift Rest Client 6.0+](https://github.com/openshift/openshift-restclient-python)
 
 System Requirements:
 
