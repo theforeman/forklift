@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: true
+  vars:
+    vagrant_libvirt: true
+    vagrant_version: 2.1.1
+  roles:
+    - role: libvirt
+    - role: vagrant
+
+- hosts: all
+  become: true
+  tasks:
+    - name: install git
+      yum:
+        name: git
+        state: present
+    - name: clone forklift
+      git:
+        repo: 'http://github.com/theforeman/forklift'
+        dest: ./forklift
