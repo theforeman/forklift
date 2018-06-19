@@ -4,7 +4,7 @@
     forklift_boxes:
       pipeline-katello-nightly-centos7:
         box: centos7
-        memory: 4680
+        memory: 8192
       pipeline-proxy-nightly-centos7:
         box: centos7
         memory: 3072
