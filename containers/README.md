@@ -37,7 +37,7 @@ The minishift setup requires some customization due to resource requirements. Ru
 
 A playbook is also provided that can be used:
 
-    ansible-playbook tools/minishift-start.yml
+    ansible-playbook -l localhost tools/minishift-start.yml
 
 Ensure you login to minishift to start:
 
