@@ -8,3 +8,8 @@
   include_role:
     name: "hammer_tests"
   when: foreman_testing_hammer_tests
+
+- name: "Run robottelo tests"
+  include_role:
+    name: "robottelo"
+  when: foreman_testing_robottelo_tests
