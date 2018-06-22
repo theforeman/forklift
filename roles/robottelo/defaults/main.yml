@@ -23,4 +23,5 @@ robottelo_test_path:
 robottelo_test_arguments:
   - tests/foreman/endtoend/test_api_endtoend.py
 robottelo_hostname: "{{ ansible_fqdn }}"
-robottelo_ssh_key: /root/.ssh/id_rsa
+robottelo_ssh_username: root
+robottelo_ssh_key: "/root/.ssh/id_rsa"
