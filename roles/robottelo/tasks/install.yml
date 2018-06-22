@@ -1,0 +1,27 @@
+---
+- name: Install packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - gcc
+    - git
+    - libffi-devel
+    - openssl-devel
+    - rh-python36-python-devel
+    - rh-python36-python-virtualenv
+
+- name: Clone robottelo
+  git:
+    repo: "{{ robottelo_url }}"
+    dest: "{{ robottelo_directory }}"
+    update: yes
+    force: yes
+    version: "{{ robottelo_version }}"
+
+- name: Install requirements
+  pip:
+    requirements: "{{ robottelo_directory }}/requirements.txt"
+    virtualenv: "{{ robottelo_virtualenv_path }}"
+    virtualenv_command: /opt/rh/rh-python36/root/bin/virtualenv
+    chdir: "{{ robottelo_directory }}"

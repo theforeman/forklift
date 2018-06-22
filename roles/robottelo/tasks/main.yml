@@ -1,44 +1,6 @@
 ---
 - include_tasks: ssh.yml
-
-- name: Install packages
-  package:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - gcc
-    - git
-    - libffi-devel
-    - openssl-devel
-    - python-devel
-    - python-pip
-    - python-virtualenv
-
-- name: Clone robottelo
-  git:
-    repo: "{{ robottelo_url }}"
-    dest: "{{ robottelo_directory }}"
-    update: yes
-    force: yes
-    version: "{{ robottelo_version }}"
-
-- name: Update setuptools
-  pip:
-    name: setuptools
-    state: latest
-    virtualenv: "{{ robottelo_virtualenv_path }}"
-
-- name: Upgrade pip in the virtualenv
-  pip:
-    name: pip
-    state: latest
-    virtualenv: "{{ robottelo_virtualenv_path }}"
-
-- name: Install requirements
-  pip:
-    requirements: "{{ robottelo_directory }}/requirements.txt"
-    virtualenv: "{{ robottelo_virtualenv_path }}"
-    chdir: "{{ robottelo_directory }}"
+- include_tasks: install.yml
 
 - name: robottelo properties file
   shell: cp robottelo.properties.sample robottelo.properties
@@ -46,20 +8,25 @@
     chdir: "{{ robottelo_directory }}"
 
 - name: Set robottelo hostname
-  lineinfile:
-    dest: "{{ robottelo_directory }}/robottelo.properties"
-    regexp: "^hostname="
-    line: "hostname={{ robottelo_hostname }}"
-    state: present
-    backrefs: yes
+  ini_file:
+    path: "{{ robottelo_directory }}/robottelo.properties"
+    section: server
+    option: hostname
+    value: "{{ robottelo_hostname }}"
 
-- name: Set robottelo SSH
-  lineinfile:
-    dest: "{{ robottelo_directory }}/robottelo.properties"
-    regexp: "^ssh_key="
-    line: "ssh_key={{ robottelo_ssh_key }}"
-    state: present
-    backrefs: yes
+- name: Set robottelo SSH key
+  ini_file:
+    path: "{{ robottelo_directory }}/robottelo.properties"
+    section: server
+    option: ssh_key
+    value: "{{ robottelo_ssh_key }}"
+
+- name: Set robottelo SSH username
+  ini_file:
+    path: "{{ robottelo_directory }}/robottelo.properties"
+    section: server
+    option: ssh_username
+    value: "{{ robottelo_ssh_username }}"
 
 - name: Set robottelo logging
   replace:
