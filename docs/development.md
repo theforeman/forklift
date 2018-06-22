@@ -53,9 +53,14 @@ vagrant up centos7-devel
 The box can now be accessed via ssh and the Rails server started directly (this assumes you are connecting as the default `vagrant` user):
 
 ```sh
+cd forklift
+vagrant ssh centos7-devel -- -L3000:localhost:3000
 vagrant ssh centos7-devel
 cd foreman
-bundle exec foreman start
+rake permissions:reset
+npm install
+rake webpack:compile
+bundle exec foreman start -p 3000
 ```
 
 ### Webpack dev server
