@@ -4,8 +4,11 @@
   args:
     creates: "{{ robottelo_ssh_key }}"
 
+- name: 'Get public key'
+  command: cat {{ robottelo_ssh_key }}.pub
+  register: robottelo_public_key
+
 - name: 'Add ssh key to authorized_keys'
-  copy:
-    remote_src: true
-    src: "{{ robottelo_ssh_key }}"
-    dest: /root/.ssh/authorized_keys
+  authorized_key:
+    key: "{{ robottelo_public_key.stdout }}"
+    user: "{{ robottelo_ssh_username }}"
