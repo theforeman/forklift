@@ -118,7 +118,7 @@
     --product="CentOS"
     --content-type="yum"
     --name "EPEL 7"
-    --url "http://download.fedoraproject.org/pub/epel/7/x86_64"
+    --url "https://dl.fedoraproject.org/pub/epel/7/x86_64"
     --download-policy {{ katello_provisioning_download_policy }}
     --organization "{{ katello_provisioning_organization }}"
   when: katello_epel_repo.stderr.find('not found') != -1
