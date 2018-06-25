@@ -1,3 +1,8 @@
+- name: "Install git"
+  package:
+    name: 'git'
+    state: 'present'
+
 - name: Install reviewer tool from git
   git:
     repo: "{{ reviewer_install_repo }}"
