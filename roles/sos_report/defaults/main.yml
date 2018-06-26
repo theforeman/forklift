@@ -1,4 +1,4 @@
 ---
 sosreport_fetch: true
 sosreport_output_dir: '/root'
-sosreport_local_dir: './debug'
+sosreport_local_dir: '/tmp/debug'
