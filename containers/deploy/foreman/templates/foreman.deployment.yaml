@@ -1,23 +1,24 @@
 ---
-apiVersion: v1
-kind: DeploymentConfig
+apiVersion: apps/v1beta1
+kind: Deployment
 metadata:
   name: foreman
   namespace: "{{ project_name }}"
   labels:
     app: foreman
-    service: foreman
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foreman
   template:
     metadata:
       labels:
         app: foreman
-        service: foreman
     spec:
       containers:
         - name: foreman
           securityContext: {}
-          state: present
           volumeMounts:
             - readOnly: true
               mountPath: /etc/pki/katello/private
@@ -61,8 +62,3 @@ spec:
                 key: pulp-client.crt
             secretName: certs
           name: certs
-  replicas: 1
-  strategy:
-    type: Rolling
-    rollingParams:
-      timeoutSeconds: 900

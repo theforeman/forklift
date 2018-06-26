@@ -1,0 +1,10 @@
+---
+- hosts: all
+  gather_facts: yes
+  tasks:
+    - name: "Start minikube"
+      command: minikube start --memory 10240 --cpus 4 --vm-driver kvm2
+
+    - name: "Enable ingress addon"
+      command: minikube addons enable ingress
+

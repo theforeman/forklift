@@ -30,7 +30,7 @@
     - memcache
 
 - name: Create Foreman deployment
-  openshift_raw:
+  k8s_raw:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
   with_items:
@@ -47,3 +47,12 @@
     - foreman-https
     - foreman-http-pub
     - foreman-http-pulp
+  when: openshift
+
+- name: Create Foreman ingress
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.ingress.yaml') | from_yaml }}"
+  with_items:
+    - foreman-https
+  when: kubernetes

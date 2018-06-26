@@ -4,12 +4,28 @@
   connection: local
   vars:
     minishift: true
+    minikube: false
+    openshift: "{{ minishift }}"
+    kubernetes: "{{ minikube }}"
     cluster_up: false
-    pulp_worker_count: 2
+    pulpworkercount: 3
     registry: quay.io/foreman
     deployment_state: present
   pre_tasks:
-    - set_fact:
+    - name: 'Set openshift false if minikube'
+      set_fact:
+        minishift: false
+        openshift: false
+      when: minikube
+
+    - name: 'Set kubernetes false if minishift'
+      set_fact:
+        minikube: false
+        kubernetes: false
+      when: minishift
+
+    - name: 'Set project name'
+      set_fact:
         project_name: "{{ project_name | default('foreman') }}"
 
     - set_fact:
@@ -23,8 +39,13 @@
     - set_fact:
         application_hostname: "foreman.{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.nip.io"
       when: application_hostname == '' and cluster_up == true and minishift == false
+
+    - name: Login as developer
+      command: oc login -u developer -p a
+      when: minishift or cluster_up
   roles:
     - project
     - service-accounts
+    - pulp
     - foreman
     - foreman-proxy

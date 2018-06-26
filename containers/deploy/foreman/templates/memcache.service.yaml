@@ -5,12 +5,10 @@ metadata:
   name: memcached
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: memcached
+    app: memcached
 spec:
   selector:
-    app: foreman
-    service: memcached
+    app: memcached
   ports:
     - protocol: TCP
       targetPort: 11211

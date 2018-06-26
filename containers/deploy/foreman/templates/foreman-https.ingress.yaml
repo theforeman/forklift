@@ -1,0 +1,20 @@
+---
+apiVersion: v1beta1
+kind: Ingress
+metadata:
+  name: foreman-https
+  namespace: "{{ project_name }}"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  backend:
+    serviceName: httpd
+    servicePort: 443
+  rules:
+  - host: "{{ application_hostname }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: httpd
+          servicePort: 443

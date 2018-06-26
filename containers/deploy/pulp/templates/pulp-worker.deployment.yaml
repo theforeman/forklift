@@ -1,25 +1,25 @@
 ---
-apiVersion: v1
-kind: DeploymentConfig
+apiVersion: apps/v1beta1
+kind: Deployment
 metadata:
   name: pulp-worker
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: pulp-worker
+    app: pulp-worker
 spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pulp-worker
   template:
     metadata:
       labels:
-        app: foreman
-        service: pulp-worker
+        app: pulp-worker
     spec:
       serviceAccount: anyuid
       serviceAccountName: anyuid
       containers:
         - name: pulp-worker
-          securityContext: {}
-          state: present
           volumeMounts:
             - readOnly: false
               mountPath: /var/lib/pulp
@@ -35,8 +35,3 @@ spec:
         - name: puppet-data
           persistentVolumeClaim:
             claimName: puppet-data
-  replicas: "{{ pulp_worker_count }}"
-  strategy:
-    type: Rolling
-    rollingParams:
-      timeoutSeconds: 900

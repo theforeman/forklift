@@ -1,0 +1,22 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: register
+  namespace: "{{ project_name }}"
+  labels:
+    app: register
+spec:
+  template:
+    metadata:
+      labels:
+        app: register
+    spec:
+      containers:
+        - name: register
+          securityContext: {}
+          state: present
+          command:
+            - /usr/bin/register.sh
+          image: "{{ registry }}/foreman-proxy:latest"
+      restartPolicy: Never

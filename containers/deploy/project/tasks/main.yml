@@ -1,8 +1,17 @@
 ---
-- name: Create project foreman
+- name: Create Foreman project
   openshift_raw:
     name: "{{ project_name }}"
     display_name: Foreman
     description: Foreman stack
     state: present
     kind: Project
+  when: openshift
+
+- name: Create Foreman namespace
+  k8s_raw:
+    kind: Namespace
+    api_version: v1
+    name: "{{ project_name }}"
+    state: "{{ deployment_state }}"
+  when: kubernetes

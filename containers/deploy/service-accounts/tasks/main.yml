@@ -5,6 +5,7 @@
 
 - name: Add anyuid scc to anyuid service account
   command: oc adm policy add-scc-to-user anyuid system:serviceaccount:{{ project_name }}:anyuid
+  when: minishift or cluster_up
 
 - name: Login as developer
   command: oc login -u developer -p a
@@ -12,6 +13,7 @@
 
 - name: Ensure on project
   command: "oc project {{ project_name }}"
+  when: minishift or cluster_up
 
 - name: Create anyuid service account
   k8s_raw:
@@ -24,5 +26,66 @@
         name: anyuid
         namespace: "{{ project_name }}"
 
-- name: Allow anyuid service account to create secrets
-  command: oc adm policy add-role-to-user edit -z anyuid
+- name: Create Role for secret read
+  k8s_raw:
+    state: present
+    resource_definition:
+      kind: Role
+      apiVersion: v1
+      metadata:
+        name: secret-reader
+        namespace: "{{ project_name }}"
+      rules:
+        - apiGroups: [""]
+          resources: ["secrets"]
+          verbs: ["get", "list"]
+
+- name: Create Role for secret edit
+  k8s_raw:
+    state: present
+    resource_definition:
+      kind: Role
+      apiVersion: v1
+      metadata:
+        name: secret-editor
+        namespace: "{{ project_name }}"
+      rules:
+        - apiGroups: [""]
+          resources: ["secrets"]
+          verbs: ["create", "patch"]
+
+- name: Add secret-reader to anyuid
+  k8s_raw:
+    state: present
+    resource_definition:
+      apiVersion: v1
+      kind: RoleBinding
+      metadata:
+        name: secret-reader-binding
+        namespace: "{{ project_name }}"
+      roleRef:
+        kind: Role
+        name: secret-reader
+      subjects:
+        - kind: ServiceAccount
+          name: anyuid
+          namespace: "{{ project_name }}"
+  when: minishift or minikube or cluster_up
+
+- name: Add secret-editor to anyuid
+  k8s_raw:
+    state: present
+    resource_definition:
+      apiVersion: v1
+      kind: RoleBinding
+      metadata:
+        name: secret-editor-binding
+        namespace: "{{ project_name }}"
+      roleRef:
+        kind: Role
+        name: secret-editor
+      subjects:
+        - kind: ServiceAccount
+          name: anyuid
+          namespace: "{{ project_name }}"
+  when: minishift or minikube or cluster_up

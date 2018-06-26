@@ -1,0 +1,44 @@
+---
+- hosts: all
+  gather_facts: no
+  vars:
+    minikube_version: v0.28.0
+    bin_dir: /usr/local/bin
+  tasks:
+    - name: 'Setup kubectl repository'
+      become: true
+      yum_repository:
+        name: Kubernetes
+        description: Kubernetes
+        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+        enabled: yes
+        gpgcheck: yes
+        gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+    - name: 'Install kubectl'
+      become: true
+      package:
+        name: kubectl
+        state: present
+
+    - name: 'Download Minikube'
+      get_url:
+        url: "https://storage.googleapis.com/minikube/releases/{{ minikube_version }}/minikube-linux-amd64"
+        dest: /tmp
+
+    - name: 'Copy minishift to bin_dir'
+      become: true
+      copy:
+        src: "/tmp/minikube-linux-amd64"
+        dest: "{{ bin_dir }}/minikube"
+        remote_src: true
+
+    - name: 'Set file permissions'
+      become: true
+      file:
+        state: file
+        path: "{{ bin_dir }}/minikube"
+        mode: 755
+
+
+

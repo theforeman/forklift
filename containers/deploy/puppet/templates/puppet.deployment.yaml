@@ -1,23 +1,24 @@
 ---
-apiVersion: v1
-kind: DeploymentConfig
+apiVersion: apps/v1beta1
+kind: Deployment
 metadata:
   name: puppet
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: puppet
+    app: puppet
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: puppet
   template:
     metadata:
       labels:
-        app: foreman
-        service: puppet
+        app: puppet
     spec:
       containers:
         - name: puppet
           securityContext: {}
-          state: present
           volumeMounts:
             - readOnly: false
               mountPath: /etc/puppet
@@ -29,8 +30,3 @@ spec:
         - name: puppet-data
           persistentVolumeClaim:
             claimName: puppet-data
-  replicas: 1
-  strategy:
-    type: Rolling
-    rollingParams:
-      timeoutSeconds: 900

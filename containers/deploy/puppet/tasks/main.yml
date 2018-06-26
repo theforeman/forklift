@@ -7,7 +7,7 @@
     - puppet
 
 - name: Create Puppet deployment
-  openshift_raw:
+  k8s_raw:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
   with_items:
