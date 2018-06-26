@@ -70,7 +70,7 @@ This use case assumes that you are on a box that has SSH access to the target bo
 
 For a release version in production:
 
-    ansible-playbook -l <target-host> playbooks/katello.yml -e foreman_repositories_version=1.14 -e katello_repositories_version=3.3
+    ansible-playbook -l <target-host> playbooks/katello.yml -e foreman_repositories_version=1.17 -e katello_repositories_version=3.6
 
 For nightly production:
 
@@ -90,7 +90,7 @@ After installing a Katello server, you could then spin up a Capsule with the ass
 
 For a release version in production:
 
-    ansible-playbook -l localhost playbooks/katello.yml -e foreman_repositories_version=1.14 -e katello_repositories_version=3.3
+    ansible-playbook -l localhost playbooks/katello.yml -e foreman_repositories_version=1.17 -e katello_repositories_version=3.6
 
 For nightly production:
 
