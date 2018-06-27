@@ -22,4 +22,5 @@ dependencies:
       - "--foreman-proxy-tftp true"
       - "--foreman-proxy-tftp-managed false"
       - "--enable-foreman-compute-libvirt"
+      - "{{ foreman_provisioning_installer_options }}"
   - role: foreman_provisioning_infrastructure
