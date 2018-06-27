@@ -25,7 +25,7 @@ boxes:
     libvirt: http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-Vagrant-Libvirt.box
 
   centos7-fips:
-    box_name: 'daviddavis/centos7-fips'
+    box_name: 'pulp/centos7-fips'
     pty: true
     scenarios:
       - foreman
