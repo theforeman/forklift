@@ -10,9 +10,6 @@
   command: oc login -u developer -p a
   when: minishift or cluster_up
 
-- name: Ensure on project
-  command: "oc project {{ project_name }}"
-
 - name: anyuid service account
   k8s_raw:
     state: present
