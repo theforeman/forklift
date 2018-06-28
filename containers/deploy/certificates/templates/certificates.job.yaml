@@ -5,36 +5,32 @@ metadata:
   name: certificates
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: certificates
+    app: certificates
 spec:
   template:
     metadata:
       labels:
-        app: foreman
-        service: client
+        app: certificates
     spec:
+      restartPolicy: Never
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
       containers:
         - name: certificates
-          securityContext: {}
-          state: present
-          volumeMounts:
-            - readOnly: false
-              mountPath: /var/www/html/pub/
-              name: pub-data
+          image: "{{ registry }}/certificates:latest"
           command:
             - ansible-playbook
           args:
             - build.yml
             - deploy.yml
-          image: "{{ registry }}/certificates:latest"
+          volumeMounts:
+            - readOnly: false
+              mountPath: /var/www/html/pub/
+              name: pub-data
           env:
             - name: APPLICATION_HOSTNAME
               value: "{{ application_hostname }}"
-      serviceAccount: "{{ project_name }}-anyuid"
-      serviceAccountName: "{{ project_name }}-anyuid"
       volumes:
         - name: pub-data
           persistentVolumeClaim:
             claimName: pub-data
-      restartPolicy: Never

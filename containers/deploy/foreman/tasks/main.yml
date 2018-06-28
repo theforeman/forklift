@@ -1,24 +1,10 @@
 ---
-- name: foreman persistent volume claim
-  k8s:
-    state: "{{ deployment_state }}"
-    definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml') | from_yaml }}"
-  with_items:
-    - pub-data
-
 - name: foreman config maps
   k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.config-map.yaml') | from_yaml }}"
   with_items:
     - httpd
-
-- name: foreman jobs
-  k8s:
-    state: "{{ deployment_state }}"
-    definition: "{{ lookup('template', 'templates/' + item + '.job.yaml') | from_yaml }}"
-  with_items:
-    - certificates
 
 - name: foreman service
   k8s:
