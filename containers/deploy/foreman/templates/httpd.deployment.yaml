@@ -64,6 +64,6 @@ spec:
               name: certs
           lifecycle:
             postStart:
-              _exec:
+              exec:
                 command:
                   - "/usr/bin/save-container-environment"
