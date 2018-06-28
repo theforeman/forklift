@@ -1,0 +1,14 @@
+---
+- name: foreman persistent volume claim
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml') | from_yaml }}"
+  with_items:
+    - pub-data
+
+- name: certificate job
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.job.yaml') | from_yaml }}"
+  with_items:
+    - certificates
