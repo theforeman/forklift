@@ -1,6 +1,6 @@
 ---
 - name: project foreman
-  openshift_raw:
+  k8s:
     state: present
     definition:
       apiVersion: project.openshift.io/v1
