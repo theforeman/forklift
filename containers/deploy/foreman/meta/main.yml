@@ -1,7 +1,7 @@
 ---
 dependencies:
-  - {role: postgres}
-  - {role: puppet}
-  - {role: pulp}
-  - {role: candlepin}
-  - {role: qpid}
+  - {role: postgres, when: ('postgres' in enabled_services)}
+  - {role: puppet, when: ('puppet' in enabled_services)}
+  - {role: pulp, when: ('pulp' in enabled_services)}
+  - {role: candlepin, when: ('candlepin' in enabled_services)}
+  - {role: qpid, when: ('qpid' in enabled_services)}
