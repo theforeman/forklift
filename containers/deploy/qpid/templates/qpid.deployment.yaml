@@ -19,8 +19,8 @@ spec:
           securityContext: {}
           state: present
           image: "{{ registry }}/qpid:latest"
-      serviceAccount: anyuid
-      serviceAccountName: anyuid
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
   replicas: 1
   strategy:
     type: Rolling

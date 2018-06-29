@@ -19,8 +19,8 @@ spec:
         app: foreman
         service: candlepin
     spec:
-      serviceAccount: anyuid
-      serviceAccountName: anyuid
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
       containers:
         - name: candlepin
           securityContext: {}

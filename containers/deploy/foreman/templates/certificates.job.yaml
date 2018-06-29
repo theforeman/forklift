@@ -31,8 +31,8 @@ spec:
           env:
             - name: APPLICATION_HOSTNAME
               value: "{{ application_hostname }}"
-      serviceAccount: anyuid
-      serviceAccountName: anyuid
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
       volumes:
         - name: pub-data
           persistentVolumeClaim:

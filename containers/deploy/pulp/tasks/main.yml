@@ -45,8 +45,8 @@
               app: foreman
               service: pulp-worker
           spec:
-            serviceAccount: anyuid
-            serviceAccountName: anyuid
+            serviceAccount: "{{ project_name }}-anyuid"
+            serviceAccountName: "{{ project_name }}-anyuid"
             containers:
               - name: pulp-worker
                 securityContext: {}
