@@ -13,7 +13,6 @@
   with_items:
     - foreman
     - httpd
-    - memcached
 
 - name: foreman deployment
   k8s:
@@ -22,7 +21,6 @@
   with_items:
     - foreman
     - dynflow
-    - memcached
     - httpd
 
 - name: foreman routes
