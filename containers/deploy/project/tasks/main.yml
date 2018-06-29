@@ -1,8 +1,13 @@
 ---
-- name: project foreman
-  openshift_raw:
-    name: "{{ project_name }}"
-    display_name: Foreman
-    description: Foreman stack
-    state: present
-    kind: Project
+- name: project foreman (workaround for https://github.com/ansible/ansible/issues/42116)
+  shell: oc new-project '{{ project_name }}' --description="Foreman Stack" --display-name="Foreman" || oc get project '{{ project_name }}'
+#   k8s:
+#     state: present
+#     definition:
+#       apiVersion: project.openshift.io/v1
+#       kind: Project
+#       metadata:
+#         name: "{{ project_name }}"
+#         annotations:
+#           openshift.io/display-name: Foreman
+#           openshift.io/description: Foreman stack

@@ -20,7 +20,7 @@ This guide assumes that you are in the `containers/` folder for all operations.
 
 This quickstart guide requires that the following are installed already:
 
- * [Ansible 2.5+](http://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+ * [Ansible 2.6+](http://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
  * [Minishift](https://docs.openshift.org/latest/minishift/getting-started/installing.html)
    * Alternatively, minishift can be installed with our playbook: `ansible-playbook tools/install-minishift.yml`
  * [Openshift Rest Client 6.0+](https://github.com/openshift/openshift-restclient-python)

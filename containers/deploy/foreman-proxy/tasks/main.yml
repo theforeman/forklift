@@ -1,13 +1,13 @@
 ---
 - name: foreman proxy service
-  k8s_raw:
+  k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.service.yaml') | from_yaml }}"
   with_items:
     - foreman-proxy
 
 - name: foreman proxy deployment
-  openshift_raw:
+  k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
   with_items:

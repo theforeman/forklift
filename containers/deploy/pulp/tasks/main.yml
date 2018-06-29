@@ -1,6 +1,6 @@
 ---
 - name: pulp persistent volume claim
-  k8s_raw:
+  k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml') | from_yaml }}"
   with_items:
@@ -8,7 +8,7 @@
     - puppet-data
 
 - name: pulp service
-  k8s_raw:
+  k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.service.yaml') | from_yaml }}"
   with_items:
@@ -16,14 +16,59 @@
     - content-server
 
 - name: pulp deployment
-  openshift_raw:
+  k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
   with_items:
     - pulp
-    - pulp-worker
     - pulp-celerybeat
     - pulp-resource-manager
     - pulp-streamer
     - squid
     - content-server
+
+- name: Create pulp deployment (workaround for https://github.com/ansible/ansible/issues/40185)
+  k8s:
+    state: "{{ deployment_state }}"
+    definition:
+      apiVersion: v1
+      kind: DeploymentConfig
+      metadata:
+        name: pulp-worker
+        namespace: "{{ project_name }}"
+        labels:
+          app: foreman
+          service: pulp-worker
+      spec:
+        template:
+          metadata:
+            labels:
+              app: foreman
+              service: pulp-worker
+          spec:
+            serviceAccount: anyuid
+            serviceAccountName: anyuid
+            containers:
+              - name: pulp-worker
+                securityContext: {}
+                state: present
+                volumeMounts:
+                  - readOnly: false
+                    mountPath: /var/lib/pulp
+                    name: pulp-data
+                  - readOnly: false
+                    mountPath: /etc/puppet
+                    name: puppet-data
+                image: "{{ registry }}/pulp-worker:latest"
+            volumes:
+              - name: pulp-data
+                persistentVolumeClaim:
+                  claimName: pulp-data
+              - name: puppet-data
+                persistentVolumeClaim:
+                  claimName: puppet-data
+        replicas: "{{ pulp_worker_count }}"
+        strategy:
+          type: Rolling
+          rollingParams:
+            timeoutSeconds: 900

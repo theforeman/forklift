@@ -1,20 +1,20 @@
 ---
 - name: mongodb persistent volume claim
-  k8s_raw:
+  k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml') | from_yaml }}"
   with_items:
     - mongodb
 
 - name: mongodb service
-  k8s_raw:
+  k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.service.yaml') | from_yaml }}"
   with_items:
     - mongodb
 
 - name: mongodb deployment
-  openshift_raw:
+  k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
   with_items:

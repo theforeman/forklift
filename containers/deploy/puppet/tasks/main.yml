@@ -1,13 +1,13 @@
 ---
 - name: puppet service
-  k8s_raw:
+  k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.service.yaml') | from_yaml }}"
   with_items:
     - puppet
 
 - name: puppet deployment
-  openshift_raw:
+  k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
   with_items:
