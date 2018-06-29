@@ -10,6 +10,7 @@
     deployment_state: present
     project: foreman
     enabled_services:
+      - memcached
       - postgres
       - puppet
       - pulp
