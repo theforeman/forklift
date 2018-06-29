@@ -22,8 +22,8 @@ spec:
             - protocol: TCP
               containerPort: 8751
           image: "{{ registry }}/pulp-streamer:latest"
-      serviceAccount: anyuid
-      serviceAccountName: anyuid
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
   replicas: 1
   strategy:
     type: Rolling

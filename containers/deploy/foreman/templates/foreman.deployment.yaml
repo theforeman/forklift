@@ -42,8 +42,8 @@ spec:
             - protocol: TCP
               containerPort: 8080
           image: "{{ registry }}/foreman:latest"
-      serviceAccount: anyuid
-      serviceAccountName: anyuid
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
       volumes:
         - secret:
             items:

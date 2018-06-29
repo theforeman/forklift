@@ -32,8 +32,8 @@ spec:
               mountPath: /etc/puppet
               name: puppet-data
           image: "{{ registry }}/pulp:latest"
-      serviceAccount: anyuid
-      serviceAccountName: anyuid
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
       volumes:
         - name: keys
           secret:

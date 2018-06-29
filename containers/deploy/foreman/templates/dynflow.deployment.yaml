@@ -35,8 +35,8 @@ spec:
             - name: RAILS_ENV
               value: production
           image: "{{ registry }}/dynflow:latest"
-      serviceAccount: anyuid
-      serviceAccountName: anyuid
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
       volumes:
         - secret:
             items:

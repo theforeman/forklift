@@ -35,8 +35,8 @@ spec:
             - protocol: TCP
               containerPort: 80
           image: "{{ registry }}/content-server:latest"
-      serviceAccount: anyuid
-      serviceAccountName: anyuid
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
       volumes:
         - secret:
             items:

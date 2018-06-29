@@ -23,8 +23,8 @@ spec:
       labels:
         name: "httpd"
     spec:
-      serviceAccount: anyuid
-      serviceAccountName: anyuid
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
       volumes:
         - name: httpd-config
           configMap:
