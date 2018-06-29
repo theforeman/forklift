@@ -1,3 +1,3 @@
 ---
 - name: 'Push image'
-  command: "docker push quay.io/foreman/{{ image }}:latest"
+  command: "docker push {{ registry }}/{{ project }}/{{ image }}:latest"

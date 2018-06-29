@@ -2,11 +2,20 @@
 - hosts: localhost
   gather_facts: no
   vars:
-    registry: quay.io
+    project: foreman
+    registry: "{{ lookup('pipe', 'minishift openshift registry') }}"
   tasks:
+    - name: 'Docker login to openshift registry'
+      shell: "docker login -u developer -p $(oc whoami -t) {{ registry }}"
+
     - set_fact:
         images: ["{{ image }}"]
       when: image is string
+
+    - include_tasks: tasks/build-image.yml
+      with_items: "{{ images }}"
+      loop_control:
+        loop_var: image
 
     - include_tasks: tasks/tag.yml
       with_items: "{{ images }}"

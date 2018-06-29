@@ -5,3 +5,6 @@
     chdir: "../images/{{ image }}"
 
 - include_tasks: tag.yml
+  vars:
+    registry: quay.io
+    project: foreman
