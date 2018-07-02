@@ -20,8 +20,7 @@ spec:
       serviceAccountName: "{{ project_name }}-anyuid"
       containers:
         - name: pulp
-          securityContext: {}
-          state: present
+          image: "{{ registry }}/pulp:latest"
           volumeMounts:
             - readOnly: true
               mountPath: /etc/pki/pulp/private
@@ -35,7 +34,8 @@ spec:
             - readOnly: false
               mountPath: /etc/puppet
               name: puppet-data
-          image: "{{ registry }}/pulp:latest"
+        - name: foreman-proxy
+          image: "{{ registry }}/foreman-proxy:latest"
       volumes:
         - name: keys
           secret:

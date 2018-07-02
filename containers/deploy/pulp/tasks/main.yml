@@ -26,6 +26,13 @@
     - squid
     - content-server
 
+- name: register foreman proxy job
+  k8s:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.job.yaml') | from_yaml }}"
+  with_items:
+    - register
+
 - name: Create pulp deployment (workaround for https://github.com/ansible/ansible/issues/40185)
   k8s:
     state: "{{ deployment_state }}"

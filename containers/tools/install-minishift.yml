@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: no
   vars:
-    minishift_version: 1.16.1
+    minishift_version: 1.21.0
   tasks:
     - name: 'Download Minishift'
       unarchive:
