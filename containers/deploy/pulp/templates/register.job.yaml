@@ -2,22 +2,27 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: foreman-proxy-register
+  name: pulp-foreman-proxy-register
   namespace: "{{ project_name }}"
   labels:
-    app: foreman-proxy-register
+    app: pulp-foreman-proxy-register
 spec:
   template:
     metadata:
       labels:
-        app: foreman-proxy-register
+        app: pulp-foreman-proxy-register
     spec:
       restartPolicy: Never
       serviceAccount: "{{ project_name }}-anyuid"
       serviceAccountName: "{{ project_name }}-anyuid"
       containers:
-        - name: register
+        - name: foreman-proxy-register
           image: "{{ registry }}/foreman-proxy:latest"
           command:
             - ansible-playbook
             - /root/register.yaml
+          env:
+            - name: FOREMAN_PROXY_SERVICE_HOST
+              value: pulp
+            - name: FOREMAN_SERVICE_HOST
+              value: foreman
