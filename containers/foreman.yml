@@ -14,7 +14,6 @@
       - puppet
       - pulp
       - candlepin
-      - qpid
   pre_tasks:
     - set_fact:
         project_name: "{{ project | lower }}"

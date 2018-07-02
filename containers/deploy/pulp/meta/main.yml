@@ -1,4 +1,5 @@
 ---
 dependencies:
+  - {role: puppet}
   - {role: mongodb}
   - {role: qpid}
