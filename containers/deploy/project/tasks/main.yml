@@ -1,6 +1,6 @@
 ---
 - name: project foreman (workaround for https://github.com/ansible/ansible/issues/42116)
-  shell: oc new-project '{{ project_name }}' --description="Foreman Stack" --display-name="Foreman" || oc get project '{{ project_name }}'
+  shell: oc new-project '{{ project_name }}' --description="{{ project_name }} Stack" --display-name="{{ project_name }}" || oc get project '{{ project_name }}'
 #   k8s:
 #     state: present
 #     definition:
