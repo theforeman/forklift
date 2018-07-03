@@ -8,9 +8,10 @@
     pulp_worker_count: 2
     registry: quay.io/foreman
     deployment_state: present
+    project: foreman
   pre_tasks:
     - set_fact:
-        project_name: "{{ project_name | default('foreman') }}"
+        project_name: "{{ project | lower }}"
 
     - set_fact:
         application_hostname: "{{ application_hostname | default('') }}"
@@ -18,10 +19,10 @@
       register: minishift_ip
       when: minishift == true
     - set_fact:
-        application_hostname: "foreman.{{ minishift_ip.stdout }}.nip.io"
+        application_hostname: "{{ project_name }}.{{ minishift_ip.stdout }}.nip.io"
       when: application_hostname == '' and minishift == true and cluster_up == false
     - set_fact:
-        application_hostname: "foreman.{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.nip.io"
+        application_hostname: "{{ project_name }}.{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.nip.io"
       when: application_hostname == '' and cluster_up == true and minishift == false
   roles:
     - project
