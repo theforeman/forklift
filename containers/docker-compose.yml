@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  foreman:
+    build: images/foreman
+    ports:
+      - 80
+    links:
+      - memcache
+      - postgres
+
+  memcache:
+    image: memcached
+
+  postgres:
+    image: postgres:9.6
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./.data/db:/var/lib/postgresql/data/pgdata:z
