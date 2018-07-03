@@ -63,6 +63,13 @@ Once services are up and the health check returns OK for all services the applic
 
 Using the entry under HOST/PORT you can now browse to `https://<hostname>` and access the Foreman web UI.
 
+
+#### Enabling specific services
+
+By default the deployment playbook will deploy Foreman, PostgreSQL, Puppet, Pulp, Candlepin, Qpid. You can specify which of these components you want to deploy with the `enabled_services` variable. For example, to deploy only Foreman, PostgreSQL, and Puppet, run:
+
+    ansible-playbook foreman.yml -e enabled_services=postgres,puppet
+
 ### Troubleshooting
 
 #### UI Not Accessible

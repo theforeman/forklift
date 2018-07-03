@@ -5,7 +5,6 @@
     definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml') | from_yaml }}"
   with_items:
     - pulp-data
-    - puppet-data
 
 - name: pulp service
   k8s:

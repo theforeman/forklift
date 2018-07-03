@@ -1,4 +1,11 @@
 ---
+- name: puppet persistent volume claim
+  k8s_raw:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml') | from_yaml }}"
+  with_items:
+    - puppet-data
+
 - name: puppet service
   k8s:
     state: "{{ deployment_state }}"

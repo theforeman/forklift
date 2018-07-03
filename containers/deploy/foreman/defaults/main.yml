@@ -1,0 +1,3 @@
+---
+enabled_services:
+- postgres

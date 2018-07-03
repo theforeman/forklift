@@ -9,6 +9,11 @@
     registry: quay.io/foreman
     deployment_state: present
     project: foreman
+    enabled_services:
+      - postgres
+      - puppet
+      - pulp
+      - candlepin
   pre_tasks:
     - set_fact:
         project_name: "{{ project | lower }}"
