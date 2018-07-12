@@ -8,6 +8,12 @@ Assuming you want vagrant with libvirt:
 dnf -y install libvirt-daemon-kvm ansible vagrant-libvirt
 systemctl enable --now libvirtd
 ```
+Add your user to the libvirt group to avoid password prompts on running vagrant commands with libvirt provider:
+
+```bash
+sudo gpasswd -a ${USER} libvirt
+newgrp libvirt
+```
 
 ## Centos 7
 
