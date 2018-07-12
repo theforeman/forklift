@@ -8,8 +8,8 @@
     repo: "deb http://stagingdeb.theforeman.org {{ ansible_distribution_release }} theforeman-{{ foreman_repositories_version }}"
     state: present
 
-- name: 'Install Foreman plugins repository'
+- name: 'Setup Foreman plugins repository'
   apt_repository:
     # No plugins staging repository
     repo: "deb http://deb.theforeman.org plugins {{ foreman_repositories_version }}"
-    state: present
+    state: "{{ foreman_repositories_plugins | ternary('present', 'absent') }}"
