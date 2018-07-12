@@ -1,3 +1,4 @@
 ---
 foreman_repositories_version: nightly
 foreman_repositories_environment: release
+foreman_repositories_plugins: true
