@@ -253,13 +253,20 @@
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: katello_provisioning_hostgroup_katello_centos.stderr.find('not found') != -1
 
+- name: 'set parameter for puppet repo on client'
+  shell: >
+        {{ katello_provisioning_hammer }} hostgroup set-parameter
+        --hostgroup "Katello CentOS 7"
+        --name {{ katello_provisioning_puppet_client_repo_param }}
+        --value true
+  when: katello_provisioning_puppet_client_repo_param != ''
 
-- name: 'set enable-puppet4 parameter'
+- name: 'add activation key to Katello CentOS 7 host group'
   shell: >
       {{ katello_provisioning_hammer }} hostgroup set-parameter
       --hostgroup "Katello CentOS 7"
-      --name enable-puppet4
-      --value true
+      --name kt_activation_keys
+      --value "CentOS 7"
 
 # Lifecycle environments
 - name: 'find lifecycle-environment Development'
