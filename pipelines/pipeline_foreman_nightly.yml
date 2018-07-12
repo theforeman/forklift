@@ -1,0 +1,39 @@
+- hosts: localhost
+  vars:
+    forklift_name: pipeline-foreman-nightly
+    forklift_boxes:
+      pipeline-foreman-nightly-centos7:
+        box: centos7
+        memory: 4680
+  roles:
+    - forklift
+
+- hosts:
+  - pipeline-foreman-nightly-centos7
+  become: yes
+  vars:
+    foreman_installer_options_internal_use_only:
+      # Because we don't have a correct reverse DNS in our CI
+      - "--skip-checks-i-know-better"
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+      - "--puppet-server-max-active-instances 1"
+      - "--puppet-server-jvm-min-heap-size 1G"
+      - "--puppet-server-jvm-max-heap-size 1G"
+    foreman_repositories_version: nightly
+    foreman_repositories_environment: staging
+    bats_tests:
+      - "fb-test-foreman.bats"
+      - "fb-test-puppet.bats"
+      - "fb-finish.bats"
+  roles:
+    - umask
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - disable_firewall
+    - haveged
+    - swapfile
+    - foreman_installer
+    - foreman_testing
