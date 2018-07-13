@@ -1,0 +1,23 @@
+---
+- name: 'Creating signing request'
+  command: >
+    openssl req -new
+      -newkey rsa:2048
+      -nodes
+      -out    "{{ custom_certificates_ca_directory_requests }}/{{ custom_certificates_hostname }}.csr"
+      -keyout "{{ custom_certificates_ca_directory_keys }}/{{ custom_certificates_hostname }}.key"
+      -subj "/C=US/ST=North Carolina/L=Raleigh/O=Foreman/OU=Katello/CN={{ custom_certificates_hostname }}"
+  args:
+    creates: "{{ custom_certificates_ca_directory_requests }}/{{ custom_certificates_hostname }}.csr"
+
+- name: 'Sign signing request'
+  command: >
+      openssl ca
+        -config "{{ custom_certificates_ca_directory }}/openssl.cnf"
+        -batch
+        -policy signing_policy
+        -extensions signing_req
+        -out "{{ custom_certificates_ca_directory_certs }}/{{ custom_certificates_hostname }}.crt"
+        -infiles "{{ custom_certificates_ca_directory_requests }}/{{ custom_certificates_hostname }}.csr"
+  args:
+      creates: "{{ custom_certificates_ca_directory_certs }}/{{ custom_certificates_hostname }}.crt"

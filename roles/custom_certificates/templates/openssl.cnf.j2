@@ -75,3 +75,16 @@ nsCertType              = client
 keyUsage                = digitalSignature, keyEncipherment
 extendedKeyUsage        = clientAuth
 nsComment               = "OpenSSL Certificate for SSL Client"
+
+[ signing_policy ]
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+
+[ signing_req ]
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid,issuer
