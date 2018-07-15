@@ -5,12 +5,10 @@ metadata:
   name: candlepin
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: candlepin
+    app: candlepin
 spec:
   selector:
-    app: foreman
-    service: candlepin
+    app: candlepin
   ports:
     - protocol: TCP
       targetPort: 8080

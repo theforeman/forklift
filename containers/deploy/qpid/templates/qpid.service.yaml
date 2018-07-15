@@ -5,12 +5,10 @@ metadata:
   name: qpid
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: qpid
+    app: qpid
 spec:
   selector:
-    app: foreman
-    service: qpid
+    app: qpid
   ports:
     - protocol: TCP
       targetPort: 5672

@@ -1,18 +1,20 @@
 ---
 apiVersion: v1
-kind: DeploymentConfig
+kind: Deployment
 metadata:
   name: content-server
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: content-server
+    app: content-server
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: content-server
   template:
     metadata:
       labels:
-        app: foreman
-        service: content-server
+        app: content-server
     spec:
       containers:
         - name: content-server
@@ -58,8 +60,3 @@ spec:
         - name: pub-data
           persistentVolumeClaim:
             claimName: pub-data
-  replicas: 1
-  strategy:
-    type: Rolling
-    rollingParams:
-      timeoutSeconds: 900

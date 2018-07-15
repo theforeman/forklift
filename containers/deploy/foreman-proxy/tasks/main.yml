@@ -12,3 +12,10 @@
     definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
   with_items:
     - foreman-proxy
+
+- name: Create Foreman Proxy jobs
+  k8s:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.job.yaml') | from_yaml }}"
+  with_items:
+    - register

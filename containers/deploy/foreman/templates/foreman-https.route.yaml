@@ -5,8 +5,7 @@ metadata:
   name: foreman-https
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: httpd
+    app: httpd
 spec:
   host: "{{ application_hostname }}"
   to:

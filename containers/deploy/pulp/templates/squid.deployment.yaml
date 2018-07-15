@@ -1,18 +1,20 @@
 ---
 apiVersion: v1
-kind: DeploymentConfig
+kind: Deployment
 metadata:
   name: squid
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: squid
+    app: squid
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: squid
   template:
     metadata:
       labels:
-        app: foreman
-        service: squid
+        app: squid
     spec:
       containers:
         - name: squid
@@ -24,8 +26,3 @@ spec:
           image: "{{ registry }}/squid:latest"
       serviceAccount: "{{ project_name }}-anyuid"
       serviceAccountName: "{{ project_name }}-anyuid"
-  replicas: 1
-  strategy:
-    type: Rolling
-    rollingParams:
-      timeoutSeconds: 900

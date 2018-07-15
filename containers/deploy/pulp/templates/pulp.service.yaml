@@ -5,12 +5,10 @@ metadata:
   name: pulp
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: pulp
+    app: pulp
 spec:
   selector:
-    app: foreman
-    service: pulp
+    app: pulp
   ports:
     - protocol: TCP
       targetPort: 443
