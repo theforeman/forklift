@@ -1,6 +1,10 @@
 ---
 - hosts: all
   gather_facts: yes
+  vars:
+    disk: 50GB
+    memory: 10GB
+    cpus: 4
   tasks:
     - name: "Start minishift"
-      command: minishift start --memory 10GB --cpus 4 --iso-url centos
+      command: "minishift start --disk-size {{ disk }} --memory {{ memory }} --cpus {{ cpus }} --iso-url centos"
