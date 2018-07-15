@@ -1,27 +1,20 @@
 ---
 apiVersion: v1
-kind: DeploymentConfig
+kind: Deployment
 metadata:
   name: httpd
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: httpd
+    app: httpd
 spec:
-  selector:
-    name: httpd
-  strategy:
-    type: Recreate
-    recreateParams:
-      timeoutSeconds: 1200
-  triggers:
-      - type: ConfigChange
   replicas: 1
+  selector:
+    matchLabels:
+      app: httpd
   template:
     metadata:
-      name: "httpd"
       labels:
-        name: "httpd"
+        app: httpd
     spec:
       serviceAccount: "{{ project_name }}-anyuid"
       serviceAccountName: "{{ project_name }}-anyuid"
@@ -47,7 +40,9 @@ spec:
         - name: httpd
           image: "manageiq/httpd:latest"
           command:
-            - /usr/sbin/init
+            - httpd
+            - "-D"
+            - FOREGROUND
           ports:
             - containerPort: 80
               protocol: TCP
@@ -62,8 +57,3 @@ spec:
             - readOnly: true
               mountPath: /etc/pki/katello/certs
               name: certs
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - "/usr/bin/save-container-environment"

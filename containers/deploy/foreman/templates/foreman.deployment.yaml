@@ -1,19 +1,23 @@
 ---
 apiVersion: v1
-kind: DeploymentConfig
+kind: Deployment
 metadata:
   name: foreman
   namespace: "{{ project_name }}"
   labels:
     app: foreman
-    service: foreman
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foreman
   template:
     metadata:
       labels:
         app: foreman
-        service: foreman
     spec:
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
       containers:
         - name: foreman
           securityContext: {}
@@ -42,8 +46,6 @@ spec:
             - protocol: TCP
               containerPort: 8080
           image: "{{ registry }}/foreman:latest"
-      serviceAccount: "{{ project_name }}-anyuid"
-      serviceAccountName: "{{ project_name }}-anyuid"
       volumes:
         - secret:
             items:
@@ -61,8 +63,3 @@ spec:
                 key: pulp-client.crt
             secretName: certs
           name: certs
-  replicas: 1
-  strategy:
-    type: Rolling
-    rollingParams:
-      timeoutSeconds: 900

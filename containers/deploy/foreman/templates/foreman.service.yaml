@@ -6,11 +6,9 @@ metadata:
   namespace: "{{ project_name }}"
   labels:
     app: foreman
-    service: foreman
 spec:
   selector:
     app: foreman
-    service: foreman
   ports:
     - protocol: TCP
       targetPort: 8080

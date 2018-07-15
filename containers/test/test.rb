@@ -24,11 +24,13 @@ while waiting < 900
   puts ''
   puts 'Checking ping status'
   begin
+    pp "curl https://#{foreman_route}/katello/api/v2/ping -k"
     output = JSON.parse(`curl https://#{foreman_route}/katello/api/v2/ping -k 2> /dev/null`)
     pp output
     up = true
     break if output['services'].all? { |service, status| status['status'] == 'ok' }
   rescue
+    pp output
   end
 
   waiting += 10

@@ -5,12 +5,10 @@ metadata:
   name: puppet
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: puppet
+    app: puppet
 spec:
   selector:
-    app: foreman
-    service: puppet
+    app: puppet
   ports:
     - protocol: TCP
       targetPort: 8140

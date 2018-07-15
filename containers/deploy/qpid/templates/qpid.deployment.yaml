@@ -1,28 +1,23 @@
 ---
 apiVersion: v1
-kind: DeploymentConfig
+kind: Deployment
 metadata:
   name: qpid
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: qpid
+    app: qpid
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qpid
   template:
     metadata:
       labels:
-        app: foreman
-        service: qpid
+        app: qpid
     spec:
-      containers:
-        - name: qpid
-          securityContext: {}
-          state: present
-          image: "{{ registry }}/qpid:latest"
       serviceAccount: "{{ project_name }}-anyuid"
       serviceAccountName: "{{ project_name }}-anyuid"
-  replicas: 1
-  strategy:
-    type: Rolling
-    rollingParams:
-      timeoutSeconds: 900
+      containers:
+        - name: qpid
+          image: "{{ registry }}/qpid:latest"

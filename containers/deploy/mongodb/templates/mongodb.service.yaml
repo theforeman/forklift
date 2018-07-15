@@ -5,12 +5,10 @@ metadata:
   name: mongodb
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: mongodb
+    app: mongodb
 spec:
   selector:
-    app: foreman
-    service: mongodb
+    app: mongodb
   ports:
     - protocol: TCP
       targetPort: 27017

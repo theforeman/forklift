@@ -5,12 +5,10 @@ metadata:
   name: foreman-proxy
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: foreman-proxy
+    app: foreman-proxy
 spec:
   selector:
-    app: foreman
-    service: foreman-proxy
+    app: foreman-proxy
   ports:
     - protocol: TCP
       targetPort: 8080

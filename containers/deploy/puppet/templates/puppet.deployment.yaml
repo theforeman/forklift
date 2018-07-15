@@ -1,18 +1,20 @@
 ---
 apiVersion: v1
-kind: DeploymentConfig
+kind: Deployment
 metadata:
   name: puppet
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: puppet
+    app: puppet
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: puppet
   template:
     metadata:
       labels:
-        app: foreman
-        service: puppet
+        app: puppet
     spec:
       containers:
         - name: puppet
@@ -29,8 +31,3 @@ spec:
         - name: puppet-data
           persistentVolumeClaim:
             claimName: puppet-data
-  replicas: 1
-  strategy:
-    type: Rolling
-    rollingParams:
-      timeoutSeconds: 900

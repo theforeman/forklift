@@ -1,19 +1,23 @@
 ---
 apiVersion: v1
-kind: DeploymentConfig
+kind: Deployment
 metadata:
   name: dynflow
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: dynflow
+    app: dynflow
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dynflow
   template:
     metadata:
       labels:
-        app: foreman
-        service: dynflow
+        app: dynflow
     spec:
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
       containers:
         - name: dynflow
           securityContext: {}
@@ -35,8 +39,6 @@ spec:
             - name: RAILS_ENV
               value: production
           image: "{{ registry }}/dynflow:latest"
-      serviceAccount: "{{ project_name }}-anyuid"
-      serviceAccountName: "{{ project_name }}-anyuid"
       volumes:
         - secret:
             items:
@@ -54,8 +56,3 @@ spec:
                 key: pulp-client.crt
             secretName: certs
           name: certs
-  replicas: 1
-  strategy:
-    type: Rolling
-    rollingParams:
-      timeoutSeconds: 900

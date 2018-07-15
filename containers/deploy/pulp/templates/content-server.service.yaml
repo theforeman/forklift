@@ -5,12 +5,10 @@ metadata:
   name: content-server
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: content-server
+    app: content-server
 spec:
   selector:
-    app: foreman
-    service: content-server
+    app: content-server
   ports:
     - protocol: TCP
       targetPort: 80

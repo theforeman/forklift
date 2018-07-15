@@ -1,23 +1,20 @@
 ---
 apiVersion: v1
-kind: DeploymentConfig
+kind: Deployment
 metadata:
   name: candlepin
   labels:
-      app: foreman
-      service: candlepin
+    app: candlepin
   namespace: "{{ project_name }}"
 spec:
   replicas: 1
-  strategy:
-    rollingParams:
-      timeoutSeconds: 900
-    type: Rolling
+  selector:
+    matchLabels:
+      app: candlepin
   template:
     metadata:
       labels:
-        app: foreman
-        service: candlepin
+        app: candlepin
     spec:
       serviceAccount: "{{ project_name }}-anyuid"
       serviceAccountName: "{{ project_name }}-anyuid"

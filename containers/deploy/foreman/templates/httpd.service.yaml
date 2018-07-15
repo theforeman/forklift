@@ -5,8 +5,7 @@ metadata:
   name: httpd
   namespace: "{{ project_name }}"
   labels:
-    app: foreman
-    service: httpd
+    app: httpd
 spec:
   ports:
     - name: http
@@ -16,4 +15,4 @@ spec:
       port: 443
       targetPort: 443
   selector:
-    name: httpd
+    app: httpd
