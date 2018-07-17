@@ -8,3 +8,13 @@ boxes:
     ansible:
       variables:
         ansible_python_interpreter: /usr/bin/python3
+
+  ubuntu1804:
+    box_name: 'generic/ubuntu1804'
+    image_name: !ruby/regexp '/Ubuntu.*18\.04.*PVHVM/'
+    pty: true
+    scenarios:
+      - foreman
+    ansible:
+      variables:
+        ansible_python_interpreter: /usr/bin/python3
