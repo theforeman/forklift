@@ -15,9 +15,9 @@ This covers how to setup and configure a development environment using the Forkl
 
 ## Development Environment Deployment
 
-A Katello development environment can be deployed on CentOS 6 or 7. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin. There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
+A Katello development environment can be deployed on CentOS 7. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin. There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
 
-  1. Copy `boxes.d/99-local.yaml.example` to `boxes.d/99-local.yaml`. If you already have a `99-local.yaml`, you can copy the entries in `99-local.yaml.example` to your `99-local.yaml`.
+  1. Copy `vagrant/boxes.d/99-local.yaml.example` to `vagrant/boxes.d/99-local.yaml`. If you already have a `99-local.yaml`, you can copy the entries in `99-local.yaml.example` to your `99-local.yaml`.
   2. Now, replace `<my_github_username>` with your github username
   3. Fill in any ansible options, examples:
     * `foreman_devel_github_push_ssh`: Force git to push over SSH when HTTPS remote is configured
@@ -58,9 +58,7 @@ cd foreman
 bundle exec foreman start
 ```
 
-### Webpack dev server
-
-When using the dev server you need to accept the self-signed certificate. You should go to `https://centos7-devel.example.com:3808` (or your equivalent) and add an exception for this certificate. 
+The Foreman UI is then accessible on `https://centos7-devel.<hostname>.example.com/`, where `<hostname>` is the shortname of your workstation.  While using the webpack dev server, you must use HTTPS and the hostname, as well as visiting `https://centos7-devel.<hostname>.example.com:3808` to accept the self-signed certificate.
 
 ### Reviewing Pull Requests
 
