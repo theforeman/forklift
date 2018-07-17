@@ -160,7 +160,7 @@ module Forklift
           ansible_provisioner.playbook = playbook
           ansible_provisioner.extra_vars = ansible['variables']
           ansible_provisioner.groups = @ansible_groups
-          ansible_provisioner.verbose = ansible['verbose'] ? ansible['verbose'] : false
+          ansible_provisioner.verbose = ansible['verbose'] || false
         end
       end
     end
