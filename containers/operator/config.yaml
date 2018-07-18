@@ -1,0 +1,6 @@
+---
+- name: Foreman
+  version: v1alpha1
+  group: app.theforeman.org
+  kind: Foreman
+  path: /opt/ansible/roles/playbook.yaml

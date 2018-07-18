@@ -16,7 +16,7 @@ spec:
       serviceAccount: "{{ project_name }}-anyuid"
       serviceAccountName: "{{ project_name }}-anyuid"
       containers:
-        - name: register
+        - name: foreman-proxy-register
           image: "{{ registry }}/foreman-proxy:latest"
           command:
             - ansible-playbook

@@ -1,0 +1,35 @@
+---
+- name: pulp persistent volume claim
+  k8s:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml') | from_yaml }}"
+  with_items:
+    - pulp-data
+
+- name: pulp service
+  k8s:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.service.yaml') | from_yaml }}"
+  with_items:
+    - pulp
+    - content-server
+
+- name: pulp deployment
+  k8s:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml') | from_yaml }}"
+  with_items:
+    - pulp
+    - pulp-celerybeat
+    - pulp-worker
+    - pulp-resource-manager
+    - pulp-streamer
+    - squid
+    - content-server
+
+- name: register foreman proxy job
+  k8s:
+    state: "{{ deployment_state }}"
+    definition: "{{ lookup('template', 'templates/' + item + '.job.yaml') | from_yaml }}"
+  with_items:
+    - register

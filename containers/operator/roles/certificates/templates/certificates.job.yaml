@@ -13,8 +13,7 @@ spec:
         app: certificates
     spec:
       restartPolicy: Never
-      serviceAccount: "{{ project_name }}-anyuid"
-      serviceAccountName: "{{ project_name }}-anyuid"
+      serviceAccountName: "foreman-operator"
       containers:
         - name: certificates
           image: "{{ registry }}/certificates:latest"

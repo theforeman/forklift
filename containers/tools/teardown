@@ -1,0 +1,12 @@
+#!/bin/bash
+
+oc login -u system:admin
+
+oc delete -f deploy/operator.yaml
+oc delete -f deploy/crd.yaml
+oc delete -f deploy/rbac.yaml
+oc delete -f deploy/developer-rbac.yaml
+oc delete serviceaccounts foreman-operator
+oc delete project foreman
+
+oc login -u developer

@@ -1,0 +1,20 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    minishift: false
+    cluster_up: false
+    project_name: "{{ lookup('env', 'WATCH_NAMESPACE') }}"
+    deployment_state: present
+    pulp_worker_count: 2
+    registry: quay.io/foreman
+    enabled_services:
+      - memcached
+      - postgres
+      - puppet
+      - pulp
+      - candlepin
+  roles:
+    - service-accounts
+    - foreman
+    - foreman-proxy
+    - foreman-routes

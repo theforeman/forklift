@@ -1,0 +1,7 @@
+apiVersion: app.theforeman.org/v1alpha1
+kind: Foreman
+metadata:
+  name: "myforeman"
+  namespace: foreman
+spec:
+  application_hostname: "{{ application_hostname }}"

@@ -5,13 +5,28 @@ require 'pp'
 
 `oc project foreman`
 
-routes = JSON.parse(`oc get routes --output json`)
+waiting = 0
+while waiting < 90
+  routes = JSON.parse(`oc get routes --output json`)
+  puts "Routes: #{routes}"
 
-foreman_route = routes['items'].find do |route|
-  route['metadata']['name'] == 'foreman-https'
+  foreman_route = routes['items'].find do |route|
+    route['metadata']['name'] == 'foreman-https'
+  end
+
+  puts "Foreman route: #{foreman_route}"
+  break if foreman_route
+  waiting += 1
 end
 
-abort('No Openshift routes found. Was the service deployed?') if foreman_route.nil?
+if foreman_route.nil?
+  pods = JSON.parse(`oc get pods --output json`)
+  foreman_operator_pod = pods['items'].first['metadata']['name']
+
+  system("oc logs #{foreman_operator_pod}")
+
+  abort('No Openshift routes found. Was the service deployed?')
+end
 
 foreman_route = foreman_route['spec']['host']
 puts "Foreman host at #{foreman_route}"

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+pushd operator
+
+oc login -u developer -p a
+docker login -u developer -p $(oc whoami -t) `minishift openshift registry`
+docker build -t `minishift openshift registry`/foreman/foreman-operator:latest .
+docker push `minishift openshift registry`/foreman/foreman-operator:latest
+
+popd
+
+oc create -f deploy/operator.yaml || true
+oc set image deployment/foreman-operator foreman-operator=`minishift openshift registry`/foreman/foreman-operator:latest
+
+pod=$(oc get pods | grep foreman-operator | grep -v Terminating | awk '{print $1;}')
+echo $pod
+oc delete pods $pod || true
+
+sleep 8
+
+pod=$(oc get pods | grep foreman-operator | grep -v Terminating | awk '{print $1;}')
+echo $pod
+
+oc logs $pod --follow

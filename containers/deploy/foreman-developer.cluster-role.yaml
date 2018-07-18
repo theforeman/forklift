@@ -1,0 +1,12 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: foreman-developer
+rules:
+- apiGroups:
+  - app.theforeman.org
+  resources:
+  - "*"
+  verbs:
+  - "*"

@@ -1,0 +1,14 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: foremans.app.theforeman.org
+spec:
+  group: app.theforeman.org
+  names:
+    kind: Foreman
+    listKind: foremanList
+    plural: foremans
+    singular: foreman
+  scope: Namespaced
+  version: v1alpha1

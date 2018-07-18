@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    minishift: true
+    deployment_state: present
+  tasks:
+    - name: 'Login as system:admin'
+      command: oc login -u system:admin
+      when: minishift or cluster_up
+
+    - name: 'RBAC for Foreman CRD and foreman-operator service account'
+      k8s:
+        state: "{{ deployment_state }}"
+        definition: "{{ lookup('template', '../deploy/rbac.yaml') | from_yaml }}"
+      when: minishift or cluster_up
+
+    - name: 'CRD for Foreman'
+      k8s:
+        state: "{{ deployment_state }}"
+        definition: "{{ lookup('template', '../deploy/crd.yaml') | from_yaml }}"
+      when: minishift or cluster_up
+
+    - name: 'RBAC for developer to manage Foreman CRD'
+      k8s:
+        state: "{{ deployment_state }}"
+        definition: "{{ lookup('template', '../deploy/developer-rbac.yaml') | from_yaml }}"
+      when: minishift or cluster_up
+
+    - name: 'Login as system:admin'
+      command: oc login -u developer
+      when: minishift or cluster_up

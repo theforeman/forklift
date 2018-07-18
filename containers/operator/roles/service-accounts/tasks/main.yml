@@ -1,0 +1,11 @@
+---
+- name: "{{ project_name }}-anyuid service account"
+  k8s_raw:
+    state: present
+    force: false
+    resource_definition:
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: "{{ project_name }}-anyuid"
+        namespace: "{{ project_name }}"

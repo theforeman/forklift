@@ -41,7 +41,7 @@
       when: minishift or cluster_up
 
     - name: Add anyuid scc to foreman-operator
-      command: oc adm policy add-scc-to-user anyuid system:serviceaccount:{{ project_name }}:foreman-operator
+      command: oc adm policy add-scc-to-user anyuid -z foreman-operator
       when: minishift or cluster_up
 
     - name: 'Login as system:admin'

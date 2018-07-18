@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: pulp-worker
+  namespace: "{{ project_name }}"
+  labels:
+    app: pulp-worker
+spec:
+  replicas: {{ pulp_worker_count }}
+  selector:
+    matchLabels:
+      app: pulp-worker
+  template:
+    metadata:
+      labels:
+        app: pulp-worker
+    spec:
+      serviceAccount: "{{ project_name }}-anyuid"
+      serviceAccountName: "{{ project_name }}-anyuid"
+      containers:
+        - name: pulp-worker
+          volumeMounts:
+            - readOnly: false
+              mountPath: /var/lib/pulp
+              name: pulp-data
+            - readOnly: false
+              mountPath: /etc/puppet
+              name: puppet-data
+          image: "{{ registry }}/pulp-worker:latest"
+      volumes:
+        - name: pulp-data
+          persistentVolumeClaim:
+            claimName: pulp-data
+        - name: puppet-data
+          persistentVolumeClaim:
+            claimName: puppet-data

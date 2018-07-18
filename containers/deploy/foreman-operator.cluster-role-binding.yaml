@@ -1,0 +1,13 @@
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: foreman-operator
+subjects:
+- kind: ServiceAccount
+  name: foreman-operator
+  namespace: foreman
+roleRef:
+  kind: ClusterRole
+  name: foreman-operator
+  apiGroup: rbac.authorization.k8s.io

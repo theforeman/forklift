@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foreman-operator
+  namespace: foreman
+  labels:
+    k8s-app: foreman-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: foreman-operator
+  template:
+    metadata:
+      labels:
+        k8s-app: foreman-operator
+    spec:
+      serviceAccountName: foreman-operator
+      containers:
+        - name: foreman-operator
+          image: quay.io/foreman/foreman-operator:latest
+          command:
+            - ansible-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace

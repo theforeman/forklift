@@ -37,7 +37,7 @@ The minishift setup requires some customization due to resource requirements. Ru
 
 A playbook is also provided that can be used:
 
-    ansible-playbook -l localhost tools/minishift-start.yml
+    ansible-playbook tools/minishift-start.yml
 
 Ensure you login to minishift to start:
 
@@ -49,9 +49,24 @@ Set the context for the Openshift client to talk to minishift:
 
 ### Deploy Application
 
+First, create a new project:
+
+    oc new-project foreman
+
+Now login as the system admin to install the RBAC and custom resource definition:
+
+    oc login -u system:admin
+
+    oc create -f deploy/rbac.yaml
+    oc create -f deploy/crd.yaml
+
+For minishift, the developer user needs access to the Foreman custom resource definition:
+
+    oc create -f deploy/developer-rbac.yaml
+
 Once minishift is up and running, the application can be deployed. This is done by running a playbook:
 
-    ansible-playbook foreman.yml
+    ansible-playbook deploy.yaml
 
 The deployment takes a while the first time so be patient. The health and status of the deployment can be checked by running:
 
@@ -69,27 +84,3 @@ Using the entry under HOST/PORT you can now browse to `https://<hostname>` and a
 By default the deployment playbook will deploy Foreman, PostgreSQL, Puppet, Pulp, Candlepin, Qpid. You can specify which of these components you want to deploy with the `enabled_services` variable. For example, to deploy only Foreman, PostgreSQL, and Puppet, run:
 
     ansible-playbook foreman.yml -e enabled_services=postgres,puppet
-
-### Troubleshooting
-
-#### UI Not Accessible
-
-Sometimes when access to the UI fails, this is due to the `httpd` pod starting incorrectly.
-
-##### Fix via UI Console
-
-Browse the the Openshift console found at `https://$(minishift ip):8443/`. Login as `developer` with password `a` and browse to Applications > Pods. Find the httpd pod, select it, click on the Logs tab. If there is no output, browse to Applications > Deployments. Click on the httpd deployment, and click `deploy` in the upper right hand corner. Re-test the health check.
-
-##### Fix via Command Line
-
-The `httpd` container logs can be viewed on the command line. Find the httpd pod first:
-
-    oc get pods
-
-A pod should exist of the format `httpd-<id>`, view the logs:
-
-    oc logs httpd-<id>
-
-If this output is blank, the `httpd` container needs to be restarted:
-
-    oc rollout latest dc/httpd
