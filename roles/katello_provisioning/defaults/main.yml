@@ -5,6 +5,5 @@ katello_provisioning_organization_label: "{{ katello_provisioning_organization|r
 katello_provisioning_location: Default Location
 katello_provisioning_sync_repos: True
 katello_provisioning_download_policy: on_demand
-katello_provisioning_puppet_client_repo_param: enable-puppetlabs-puppet5-repo
 katello_provisioning_installer_options:
  - '--disable-system-checks'

@@ -73,34 +73,41 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_sync_repos
 
-# Puppet 4
-- name: 'find puppet4 repo'
+# Puppet 5
+- name: 'find puppet5 repo'
   shell: >
     {{ katello_provisioning_hammer }} repository info
-    --name "Puppet 4"
+    --name "Puppet 5"
     --product "CentOS"
     --organization "{{ katello_provisioning_organization }}"
   register: katello_puppet_repo
   ignore_errors: True
 
-- name: 'create puppet4 repo'
+- name: 'create puppet5 repo'
   shell: >
     {{ katello_provisioning_hammer }} repository create
     --product="CentOS"
     --content-type="yum"
-    --name "Puppet 4"
-    --url http://yum.puppetlabs.com/el/7/PC1/x86_64
+    --name "Puppet 5"
+    --url https://yum.puppetlabs.com/puppet5/el/7/x86_64/
     --download-policy {{ katello_provisioning_download_policy }}
     --organization "{{ katello_provisioning_organization }}"
   when: katello_puppet_repo.stderr.find('not found') != -1
 
-- name: 'sync the puppet4 repo'
+- name: 'sync the puppet5 repo'
   shell: >
     {{ katello_provisioning_hammer }} repository synchronize
-    --name "Puppet 4"
+    --name "Puppet 5"
     --product "CentOS"
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_sync_repos
+
+- name: 'set enable-puppet5 parameter'
+  shell: >
+    {{ katello_provisioning_hammer }} hostgroup set-parameter
+    --hostgroup "Katello CentOS 7"
+    --name enable-puppet5
+    --value true
 
 # EPEL
 - name: 'find epel repo'
@@ -252,14 +259,6 @@
     --parent 'Base'
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: katello_provisioning_hostgroup_katello_centos.stderr.find('not found') != -1
-
-- name: 'set parameter for puppet repo on client'
-  shell: >
-        {{ katello_provisioning_hammer }} hostgroup set-parameter
-        --hostgroup "Katello CentOS 7"
-        --name {{ katello_provisioning_puppet_client_repo_param }}
-        --value true
-  when: katello_provisioning_puppet_client_repo_param != ''
 
 - name: 'add activation key to Katello CentOS 7 host group'
   shell: >
