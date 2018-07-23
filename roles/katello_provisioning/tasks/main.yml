@@ -102,13 +102,6 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_sync_repos
 
-- name: 'set enable-puppet5 parameter'
-  shell: >
-    {{ katello_provisioning_hammer }} hostgroup set-parameter
-    --hostgroup "Katello CentOS 7"
-    --name enable-puppet5
-    --value true
-
 # EPEL
 - name: 'find epel repo'
   shell: >
@@ -266,6 +259,13 @@
       --hostgroup "Katello CentOS 7"
       --name kt_activation_keys
       --value "CentOS 7"
+
+- name: 'set enable-puppet5 parameter'
+  shell: >
+    {{ katello_provisioning_hammer }} hostgroup set-parameter
+    --hostgroup "Katello CentOS 7"
+    --name enable-puppet5
+    --value true
 
 # Lifecycle environments
 - name: 'find lifecycle-environment Development'
