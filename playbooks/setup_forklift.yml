@@ -11,16 +11,22 @@
 
 - hosts: all
   become: true
+  vars:
+    forklift_url: "https://github.com/theforeman/forklift"
+    forklift_version: master
   tasks:
     - name: 'Install ansible'
       package:
         name: 'ansible'
         state: 'present'
+
     - name: 'Install git'
       package:
         name: 'git'
         state: 'present'
+
     - name: 'Clone Forklift'
       git:
-        repo: 'http://github.com/theforeman/forklift'
+        repo: "{{ forklift_url }}"
+        version: "{{ forklift_version }}"
         dest: './forklift'
