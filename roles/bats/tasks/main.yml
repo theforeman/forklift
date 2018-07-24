@@ -5,13 +5,13 @@
 - name: "install required packages"
   package:
     name: "{{ item }}"
-    state: installed
+    state: present
   with_items: "{{ bats_packages }}"
 
 - name: "Install bats from package"
   package:
     name: "bats"
-    state: installed
+    state: present
   ignore_errors: yes
 
 - name: "Get /usr/bin/bats stat"
