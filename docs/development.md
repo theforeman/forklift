@@ -10,7 +10,6 @@ This covers how to setup and configure a development environment using the Forkl
  * [Hammer Development](#hammer-development)
  * [Capsule Development](#capsule-development)
  * [Client Development](#client-development)
- * [Webpack](#webpack)
  * [Dynflow](#dynflow-development)
 
 ## Development Environment Deployment
@@ -58,7 +57,36 @@ cd foreman
 bundle exec foreman start
 ```
 
-The Foreman UI is then accessible on `https://centos7-devel.<hostname>.example.com/`, where `<hostname>` is the shortname of your workstation.  While using the webpack dev server, you must use HTTPS and the hostname, as well as visiting `https://centos7-devel.<hostname>.example.com:3808` to accept the self-signed certificate.
+### Starting the Development Server
+
+Our backend requires a rails server to be running. We also use a webpack server for the more "modern" parts of our front-end UI.
+[Webpack](https://webpack.js.org/) is a way of bundling up multiple front-end files and assets to a small amount of files to send to the browser. 
+The files that webpack handles are located in `webpack/` directory found in Foreman, Katello,
+and plugin root directories. If you are editing any files in `webpack/` and want to have your changes refresh automatically, you will need a webpack server running.
+
+Because we are using a webpack server in conjunction with a rails server, there are different ways of starting a server depending on your needs and preferences. The following are instructions for starting the server using a base `centos7-devel` box as a starting point.
+
+#### Run a rails and webpack server together using `foreman start`
+- Run `bundle exec foreman start` in `~/foreman`
+- Navigate to `https://centos7-devel.<hostname>.example.com/` where `<hostname>` is the shortname of your hypervisor (machine your VM is running on).
+- Accept the self-signed certs at `https://centos7-devel.<hostname>.example.com:3808`.
+- Everything should be set for you to run `bundle exec foreman start` to start your dev server as needed.
+
+NOTE: The `foreman` in `foreman start` is actually [this gem](https://github.com/ddollar/foreman) and not our `foreman`. It
+doesn't allow STDIN, which means it doesn't support local debugging. To use a debugger with `foreman start`, you can use
+remote debugging with a tool like [pry-remote](https://github.com/Mon-Ouie/pry-remote). There is a helpful blog post about
+remote debugging [here](http://blog.honeybadger.io/remote-debugging-with-byebug-rails-and-pow/) with more information.
+
+#### Run the rails server without a webpack server running
+If you don't need to do any development in the `webpack/` directories, you can turn the webpack server off and run only the rails server if desired.
+
+- Run `foreman-installer --katello-devel-webpack-dev-server false` to disable the webpack server. You can also set this installer option
+in your boxes.yaml entry to configure this on box creation.
+- Start the rails server with `bundle exec foreman start rails` in `~/foreman`
+  - Alternatively, you can start the rails server with `bundle exec rails s`
+
+#### Additional info
+- `foreman start` can be run with `rails` or `webpack` to start just that server: i.e. `bundle exec foreman start rails`. This can be used to start servers separately.
 
 ### Reviewing Pull Requests
 
