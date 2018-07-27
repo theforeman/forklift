@@ -1,0 +1,22 @@
+---
+- name: 'Detect certs generate'
+  command: "which foreman-proxy-certs-generate"
+  ignore_errors: true
+  register: foreman_proxy_certs_generate_exists
+  delegate_to: "{{ foreman_proxy_content_server }}"
+
+- name: 'Generate Certs'
+  command: foreman-proxy-certs-generate --foreman-proxy-fqdn {{ ansible_nodename }} --certs-tar {{ foreman_proxy_content_certs_tar }} {{ foreman_proxy_content_certs_args }}
+  delegate_to: "{{ foreman_proxy_content_server }}"
+  when: foreman_proxy_certs_generate_exists.rc == 0
+
+- name: 'Fetch Certs'
+  delegate_to: "{{ foreman_proxy_content_server }}"
+  fetch:
+    src: "{{ foreman_proxy_content_certs_tar }}"
+    dest: /tmp
+
+- name: 'Copy Certs to Capsule'
+  copy:
+    src: "/tmp/{{ inventory_hostname }}{{ foreman_proxy_content_certs_tar }}"
+    dest: ~/

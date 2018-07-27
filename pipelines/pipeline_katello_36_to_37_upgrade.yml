@@ -31,6 +31,7 @@
     - update_os_packages
     - haveged
     - disable_firewall
+    - foreman_installer
 
 - hosts: pipeline-katello-3.6-3.7-centos7
   become: yes
@@ -75,6 +76,7 @@
   roles:
     - bats
 
+# Upgrade server to 3.7 & Puppet 5
 - hosts: pipeline-katello-3.6-3.7-centos7
   become: true
   vars:
@@ -86,9 +88,12 @@
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
+    puppet_repositories_version: 5
   roles:
+    - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - update_os_packages
     - foreman_installer
 
 - hosts: pipeline-katello-3.6-3.7-centos7
@@ -103,46 +108,26 @@
   roles:
     - bats
 
-# Upgrade to Puppet 5
-# http://projects.theforeman.org/projects/foreman/wiki/Upgrading_from_Puppet_4_to_5#Prepare-And-Run-The-Installer
-- hosts:
-  - pipeline-katello-3.6-3.7-centos7
-  - pipeline-proxy-3.6-3.7-centos7
-  become: true
-  vars:
-    puppet_repositories_version: 5
-  roles:
-    - puppet_repositories
-
-- hosts:
-  - pipeline-katello-3.6-3.7-centos7
-  - pipeline-proxy-3.6-3.7-centos7
-  become: true
-  tasks:
-    - name: 'Update packages'
-      yum:
-        name: '*'
-        state: latest
-
-- hosts: pipeline-katello-3.6-3.7-centos7
-  become: true
-  vars:
-    foreman_installer_scenario: katello
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
-  roles:
-    - foreman_installer
-
+# Upgrade proxy
 - hosts: pipeline-proxy-3.6-3.7-centos7
   become: true
   vars:
     foreman_installer_scenario: foreman-proxy-content
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
+    foreman_proxy_content_upgrade: True
+    foreman_proxy_content_server: pipeline-katello-3.6-3.7-centos7
+    foreman_proxy_content_certs_args: "--certs-update-all"
+    puppet_repositories_version: 5
+    katello_repositories_version: 3.7
+    foreman_repositories_version: 1.18
+    foreman_repositories_environment: staging
+    katello_repositories_environment: staging
   roles:
-    - foreman_installer
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - update_os_packages
+    - foreman_proxy_content
 
-# Validate puppet upgrade
 - hosts: pipeline-katello-3.6-3.7-centos7
   become: true
   vars:
