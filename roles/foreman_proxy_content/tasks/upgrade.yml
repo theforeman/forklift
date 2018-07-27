@@ -1,4 +1,6 @@
 ---
+- include_tasks: certs_generate.yml
+
 - name: 'Run installer upgrade'
   command: >
     foreman-installer
@@ -6,3 +8,7 @@
     --scenario foreman-proxy-content
     --disable-system-checks
     --upgrade
+    --certs-update-all
+    --certs-regenerate=true
+    --certs-deploy=true
+    --foreman-proxy-content-certs-tar="{{ foreman_proxy_content_certs_tar }}"

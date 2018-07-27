@@ -203,6 +203,11 @@ EOF
   tPackageExists walrus-5.21
 }
 
+# it seems walrus lingers around making subsequent runs fail, so lets test package removal!
+@test "package remove (katello-agent)" {
+  timeout 300 hammer host package remove --host $(hostname -f) --packages walrus
+}
+
 @test "add puppet module to content view" {
   repo_id=$(hammer repository list --organization="${ORGANIZATION}" \
     | grep Puppet | cut -d\| -f1 | egrep -i '[0-9]+')
