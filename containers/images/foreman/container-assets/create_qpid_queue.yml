@@ -18,10 +18,11 @@
     - name: "Check for qpid queue"
       command: "qpid-config -b {{ qpid_host }}:{{ qpid_port }} queues katello_event_queue"
       register: queue_exist
+      ignore_errors: true
 
     - name: "Add katello_event_queue"
       command: "qpid-config -b {{ qpid_host }}:{{ qpid_port }} add queue katello_event_queue --durable"
-      when: '"katello_event_queue" not in queue_exist'
+      when: '"katello_event_queue" not in queue_exist.stdout'
 
     - name: "Bind katello_event_queue to specific events"
       command: "qpid-config -b {{ qpid_host }}:{{ qpid_port }} bind event katello_event_queue {{ item }}"
