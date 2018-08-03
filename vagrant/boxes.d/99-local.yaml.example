@@ -45,7 +45,8 @@ katello-client:
   ansible:
     playbook: 'playbooks/katello_client.yml'
     group: 'client'
-    server: 'centos7-devel'
+    variables:
+      katello_client_server: 'centos7-devel'
 
 centos7-katello-bats-ci:
   box: centos7
