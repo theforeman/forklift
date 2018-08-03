@@ -251,32 +251,23 @@ capsule-dev:
 
 ## Client Development
 
-In `99-local.yaml`:
-
-Add your client, replacing 'your-katello-server-name' with your main katello development server name
+`99-local.yaml` defines a `katello-client` box which can be used to register against a Katello instance.
+The following example shows some of the extra values that can be set to control how the client is registered.
 
 ```yaml
-awesome-client:
+katello-client:
   box: centos7
   ansible:
-    group: 'client'
     playbook: 'playbooks/katello_client.yml'
+    group: 'client'
     variables:
-      katello_client_server: 'your-katello-server-name'
+      katello_client_server: 'centos7-devel'
       katello_client_organization: 'Default_Organization'
       katello_client_environment: 'Library'
       katello_client_username: 'admin'
       katello_client_password: 'changeme'
-
+      katello_client_install_agent: True
 ```
-then add
-
-```yaml
-  ansible:
-    group: 'server'
-```
-
-to the main katello server you want the client attached to
 
 ## Dynflow Development
 
