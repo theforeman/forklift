@@ -41,7 +41,34 @@ system("oc get pods")
 abort("Ping failed") unless up
 
 if ARGV[0] == '--smoke'
-  smoke = system("docker run -e FOREMAN_HOSTNAME=#{foreman_route} quay.io/foreman/smoke-tests:latest")
-
-  exit 1 unless smoke
+  Dir.chdir "./foreman-ansible-modules/"
+  system("yum install gcc python-devel -y")
+  system("make test-setup")
+  #system("ansible fixtures -m pip -a 'name=git+https://github.com/SatelliteQE/nailgun.git@master#egg=nailgun'"
+  #system("ansible tests -m pip -a 'name=git+https://github.com/SatelliteQE/nailgun.git@master#egg=nailgun'"
+  MODULES = [
+    'activation_key',
+    'compute_profile',
+    'content_view',
+    'domain',
+    'global_parameter',
+    'job_template',
+    'location',
+    'lifecycle_environment',
+    'operating_system',
+    'organization',
+    'os_default_template',
+    'product',
+    'provisioning_template',
+    'ptable',
+    'redhat_manifest',
+    'repository',
+    'repository_sync',
+    'setting',
+    'sync_plan',
+  ]
+  MODULES.each do |mod|
+    smoke = system("ansible-playbook -e foreman_server_url=https://#{foreman_route} test/test_playbooks/#{mod}.yml")
+    exit 1 unless smoke
+  end
 end

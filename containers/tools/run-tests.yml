@@ -20,6 +20,11 @@
       docker_image:
         name: 'quay.io/foreman/smoke-tests'
 
+    - name: 'Clone foreman-ansible-modules'
+      git:
+        repo: "https://github.com/theforeman/foreman-ansible-modules.git"
+        dest: "{{ working_dir }}/test/foreman-ansible-modules"
+
     - name: 'Run tests'
       shell: "./test.rb --smoke"
       args:
