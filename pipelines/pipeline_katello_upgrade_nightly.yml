@@ -60,8 +60,8 @@
     katello_repositories_version: nightly
     foreman_repositories_version: nightly
     foreman_installer_upgrade: True
-    katello_repositories_environment: release
-    foreman_repositories_environment: release
+    katello_repositories_environment: staging
+    foreman_repositories_environment: staging
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
