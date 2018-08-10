@@ -7,33 +7,43 @@
     remote: upstream
   with_items: "{{ hammer_devel_repositories }}"
 
-- name: 'Check if the fork remotes exist'
+- name: 'Check if the local fork remotes exist'
   shell: "git remote | grep ^{{ hammer_devel_github_fork_remote_name }}$"
   args:
     chdir: ~/{{ item.split('/')[1] }}
   ignore_errors: yes
+  changed_when: False
   with_items: "{{ hammer_devel_repositories }}"
-  register: fork_remotes_exist
+  register: local_fork_remotes_exist
 
-- name: 'Add fork remotes to cloned repositories'
-  command: "git remote add {{ hammer_devel_github_fork_remote_name }} git@github.com:{{ hammer_devel_github_username }}/{{ item.item.split('/')[1] }}.git"
-  when: item.rc != 0
+- name: 'Check the GitHub fork repos exist for missing local fork remotes'
+  shell: "git ls-remote --exit-code -h https://:@github.com/{{ hammer_devel_github_username }}/{{ item.item.split('/')[1] }}"
   args:
     chdir: ~/{{ item.item.split('/')[1] }}
-  with_items: "{{ fork_remotes_exist.results }}"
+  ignore_errors: yes
+  changed_when: False
+  with_items: "{{ local_fork_remotes_exist.results }}"
+  when: item.rc != 0
+  register: github_forks_exist
+
+- name: 'Add local fork remotes to cloned repositories'
+  command: "git remote add {{ hammer_devel_github_fork_remote_name }} git@github.com:{{ hammer_devel_github_username }}/{{ item.item.item.split('/')[1] }}.git"
+  when:
+    - ('skipped' not in item)
+    - item.rc == 0
+  args:
+    chdir: ~/{{ item.item.item.split('/')[1] }}
+  ignore_errors: yes
+  with_items: "{{ github_forks_exist.results }}"
 
 - name: 'Add local gems to Gemfile.local'
   blockinfile:
-    dest: ~/hammer-cli-katello/Gemfile.local
+    dest: ~/hammer-cli-foreman/Gemfile.local
     create: yes
     block: |
       gem 'pry'
       path '../' do
-        gem 'hammer_cli'
-        gem 'hammer_cli_foreman'
-        gem 'hammer_cli_foreman_admin'
-        gem 'hammer_cli_foreman_tasks'
-        gem 'hammer_cli_csv'
+        {{ hammer_devel_local_gems }}
       end
 
 - name: 'Install gem native dependencies'
@@ -44,4 +54,4 @@
   gem: name=bundler state=present
 
 - name: 'Install gems'
-  bundler: chdir=~/hammer-cli-katello state=present executable=~/bin/bundle
+  bundler: chdir=~/hammer-cli-foreman state=present executable=~/bin/bundle
