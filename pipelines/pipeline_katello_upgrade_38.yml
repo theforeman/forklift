@@ -1,0 +1,82 @@
+- hosts: localhost
+  vars:
+    forklift_name: pipeline-upgrade-nightly
+    forklift_boxes:
+      pipeline-upgrade-centos7:
+        box: centos7
+        memory: 6144
+  roles:
+    - forklift
+
+- hosts: pipeline-upgrade-centos7
+  become: yes
+  vars:
+    puppet_repositories_version: 4
+    katello_repositories_version: 3.6
+    foreman_repositories_version: 1.17
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+      - "--disable-system-checks"
+      - "--puppet-server-max-active-instances 1"
+      - "--puppet-server-jvm-min-heap-size 1G"
+      - "--puppet-server-jvm-max-heap-size 1G"
+    foreman_installer_additional_packages:
+      - katello
+  roles:
+    - umask
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - update_os_packages
+    - haveged
+    - disable_firewall
+    - foreman_installer
+
+- hosts: pipeline-upgrade-centos7
+  become: true
+  vars:
+    puppet_repositories_version: 5
+    katello_repositories_version: 3.7
+    foreman_repositories_version: 1.18
+    foreman_installer_upgrade: True
+    foreman_repositories_environment: release
+    katello_repositories_environment: release
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+  roles:
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer
+
+- hosts: pipeline-upgrade-centos7
+  become: yes
+  vars:
+    katello_repositories_version: 3.8
+    foreman_repositories_version: 1.19
+    foreman_installer_upgrade: True
+    katello_repositories_environment: staging
+    foreman_repositories_environment: staging
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+  roles:
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer
+
+- hosts: pipeline-upgrade-centos7
+  become: yes
+  vars:
+    bats_tests:
+      - fb-test-katello.bats
+      - fb-content-katello.bats
+      - fb-destroy-organization.bats
+      - fb-finish.bats
+    roles:
+      - foreman_testing
