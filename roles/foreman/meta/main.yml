@@ -1,5 +1,6 @@
 ---
 dependencies:
+  - role: umask
   - role: selinux
   - role: etc_hosts
   - role: epel_repositories

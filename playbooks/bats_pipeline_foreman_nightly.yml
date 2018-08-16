@@ -15,14 +15,8 @@
       - "fb-test-puppet.bats"
       - "fb-finish.bats"
   roles:
-    - umask
-    - selinux
-    - etc_hosts
-    - epel_repositories
-    - puppet_repositories
-    - foreman_repositories
     - disable_firewall
     - haveged
     - swapfile
-    - foreman_installer
+    - foreman
     - foreman_testing
