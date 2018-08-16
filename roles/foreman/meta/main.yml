@@ -2,6 +2,7 @@
 dependencies:
   - role: umask
   - role: selinux
+  - role: rackspace_hostname
   - role: etc_hosts
   - role: epel_repositories
   - role: puppet_repositories
