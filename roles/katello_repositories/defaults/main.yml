@@ -1,5 +1,5 @@
 ---
 katello_repositories_version: nightly
 katello_repositories_environment: release
-katello_repositories_pulp_version: 2.16
-katello_repositories_pulp_release: stable
+katello_repositories_pulp_version: 2.17
+katello_repositories_pulp_release: beta
