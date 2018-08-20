@@ -42,16 +42,27 @@
     puppet_repositories_version: 5
     katello_repositories_version: 3.8
     foreman_repositories_version: 1.19
-    foreman_installer_upgrade: True
     foreman_repositories_environment: release
     katello_repositories_environment: release
-    foreman_installer_scenario: katello
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
   roles:
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+
+- hosts: pipeline-upgrade-centos7
+  become: true
+  vars:
+    foreman_installer_upgrade: True
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+  pre_tasks:
+    - name: 'Disable gpgcheck'
+      lineinfile:
+        path: /etc/yum.repos.d/foreman-plugins.repo
+        regexp: '^gpgcheck=1'
+        line: 'gpgcheck=0'
+  roles:
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
