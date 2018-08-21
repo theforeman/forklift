@@ -27,7 +27,6 @@
       - "fb-finish.bats"
   roles:
     - disable_firewall
-    - haveged
     - swapfile
     - foreman
     - foreman_testing
