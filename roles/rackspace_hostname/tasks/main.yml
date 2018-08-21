@@ -11,6 +11,8 @@
       package:
         name: xenstore-utils
         state: present
+      # On the Debian Stretch image xe-guest-utilities already provides xenstore-read
+      when: ansible_distribution == 'Ubuntu'
 
     - name: Read the hostname
       command: xenstore-read vm-data/hostname
