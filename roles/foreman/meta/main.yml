@@ -5,6 +5,7 @@ dependencies:
   - role: rackspace_hostname
   - role: etc_hosts
   - role: epel_repositories
+  - role: haveged
   - role: puppet_repositories
   - role: foreman_repositories
   - role: foreman_installer
