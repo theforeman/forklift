@@ -1,0 +1,13 @@
+---
+dependencies:
+  - role: epel_repositories
+    when: server_repositories_epel
+  - role: puppet_repositories
+    when: server_repositories_puppet
+  - role: foreman_repositories
+    when: server_repositories_foreman
+  - role: katello_repositories
+    katello_repositories_environment: "{{ foreman_repositories_environment }}"
+    when: server_repositories_katello
+  - role: ostree_repositories
+    when: server_repositories_ostree
