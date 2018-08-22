@@ -1,25 +1,23 @@
-- name: Ensure the correct hostname with Debian-based on Rackspace
+- name: Check if running on rackspace
+  command: "grep -q 'Provider: Rackspace' /var/log/nova-agent.log"
+  ignore_errors: true
+  register: rackspace_hostname_should_run
+
+- name: Running on Rackspace
   block:
-  - name: Check if running on rackspace
-    command: "grep -q 'Provider: Rackspace' /var/log/nova-agent.log"
-    ignore_errors: true
-    register: rackspace_hostname_should_run
+  - name: Install xenstore-utils
+    package:
+      name: xenstore-utils
+      state: present
+    # On the Debian Stretch image xe-guest-utilities already provides xenstore-read
+    # On CentOS7 it's also already provided
+    when: ansible_distribution == 'Ubuntu'
 
-  - name: Running on Rackspace
-    block:
-    - name: Install xenstore-utils
-      package:
-        name: xenstore-utils
-        state: present
-      # On the Debian Stretch image xe-guest-utilities already provides xenstore-read
-      when: ansible_distribution == 'Ubuntu'
+  - name: Read the hostname
+    command: xenstore-read vm-data/hostname
+    register: rackspace_hostname_desired_name
 
-    - name: Read the hostname
-      command: xenstore-read vm-data/hostname
-      register: rackspace_hostname_desired_name
-
-    - name: Set the hostname based on xenstore
-      command: "hostnamectl set-hostname {{ rackspace_hostname_desired_name.stdout }}"
-      when: ansible_fqdn != rackspace_hostname_desired_name.stdout|trim
-    when: rackspace_hostname_should_run is succeeded
-  when: ansible_os_family == "Debian"
+  - name: Set the hostname based on xenstore
+    command: "hostnamectl set-hostname {{ rackspace_hostname_desired_name.stdout }}"
+    when: ansible_fqdn != rackspace_hostname_desired_name.stdout|trim
+  when: rackspace_hostname_should_run is succeeded

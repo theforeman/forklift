@@ -3,7 +3,6 @@ dependencies:
   - role: umask
   - role: selinux
   - role: myhostname
-  - role: rackspace_hostname
   - role: etc_hosts
   - role: epel_repositories
   - role: haveged
