@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+
+import os
+
+import click
+import requests
+import yaml
+
+@click.command()
+@click.argument('url')
+def download(url):
+    """Simple program to download Jenkins artifacts"""
+    session = requests.Session()
+
+    response = session.get(url + 'api/json')
+    response.raise_for_status()
+    data = response.json()
+
+    artifacts = {artifact['fileName']: artifact['relativePath'] for artifact in data['artifacts']
+                 if artifact['fileName'].endswith('.yaml')}
+
+    for filename, path in artifacts.items():
+        response = session.get(url + 'artifact/' + path)
+        response.raise_for_status()
+        target = os.path.join('vagrant/boxes.d', filename)
+        with open(target, 'wb') as fp:
+            click.echo('Downloading {} to {}'.format(filename, target))
+            fp.write(response.content)
+
+            boxes = yaml.load(response.content)
+            click.echo('Found boxes: {}'.format(' '.join(boxes.keys())))
+
+
+if __name__ == '__main__':
+    download()
