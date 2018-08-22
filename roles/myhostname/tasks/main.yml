@@ -1,0 +1,6 @@
+- name: Ensure nss-myhostname is installed
+  package:
+    name: libnss-myhostname
+    state: present
+  # On EL7 it's always installed
+  when: ansible_os_family == "Debian"

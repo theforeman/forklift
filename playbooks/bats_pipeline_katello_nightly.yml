@@ -11,8 +11,6 @@
       - katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
-      # Because we don't have a correct reverse DNS in our CI
-      - "--skip-checks-i-know-better"
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
       - "--katello-enable-ostree=true"
       - "--puppet-server-max-active-instances 1"

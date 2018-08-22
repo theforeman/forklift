@@ -2,8 +2,6 @@
   become: true
   vars:
     foreman_installer_options_internal_use_only:
-      # Because we don't have a correct reverse DNS in our CI
-      - "--skip-checks-i-know-better"
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
       - "--puppet-server-max-active-instances 1"
       - "--puppet-server-jvm-min-heap-size 1G"
