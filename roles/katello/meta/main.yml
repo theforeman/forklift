@@ -1,13 +1,8 @@
 ---
 dependencies:
-  - role: umask
-  - role: selinux
-  - role: etc_hosts
-  - role: koji
-  - role: server_repositories
+  - role: foreman
     server_repositories_katello: true
     server_repositories_ostree: true
-  - role: foreman_installer
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
