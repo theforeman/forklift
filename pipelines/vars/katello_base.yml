@@ -1,3 +1,4 @@
+server_repositories_katello: true
 foreman_installer_scenario: katello
 foreman_installer_options_internal_use_only:
   - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"

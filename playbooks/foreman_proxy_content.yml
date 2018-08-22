@@ -2,16 +2,14 @@
 - hosts: server foreman-proxy-content
   become: true
   vars:
+    server_repositories_katello: true
+    server_repositories_ostree: true
     foreman_proxy_content_server_group: "server-{{ inventory_hostname }}"
     foreman_proxy_content_server: "{{ groups[foreman_proxy_content_server_group][0] }}"
   roles:
     - selinux
     - etc_hosts
-    - epel_repositories
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
-    - ostree_repositories
+    - server_repositories
     - foreman_proxy_content
     - role: foreman_installer
       foreman_installer_scenario: foreman-proxy-content

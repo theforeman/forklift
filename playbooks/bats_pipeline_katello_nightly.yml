@@ -1,8 +1,8 @@
 - hosts: all
   become: true
   vars:
+    server_repositories_katello: true
     katello_repositories_version: nightly
-    katello_repositories_environment: staging
     foreman_repositories_version: nightly
     foreman_repositories_environment: staging
     puppet_repositories_version: 5
@@ -20,10 +20,7 @@
     - umask
     - selinux
     - etc_hosts
-    - epel_repositories
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
+    - server_repositories
     - disable_firewall
     - haveged
     - swapfile
