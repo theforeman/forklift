@@ -9,3 +9,9 @@
   tags:
     - packages
   when: ansible_os_family == 'RedHat'
+
+- name: 'Clean yum'
+  command: 'yum clean expire-cache'
+  tags:
+    - packages
+  when: ansible_os_family == 'RedHat'
