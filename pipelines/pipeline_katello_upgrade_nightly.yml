@@ -78,5 +78,5 @@
       - fb-content-katello.bats
       - fb-destroy-organization.bats
       - fb-finish.bats
-    roles:
-      - foreman_testing
+  roles:
+    - foreman_testing
