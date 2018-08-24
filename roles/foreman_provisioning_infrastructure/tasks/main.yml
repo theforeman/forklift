@@ -3,6 +3,7 @@
 - name: 'disable default context for admin'
   shell: >
     {{ foreman_provisioning_hammer }} user update --login admin --default-organization-id 0 --default-location-id 0
+  when: foreman_provisioning_use_taxonomies
 
 # Get the smart proxy ID of the local katello:
 - name: 'get smart proxy id'
