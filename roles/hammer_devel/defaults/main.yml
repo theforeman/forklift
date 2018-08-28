@@ -7,6 +7,7 @@ hammer_devel_server_port: 443
 hammer_devel_host: "{{ hammer_devel_server_protocol }}://{{ hammer_devel_server }}:{{ hammer_devel_server_port }}"
 hammer_devel_username: admin
 hammer_devel_password: changeme
+hammer_devel_github_fork_remote_name: "{{ hammer_devel_github_username }}"
 hammer_devel_repositories:
   - theforeman/hammer-cli
   - theforeman/hammer-cli-foreman
