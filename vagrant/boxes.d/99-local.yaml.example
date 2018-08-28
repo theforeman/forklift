@@ -27,16 +27,7 @@ centos7-hammer-devel:
     group: 'hammer-devel'
     variables: # defaults in roles/hammer_devel/defaults/main.yml
       hammer_devel_github_username: <REPLACE ME>
-      hammer_devel_github_fork_remote_name: origin
-      hammer_devel_server: centos7-devel.custom-domain
-      hammer_devel_repositories:
-        - theforeman/hammer-cli
-        - theforeman/hammer-cli-foreman
-        - katello/hammer-cli-katello
-      hammer_devel_local_gems: |-
-        gem 'hammer_cli'
-          gem 'hammer_cli_foreman'
-          gem 'hammer_cli_katello'
+      #hammer_devel_server: centos7-devel.custom-domain
 
 katello-remote-execution:
   box: centos7-katello-nightly
