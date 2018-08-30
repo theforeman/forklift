@@ -1,4 +1,9 @@
 ---
+- name: 'install sos'
+  package:
+    name: 'sos'
+    state: present
+
 - name: 'Generate sosreport'
   command: "sosreport --batch --tmp-dir={{ sosreport_output_dir }}"
   ignore_errors: true
