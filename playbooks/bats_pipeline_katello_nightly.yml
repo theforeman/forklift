@@ -5,7 +5,7 @@
     katello_repositories_environment: staging
     foreman_repositories_version: nightly
     foreman_repositories_environment: staging
-    puppet_repositories_version: 4
+    puppet_repositories_version: 5
     foreman_installer_scenario: katello
     foreman_installer_additional_packages:
       - katello
@@ -17,6 +17,7 @@
       - "--puppet-server-jvm-min-heap-size 1G"
       - "--puppet-server-jvm-max-heap-size 1G"
     bats_tests:
+      - "fb-verify-packages.bats"
       - "fb-test-foreman.bats"
       - "fb-test-puppet.bats"
       - "fb-test-katello.bats"

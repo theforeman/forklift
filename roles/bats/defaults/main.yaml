@@ -10,6 +10,7 @@ bats_remote_dir: "/tmp/debug"
 bats_update_forklift: "yes"
 bats_run: true
 bats_tests:
+  - "fb-verify-packages.bats"
   - "fb-test-foreman.bats"
   - "fb-test-puppet.bats"
   - "fb-test-katello.bats"

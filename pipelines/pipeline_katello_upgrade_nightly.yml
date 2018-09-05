@@ -74,6 +74,7 @@
   become: yes
   vars:
     bats_tests:
+      - fb-verify-packages.bats
       - fb-test-katello.bats
       - fb-content-katello.bats
       - fb-destroy-organization.bats
