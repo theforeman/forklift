@@ -20,6 +20,7 @@
     foreman_repositories_version: nightly
     foreman_repositories_environment: staging
     bats_tests:
+      - "fb-verify-packages.bats"
       - "fb-test-foreman.bats"
       - "fb-test-puppet.bats"
       - "fb-finish.bats"
