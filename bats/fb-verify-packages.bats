@@ -7,8 +7,8 @@ load os_helper
 load foreman_helper
 
 @test "verify no old SCL packages" {
-  run tSetOSVersion
-  run FOREMAN_VERSION=$(tForemanVersion)
+  tSetOSVersion
+  FOREMAN_VERSION=$(tForemanVersion)
 
   if tIsRedHatCompatible; then
     if [ $FOREMAN_VERSION == '1.20' ]; then
