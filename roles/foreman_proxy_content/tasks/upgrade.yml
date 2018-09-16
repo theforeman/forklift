@@ -13,4 +13,4 @@
       - --certs-update-all
       - --certs-regenerate=true
       - --certs-deploy=true
-      - --foreman-proxy-content-certs-tar="{{ foreman_proxy_content_certs_tar }}"
+      - --certs-tar-file="{{ foreman_proxy_content_certs_tar }}"
