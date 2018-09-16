@@ -17,6 +17,7 @@
       foreman_installer_scenario: foreman-proxy-content
       foreman_installer_options_internal_use_only:
         - '--disable-system-checks'
+        - '--certs-tar-file "{{ foreman_proxy_content_certs_tar }}"'
         - '--foreman-proxy-content-enable-ostree true'
         - '--foreman-proxy-trusted-hosts "{{ server_fqdn.stdout }}"'
         - '--foreman-proxy-trusted-hosts "{{ ansible_nodename }}"'
