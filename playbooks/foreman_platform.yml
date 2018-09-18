@@ -1,15 +1,10 @@
 - hosts: all
   become: true
   roles:
-    - etc_hosts
-    - epel_repositories
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
-    - role: foreman_installer
-      scenario: katello
+    - role: katello
       foreman_installer_options_internal_use_only:
           - "--disable-system-checks"
+          - "--foreman-admin-password {{ foreman_installer_admin_password }}"
           - "--enable-foreman-plugin-discovery"
           - "--enable-foreman-plugin-bootdisk"
           - "--enable-foreman-plugin-remote-execution"
@@ -17,5 +12,3 @@
           - "--enable-foreman-plugin-openscap"
           - "--enable-foreman-proxy-plugin-openscap"
           - "--enable-foreman-proxy-plugin-remote-execution-ssh"
-      foreman_installer_additional_packages:
-          - katello
