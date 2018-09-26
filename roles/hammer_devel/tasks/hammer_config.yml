@@ -56,6 +56,11 @@
   creates: ~/.hammer/cli.modules.d/csv.yml
   when: ('katello/hammer-cli-csv' in hammer_devel_repositories)
 
+- name: 'Configure hammer_cli_foreman_remote_execution'
+  command: cp ~/hammer_cli_foreman_remote_execution/config/foreman_remote_execution.yml ~/.hammer/cli.modules.d/
+  creates: ~/.hammer/cli.modules.d/foreman_remote_execution.yml
+  when: ('theforeman/hammer_cli_foreman_remote_execution' in hammer_devel_repositories)
+
 - name: 'Alias hammer'
   lineinfile: dest=~/.bash_profile line="alias hammer='BUNDLE_GEMFILE=~/hammer-cli-foreman/Gemfile bundle exec hammer'"
 
