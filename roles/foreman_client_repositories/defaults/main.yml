@@ -1,0 +1,6 @@
+---
+foreman_client_repositories_version: nightly
+foreman_client_repositories_environment: release
+foreman_client_repositories_dists:
+  RedHat: el
+  Fedora: fc

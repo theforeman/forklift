@@ -62,12 +62,15 @@
     foreman_installer_upgrade: True
     katello_repositories_environment: staging
     foreman_repositories_environment: staging
+    foreman_client_repositories_version: nightly
+    foreman_client_repositories_environment: staging
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
   roles:
     - foreman_repositories
     - katello_repositories
+    - foreman_client_repositories
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
