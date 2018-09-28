@@ -20,6 +20,8 @@
     foreman_repositories_version: nightly
     katello_repositories_environment: staging
     foreman_repositories_environment: staging
+    foreman_client_repositories_version: nightly
+    foreman_client_repositories_environment: staging
     foreman_installer_skip_installer: true
     foreman_installer_additional_packages:
       - foreman-installer-katello
@@ -31,6 +33,7 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - foreman_client_repositories
     - disable_firewall
     - haveged
     - update_os_packages
