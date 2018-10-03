@@ -17,23 +17,24 @@ newgrp libvirt
 
 ## Centos 7
 
-For this you need EPEL and SCLo
+For this you need EPEL and Vagrant RPM
 
 ```bash
 yum -y install epel-release centos-release-scl
-yum -y install libvirt-daemon-kvm ansible sclo-vagrant1-vagrant-libvirt
+yum -y install libvirt-daemon-kvm ansible https://releases.hashicorp.com/vagrant/2.1.5/vagrant_2.1.5_x86_64.rpm
 systemctl enable libvirtd
 systemctl start libvirtd
 ```
 
-Now you need to run commands in the vagrant SCL. The easiest is to start a new shell:
+Now you need to ensure your user can access vagrant and libvirt:
 
 ```bash
-scl enable sclo-vagrant1 bash
+usermod --append --groups libvirt `whoami`
 ```
 
-You can also manually load the SCL into your existing bash:
+Install vagrant libvirt plugin:
 
 ```bash
-. /opt/rh/sclo-vagrant1/enable
+sudo yum -y install install libxslt-devel libxml2-devel libvirt-devel libguestfs-tools-c ruby-devel gcc
+vagrant plugin install vagrant-libvirt
 ```
