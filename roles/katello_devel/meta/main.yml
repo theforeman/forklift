@@ -5,6 +5,7 @@ dependencies:
     foreman_server_repositories_ostree: true
     foreman_server_repositories_katello: true
     foreman_server_repositories_foreman_client: true
+  - role: ruby_scl
   - role: foreman_installer_devel_scenario
   - role: foreman_installer
     katello_repositories_version: nightly
@@ -13,5 +14,6 @@ dependencies:
       - foreman-installer-katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
+      - "--katello-devel-scl-ruby={{ ruby_scl_version }}"
       - "--katello-devel-enable-ostree=true"
       - "--katello-devel-admin-password {{ foreman_installer_admin_password }}"
