@@ -1,6 +1,6 @@
 - name: 'Install SCL repository'
   yum:
-    name: centos-release-scl
+    name: centos-release-scl-rh
     state: present
 
 - name: 'Install Ruby SCL'
