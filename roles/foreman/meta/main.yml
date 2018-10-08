@@ -4,6 +4,7 @@ dependencies:
   - role: selinux
   - role: myhostname
   - role: etc_hosts
+  - role: koji
   - role: epel_repositories
   - role: haveged
   - role: puppet_repositories
