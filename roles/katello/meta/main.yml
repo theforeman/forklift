@@ -2,6 +2,7 @@
 dependencies:
   - role: selinux
   - role: etc_hosts
+  - role: koji
   - role: epel_repositories
   - role: ostree_repositories
   - role: puppet_repositories
