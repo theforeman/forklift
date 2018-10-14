@@ -1,34 +1,51 @@
 ---
-- name: "Determine if Puppet 4 is used"
-  stat:
-    path: /opt/puppetlabs/puppet/bin/gem
-  register: puppetlabs_gem
+- set_fact:
+    namespace: "{{ module.split('/')[0] }}"
+    module_name: "{{ module.split('/')[1] | replace('puppet-', '') }}"
+    ref: "{{ module.split('/')[2] }}"
 
-- name: "Install gems to rebuild the kafo module cache"
-  gem:
-    name: "{{ item }}"
-    executable: /opt/puppetlabs/puppet/bin/gem
-  with_items:
-    - yard
-    - puppet-strings
-    - rgen # https://tickets.puppetlabs.com/browse/PDOC-168
-  when: puppetlabs_gem.stat.exists
-  tags:
-    - packages
+- name: find puppet module
+  find:
+    paths: /usr/share/foreman-installer/modules
+    patterns: "{{ module_name }}"
+    file_type: directory
+  register: foreman_module
 
-- name: "install git"
-  package:
-    name: 'git'
-    state: 'present'
+- name: find puppet module
+  find:
+    paths: /usr/share/katello-installer-base/modules
+    patterns: "{{ module_name }}"
+    file_type: directory
+  register: katello_module
 
-- name: "install module PR into installer directory"
+- set_fact:
+    module_dir: /usr/share/foreman-installer
+  when: foreman_module.matched > 0
+
+- set_fact:
+    module_dir: /usr/share/katello-installer-base
+  when: katello_module.matched > 0
+
+- name: Delete old module
+  file:
+    state: absent
+    path: "{{ module_dir }}/{{ module_name }}"
+
+- name: Clone puppet module
+  git:
+    repo: https://github.com/{{ namespace }}/puppet-{{ module_name }}.git
+    dest: "{{ module_dir }}/{{ module_name }}"
+
+- name:
   shell: >
-      cd {{ (item.split("/")[0] == 'theforeman') | ternary("/usr/share/foreman-installer/modules", "/usr/share/katello-installer-base/modules") }} &&
-      rm -rf {{ item.split("/")[1] | replace("puppet-", "") }} &&
-      git clone https://github.com/{{ item.split("/")[0] }}/puppet-{{ item.split("/")[1] | replace("puppet-", "") }} {{ item.split("/")[1] | replace("puppet-", "") }} &&
-      cd {{ item.split("/")[1] | replace("puppet-", "") }} &&
-      git fetch origin pull/{{ item.split("/")[2] }}/head:pr &&
+      git fetch origin pull/{{ ref }}/head:pr &&
       git {{ foreman_installer_module_prs_strategy }} pr
-  with_items: "{{ foreman_installer_module_prs.split(',') }}"
-  tags:
-    - packages
+  args:
+    chdir: "{{ module_dir }}/{{ module_name }}"
+  when: pr is defined and pr
+
+- name: "install module branches into installer directory"
+  shell: git checkout {{ ref }}
+  args:
+    chdir: "{{ module_dir }}/{{ module_name }}"
+  when: branch is defined and branch
