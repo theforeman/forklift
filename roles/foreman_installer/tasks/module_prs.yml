@@ -1,0 +1,40 @@
+---
+- name: "Determine if Puppet 4 is used"
+  stat:
+    path: /opt/puppetlabs/puppet/bin/gem
+  register: puppetlabs_gem
+
+- name: "Install gems to rebuild the kafo module cache"
+  gem:
+    name: "{{ item }}"
+    executable: /opt/puppetlabs/puppet/bin/gem
+  with_items:
+    - puppet-strings
+  when: puppetlabs_gem.stat.exists
+  tags:
+    - packages
+
+- name: "install git"
+  package:
+    name: 'git'
+    state: 'present'
+  tags:
+    - packages
+
+- include_tasks: module_pr.yml
+  vars:
+    pr: true
+  loop: "{{ foreman_installer_module_prs }}"
+  loop_control:
+    loop_var: module
+  tags:
+    - packages
+
+- include_tasks: module_pr.yml
+  vars:
+    branch: true
+  loop: "{{ foreman_installer_module_branches }}"
+  loop_control:
+    loop_var: module
+  tags:
+    - packages

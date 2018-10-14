@@ -60,7 +60,7 @@ bundle exec foreman start
 ### Starting the Development Server
 
 Our backend requires a rails server to be running. We also use a webpack server for the more "modern" parts of our front-end UI.
-[Webpack](https://webpack.js.org/) is a way of bundling up multiple front-end files and assets to a small amount of files to send to the browser. 
+[Webpack](https://webpack.js.org/) is a way of bundling up multiple front-end files and assets to a small amount of files to send to the browser.
 The files that webpack handles are located in `webpack/` directory found in Foreman, Katello,
 and plugin root directories. If you are editing any files in `webpack/` and want to have your changes refresh automatically, you will need a webpack server running.
 
@@ -139,7 +139,9 @@ The Koji role and task ID variable can be added to download and configure a repo
     - katello
 ```
 
-## Test Puppet Module Pull Requests
+## Test Puppet Module
+
+### Pull Requests
 
 Testing installer puppet module pull requests is possible through an Ansible variable. Any number of modules and associated pull requests may be specified. For example, if a module under goes a refactoring, and you want to test that it continues to work with the installer. The pull requests are indicated by the github project, repository, and pull request number (eg. katello/qpid/23). Note that the name in this situation is the name as laid down in the module directory as opposed to the github repository name. In other words, use 'qpid' not 'puppet-qpid'. The pull requests are specified through the 'foreman_installer_module_prs' variable in the 'ansible' 'variables' section of your box definition. See examples below.
 
@@ -147,14 +149,38 @@ Single module PR in `99-local.yaml`:
 ```yaml
 ansible:
   variables:
-    foreman_installer_module_prs: "katello/katello_devel/97"
+    foreman_installer_module_prs:
+      - katello/katello_devel/97
 ```
 
 Multiple modules:
 ```yaml
 ansible:
   variables:
-    foreman_installer_module_prs: "katello/katello_devel/97,katello/qpid/34"
+    foreman_installer_module_prs:
+      - katello/katello_devel/97
+      - katello/qpid/34
+```
+
+### Branches
+
+Testing installer puppet module branches is possible through an Ansible variable. Any number of modules and associated branches may be specified. For example, if a module under goes a refactoring, and you want to test that it continues to work with the installer. The branches are indicated by the github project, repository, and branch (or commit) name (eg. myfork/qpid/my-branch). Note that the name in this situation is the name as laid down in the module directory as opposed to the github repository name. In other words, use 'qpid' not 'puppet-qpid'. The branches are specified through the 'foreman_installer_module_branches' variable in the 'ansible' 'variables' section of your box definition. See examples below.
+
+Single module branch in `99-local.yaml`:
+```yaml
+ansible:
+  variables:
+    foreman_installer_module_branches:
+      - myfork/katello_devel/switch-to-scl
+```
+
+Multiple modules:
+```yaml
+ansible:
+  variables:
+    foreman_installer_module_branches:
+      - myfork/katello_devel/switch-to-scl
+      - myfork/foreman/add-puma
 ```
 
 ## Jenkins Job Builder Development

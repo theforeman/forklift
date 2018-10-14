@@ -10,9 +10,12 @@ foreman_installer_command: foreman-installer
 foreman_installer_custom_hiera: ""
 
 # Comma-separated list of "organization/module/pr_number", e.g. "katello/foreman_proxy_content/37,katello/certs/34"
-foreman_installer_module_prs: ""
+foreman_installer_module_prs: []
 # Another option is checkout which can be useful if you're not based on master
 foreman_installer_module_prs_strategy: "merge"
+
+# Comma-separated list of "organization/module/branch", e.g. "theforeman/foreman/foo,theforeman/katello/bar"
+foreman_installer_module_branches: []
 
 # There are two options, so a user can supply their own, and a playbook can
 # specify theirs. For example, katello needs "--disable-system-checks" so we
