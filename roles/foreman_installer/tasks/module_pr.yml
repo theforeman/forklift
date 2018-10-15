@@ -19,11 +19,11 @@
   register: katello_module
 
 - set_fact:
-    module_dir: /usr/share/foreman-installer
+    module_dir: /usr/share/foreman-installer/modules
   when: foreman_module.matched > 0
 
 - set_fact:
-    module_dir: /usr/share/katello-installer-base
+    module_dir: /usr/share/katello-installer-base/modules
   when: katello_module.matched > 0
 
 - name: Delete old module
