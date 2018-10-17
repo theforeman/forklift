@@ -100,6 +100,7 @@ module Forklift
 
     def configure_nfs(config, box)
       return unless box['nfs']
+
       config.vm.synced_folder box['nfs']['host_path'],
                               box['nfs']['guest_path'],
                               :type    => :nfs,
@@ -109,6 +110,7 @@ module Forklift
 
     def configure_sshfs(config, box)
       return unless box['sshfs']
+
       config.vm.synced_folder box['sshfs']['host_path'],
                               box['sshfs']['guest_path'],
                               :type => :sshfs,
@@ -118,6 +120,7 @@ module Forklift
 
     def configure_vagrant_hostmanager(config)
       return unless Vagrant.has_plugin?('vagrant-hostmanager')
+
       config.hostmanager.enabled = true
       config.hostmanager.manage_host = true
       config.hostmanager.manage_guest = true
@@ -126,6 +129,7 @@ module Forklift
 
     def configure_vagrant_cachier(config)
       return unless Vagrant.has_plugin?('vagrant-cachier')
+
       config.cache.scope = :box
       config.cache.synced_folder_opts = {
         type: :nfs,
@@ -135,6 +139,7 @@ module Forklift
 
     def configure_networks(networks)
       return [] if networks.empty?
+
       networks.map do |network|
         network.update('options' => symbolized_options(network['options']))
       end
@@ -167,6 +172,7 @@ module Forklift
 
     def configure_shell(machine, box)
       return unless box.key?('shell') && !box['shell'].nil?
+
       machine.vm.provision :shell do |shell|
         shell.inline = box.fetch('shell')
         shell.privileged = false if box.key?('privileged')
@@ -178,6 +184,7 @@ module Forklift
     def configure_synced_folders(machine, box)
       synced_folders = box.fetch('synced_folders', [])
       return if synced_folders.empty?
+
       configure_private_network(machine, box)
 
       synced_folders.each do |folder|
@@ -220,6 +227,7 @@ module Forklift
           if type.nil? || device.nil? || size.nil?
             raise "Error in add_disks configuration: type, device or size are missing #{disk}"
           end
+
           p.storage :file, :size => size, :type => type, :device => device
         end
 
@@ -259,6 +267,7 @@ module Forklift
 
     def configure_rackspace(machine, box)
       return unless box.fetch('image_name', false)
+
       machine.vm.provider :rackspace do |p, override|
         override.vm.box  = 'dummy'
         p.server_name    = machine.vm.hostname
@@ -274,6 +283,7 @@ module Forklift
 
     def configure_openstack_provider(machine, box)
       return unless box.fetch('image_name', false)
+
       machine.vm.provider :openstack do |p, override|
         override.vm.box        = nil
         override.ssh.username  = 'root'
