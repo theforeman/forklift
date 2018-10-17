@@ -69,11 +69,13 @@ module Forklift
 
     def layer_base_box(box)
       return box unless (base_box = find_base_box(box['box']))
+
       deep_merge(base_box, box)
     end
 
     def find_base_box(name)
       return false if name.nil?
+
       @boxes[name]
     end
 
