@@ -20,13 +20,25 @@
     priority: 1
     gpgcheck: 0
 
-- name: Add Pulp repository
+- name: Add Pulp Stable repository
   yum_repository:
     name: pulp-repository
     description: Pulp release repository
-    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/{{ katello_repositories_pulp_release }}/{{ katello_repositories_pulp_version }}/7Server/x86_64/"
+    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/{{ katello_repositories_pulp_release }}/{{ katello_repositories_pulp_version }}/$releasever/$basearch"
     gpgcheck: no
     enabled: yes
+  when:
+    - katello_repositories_pulp_version != "nightly"
+
+- name: Add Pulp Nightly repository
+  yum_repository:
+    name: pulp-repository
+    description: Pulp nightly repository
+    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/testing/automation/2-master/stage/$releasever/$basearch"
+    gpgcheck: no
+    enabled: yes
+  when:
+    - katello_repositories_pulp_version == "nightly"
 
 - name: 'Katello Client Koji repository'
   yum_repository:
