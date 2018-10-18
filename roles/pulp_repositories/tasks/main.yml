@@ -1,11 +1,23 @@
 ---
-- name: Add Pulp repository
+- name: Add Pulp stable repository
   yum_repository:
     name: pulp-repository
     description: Pulp release repository
-    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/{{ pulp_repositories_release }}/{{ pulp_repositories_version }}/7Server/x86_64/"
+    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/{{ pulp_repositories_release }}/{{ pulp_repositories_version }}/$releasever/$basearch"
     gpgcheck: no
     enabled: yes
+  when:
+    - pulp_repositories_version != "nightly"
+
+- name: Add Pulp nightly repository
+  yum_repository:
+    name: pulp-repository
+    description: Pulp nightly repository
+    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/testing/automation/2-master/stage/$releasever/$basearch"
+    gpgcheck: no
+    enabled: yes
+  when:
+    - pulp_repositories_version == "nightly"
 
 - name: 'Gofer repository'
   yum_repository:
