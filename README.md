@@ -24,7 +24,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
 ### Requirements
 
 * Vagrant - 1.8+ - Both the VirtualBox and Libvirt providers are tested
-* Ansible - 2.4+
+* Ansible - 2.5+
 * [Vagrant Libvirt provider plugin](https://github.com/vagrant-libvirt/vagrant-libvirt) (if using Libvirt)
 * Virtualization enabled in BIOS
 
