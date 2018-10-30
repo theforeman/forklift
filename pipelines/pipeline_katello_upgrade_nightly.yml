@@ -41,7 +41,7 @@
   vars:
     puppet_repositories_version: 5
     katello_repositories_version: 3.9
-    foreman_repositories_version: 1.20
+    foreman_repositories_version: '1.20'
     foreman_installer_upgrade: True
     foreman_repositories_environment: release
     katello_repositories_environment: release
