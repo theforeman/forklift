@@ -103,7 +103,7 @@ module Forklift
 
       config.vm.synced_folder box['nfs']['host_path'],
                               box['nfs']['guest_path'],
-                              :type    => :nfs,
+                              :type => :nfs,
                               :nfs_udp => box['nfs']['udp'] || false,
                               :linux__nfs_options => box['nfs']['options'] || %w[async rw no_subtree_check all_squash]
     end

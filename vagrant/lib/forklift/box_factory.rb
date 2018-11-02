@@ -87,12 +87,12 @@ module Forklift
       variables.merge!(
         'foreman_repositories_version' => version['foreman'],
         'katello_repositories_version' => version['katello'],
-        'puppet_repositories_version'  => version['puppet']
+        'puppet_repositories_version' => version['puppet']
       )
 
       box['ansible'] = {
         'playbook' => playbook,
-        'group'    => group,
+        'group' => group,
         'variables' => variables
       }
 
