@@ -231,7 +231,7 @@ module Forklift
           p.storage :file, :size => size, :type => type, :device => device
         end
 
-        box.fetch('libvirt_options', []).each do |opt, val|
+        merged_options(box, 'libvirt_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
       end
@@ -259,7 +259,7 @@ module Forklift
           override.vm.network network['type'], network['options']
         end
 
-        box.fetch('virtualbox_options', []).each do |opt, val|
+        merged_options(box, 'virtualbox_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
       end
@@ -275,7 +275,7 @@ module Forklift
         p.image          = box.fetch('image_name')
         override.ssh.pty = true if box.fetch('pty')
 
-        box.fetch('rackspace_options', []).each do |opt, val|
+        merged_options(box, 'rackspace_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
       end
@@ -292,7 +292,7 @@ module Forklift
         p.flavor               = /4GB/
         p.image                = box.fetch('image_name')
 
-        box.fetch('openstack_options', []).each do |opt, val|
+        merged_options(box, 'openstack_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
       end
@@ -308,7 +308,7 @@ module Forklift
 
         override.vm.box = 'google/gce'
 
-        box.fetch('google_options', []).each do |opt, val|
+        merged_options(box, 'google_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
       end
@@ -318,6 +318,11 @@ module Forklift
 
     def symbolized_options(hash)
       hash.inject({}) { |memo, (k, v)| memo.update(k.to_sym => v) }
+    end
+
+    def merged_options(box, key)
+      options = @settings.fetch(key, {})
+      options.merge(box.fetch(key, {}))
     end
 
   end
