@@ -99,6 +99,8 @@ Options:
 | libvirt_options    |  sets Libvirt specific options, see [`config.rb` from `vagrant-libvirt`](https://github.com/vagrant-libvirt/vagrant-libvirt/blob/master/lib/vagrant-libvirt/config.rb) for possible options |
 | virtualbox_options |  sets VirtualBox specific options |
 | rackspace_options  |  sets Rackspace specific options |
+| openstack_options  |  sets OpenStack specific options |
+| google_options     |  sets Google specific options |
 | domain             |  forklift uses short name of your host + 'example.com' as domain name for your boxes. You can use this option to override it. |
 | sshfs              |  if you have vagrant-sshfs plugin, you can use sshfs to share folders between your host and guest. See an example below for details. |
 | nfs                |  share folders between host and guest.  See an example below for details. |
@@ -201,6 +203,7 @@ Some settings can be customized for the entirety of the deployment, they are:
  * sync_type: type of sync to use for transfer to the Vagrant box
  * mount_options: options for the vagrant-cachier plugin
  * domain: domain for your hosts, you can override this per-box by configuring your box with a domain directly
+ * libvirt_options, virtualbox_options, rackspace_options, openstack_options, google_options: custom options for the various providers
 
 To customize any of these, copy `settings.yaml.example` to `settings.yaml` and add, remove or update the ones you wish to change'
 
