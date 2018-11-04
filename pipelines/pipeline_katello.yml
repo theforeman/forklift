@@ -1,42 +1,35 @@
 - hosts: localhost
-  vars:
-    forklift_name: pipeline-katello-3.8
-    forklift_boxes:
-      pipeline-katello-3.8-centos7:
-        box: centos7
-        memory: 6144
-      pipeline-proxy-3.8-centos7:
-        box: centos7
-        memory: 3072
+  vars_files:
+    - vars_katello_{{ katello_version }}.yml
   roles:
     - forklift
 
 - hosts:
-  - pipeline-katello-3.8-centos7
-  - pipeline-proxy-3.8-centos7
+  - pipeline-katello-{{ katello_version }}-centos7
+  - pipeline-proxy-{{ katello_version }}-centos7
   become: yes
   vars:
-    puppet_repositories_version: 5
-    katello_repositories_version: 3.8
-    katello_repositories_pulp_version: 2.16
-    foreman_repositories_version: 1.19
-    foreman_repositories_environment: staging
-    katello_repositories_environment: staging
     foreman_installer_skip_installer: true
+    foreman_installer_additional_packages:
+      - foreman-installer-katello
+  vars_files:
+    - vars_katello_{{ katello_version }}.yml
   roles:
     - umask
     - selinux
     - etc_hosts
+    - koji
     - epel_repositories
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
-    - update_os_packages
-    - haveged
+    - foreman_client_repositories
     - disable_firewall
+    - haveged
+    - update_os_packages
     - foreman_installer
 
-- hosts: pipeline-katello-3.8-centos7
+- hosts: pipeline-katello-{{ katello_version }}-centos7
   become: yes
   vars:
     foreman_installer_scenario: katello
@@ -45,35 +38,40 @@
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
     foreman_installer_additional_packages:
       - katello
+  vars_files:
+    - vars_katello_{{ katello_version }}.yml
   roles:
+    - disable_ipv6
     - foreman_installer
 
-- hosts: pipeline-proxy-3.8-centos7
+- hosts: pipeline-proxy-{{ katello_version }}-centos7
   become: yes
   vars:
-    foreman_proxy_content_server: pipeline-katello-3.8-centos7
+    foreman_proxy_content_server: pipeline-katello-{{ katello_version }}-centos7
     foreman_installer_scenario: foreman-proxy-content
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
+      - "--certs-tar-file {{ foreman_proxy_content_certs_tar }}"
       - "--foreman-proxy-trusted-hosts {{ server_fqdn.stdout }}"
       - "--foreman-proxy-trusted-hosts {{ ansible_nodename }}"
       - "--foreman-proxy-foreman-base-url https://{{ server_fqdn.stdout }}"
       - "--foreman-proxy-register-in-foreman true"
       - "--foreman-proxy-oauth-consumer-key {{ oauth_consumer_key.stdout }}"
       - "--foreman-proxy-oauth-consumer-secret {{ oauth_consumer_secret.stdout }}"
-      - "--foreman-proxy-content-certs-tar {{ foreman_proxy_content_certs_tar }}"
       - "--foreman-proxy-content-parent-fqdn {{ server_fqdn.stdout }}"
       - "--puppet-server-foreman-url https://{{ server_fqdn.stdout }}"
-    foreman_installer_additional_packages:
-      - foreman-installer-katello
+  vars_files:
+    - vars_katello_{{ katello_version }}.yml
   roles:
     - foreman_proxy_content
     - foreman_installer
 
-- hosts: pipeline-katello-3.8-centos7
+- hosts: pipeline-katello-{{ katello_version }}-centos7
   become: true
   vars:
     bats_tests_additional:
       - fb-proxy.bats
+  vars_files:
+    - vars_katello_{{ katello_version }}.yml
   roles:
-    - bats
+    - foreman_testing
