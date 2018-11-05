@@ -12,6 +12,7 @@
   become: yes
   vars:
     katello_repositories_environment: release
+    katello_repositories_pulp_release: stable
     foreman_repositories_environment: release
     foreman_client_repositories_environment: release
     foreman_installer_scenario: katello
@@ -44,6 +45,7 @@
   become: true
   vars:
     katello_repositories_environment: release
+    katello_repositories_pulp_release: stable
     foreman_repositories_environment: release
     foreman_client_repositories_environment: release
     foreman_installer_upgrade: True
@@ -64,6 +66,7 @@
   become: yes
   vars:
     katello_repositories_environment: staging
+    katello_repositories_pulp_release: stable
     foreman_repositories_environment: staging
     foreman_client_repositories_environment: staging
     foreman_installer_upgrade: True
