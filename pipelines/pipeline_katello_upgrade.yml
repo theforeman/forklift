@@ -11,11 +11,6 @@
 - hosts: pipeline-upgrade-centos7
   become: yes
   vars:
-    puppet_repositories_version: 5
-    katello_repositories_version: 3.8
-    katello_repositories_pulp_version: 2.16
-    katello_repositories_pulp_release: stable
-    foreman_repositories_version: 1.19
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
@@ -25,6 +20,8 @@
       - "--puppet-server-jvm-max-heap-size 1G"
     foreman_installer_additional_packages:
       - katello
+  vars_files:
+    - vars_katello_{{ katello_version_1 }}.yml
   roles:
     - umask
     - selinux
@@ -33,6 +30,8 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - role: foreman_client_repositories
+      when: katello_version_1 in ['3.9', 'nightly']
     - update_os_packages
     - haveged
     - disable_firewall
@@ -41,42 +40,34 @@
 - hosts: pipeline-upgrade-centos7
   become: true
   vars:
-    puppet_repositories_version: 5
-    katello_repositories_version: 3.9
-    katello_repositories_pulp_version: 2.17
-    katello_repositories_pulp_release: stable
-    foreman_repositories_version: '1.20'
     foreman_installer_upgrade: True
-    foreman_repositories_environment: release
-    katello_repositories_environment: release
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
+  vars_files:
+    - vars_katello_{{ katello_version_2 }}.yml
   roles:
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
+    - role: foreman_client_repositories
+      when: katello_version_2 in ['3.9', 'nightly']
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
   become: yes
   vars:
-    katello_repositories_version: nightly
-    katello_repositories_pulp_version: nightly
-    katello_repositories_pulp_release: beta
-    foreman_repositories_version: nightly
     foreman_installer_upgrade: True
-    katello_repositories_environment: staging
-    foreman_repositories_environment: staging
-    foreman_client_repositories_version: nightly
-    foreman_client_repositories_environment: staging
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
+  vars_files:
+    - vars_katello_{{ katello_version_3 }}.yml
   roles:
     - foreman_repositories
     - katello_repositories
-    - foreman_client_repositories
+    - role: foreman_client_repositories
+      when: katello_version_3 in ['3.9', 'nightly']
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
@@ -86,5 +77,7 @@
       - fb-verify-packages.bats
       - fb-test-katello.bats
       - fb-content-katello.bats
+  vars_files:
+    - vars_katello_{{ katello_version_3 }}.yml
   roles:
     - foreman_testing
