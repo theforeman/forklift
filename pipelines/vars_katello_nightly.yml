@@ -7,8 +7,5 @@ forklift_boxes:
     box: centos7
     memory: 3072
 katello_repositories_version: 'nightly'
-katello_repositories_environment: staging
 foreman_repositories_version: 'nightly'
-foreman_repositories_environment: staging
 foreman_client_repositories_version: "{{ foreman_repositories_version }}"
-foreman_client_repositories_environment: "{{ foreman_repositories_environment }}"
