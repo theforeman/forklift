@@ -23,7 +23,8 @@
     - puppet_repositories
     - foreman_repositories
     - katello_repositories
-    - foreman_client_repositories
+    - role: foreman_client_repositories
+      when: katello_version in ['3.9', 'nightly']
     - disable_firewall
     - haveged
     - update_os_packages
