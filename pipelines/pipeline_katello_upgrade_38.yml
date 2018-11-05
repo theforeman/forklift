@@ -14,6 +14,7 @@
     puppet_repositories_version: 4
     katello_repositories_version: 3.6
     katello_repositories_pulp_version: 2.15
+    katello_repositories_pulp_release: stable
     foreman_repositories_version: 1.17
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
@@ -43,6 +44,7 @@
     puppet_repositories_version: 5
     katello_repositories_version: 3.7
     katello_repositories_pulp_version: 2.16
+    katello_repositories_pulp_release: stable
     foreman_repositories_version: 1.18
     foreman_installer_upgrade: True
     foreman_repositories_environment: release
@@ -65,6 +67,7 @@
     foreman_installer_upgrade: True
     katello_repositories_environment: staging
     foreman_repositories_environment: staging
+    katello_repositories_pulp_release: stable
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
