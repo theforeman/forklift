@@ -1,6 +1,7 @@
 installers:
   - foreman: '1.15'
     katello: '3.4'
+    pulp: '2.13'
     puppet: 4
     boxes:
       - 'centos7'
@@ -9,6 +10,7 @@ installers:
 
   - foreman: '1.16'
     katello: '3.5'
+    pulp: '2.13'
     puppet: 5
     boxes:
       - 'centos7'
@@ -18,6 +20,7 @@ installers:
 
   - foreman: '1.17'
     katello: '3.6'
+    pulp: '2.15'
     puppet: 5
     boxes:
       - 'centos7'
@@ -26,6 +29,7 @@ installers:
 
   - foreman: '1.18'
     katello: '3.7'
+    pulp: '2.16'
     puppet: 5
     boxes:
       - 'centos7'
@@ -34,6 +38,7 @@ installers:
 
   - foreman: '1.19'
     katello: '3.8'
+    pulp: '2.16'
     puppet: 5
     boxes:
       - 'centos7'
@@ -43,6 +48,7 @@ installers:
 
   - foreman: '1.20'
     katello: '3.9'
+    pulp: '2.17'
     puppet: 5
     boxes:
       - 'centos7'
@@ -52,6 +58,7 @@ installers:
 
   - foreman: 'nightly'
     katello: 'nightly'
+    pulp: 'nightly'
     puppet: 5
     boxes:
       - 'centos7'
