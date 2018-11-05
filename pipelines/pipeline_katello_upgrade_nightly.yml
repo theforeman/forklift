@@ -13,6 +13,7 @@
   vars:
     puppet_repositories_version: 5
     katello_repositories_version: 3.8
+    katello_repositories_pulp_version: 2.16
     foreman_repositories_version: 1.19
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
@@ -41,6 +42,7 @@
   vars:
     puppet_repositories_version: 5
     katello_repositories_version: 3.9
+    katello_repositories_pulp_version: 2.17
     foreman_repositories_version: '1.20'
     foreman_installer_upgrade: True
     foreman_repositories_environment: release
@@ -58,6 +60,7 @@
   become: yes
   vars:
     katello_repositories_version: nightly
+    katello_repositories_pulp_version: nightly
     foreman_repositories_version: nightly
     foreman_installer_upgrade: True
     katello_repositories_environment: staging
