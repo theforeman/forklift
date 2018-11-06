@@ -266,14 +266,12 @@ module Forklift
     end
 
     def configure_rackspace(machine, box)
-      return unless box.fetch('image_name', false)
-
       machine.vm.provider :rackspace do |p, override|
         override.vm.box  = 'dummy'
         p.server_name    = machine.vm.hostname
         p.flavor         = /4GB/
-        p.image          = box.fetch('image_name')
-        override.ssh.pty = true if box.fetch('pty')
+        p.image          = box.fetch('image_name', nil)
+        override.ssh.pty = true if box.fetch('pty', nil)
 
         merged_options(box, 'rackspace_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
@@ -282,15 +280,13 @@ module Forklift
     end
 
     def configure_openstack_provider(machine, box)
-      return unless box.fetch('image_name', false)
-
       machine.vm.provider :openstack do |p, override|
         override.vm.box        = nil
         override.ssh.username  = 'root'
-        override.ssh.pty       = true if box.fetch('pty')
+        override.ssh.pty       = true if box.fetch('pty', nil)
         p.server_name          = machine.vm.hostname
         p.flavor               = /4GB/
-        p.image                = box.fetch('image_name')
+        p.image                = box.fetch('image_name', nil)
 
         merged_options(box, 'openstack_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
