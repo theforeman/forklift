@@ -1,12 +1,11 @@
 ---
 - name: 'install vagrant-libvirt requirements'
   yum:
-    name: "{{ item }}"
+    name:
+      - libvirt-devel
+      - ruby-devel
+      - gcc
     state: present
-  with_items:
-    - libvirt-devel
-    - ruby-devel
-    - gcc
 
 - name: 'install vagrant-libvirt'
   command: vagrant plugin install vagrant-libvirt

@@ -15,14 +15,11 @@
     forklift_url: "https://github.com/theforeman/forklift"
     forklift_version: master
   tasks:
-    - name: 'Install ansible'
+    - name: 'Install Forklift dependencies'
       package:
-        name: 'ansible'
-        state: 'present'
-
-    - name: 'Install git'
-      package:
-        name: 'git'
+        name:
+          - ansible
+          - git
         state: 'present'
 
     - name: 'Clone Forklift'

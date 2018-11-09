@@ -19,22 +19,21 @@
 
     - name: 'Install packages'
       yum:
-        name: "{{ item }}"
+        name:
+          - ruby-devel
+          - rubygem-bundler
+          - libxml2-devel
+          - ruby
+          - rake
+          - gcc
+          - wget
+          - git
+          - nss
+          - puppet
+          - glib2
+          - ostree
         state: "present"
       become: true
-      with_items:
-        - ruby-devel
-        - rubygem-bundler
-        - libxml2-devel
-        - ruby
-        - rake
-        - gcc
-        - wget
-        - git
-        - nss
-        - puppet
-        - glib2
-        - ostree
 
     - name: "Install RVM gpg key"
       shell: "gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3"

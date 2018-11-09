@@ -10,11 +10,10 @@
 
 - name: "Install PowerDNS"
   package:
-    name: "{{ item }}"
+    name:
+      - "pdns"
+      - "pdns-backend-mysql"
     state: "present"
-  with_items:
-    - "pdns"
-    - "pdns-backend-mysql"
 
 - name: "Configure PowerDNS"
   template:

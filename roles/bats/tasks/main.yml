@@ -4,9 +4,8 @@
 
 - name: "install required packages"
   package:
-    name: "{{ item }}"
+    name: "{{ bats_packages }}"
     state: present
-  with_items: "{{ bats_packages }}"
 
 - name: "Install bats from package"
   package:

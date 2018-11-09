@@ -9,9 +9,11 @@
     name: "@Virtualization Tools"
     state: present
 
-- name: 'install the libvirt-python package'
+- name: 'install the libvirt-python support'
   yum:
-    name: "libvirt-python"
+    name:
+      - libvirt-python
+      - python-lxml
     state: present
 
 - name: 'disable libvirt authentication'
@@ -21,14 +23,6 @@
 
 - name: 'restart libvirt'
   service: name=libvirtd state=restarted
-
-- name: 'install libvirt-python dependency'
-  yum:
-    name: libvirt-python
-
-- name: 'install python-lxml'
-  yum:
-    name: python-lxml
 
 - include_tasks: 'tftp.yml'
   when: libvirt_tftp
