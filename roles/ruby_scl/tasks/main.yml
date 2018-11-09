@@ -5,11 +5,10 @@
 
 - name: 'Install Ruby SCL'
   yum:
-    name: "{{ item }}"
+    name:
+      - "{{ ruby_scl_version }}"
+      - "{{ ruby_scl_version }}-ruby-devel"
     state: present
-  with_items:
-    - "{{ ruby_scl_version }}"
-    - "{{ ruby_scl_version }}-ruby-devel"
 
 - name: 'Enable SCL at login'
   blockinfile:

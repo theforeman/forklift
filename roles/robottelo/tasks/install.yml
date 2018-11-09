@@ -1,15 +1,14 @@
 ---
 - name: Install packages
   package:
-    name: "{{ item }}"
+    name:
+      - gcc
+      - git
+      - libffi-devel
+      - openssl-devel
+      - rh-python36-python-devel
+      - rh-python36-python-virtualenv
     state: present
-  with_items:
-    - gcc
-    - git
-    - libffi-devel
-    - openssl-devel
-    - rh-python36-python-devel
-    - rh-python36-python-virtualenv
 
 - name: Clone robottelo
   git:

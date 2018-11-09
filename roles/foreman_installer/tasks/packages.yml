@@ -8,8 +8,7 @@
 
 - name: 'Install additional packages'
   package:
-    name: "{{ item }}"
+    name: "{{ foreman_installer_additional_packages }}"
     state: latest
-  with_items: "{{ foreman_installer_additional_packages }}"
   tags:
     - packages
