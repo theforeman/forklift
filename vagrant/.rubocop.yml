@@ -36,10 +36,10 @@ Metrics/AbcSize:
   Max: 60
 
 Metrics/PerceivedComplexity:
-  Max: 10
+  Max: 11
 
 Metrics/CyclomaticComplexity:
-  Max: 10
+  Max: 11
 
 Security/YAMLLoad:
   Enabled: false
