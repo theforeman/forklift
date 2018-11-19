@@ -12,10 +12,10 @@
   become: yes
   vars:
     puppet_repositories_version: 4
-    katello_repositories_version: 3.6
-    katello_repositories_pulp_version: 2.15
+    katello_repositories_version: 3.7
+    katello_repositories_pulp_version: 2.16
     katello_repositories_pulp_release: stable
-    foreman_repositories_version: 1.17
+    foreman_repositories_version: 1.18
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
@@ -36,26 +36,6 @@
     - update_os_packages
     - haveged
     - disable_firewall
-    - foreman_installer
-
-- hosts: pipeline-upgrade-centos7
-  become: true
-  vars:
-    puppet_repositories_version: 5
-    katello_repositories_version: 3.7
-    katello_repositories_pulp_version: 2.16
-    katello_repositories_pulp_release: stable
-    foreman_repositories_version: 1.18
-    foreman_installer_upgrade: True
-    foreman_repositories_environment: release
-    katello_repositories_environment: release
-    foreman_installer_scenario: katello
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
-  roles:
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
