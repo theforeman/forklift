@@ -1,4 +1,3 @@
 ---
 foreman_openscap_hammer: hammer
 foreman_openscap_proxy_name: False
-foreman_openscap_installer_options: ""

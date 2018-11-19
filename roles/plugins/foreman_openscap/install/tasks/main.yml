@@ -1,0 +1,14 @@
+- name: 'Install openscap plugin'
+  include_role:
+    name: plugins/plugin_installer
+  vars:
+    plugin_installer_options: >
+      --enable-foreman-plugin-openscap
+      --enable-foreman-proxy-plugin-openscap
+      --enable-foreman-cli-openscap
+      {{ foreman_openscap_installer_options }}
+
+- name: 'Install foreman openscap puppet module'
+  yum:
+    name: 'puppet-foreman_scap_client'
+    state: 'present'

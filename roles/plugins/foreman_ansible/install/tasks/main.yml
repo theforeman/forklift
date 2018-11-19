@@ -1,0 +1,13 @@
+- name: 'Install ansible'
+  yum:
+    name: ansible
+    state: present
+
+- name: 'Install ansible plugin'
+  include_role:
+    name: plugins/plugin_installer
+  vars:
+    plugin_installer_options: >
+      --enable-foreman-plugin-ansible
+      --enable-foreman-proxy-plugin-ansible
+      {{ foreman_ansible_installer_options }}

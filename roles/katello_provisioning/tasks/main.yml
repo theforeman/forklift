@@ -131,6 +131,34 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_sync_repos
 
+- name: 'find foreman plugins repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository info
+    --name "Foreman Plugins"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  register: katello_foreman_plugins_repo
+  ignore_errors: True
+
+- name: 'create foreman plugins repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository create
+    --product="CentOS"
+    --content-type="yum"
+    --name "Foreman Plugins"
+    --url "http://yum.theforeman.org/plugins/{{ foreman_repositories_version }}/el7/x86_64/"
+    --download-policy {{ katello_provisioning_download_policy }}
+    --organization "{{ katello_provisioning_organization }}"
+  when: "'not found' in katello_foreman_plugins_repo.stderr"
+
+- name: 'sync foreman plugins repo'
+  shell: >
+    {{ katello_provisioning_hammer }} repository synchronize
+    --name "Foreman Plugins"
+    --product "CentOS"
+    --organization "{{ katello_provisioning_organization }}"
+  when: katello_provisioning_sync_repos
+
 # Activation key
 - name: 'find activation key'
   shell: >
@@ -149,6 +177,20 @@
     --lifecycle-environment="Library"
     --unlimited-hosts
   when: katello_provisioning_activation_key.stderr.find('not found') != -1
+
+- name: 'Get all the subscriptions'
+  shell: >
+    {{ katello_provisioning_hammer }} --output json subscription list
+    --organization '{{ katello_provisioning_organization }}'
+  register: subscriptions_json
+
+- name: 'Add subscriptions to activation key'
+  shell: >
+    {{ katello_provisioning_hammer }} activation-key add-subscription
+    --organization '{{ katello_provisioning_organization }}'
+    --name 'CentOS 7'
+    --subscription-id {{ item.ID }}
+  with_items: "{{ subscriptions_json.stdout | from_json }}"
 
 # Associate templates
 - name: 'find CentOS 7'

@@ -1,0 +1,19 @@
+---
+- name: 'Setup ssh'
+  template:
+    src: ../templates/ssh_config
+    dest: ~foreman-proxy/.ssh/config
+    owner: foreman-proxy
+    group: foreman-proxy
+    mode: "u=rw,g=,o="
+
+- name: 'Install ansible roles'
+  shell: >
+    ansible-galaxy install {{ item }} -p /etc/ansible/roles
+  with_items: '{{ foreman_ansible_roles }}'
+
+- name: 'Import installed ansible roles'
+  shell: >
+      curl -k -u {{ foreman_ansible_foreman_user }}:{{ foreman_ansible_foreman_password }} \
+      -H 'Content-Type: application/json' \
+      -X PUT https://localhost/ansible/api/v2/ansible_roles/import

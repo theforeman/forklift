@@ -1,40 +1,12 @@
-- name: 'Install openscap plugin'
-  include_role:
-    name: plugins/plugin_installer
-  vars:
-    plugin_installer_options: >
-      --enable-foreman-plugin-openscap
-      --enable-foreman-proxy-plugin-openscap
-      {{ foreman_openscap_installer_options }}
-  tags:
-    - installation
-
-- name: 'Install foreman openscap hammer plugin'
-  yum:
-    name: 'tfm-rubygem-hammer_cli_foreman_openscap'
-    state: 'present'
-  tags:
-    - installation
-
-- name: 'Install foreman openscap puppet module'
-  yum:
-    name: 'puppet-foreman_scap_client'
-    state: 'present'
-  tags:
-    - seed
-
+---
 - name: 'Import puppet classes'
   shell: >
     {{ foreman_openscap_hammer }} proxy import-classes --name {{ foreman_openscap_proxy_name }}
-  tags:
-    - seed
   when: '{{ foreman_openscap_proxy_name != False }}'
 
 - name: 'Import default scap content'
   shell: >
     foreman-rake foreman_openscap:bulk_upload:default
-  tags:
-    - seed
   when: '{{ foreman_openscap_proxy_name != False }}'
 
 # TODO: disabled until cli is fixed
