@@ -1,0 +1,13 @@
+---
+dependencies:
+  - role: katello
+  - role: libvirt
+    libvirt_tftp: true
+  - role: katello_provisioning
+    katello_provisioning_installer_extra_options: "{{ luna_provisioning_installer_options }}"
+    foreman_installer_additional_packages: "{{ luna_provisioning_additional_packages }}"
+  - role: 'plugins/foreman_ansible/seed'
+  # use role instead of installer options for openscap to install theforeman-foreman_scap_client puppet module
+  - role: 'plugins/foreman_openscap/install'
+  - role: 'plugins/foreman_openscap/seed'
+  - role: 'plugins/foreman_templates/seed'
