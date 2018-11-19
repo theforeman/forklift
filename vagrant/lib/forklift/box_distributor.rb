@@ -251,8 +251,8 @@ module Forklift
           override.vm.network :forwarded_port, guest: 3000, host: 3330
           override.vm.network :forwarded_port, guest: 443, host: 4430
         else
-          override.vm.network :forwarded_port, guest: 80, host: 8080
-          override.vm.network :forwarded_port, guest: 443, host: 4433
+          override.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
+          override.vm.network :forwarded_port, guest: 443, host: 4433, auto_correct: true
         end
 
         networks.each do |network|
