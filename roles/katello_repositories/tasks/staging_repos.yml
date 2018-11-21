@@ -47,6 +47,4 @@
     baseurl: "http://koji.katello.org/releases/yum/katello-{{ katello_repositories_version }}/client/el{{ ansible_distribution_major_version }}/x86_64/"
     priority: 1
     gpgcheck: 0
-  when:
-    - katello_repositories_version != "nightly"
-    - katello_repositories_version|float < 3.9
+  when: katello_repositories_version is version('3.8', '<=')

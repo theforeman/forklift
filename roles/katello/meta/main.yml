@@ -11,7 +11,7 @@ dependencies:
   - role: foreman_installer
     foreman_installer_scenario: katello
     foreman_installer_options_internal_use_only:
-      - "{{ '--disable-system-checks' if katello_repositories_version != '3.1' else '' }}"
+      - "--disable-system-checks"
       - "--foreman-admin-password {{ foreman_installer_admin_password }}"
     foreman_installer_additional_packages:
       - katello
