@@ -1,0 +1,3 @@
+katello_version_1: '3.7'
+katello_version_2: '3.8'
+katello_version_3: '{{ katello_version }}'
