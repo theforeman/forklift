@@ -35,7 +35,7 @@
     - foreman_repositories
     - katello_repositories
     - role: foreman_client_repositories
-      when: katello_version_1 in ['3.9', 'nightly']
+      when: katello_version_1 is version('3.9', '>=')
     - update_os_packages
     - haveged
     - disable_firewall
@@ -59,7 +59,7 @@
     - foreman_repositories
     - katello_repositories
     - role: foreman_client_repositories
-      when: katello_version_2 in ['3.9', 'nightly']
+      when: katello_version_2 is version('3.9', '>=')
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
@@ -79,7 +79,7 @@
     - foreman_repositories
     - katello_repositories
     - role: foreman_client_repositories
-      when: katello_version_3 in ['3.9', 'nightly']
+      when: katello_version_3 is version('3.9', '>=')
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
