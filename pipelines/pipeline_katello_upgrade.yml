@@ -91,6 +91,7 @@
     bats_tests:
       - fb-verify-packages.bats
       - fb-test-katello.bats
+      - fb-test-puppet.bats
       - fb-content-katello.bats
   vars_files:
     - vars_katello_upgrade_{{ katello_version }}.yml
