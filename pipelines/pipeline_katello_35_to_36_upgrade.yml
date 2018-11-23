@@ -73,6 +73,7 @@
     bats_tests:
       - fb-test-katello.bats
       - fb-content-katello.bats
+    bats_teardown: []
   roles:
     - bats
 
@@ -102,6 +103,7 @@
       - fb-destroy-organization.bats
       - fb-content-katello.bats
       - fb-proxy.bats
+    bats_teardown:
       - fb-finish.bats
   roles:
     - bats

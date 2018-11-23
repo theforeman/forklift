@@ -15,6 +15,7 @@
     bats_update_forklift: "no"
     bats_tests:
       - "fb-proxy-dns.bats"
+    bats_teardown: []
     foreman_installer_options:
        - "--no-enable-foreman"
        - "--no-enable-foreman-cli"
