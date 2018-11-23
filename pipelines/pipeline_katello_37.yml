@@ -73,12 +73,7 @@
 - hosts: pipeline-katello-3.7-centos7
   become: true
   vars:
-    bats_tests:
-      - fb-test-katello.bats
-      - fb-test-puppet.bats
-      - fb-content-katello.bats
+    bats_tests_additional:
       - fb-proxy.bats
-      - fb-destroy-organization.bats
-      - fb-finish.bats
   roles:
     - bats

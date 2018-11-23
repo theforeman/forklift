@@ -86,7 +86,5 @@
       - fb-verify-packages.bats
       - fb-test-katello.bats
       - fb-content-katello.bats
-      - fb-destroy-organization.bats
-      - fb-finish.bats
   roles:
     - foreman_testing

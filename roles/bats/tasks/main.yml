@@ -46,7 +46,11 @@
       shell: "bats --tap {{ item }} > {{ bats_output_dir }}/{{ item }}.tap"
       args:
         chdir: "{{ bats_forklift_dir }}/bats"
-      with_items: "{{ bats_tests }}"
+      with_items:
+        - "{{ bats_setup }}"
+        - "{{ bats_tests }}"
+        - "{{ bats_tests_additional }}"
+        - "{{ bats_teardown }}"
       register: "test_output"
       ignore_errors: true
       environment: "{{ bats_environment }}"
@@ -54,7 +58,11 @@
     - name: "Read results"
       shell: "cat {{ bats_output_dir }}/{{ item }}.tap"
       register: "test_results"
-      with_items: "{{ bats_tests }}"
+      with_items:
+        - "{{ bats_setup }}"
+        - "{{ bats_tests }}"
+        - "{{ bats_tests_additional }}"
+        - "{{ bats_teardown }}"
 
     - name: "Output test results"
       debug:
