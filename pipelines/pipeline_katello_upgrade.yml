@@ -87,13 +87,6 @@
 
 - hosts: pipeline-upgrade-centos7
   become: yes
-  vars:
-    bats_tests:
-      - fb-verify-packages.bats
-      - fb-test-foreman.bats
-      - fb-test-puppet.bats
-      - fb-test-katello.bats
-      - fb-content-katello.bats
   vars_files:
     - vars_katello_upgrade_{{ katello_version }}.yml
     - vars_katello_{{ katello_version_3 }}.yml
