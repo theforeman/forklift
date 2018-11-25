@@ -10,7 +10,7 @@
     executable: /opt/puppetlabs/puppet/bin/gem
   with_items:
     - puppet-strings
-  when: puppetlabs_gem.stat.exists
+  when: ( puppetlabs_gem.stat.exists and determine_puppetlabs_gem_check is not defined )
   tags:
     - packages
 
