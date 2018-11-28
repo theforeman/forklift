@@ -5,7 +5,7 @@
   when: ansible_os_family == 'Debian'
 
 - include_tasks: module_prs.yml
-  when: foreman_installer_module_prs != "" or foreman_installer_module_branches != ""
+  when: (foreman_installer_module_prs|length > 0) or (foreman_installer_module_branches|length > 0)
 
 - include_tasks: custom_hiera.yml
   when: foreman_installer_custom_hiera != ""
