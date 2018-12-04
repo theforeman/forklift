@@ -1,0 +1,15 @@
+- name: 'check if Intel or AMD processor'
+  shell: "grep -q Intel /proc/cpuinfo && echo -n 'intel' || echo -n 'amd'"
+  ignore_errors: true
+  register: cpu_type
+
+- name: 'rmmod kvm'
+  command: "modprobe -r kvm_{{ cpu_type.stdout }}"
+
+- name: 'enable nested virtualization'
+  copy:
+    dest: /etc/modprobe.d/kvm.conf
+    content: "options kvm_{{ cpu_type.stdout }} nested=1"
+
+- name: 'insmod kvm with nested'
+  command: "modprobe kvm_{{ cpu_type.stdout }} nested=1"

@@ -21,6 +21,9 @@
     dest: /etc/libvirt/libvirtd.conf
     line: 'auth_unix_rw = "none"'
 
+- include_tasks: 'nested.yml'
+  when: libvirt_nested
+
 - name: 'restart libvirt'
   service: name=libvirtd state=restarted
 
