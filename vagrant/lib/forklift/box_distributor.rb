@@ -219,6 +219,7 @@ module Forklift
         p.cpu_mode = box.fetch('cpu_mode') if box.fetch('cpu_mode', false)
         p.memory = box.fetch('memory').to_i * @settings['scale_memory'].to_i if box.fetch('memory', false)
         p.machine_virtual_size = box.fetch('disk_size') if box.fetch('disk_size', false)
+        p.management_network_domain = create_domain(box) if p.respond_to?(:management_network_domain)
 
         box.fetch('add_disks', []).each do |disk|
           type = disk.fetch('type', 'raw')
