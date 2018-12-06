@@ -25,8 +25,8 @@
     foreman_installer_additional_packages:
       - katello
   vars_files:
-    - vars_katello_upgrade_{{ katello_version }}.yml
-    - vars_katello_{{ katello_version_1 }}.yml
+    - vars/katello_upgrade_{{ katello_version }}.yml
+    - vars/katello_{{ katello_version_1 }}.yml
   roles:
     - umask
     - selinux
@@ -54,8 +54,8 @@
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
   vars_files:
-    - vars_katello_upgrade_{{ katello_version }}.yml
-    - vars_katello_{{ katello_version_2 }}.yml
+    - vars/katello_upgrade_{{ katello_version }}.yml
+    - vars/katello_{{ katello_version_2 }}.yml
   roles:
     - puppet_repositories
     - foreman_repositories
@@ -76,8 +76,8 @@
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
   vars_files:
-    - vars_katello_upgrade_{{ katello_version }}.yml
-    - vars_katello_{{ katello_version_3 }}.yml
+    - vars/katello_upgrade_{{ katello_version }}.yml
+    - vars/katello_{{ katello_version_3 }}.yml
   roles:
     - foreman_repositories
     - katello_repositories
@@ -88,7 +88,7 @@
 - hosts: pipeline-upgrade-centos7
   become: yes
   vars_files:
-    - vars_katello_upgrade_{{ katello_version }}.yml
-    - vars_katello_{{ katello_version_3 }}.yml
+    - vars/katello_upgrade_{{ katello_version }}.yml
+    - vars/katello_{{ katello_version_3 }}.yml
   roles:
     - foreman_testing

@@ -1,6 +1,6 @@
 - hosts: localhost
   vars_files:
-    - vars_katello_{{ katello_version }}.yml
+    - vars/katello_{{ katello_version }}.yml
   roles:
     - forklift
 
@@ -17,7 +17,7 @@
     foreman_installer_additional_packages:
       - foreman-installer-katello
   vars_files:
-    - vars_katello_{{ katello_version }}.yml
+    - vars/katello_{{ katello_version }}.yml
   roles:
     - umask
     - selinux
@@ -44,7 +44,7 @@
     foreman_installer_additional_packages:
       - katello
   vars_files:
-    - vars_katello_{{ katello_version }}.yml
+    - vars/katello_{{ katello_version }}.yml
   roles:
     - disable_ipv6
     - foreman_installer
@@ -66,7 +66,7 @@
       - "--foreman-proxy-content-parent-fqdn {{ server_fqdn.stdout }}"
       - "--puppet-server-foreman-url https://{{ server_fqdn.stdout }}"
   vars_files:
-    - vars_katello_{{ katello_version }}.yml
+    - vars/katello_{{ katello_version }}.yml
   roles:
     - foreman_proxy_content
     - foreman_installer
@@ -77,6 +77,6 @@
     bats_tests_additional:
       - fb-proxy.bats
   vars_files:
-    - vars_katello_{{ katello_version }}.yml
+    - vars/katello_{{ katello_version }}.yml
   roles:
     - foreman_testing
