@@ -28,7 +28,7 @@
     - foreman_repositories
     - katello_repositories
     - role: foreman_client_repositories
-      when: katello_version is version('3.9', '>=')
+      when: katello_version == "nightly" or katello_version is version('3.9', '>=')
     - disable_firewall
     - haveged
     - update_os_packages
