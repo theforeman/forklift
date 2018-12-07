@@ -6,7 +6,8 @@
   import_role:
     name: update_os_packages
 
+- set_fact:
+    foreman_installer_options_internal_use_only: "{{ [ '--disable-system-checks', '--upgrade', '--certs-update-all' ] + foreman_installer_options_internal_use_only }}"
+
 - name: 'Run installer upgrade'
   import_tasks: "install.yml"
-  vars:
-    foreman_installer_options_internal_use_only: "{{ [ '--disable-system-checks', '--upgrade', '--certs-update-all' ] + foreman_installer_options_internal_use_only }}"
