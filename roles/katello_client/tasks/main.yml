@@ -15,6 +15,7 @@
     environment: "{{ katello_client_environment }}"
     username: "{{ katello_client_username }}"
     password: "{{ katello_client_password }}"
+    server_insecure: "{{ katello_client_insecure }}"
   when:
     - katello_client_activationkey == ""
 
@@ -23,6 +24,7 @@
     state: "present"
     org_id: "{{ katello_client_organization }}"
     activationkey: "{{ katello_client_activationkey }}"
+    server_insecure: "{{ katello_client_insecure }}"
   when:
     - katello_client_activationkey != ""
 
