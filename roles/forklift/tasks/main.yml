@@ -9,8 +9,8 @@
 
 - name: 'Check Forklift state'
   fail:
-    msg: 'Invalid value for the forklift_state variable. Please use pass "-e "forklift_state=up"" to spin up the boxes or "-e "forklift_state=destroy"" to destroy the boxes'
-  when: forklift_state not in ('up', 'destroy')
+    msg: 'Invalid value for the forklift_state variable. Please use pass "-e "forklift_state=up"" to spin up the boxes or "-e "forklift_state=destroy"" to destroy the boxes. The rebuild state can be used to first destroy and the up.'
+  when: forklift_state not in ('up', 'destroy', 'rebuild')
 
 - name: 'vagrant {{ forklift_state }} boxes'
   include_tasks: '{{ forklift_state }}.yml'

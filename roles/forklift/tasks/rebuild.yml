@@ -1,0 +1,6 @@
+---
+- name: 'Rebuild vagrant boxes'
+  include_tasks: '{{ item }}.yml'
+  with_items:
+    - destroy
+    - up
