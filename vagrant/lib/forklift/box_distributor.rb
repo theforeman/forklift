@@ -180,6 +180,9 @@ module Forklift
 
       machine.vm.provision :shell do |shell|
         shell.inline = box.fetch('shell')
+        if box.key?('shell_args')
+          shell.args = box.fetch('shell_args')
+        end
         shell.privileged = false if box.key?('privileged')
       end
     end
@@ -286,13 +289,19 @@ module Forklift
     end
 
     def configure_openstack_provider(machine, box)
+      machine.hostmanager.enabled = false
       machine.vm.provider :openstack do |p, override|
         override.vm.box        = nil
-        override.ssh.username  = 'root'
+        #rsync disabled for RHEL6 because sudo require a TTY
+        if box.fetch('sync_disabled',nil)
+          override.vm.synced_folder ".", "/home/vagrant/sync", disabled: true
+        end
         override.ssh.pty       = true if box.fetch('pty', nil)
+        override.ssh.username  = box.fetch('username', 'root')
         p.server_name          = machine.vm.hostname
-        p.flavor               = /4GB/
+        p.flavor               = box.fetch('openstack_flavor', /4GB/)
         p.image                = box.fetch('image_name', nil)
+        p.meta_args_support    = true
 
         merged_options(box, 'openstack_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
