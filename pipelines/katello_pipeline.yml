@@ -11,6 +11,7 @@
   vars:
     foreman_installer_skip_installer: true
   vars_files:
+    - vars/katello_base.yml
     - vars/katello_base_staging.yml
     - vars/katello_{{ katello_version }}.yml
   roles:
@@ -33,6 +34,7 @@
 - hosts: pipeline-katello-{{ katello_version }}-centos7
   become: yes
   vars_files:
+    - vars/katello_base.yml
     - vars/katello_base_staging.yml
     - vars/katello_{{ katello_version }}.yml
   roles:
