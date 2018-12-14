@@ -11,20 +11,8 @@
 - hosts: pipeline-upgrade-centos7
   become: yes
   vars:
-    katello_repositories_environment: release
-    katello_repositories_pulp_release: stable
-    foreman_repositories_environment: release
-    foreman_client_repositories_environment: release
-    foreman_installer_scenario: katello
-    foreman_installer_options_internal_use_only:
-      - "--foreman-admin-password {{ foreman_installer_admin_password }}"
-      - "--disable-system-checks"
-      - "--puppet-server-max-active-instances 1"
-      - "--puppet-server-jvm-min-heap-size 1G"
-      - "--puppet-server-jvm-max-heap-size 1G"
-    foreman_installer_additional_packages:
-      - katello
   vars_files:
+    - vars/katello_base_release.yml
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_start }}.yml
   roles:
@@ -45,15 +33,9 @@
 - hosts: pipeline-upgrade-centos7
   become: true
   vars:
-    katello_repositories_environment: release
-    katello_repositories_pulp_release: stable
-    foreman_repositories_environment: release
-    foreman_client_repositories_environment: release
     foreman_installer_upgrade: True
-    foreman_installer_scenario: katello
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
   vars_files:
+    - vars/katello_base_release.yml
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_intermediate }}.yml
   roles:
@@ -67,15 +49,9 @@
 - hosts: pipeline-upgrade-centos7
   become: yes
   vars:
-    katello_repositories_environment: staging
-    katello_repositories_pulp_release: stable
-    foreman_repositories_environment: staging
-    foreman_client_repositories_environment: staging
     foreman_installer_upgrade: True
-    foreman_installer_scenario: katello
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
   vars_files:
+    - vars/katello_base_staging.yml
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_final }}.yml
   roles:
