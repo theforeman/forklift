@@ -48,11 +48,48 @@ Or if you want to run bats from a different repository or branch, edit `centos7-
 
 Under `pipelines` are a series of playbooks designed around testing scenarios for various version of the Foreman and Katello stack. To run one:
 
-    ansible-playbook pipelines/pipeline_katello_nightly.yml -e "forklift_state=up"
+    ansible-playbook pipelines/<pipeline>.yml -e forklift_state=up -e <vars required by pipeline>
 
 When you are finished with the test, you can tear down the associated infrastructure:
 
-    ansible-playbook pipelines/pipeline_katello_nightly.yml -e "forklift_state=destroy"
+    ansible-playbook pipelines/<pipeline>.yml -e forklift_state=destroy -e <vars required by pipeline>
+
+### Existing Pipelines
+
+* `katello_pipeline` - Installs a Katello and a Content Proxy VMs and runs the `foreman_testing` role to verify the setup.
+  Expects the `katello_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, nightly)
+* `katello_upgrade_pipeline` - Installs a Katello VM, upgrades it twice and runs the `foreman_testing` role to verify the final upgrade.
+  Expects the `katello_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, nightly).
+* `pipeline_foreman_nightly` - Installs a nightly Foreman VM and runs the `foreman_testing` role to verify the setup.
+
+### Creating Pipelines
+
+If you wish to add a new version of an existing pipeline (e.g. a new Katello release), you only have to add the corresponding vars files to `pipelines/vars/`.
+
+For Katello 3.11, you'd be adding the following two files:
+
+`pipelines/vars/katello_3.11.yml`:
+```yaml
+forklift_name: pipeline-katello-3.11
+forklift_boxes:
+  pipeline-katello-3.11-centos7:
+    box: centos7
+    memory: 8192
+  pipeline-proxy-3.11-centos7:
+    box: centos7
+    memory: 3072
+katello_repositories_version: '3.11'
+katello_repositories_pulp_version: '2.19'
+foreman_repositories_version: '1.21'
+foreman_client_repositories_version: "{{ foreman_repositories_version }}"
+```
+
+`pipelines/vars/katello_upgrade_3.11.yml`:
+```yaml
+katello_version_start: '3.9'
+katello_version_intermediate: '3.10'
+katello_version_final: '{{ katello_version }}'
+```
 
 ## Client Testing With Docker
 
