@@ -2,12 +2,3 @@ katello_repositories_environment: release
 katello_repositories_pulp_release: stable
 foreman_repositories_environment: release
 foreman_client_repositories_environment: release
-foreman_installer_scenario: katello
-foreman_installer_options_internal_use_only:
-  - "--foreman-admin-password {{ foreman_installer_admin_password }}"
-  - "--disable-system-checks"
-  - "--puppet-server-max-active-instances 1"
-  - "--puppet-server-jvm-min-heap-size 1G"
-  - "--puppet-server-jvm-max-heap-size 1G"
-foreman_installer_additional_packages:
-  - katello

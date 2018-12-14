@@ -12,6 +12,7 @@
   become: yes
   vars:
   vars_files:
+    - vars/katello_base.yml
     - vars/katello_base_release.yml
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_start }}.yml
@@ -35,6 +36,7 @@
   vars:
     foreman_installer_upgrade: True
   vars_files:
+    - vars/katello_base.yml
     - vars/katello_base_release.yml
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_intermediate }}.yml
@@ -51,6 +53,7 @@
   vars:
     foreman_installer_upgrade: True
   vars_files:
+    - vars/katello_base.yml
     - vars/katello_base_staging.yml
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_final }}.yml
