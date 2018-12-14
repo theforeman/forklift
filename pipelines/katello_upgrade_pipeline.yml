@@ -58,6 +58,7 @@
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_final }}.yml
   roles:
+    - puppet_repositories
     - foreman_repositories
     - katello_repositories
     - role: foreman_client_repositories
