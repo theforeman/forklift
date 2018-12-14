@@ -6,17 +6,12 @@
 :log_level: DEBUG
 :no_prefix: false
 :answer_file: /etc/foreman-installer/scenarios.d/katello-devel-answers.yaml
-:installer_dir: /usr/share/katello-installer-base
-:default_values_dir: /tmp
-:module_dirs:
-- /usr/share/foreman-installer/modules
-- /usr/share/katello-installer-base/modules
+:installer_dir: /usr/share/foreman-installer/katello
+:module_dirs: /usr/share/foreman-installer/modules
 :parser_cache_path:
 - /usr/share/foreman-installer/parser_cache/foreman.yaml
-- /usr/share/katello-installer-base/parser_cache/katello-devel.yaml
+- /usr/share/foreman-installer/parser_cache/katello.yaml
 :hiera_config: /usr/share/foreman-installer/config/foreman-hiera.conf
-:hook_dirs:
-- /usr/share/katello-installer-base/hooks
 :colors: true
 :order:
 - certs
@@ -25,5 +20,3 @@
 - katello_devel
 - foreman_proxy_content
 :password: l7VtnWiPeKe412o2CVBM6yVbTkKGh6L_CKx4_zBkmUE
-# Unused, but remains present for older config migrations
-:mapping: {}

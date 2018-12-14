@@ -20,12 +20,12 @@
 - name: 'Remove current puppet-katello_devel'
   file:
     state: absent
-    path: /usr/share/katello-installer-base/modules/katello_devel
+    path: "{{ foreman_installer_devel_scenario_modules }}/katello_devel"
 
 - name: 'Clone latest puppet-katello_devel'
   git:
     repo: https://github.com/theforeman/puppet-katello_devel
-    dest: /usr/share/katello-installer-base/modules/katello_devel
+    dest: "{{ foreman_installer_devel_scenario_modules }}/katello_devel"
     update: yes
 
 - name: 'Install puppet-agent'
@@ -34,7 +34,7 @@
     state: present
 
 - name: 'Install puppetlabs-vcsrepo'
-  shell: /opt/puppetlabs/puppet/bin/puppet module install --ignore-dependencies --target-dir /usr/share/katello-installer-base/modules puppetlabs-vcsrepo
+  shell: "/opt/puppetlabs/puppet/bin/puppet module install --ignore-dependencies --target-dir {{ foreman_installer_devel_scenario_modules }} puppetlabs-vcsrepo"
 
 - name: "Install gems to rebuild the kafo module cache"
   gem:
