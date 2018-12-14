@@ -62,6 +62,11 @@ When you are finished with the test, you can tear down the associated infrastruc
   Expects the `katello_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, nightly).
 * `pipeline_foreman_nightly` - Installs a nightly Foreman VM and runs the `foreman_testing` role to verify the setup.
 
+#### Examples
+
+    ansible-playbook pipelines/katello_upgrade_pipeline.yml -e forklift_state=up -e katello_version=nightly
+    ansible-playbook pipelines/katello_pipeline.yml -e forklift_state=up -e katello_version=3.10
+
 ### Creating Pipelines
 
 If you wish to add a new version of an existing pipeline (e.g. a new Katello release), you only have to add the corresponding vars files to `pipelines/vars/`.
