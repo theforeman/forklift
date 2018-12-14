@@ -22,6 +22,7 @@
     - umask
     - selinux
     - etc_hosts
+    - disable_ipv6
     - koji
     - epel_repositories
     - puppet_repositories
@@ -46,7 +47,6 @@
   vars_files:
     - vars/katello_{{ katello_version }}.yml
   roles:
-    - disable_ipv6
     - foreman_installer
 
 - hosts: pipeline-proxy-{{ katello_version }}-centos7
