@@ -7,11 +7,13 @@
 
 - name: 'Configure hammer'
   command: cp ~/hammer-cli/config/cli_config.template.yml ~/.hammer/cli_config.yml
-  creates: ~/.hammer/cli_config.yml
+  args:
+    creates: ~/.hammer/cli_config.yml
 
 - name: 'Configure hammer-cli-foreman'
   command: cp ~/hammer-cli-foreman/config/foreman.yml ~/.hammer/cli.modules.d/
-  creates: ~/.hammer/cli.modules.d/foreman.yml
+  args:
+    creates: ~/.hammer/cli.modules.d/foreman.yml
 
 - name: 'Update hammer-cli-foreman host'
   lineinfile:
@@ -33,32 +35,38 @@
 
 - name: 'Enable hammer-cli-foreman-admin'
   command: cp ~/hammer-cli-foreman-admin/config/foreman_admin.yml ~/.hammer/cli.modules.d/
-  creates: ~/.hammer/cli.modules.d/foreman_admin.yml
+  args:
+    creates: ~/.hammer/cli.modules.d/foreman_admin.yml
   when: ('theforeman/hammer-cli-foreman-admin' in hammer_devel_repositories)
 
 - name: 'Configure hammer-cli-foreman-admin logging core'
   command: cp ~/hammer-cli-foreman-admin/config/cli.modules.d/foreman_admin_logging_core.yml ~/.hammer/cli.modules.d/
-  creates: ~/.hammer/cli.modules.d/foreman_admin_logging_core.yml
+  args:
+    creates: ~/.hammer/cli.modules.d/foreman_admin_logging_core.yml
   when: ('theforeman/hammer-cli-foreman-admin' in hammer_devel_repositories)
 
 - name: 'Configure hammer-cli-foreman-admin logging for katello'
   command: cp ~/hammer-cli-foreman-admin/config/cli.modules.d/foreman_admin_logging_katello.yml ~/.hammer/cli.modules.d/
-  creates: ~/.hammer/cli.modules.d/foreman_admin_logging_katello.yml
+  args:
+    creates: ~/.hammer/cli.modules.d/foreman_admin_logging_katello.yml
   when: ('theforeman/hammer-cli-foreman-admin' in hammer_devel_repositories)
 
 - name: 'Configure hammer-cli-katello'
   command: cp ~/hammer-cli-katello/config/katello.yml ~/.hammer/cli.modules.d/
-  creates: ~/.hammer/cli.modules.d/katello.yml
+  args:
+    creates: ~/.hammer/cli.modules.d/katello.yml
   when: ('katello/hammer-cli-katello' in hammer_devel_repositories)
 
 - name: 'Configure hammer-cli-csv'
   command: cp ~/hammer-cli-csv/config/csv.yml ~/.hammer/cli.modules.d/
-  creates: ~/.hammer/cli.modules.d/csv.yml
+  args:
+    creates: ~/.hammer/cli.modules.d/csv.yml
   when: ('katello/hammer-cli-csv' in hammer_devel_repositories)
 
 - name: 'Configure hammer_cli_foreman_remote_execution'
   command: cp ~/hammer_cli_foreman_remote_execution/config/foreman_remote_execution.yml ~/.hammer/cli.modules.d/
-  creates: ~/.hammer/cli.modules.d/foreman_remote_execution.yml
+  args:
+    creates: ~/.hammer/cli.modules.d/foreman_remote_execution.yml
   when: ('theforeman/hammer_cli_foreman_remote_execution' in hammer_devel_repositories)
 
 - name: 'Alias hammer'
