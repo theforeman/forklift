@@ -20,10 +20,7 @@
     - umask
     - selinux
     - etc_hosts
-    - epel_repositories
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
+    - foreman_server_repositories
     - role: foreman_client_repositories
       when: katello_version_start == "nightly" or katello_version_start is version('3.9', '>=')
     - update_os_packages
@@ -41,9 +38,7 @@
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_intermediate }}.yml
   roles:
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
+    - foreman_server_repositories
     - role: foreman_client_repositories
       when: katello_version_intermediate == "nightly" or katello_version_intermediate is version('3.9', '>=')
     - foreman_installer
@@ -58,9 +53,7 @@
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_final }}.yml
   roles:
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
+    - foreman_server_repositories
     - role: foreman_client_repositories
       when: katello_version_final == "nightly" or katello_version_final is version('3.9', '>=')
     - foreman_installer
