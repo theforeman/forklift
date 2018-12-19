@@ -20,7 +20,7 @@
     - etc_hosts
     - disable_ipv6
     - koji
-    - server_repositories
+    - foreman_server_repositories
     - role: foreman_client_repositories
       when: katello_version == "nightly" or katello_version is version('3.9', '>=')
     - disable_firewall

@@ -6,9 +6,9 @@
     foreman_proxy_content_server: "{{ groups[foreman_proxy_content_server_group][0] }}"
     katello_repositories_version: nightly
   roles:
-    - role: server_repositories
-      server_repositories_katello: true
-      server_repositories_ostree: true
+    - role: foreman_server_repositories
+      foreman_server_repositories_katello: true
+      foreman_server_repositories_ostree: true
     - etc_hosts
     - {role: foreman_proxy_content, foreman_directory: '/home/vagrant/foreman/config/',
        devel: True, base_foreman_directory: '/home/vagrant/foreman/'}

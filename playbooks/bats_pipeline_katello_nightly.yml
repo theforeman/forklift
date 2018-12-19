@@ -1,7 +1,7 @@
 - hosts: all
   become: true
   vars:
-    server_repositories_katello: true
+    foreman_server_repositories_katello: true
     katello_repositories_version: nightly
     foreman_repositories_version: nightly
     foreman_repositories_environment: staging
@@ -20,7 +20,7 @@
     - umask
     - selinux
     - etc_hosts
-    - server_repositories
+    - foreman_server_repositories
     - disable_firewall
     - haveged
     - swapfile
