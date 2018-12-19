@@ -4,11 +4,11 @@
   vars:
     foreman_proxy_content_server_group: "server-{{ inventory_hostname }}"
     foreman_proxy_content_server: "{{ groups[foreman_proxy_content_server_group][0] }}"
+    foreman_server_repositories_katello: true
+    foreman_server_repositories_ostree: true
     katello_repositories_version: nightly
   roles:
-    - role: foreman_server_repositories
-      foreman_server_repositories_katello: true
-      foreman_server_repositories_ostree: true
+    - foreman_server_repositories
     - etc_hosts
     - {role: foreman_proxy_content, foreman_directory: '/home/vagrant/foreman/config/',
        devel: True, base_foreman_directory: '/home/vagrant/foreman/'}
