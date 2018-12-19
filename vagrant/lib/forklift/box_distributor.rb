@@ -29,7 +29,9 @@ module Forklift
         'sync_type' => 'rsync',
         'cachier' => {
           'mount_options' => ['rw', 'vers=3', 'tcp', 'nolock']
-        }
+        },
+        'cachier_enabled': true,
+        'hostmanager_enabled': true
       }
 
       overrides = YAML.load_file(settings_file) if File.exist?(settings_file)
@@ -120,6 +122,7 @@ module Forklift
 
     def configure_vagrant_hostmanager(config)
       return unless Vagrant.has_plugin?('vagrant-hostmanager')
+      return unless @settings['hostmanager_enabled']
 
       config.hostmanager.enabled = true
       config.hostmanager.manage_host = true
@@ -129,6 +132,7 @@ module Forklift
 
     def configure_vagrant_cachier(config)
       return unless Vagrant.has_plugin?('vagrant-cachier')
+      return unless @settings['cachier_enabled']
 
       config.cache.scope = :box
       config.cache.synced_folder_opts = {
