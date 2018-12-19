@@ -8,7 +8,4 @@
     katello_repositories_environment: staging
     foreman_installer_scenario: katello
   roles:
-    - puppet_repositories
-    - foreman_repositories
-    - katello_repositories
-    - foreman_installer
+    - foreman_server_repositories
