@@ -16,7 +16,7 @@
   - pipeline-proxy-3.5-3.6-centos7
   become: yes
   vars:
-    server_repositories_katello: true
+    foreman_server_repositories_katello: true
     puppet_repositories_version: 4
     katello_repositories_version: 3.5
     foreman_repositories_version: 1.16
@@ -25,7 +25,7 @@
     - umask
     - selinux
     - etc_hosts
-    - server_repositories
+    - foreman_server_repositories
     - update_os_packages
     - haveged
     - disable_firewall
@@ -78,7 +78,7 @@
 - hosts: pipeline-katello-3.5-3.6-centos7
   become: true
   vars:
-    server_repositories_katello: true
+    foreman_server_repositories_katello: true
     katello_repositories_version: 3.6
     foreman_repositories_version: 1.17
     foreman_installer_upgrade: True
@@ -88,7 +88,7 @@
       - "--upgrade-puppet"
       - "--disable-system-checks"
   roles:
-    - server_repositories
+    - foreman_server_repositories
     - foreman_installer
 
 - hosts: pipeline-katello-3.5-3.6-centos7

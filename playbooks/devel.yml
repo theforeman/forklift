@@ -2,8 +2,8 @@
 - hosts: all
   become: true
   vars:
-    server_repositories_katello: true
-    server_repositories_ostree: true
+    foreman_server_repositories_katello: true
+    foreman_server_repositories_ostree: true
     katello_repositories_version: nightly
     katello_repositories_environment: staging
     foreman_installer_scenario: katello-devel
@@ -14,6 +14,6 @@
       - "--katello-devel-enable-ostree=true"
   roles:
     - etc_hosts
-    - server_repositories
+    - foreman_server_repositories
     - foreman_installer_devel_scenario
     - foreman_installer

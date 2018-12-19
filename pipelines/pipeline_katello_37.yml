@@ -16,7 +16,7 @@
   - pipeline-proxy-3.7-centos7
   become: yes
   vars:
-    server_repositories_katello: true
+    foreman_server_repositories_katello: true
     puppet_repositories_version: 4
     katello_repositories_version: 3.7
     katello_repositories_pulp_version: 2.16
@@ -27,7 +27,7 @@
     - umask
     - selinux
     - etc_hosts
-    - server_repositories
+    - foreman_server_repositories
     - update_os_packages
     - haveged
     - disable_firewall

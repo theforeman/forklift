@@ -1,6 +1,0 @@
----
-server_repositories_epel: true
-server_repositories_puppet: true
-server_repositories_foreman: true
-server_repositories_katello: false
-server_repositories_ostree: false
