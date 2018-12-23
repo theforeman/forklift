@@ -289,10 +289,8 @@ module Forklift
     end
 
     def configure_openstack_provider(machine, box)
-      machine.hostmanager.enabled = false
       machine.vm.provider :openstack do |p, override|
         override.vm.box        = nil
-        #rsync disabled for RHEL6 because sudo require a TTY
         if box.fetch('sync_disabled',nil)
           override.vm.synced_folder ".", "/home/vagrant/sync", disabled: true
         end
