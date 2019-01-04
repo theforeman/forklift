@@ -16,18 +16,15 @@
     - vars/katello_base_staging.yml
     - vars/katello_{{ katello_version }}.yml
   roles:
-    - umask
-    - selinux
-    - etc_hosts
-    - disable_ipv6
-    - koji
-    - foreman_server_repositories
-    - role: foreman_client_repositories
-      when: katello_version == "nightly" or katello_version is version('3.9', '>=')
-    - disable_firewall
-    - haveged
-    - update_os_packages
-    - foreman_installer
+    - role: disable_firewall
+    - role: disable_ipv6
+    - role: foreman_server_repositories
+      foreman_server_repositories_katello_client: katello_version == 'nightly' or katello_version is number and katello_version is version('3.9', '>=') | bool
+    - role: update_os_packages
+    - role: katello
+      when: katello_version is number or katello_version == "nightly"
+    - role: katello_devel
+      when: katello_version == "devel"
 
 - hosts: pipeline-katello-{{ katello_version }}-centos7
   become: yes
@@ -66,6 +63,8 @@
     bats_tests_additional:
       - fb-proxy.bats
   vars_files:
+    - vars/katello_base.yml
     - vars/katello_{{ katello_version }}.yml
   roles:
-    - foreman_testing
+    - role: foreman_testing
+      when: pipeline_run_tests
