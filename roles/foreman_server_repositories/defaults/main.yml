@@ -4,3 +4,5 @@ foreman_server_repositories_puppet: true
 foreman_server_repositories_foreman: true
 foreman_server_repositories_katello: false
 foreman_server_repositories_ostree: false
+foreman_server_repositories_katello_client: false
+foreman_server_repositories_foreman_client: false

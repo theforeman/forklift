@@ -8,5 +8,9 @@ dependencies:
     when: foreman_server_repositories_foreman
   - role: katello_repositories
     when: foreman_server_repositories_katello
+  - role: foreman_client_repositories
+    when: foreman_server_repositories_foreman_client
+  - role: katello_client_repositories
+    when: foreman_server_repositories_katello_client
   - role: ostree_repositories
     when: foreman_server_repositories_ostree
