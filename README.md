@@ -69,6 +69,9 @@ vagrant plugin install vagrant-hostmanager
 
 By default, the boxes are set with `example.com` domain.
 
+If you're using NetworkManager, [this advanced DNS configuration](https://m0dlx.com/blog/Automatic_DNS_updates_from_libvirt_guests.html)
+allows completely automated dns resolution using dnsmasq from host to guest and guest to guest.
+
 ### Adding Custom Boxes
 
 Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
