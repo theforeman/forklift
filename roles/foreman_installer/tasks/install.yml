@@ -16,10 +16,17 @@
   set_fact:
     foreman_installer_options_joined: "{{ foreman_installer_options | join(' ') }} {{ foreman_installer_options_internal_use_only | join(' ') }}"
 
-- name: 'Replace certs-tar-file with legacy option'
+- name: 'Replace certs-tar and --inital-admin parms with legacy options'
   set_fact:
-    foreman_installer_options_joined: "{{ foreman_installer_options_joined | replace('--certs-tar-file', '--foreman-proxy-content-certs-tar') }}"
+    foreman_installer_options_joined: "{{ foreman_installer_options_joined | replace( item.new, item.old }}"
   when: foreman_installer_version_file['content'] | b64decode is version('1.21', '<')
+  with_items:
+    - { new: '--certs-tar-file', old: '--foreman-proxy-content-certs-tar' }
+    - { new: '--foreman-initial-admin-email', old: '--foreman-admin-email' }
+    - { new: '--foreman-initial-admin-first-name', old: '--foreman-admin-first-name' }
+    - { new: '--foreman-initial-admin-last-name', old: '--foreman-admin-last-name' }
+    - { new: '--foreman-initial-admin-password', old: '--foreman-admin-password' }
+    - { new: '--foreman-initial-admin-username', old: '--foreman-admin-username' }
 
 - name: 'Run installer'
   shell: >
