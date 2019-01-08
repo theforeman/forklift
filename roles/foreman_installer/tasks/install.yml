@@ -20,7 +20,7 @@
   set_fact:
     foreman_installer_options_joined: "{{ foreman_installer_options_joined | replace( item.new, item.old }}"
   when: foreman_installer_version_file['content'] | b64decode is version('1.21', '<')
-  with_items: 
+  with_items:
     - { new: '--certs-tar-file', old: '--foreman-proxy-content-certs-tar' }
     - { new: '--foreman-initial-admin-email', old: '--foreman-admin-email' }
     - { new: '--foreman-initial-admin-first-name', old: '--foreman-admin-first-name' }
