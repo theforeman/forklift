@@ -1,6 +1,6 @@
 foreman_installer_scenario: katello
 foreman_installer_options_internal_use_only:
-  - "--foreman-admin-password {{ foreman_installer_admin_password }}"
+  - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
   - "--disable-system-checks"
   - "--puppet-server-max-active-instances 1"
   - "--puppet-server-jvm-min-heap-size 1G"
