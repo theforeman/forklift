@@ -18,7 +18,7 @@
 
 - name: 'Replace certs-tar and --inital-admin parms with legacy options'
   set_fact:
-    foreman_installer_options_joined: "{{ foreman_installer_options_joined | replace( item.new, item.old }}"
+    foreman_installer_options_joined: "{{ foreman_installer_options_joined | replace(item.new, item.old) }}"
   when: foreman_installer_version_file['content'] | b64decode is version('1.21', '<')
   with_items:
     - { new: '--certs-tar-file', old: '--foreman-proxy-content-certs-tar' }
