@@ -1,0 +1,11 @@
+forklift_name: pipeline-katello-3.7
+forklift_boxes:
+  pipeline-katello-3.7-centos7:
+    box: centos7
+    memory: 8192
+  pipeline-proxy-3.7-centos7:
+    box: centos7
+    memory: 3072
+katello_repositories_version: '3.7'
+katello_repositories_pulp_version: '2.16'
+foreman_repositories_version: '1.18'
