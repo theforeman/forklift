@@ -1,0 +1,12 @@
+forklift_name: pipeline-katello-3.11
+forklift_boxes:
+  pipeline-katello-3.11-centos7:
+    box: centos7
+    memory: 8192
+  pipeline-proxy-3.11-centos7:
+    box: centos7
+    memory: 3072
+katello_repositories_version: '3.11'
+katello_repositories_pulp_version: '2.18'
+foreman_repositories_version: '1.21'
+foreman_client_repositories_version: "{{ foreman_repositories_version }}"
