@@ -88,6 +88,7 @@ module Forklift
         configure_rackspace(machine, box)
         configure_openstack_provider(machine, box)
         configure_google_provider(machine, box)
+        configure_docker(machine, box)
         configure_synced_folders(machine, box)
         configure_sshfs(config, box)
         configure_nfs(config, box)
@@ -311,6 +312,24 @@ module Forklift
 
         merged_options(box, 'google_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
+        end
+      end
+    end
+
+    def configure_docker(machine, box)
+      puts box
+      machine.vm.provider :docker do |p, _override|
+        p.has_ssh = box.fetch('has_ssh') if box.fetch('has_ssh', false)
+        p.privileged = box.fetch('privileged') if box.fetch('privileged', false)
+        p.expose = box.fetch('expose') if box.fetch('expose', false)
+
+        p.image = box.fetch('image') if box.fetch('image', false)
+
+        if box.fetch('build_dir', false)
+          default_build_args = ["--build-arg=USER_EUID=#{Process.euid}"]
+
+          p.build_dir = box.fetch('build_dir') if box.fetch('build_dir', false)
+          p.build_args = default_build_args.concat(box.fetch('build_args', []))
         end
       end
     end
