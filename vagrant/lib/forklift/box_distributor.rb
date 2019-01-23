@@ -291,13 +291,13 @@ module Forklift
     def configure_openstack_provider(machine, box)
       machine.vm.provider :openstack do |p, override|
         override.vm.box = nil
-        if box.fetch('sync_disabled', nil)
-          override.vm.synced_folder '.', '/home/vagrant/sync', disabled: true
+        if box.fetch('sync_type', 'disabled')
+          override.vm.synced_folder '.', '/vagrant', disabled: true
         end
         override.ssh.pty       = true if box.fetch('pty', nil)
         override.ssh.username  = box.fetch('username', 'root')
         p.server_name          = machine.vm.hostname
-        p.flavor               = box.fetch('openstack_flavor', /4GB/)
+        p.flavor               = box.fetch('openstack_flavor', nil)
         p.image                = box.fetch('image_name', nil)
         p.meta_args_support    = true
 
