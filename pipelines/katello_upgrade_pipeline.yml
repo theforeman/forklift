@@ -30,13 +30,14 @@
 
 - hosts: pipeline-upgrade-centos7
   become: true
-  vars:
-    foreman_installer_upgrade: True
   vars_files:
     - vars/katello_base.yml
     - vars/katello_base_release.yml
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_intermediate }}.yml
+  vars:
+    foreman_installer_upgrade: True
+    foreman_installer_skip_installer: "{{ true if katello_version_start == katello_version_intermediate else false }}"
   roles:
     - foreman_server_repositories
     - role: foreman_client_repositories
