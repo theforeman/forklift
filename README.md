@@ -142,6 +142,19 @@ static:
     management_network_address: 172.23.99.0/24
 ```
 
+Example with openstack provider:
+You will need to install vagrant openstack provider. For more information click [here](https://github.com/ggiamarchi/vagrant-openstack-provider).
+Do not forget to set openstack API credentials. To use openstack provider as default look [here](https://www.vagrantup.com/docs/providers/default.html).
+Tip: You can disable hostmanager by using settings.yaml
+```
+openstack-centos7:
+  image_name: 'Centos7'
+  username: 'centos'  #root by default
+  hostname: 'john-doe'
+  openstack_flavor: 'm1.medium'
+  sync_type: 'disabled' 
+```
+
 #### Using SSHFS to share folders
 
 You will need to install [vagrant-sshfs](https://github.com/dustymabe/vagrant-sshfs) plugin. Make sure your host actually has sshfs installed.
