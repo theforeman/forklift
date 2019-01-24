@@ -170,6 +170,7 @@ module Forklift
           ansible_provisioner.extra_vars = ansible['variables']
           ansible_provisioner.groups = @ansible_groups
           ansible_provisioner.verbose = ansible['verbose'] || false
+          ansible_provisioner.galaxy_role_file = ansible['galaxy_role_file'] if ansible['galaxy_role_file']
         end
       end
     end
