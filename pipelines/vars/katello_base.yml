@@ -8,3 +8,9 @@ foreman_installer_options_internal_use_only:
   - "--puppet-server-jvm-max-heap-size 1G"
 foreman_installer_additional_packages:
   - katello
+server_box:
+  box: centos7
+  memory: 8192
+proxy_box:
+  box: centos7
+  memory: 3072
