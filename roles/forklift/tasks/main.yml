@@ -1,7 +1,4 @@
 ---
-- set_fact:
-    current_directory: "{{ lookup('pipe','dirname `pwd`') }}"
-
 - name: 'Check variables defined'
   fail:
     msg: 'Please define forklift_name which determines the file boxes are deployed to'

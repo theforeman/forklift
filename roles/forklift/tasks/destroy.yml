@@ -2,9 +2,9 @@
 - name: 'Destroy boxes'
   command: "vagrant destroy -f {{ forklift_boxes.keys()|join(' ') }}"
   args:
-    chdir: "{{ current_directory }}"
+    chdir: "{{ forklift_directory }}"
 
 - name: 'Remove box file'
   file:
-    path: "{{ current_directory }}/vagrant/boxes.d/80-tmp-{{ forklift_name }}.yaml"
+    path: "{{ forklift_directory }}/vagrant/boxes.d/80-tmp-{{ forklift_name }}.yaml"
     state: "absent"
