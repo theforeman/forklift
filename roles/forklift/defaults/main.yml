@@ -1,2 +1,3 @@
 ---
+forklift_directory: "{{ role_path | dirname | dirname }}"
 forklift_state: ''

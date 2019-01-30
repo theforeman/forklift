@@ -1,7 +1,7 @@
 ---
 - name: 'Write box file'
   copy:
-    dest: "{{ current_directory }}/vagrant/boxes.d/80-tmp-{{ forklift_name }}.yaml"
+    dest: "{{ forklift_directory }}/vagrant/boxes.d/80-tmp-{{ forklift_name }}.yaml"
     content: "{{ forklift_boxes | to_yaml }}"
 
 # using --no-parallel here to avoid problems with libvirt storage volumes
@@ -9,4 +9,4 @@
 - name: 'Bring up boxes'
   command: "vagrant up --no-parallel {{ forklift_boxes.keys()|join(' ') }}"
   args:
-    chdir: "{{ current_directory }}"
+    chdir: "{{ forklift_directory }}"
