@@ -1,10 +1,10 @@
 - hosts: localhost
+  vars_files:
+    - vars/katello_base.yml
   vars:
     forklift_name: pipeline-upgrade-nightly
     forklift_boxes:
-      pipeline-upgrade-centos7:
-        box: centos7
-        memory: 6144
+      pipeline-upgrade-centos7: "{{ server_box }}"
   roles:
     - forklift
 
