@@ -1,6 +1,6 @@
 - hosts: localhost
   vars_files:
-    - vars/katello_base.yml
+    - vars/{{ server_type | default('katello') }}_base.yml
   vars:
     forklift_name: pipeline-upgrade-nightly
     forklift_boxes:
@@ -12,10 +12,10 @@
   become: yes
   vars:
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_release.yml
-    - vars/katello_upgrade_{{ katello_version }}.yml
-    - vars/katello_{{ katello_version_start }}.yml
+    - vars/{{ server_type | default('katello') }}_base.yml
+    - vars/{{ server_type | default('katello') }}_base_release.yml
+    - vars/{{ server_type | default('katello') }}_upgrade_{{ target_version }}.yml
+    - vars/{{ server_type | default('katello') }}_{{ target_version_start }}.yml
   roles:
     - umask
     - selinux
@@ -30,13 +30,13 @@
 - hosts: pipeline-upgrade-centos7
   become: true
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_release.yml
-    - vars/katello_upgrade_{{ katello_version }}.yml
-    - vars/katello_{{ katello_version_intermediate }}.yml
+    - vars/{{ server_type | default('katello') }}_base.yml
+    - vars/{{ server_type | default('katello') }}_base_release.yml
+    - vars/{{ server_type | default('katello') }}_upgrade_{{ target_version }}.yml
+    - vars/{{ server_type | default('katello') }}_{{ target_version_intermediate }}.yml
   vars:
     foreman_installer_upgrade: True
-    foreman_installer_skip_installer: "{{ true if katello_version_start == katello_version_intermediate else false }}"
+    foreman_installer_skip_installer: "{{ true if target_version_start == target_version_intermediate else false }}"
   roles:
     - foreman_server_repositories
     - foreman_client_repositories
@@ -47,10 +47,10 @@
   vars:
     foreman_installer_upgrade: True
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_staging.yml
-    - vars/katello_upgrade_{{ katello_version }}.yml
-    - vars/katello_{{ katello_version_final }}.yml
+    - vars/{{ server_type | default('katello') }}_base.yml
+    - vars/{{ server_type | default('katello') }}_base_staging.yml
+    - vars/{{ server_type | default('katello') }}_upgrade_{{ target_version }}.yml
+    - vars/{{ server_type | default('katello') }}_{{ target_version_final }}.yml
   roles:
     - foreman_server_repositories
     - foreman_client_repositories
@@ -59,7 +59,7 @@
 - hosts: pipeline-upgrade-centos7
   become: yes
   vars_files:
-    - vars/katello_upgrade_{{ katello_version }}.yml
-    - vars/katello_{{ katello_version_final }}.yml
+    - vars/{{ server_type | default('katello') }}_upgrade_{{ target_version }}.yml
+    - vars/{{ server_type | default('katello') }}_{{ target_version_final }}.yml
   roles:
     - foreman_testing
