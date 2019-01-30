@@ -1,0 +1,7 @@
+help: >
+  Perform a Katello installation with a separate proxy and run tests on it
+variables:
+  katello_version:
+    help: The Katello version
+  forklift_state:
+    help: The state of the machines to ensure

@@ -1,0 +1,5 @@
+#!/bin/sh
+export OBAL_DATA="$(dirname $(dirname $(realpath $0)))"
+export OBAL_PLAYBOOKS="${OBAL_DATA}/pipelines"
+export OBAL_INVENTORY="${OBAL_DATA}/inventories"
+exec obal "$@"

@@ -1,0 +1,12 @@
+help: >
+  Perform a Katello upgrade pipeline
+
+
+  This pipeline installs a base version, then upgrades it to an intermediate
+  version. Lastly it's upgraded to the final version (the katello_version
+  parameter) and tests are ran on that.
+variables:
+  katello_version:
+    help: The Katello version to run tests on.
+  forklift_state:
+    help: The state of the machines to ensure

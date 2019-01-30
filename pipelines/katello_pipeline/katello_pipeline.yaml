@@ -1,7 +1,7 @@
 - hosts: localhost
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_{{ katello_version }}.yml
+    - ../vars/katello_base.yml
+    - ../vars/katello_{{ katello_version }}.yml
   roles:
     - forklift
 
@@ -12,9 +12,9 @@
   vars:
     foreman_installer_skip_installer: true
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_staging.yml
-    - vars/katello_{{ katello_version }}.yml
+    - ../vars/katello_base.yml
+    - ../vars/katello_base_staging.yml
+    - ../vars/katello_{{ katello_version }}.yml
   roles:
     - role: disable_firewall
     - role: disable_ipv6
@@ -29,9 +29,9 @@
 - hosts: pipeline-katello-{{ katello_version }}-centos7
   become: yes
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_staging.yml
-    - vars/katello_{{ katello_version }}.yml
+    - ../vars/katello_base.yml
+    - ../vars/katello_base_staging.yml
+    - ../vars/katello_{{ katello_version }}.yml
   roles:
     - foreman_installer
 
@@ -52,7 +52,7 @@
       - "--foreman-proxy-content-parent-fqdn {{ server_fqdn.stdout }}"
       - "--puppet-server-foreman-url https://{{ server_fqdn.stdout }}"
   vars_files:
-    - vars/katello_{{ katello_version }}.yml
+    - ../vars/katello_{{ katello_version }}.yml
   roles:
     - foreman_proxy_content
     - foreman_installer
@@ -63,8 +63,8 @@
     bats_tests_additional:
       - fb-proxy.bats
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_{{ katello_version }}.yml
+    - ../vars/katello_base.yml
+    - ../vars/katello_{{ katello_version }}.yml
   roles:
     - role: foreman_testing
       when: pipeline_run_tests

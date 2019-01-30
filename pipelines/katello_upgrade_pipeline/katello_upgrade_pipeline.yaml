@@ -1,6 +1,6 @@
 - hosts: localhost
   vars_files:
-    - vars/katello_base.yml
+    - ../vars/katello_base.yml
   vars:
     forklift_name: pipeline-upgrade-nightly
     forklift_boxes:
@@ -12,10 +12,10 @@
   become: yes
   vars:
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_release.yml
-    - vars/katello_upgrade_{{ katello_version }}.yml
-    - vars/katello_{{ katello_version_start }}.yml
+    - ../vars/katello_base.yml
+    - ../vars/katello_base_release.yml
+    - ../vars/katello_upgrade_{{ katello_version }}.yml
+    - ../vars/katello_{{ katello_version_start }}.yml
   roles:
     - umask
     - selinux
@@ -31,10 +31,10 @@
 - hosts: pipeline-upgrade-centos7
   become: true
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_release.yml
-    - vars/katello_upgrade_{{ katello_version }}.yml
-    - vars/katello_{{ katello_version_intermediate }}.yml
+    - ../vars/katello_base.yml
+    - ../vars/katello_base_release.yml
+    - ../vars/katello_upgrade_{{ katello_version }}.yml
+    - ../vars/katello_{{ katello_version_intermediate }}.yml
   vars:
     foreman_installer_upgrade: True
     foreman_installer_skip_installer: "{{ true if katello_version_start == katello_version_intermediate else false }}"
@@ -49,10 +49,10 @@
   vars:
     foreman_installer_upgrade: True
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_staging.yml
-    - vars/katello_upgrade_{{ katello_version }}.yml
-    - vars/katello_{{ katello_version_final }}.yml
+    - ../vars/katello_base.yml
+    - ../vars/katello_base_staging.yml
+    - ../vars/katello_upgrade_{{ katello_version }}.yml
+    - ../vars/katello_{{ katello_version_final }}.yml
   roles:
     - foreman_server_repositories
     - role: foreman_client_repositories
@@ -62,7 +62,7 @@
 - hosts: pipeline-upgrade-centos7
   become: yes
   vars_files:
-    - vars/katello_upgrade_{{ katello_version }}.yml
-    - vars/katello_{{ katello_version_final }}.yml
+    - ../vars/katello_upgrade_{{ katello_version }}.yml
+    - ../vars/katello_{{ katello_version_final }}.yml
   roles:
     - foreman_testing
