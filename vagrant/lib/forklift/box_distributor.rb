@@ -297,7 +297,7 @@ module Forklift
         override.ssh.pty       = true if box.fetch('pty', nil)
         override.ssh.username  = box.fetch('username', 'root')
         p.server_name          = machine.vm.hostname
-        p.flavor               = box.fetch('openstack_flavor', nil)
+        p.flavor               = box.fetch('openstack_flavor', /4GB/)
         p.image                = box.fetch('image_name', nil)
         p.meta_args_support    = true
 
