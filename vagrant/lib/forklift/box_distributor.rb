@@ -30,13 +30,13 @@ module Forklift
         'cachier' => {
           'mount_options' => ['rw', 'vers=3', 'tcp', 'nolock']
         },
-        'cachier_enabled': true,
-        'hostmanager_enabled': true
+        'cachier_enabled' => true,
+        'hostmanager_enabled' => true
       }
 
       overrides = YAML.load_file(settings_file) if File.exist?(settings_file)
 
-      @settings ||= default_settings.merge(overrides)
+      default_settings.merge(overrides)
     end
 
     def distribute!
