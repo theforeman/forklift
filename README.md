@@ -47,7 +47,7 @@ git clone https://github.com/theforeman/forklift.git
 cd forklift
 cp vagrant/boxes.d/99-local.yaml.example vagrant/boxes.d/99-local.yaml
 sed -i "s/<REPLACE ME>/GITHUB_NICK/g" vagrant/boxes.d/99-local.yaml
-vagrant up centos7-devel
+vagrant up centos7-katello-devel
 ```
 
 You can find more thorough guides in the [docs folder](https://github.com/theforeman/forklift/tree/master/docs).
@@ -74,7 +74,7 @@ allows completely automated dns resolution using dnsmasq from host to guest and 
 
 ### Adding Custom Boxes
 
-Sometimes you want to spin up the same box type (e.g. centos7-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
+Sometimes you want to spin up the same box type (e.g. centos7-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
 
 ```
 my-nightly-koji:

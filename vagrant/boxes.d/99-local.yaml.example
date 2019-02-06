@@ -1,5 +1,5 @@
 ---
-centos7-devel:
+centos7-katello-devel:
   primary: true
   box: centos7
   ansible:
@@ -27,7 +27,7 @@ centos7-hammer-devel:
     group: 'hammer-devel'
     variables: # defaults in roles/hammer_devel/defaults/main.yml
       hammer_devel_github_username: <REPLACE ME>
-      #hammer_devel_server: centos7-devel.custom-domain
+      #hammer_devel_server: centos7-katello-devel.custom-domain
 
 katello-remote-execution:
   box: centos7-katello-nightly
@@ -38,7 +38,7 @@ centos7-proxy-devel:
     ansible:
       playbook: 'playbooks/foreman_proxy_content_dev.yml'
       group: 'foreman-proxy-content'
-      server: 'centos7-devel'
+      server: 'centos7-katello-devel'
 
 katello-client:
   box: centos7
@@ -46,7 +46,7 @@ katello-client:
     playbook: 'playbooks/katello_client.yml'
     group: 'client'
     variables:
-      katello_client_server: 'centos7-devel'
+      katello_client_server: 'centos7-katello-devel'
 
 centos7-katello-bats-ci:
   box: centos7

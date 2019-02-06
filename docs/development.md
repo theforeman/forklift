@@ -31,7 +31,7 @@ A Katello development environment can be deployed on CentOS 7. Ensure that you h
 For example, if I wanted my upstream remotes to be origin and to install the remote execution and discovery plugins:
 
 ```yaml
-centos7-devel:
+centos7-katello-devel:
   box: centos7
   ansible:
     playbook: 'playbooks/katello_devel.yml'
@@ -46,13 +46,13 @@ centos7-devel:
 Lastly, spin up the box:
 
 ```
-vagrant up centos7-devel
+vagrant up centos7-katello-devel
 ```
 
 The box can now be accessed via ssh and the Rails server started directly (this assumes you are connecting as the default `vagrant` user):
 
 ```sh
-vagrant ssh centos7-devel
+vagrant ssh centos7-katello-devel
 cd foreman
 bundle exec foreman start
 ```
@@ -64,12 +64,12 @@ Our backend requires a rails server to be running. We also use a webpack server 
 The files that webpack handles are located in `webpack/` directory found in Foreman, Katello,
 and plugin root directories. If you are editing any files in `webpack/` and want to have your changes refresh automatically, you will need a webpack server running.
 
-Because we are using a webpack server in conjunction with a rails server, there are different ways of starting a server depending on your needs and preferences. The following are instructions for starting the server using a base `centos7-devel` box as a starting point.
+Because we are using a webpack server in conjunction with a rails server, there are different ways of starting a server depending on your needs and preferences. The following are instructions for starting the server using a base `centos7-katello-devel` box as a starting point.
 
 #### Run a rails and webpack server together using `foreman start`
 - Run `bundle exec foreman start` in `~/foreman`
-- Navigate to `https://centos7-devel.<hostname>.example.com/` where `<hostname>` is the shortname of your hypervisor (machine your VM is running on).
-- Accept the self-signed certs at `https://centos7-devel.<hostname>.example.com:3808`.
+- Navigate to `https://centos7-katello-devel.<hostname>.example.com/` where `<hostname>` is the shortname of your hypervisor (machine your VM is running on).
+- Accept the self-signed certs at `https://centos7-katello-devel.<hostname>.example.com:3808`.
 - Everything should be set for you to run `bundle exec foreman start` to start your dev server as needed.
 
 NOTE: The `foreman` in `foreman start` is actually [this gem](https://github.com/ddollar/foreman) and not our `foreman`. It
@@ -287,7 +287,7 @@ katello-client:
     playbook: 'playbooks/katello_client.yml'
     group: 'client'
     variables:
-      katello_client_server: 'centos7-devel'
+      katello_client_server: 'centos7-katello-devel'
       katello_client_organization: 'Default_Organization'
       katello_client_environment: 'Library'
       katello_client_username: 'admin'
