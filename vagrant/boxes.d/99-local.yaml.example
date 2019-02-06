@@ -3,7 +3,7 @@ centos7-devel:
   primary: true
   box: centos7
   ansible:
-    playbook: 'playbooks/devel.yml'
+    playbook: 'playbooks/katello_devel.yml'
     group: 'devel'
     variables:
       ssh_forward_agent: true
