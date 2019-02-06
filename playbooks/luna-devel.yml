@@ -1,5 +1,5 @@
 ---
-- import_playbook: devel.yml
+- import_playbook: katello_devel.yml
   vars:
     katello_devel_github_username: ''
     foreman_installer_options_internal_use_only:

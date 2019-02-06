@@ -34,7 +34,7 @@ For example, if I wanted my upstream remotes to be origin and to install the rem
 centos7-devel:
   box: centos7
   ansible:
-    playbook: 'playbooks/devel.yml'
+    playbook: 'playbooks/katello_devel.yml'
     group: 'devel'
     variables:
       katello_devel_github_username: <REPLACE ME>
