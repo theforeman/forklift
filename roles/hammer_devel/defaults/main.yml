@@ -1,7 +1,7 @@
 ---
 hammer_devel_ruby_version: 2.3.1
 hammer_devel_server_group: "server-{{ inventory_hostname }}"
-hammer_devel_server: "centos7-devel"
+hammer_devel_server: "centos7-katello-devel"
 hammer_devel_server_protocol: 'https'
 hammer_devel_server_port: 443
 hammer_devel_host: "{{ hammer_devel_server_protocol }}://{{ hammer_devel_server }}:{{ hammer_devel_server_port }}"
