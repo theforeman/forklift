@@ -1,16 +1,5 @@
 ---
 - hosts: all
   become: true
-  vars:
-    foreman_server_repositories_katello: true
-    foreman_server_repositories_ostree: true
-    katello_repositories_version: nightly
-    katello_repositories_environment: staging
-    foreman_installer_scenario: katello-devel
-    foreman_installer_additional_packages:
-      - foreman-installer-katello
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
-      - "--katello-devel-enable-ostree=true"
   roles:
     - katello_devel
