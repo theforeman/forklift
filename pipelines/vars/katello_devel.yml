@@ -13,3 +13,4 @@ foreman_installer_additional_packages:
 foreman_installer_options_internal_use_only:
   - "--disable-system-checks"
   - "--katello-devel-enable-ostree=true"
+pipeline_run_tests: False
