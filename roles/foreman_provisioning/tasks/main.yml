@@ -1,21 +1,4 @@
 ---
-# make installation media available
-# until it's done by seed - http://projects.theforeman.org/issues/22661
-- name: 'assign organization and location to all seeded media'
-  with_items:
-    - CentOS mirror
-    - CoreOS mirror
-    - Debian mirror
-    - Fedora Atomic mirror
-    - Fedora mirror
-    - FreeBSD mirror
-    - OpenSUSE mirror
-    - Ubuntu mirror
-  shell: >
-    {{ foreman_provisioning_hammer }} medium update --name "{{ item }}" --organization-titles "{{ foreman_provisioning_organization }}" --location-titles "{{ foreman_provisioning_location }}"
-  when: foreman_provisioning_use_taxonomies and foreman_provisioning_foreman_version == 'nightly'
-
-
 - name: 'Setup CentOS 7 provisioning'
   import_tasks: configure_centos_7.yml
 
