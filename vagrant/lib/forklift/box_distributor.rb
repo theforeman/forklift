@@ -101,23 +101,23 @@ module Forklift
     end
 
     def configure_nfs(config, box)
-      return unless box['nfs']
-
-      config.vm.synced_folder box['nfs']['host_path'],
-                              box['nfs']['guest_path'],
-                              :type => :nfs,
-                              :nfs_udp => box['nfs']['udp'] || false,
-                              :linux__nfs_options => box['nfs']['options'] || %w[async rw no_subtree_check all_squash]
+      normalize_synced_folder(box['nfs']).each do |nfs|
+        config.vm.synced_folder nfs['host_path'],
+                                nfs['guest_path'],
+                                :type => :nfs,
+                                :nfs_udp => nfs['udp'] || false,
+                                :linux__nfs_options => nfs['options'] || %w[async rw no_subtree_check all_squash]
+      end
     end
 
     def configure_sshfs(config, box)
-      return unless box['sshfs']
-
-      config.vm.synced_folder box['sshfs']['host_path'],
-                              box['sshfs']['guest_path'],
-                              :type => :sshfs,
-                              :reverse => box['sshfs']['reverse'] || false,
-                              :sshfs_opts_append => box['sshfs']['options'] || ''
+      normalize_synced_folder(box['sshfs']).each do |sshfs|
+        config.vm.synced_folder sshfs['host_path'],
+                                sshfs['guest_path'],
+                                :type => :sshfs,
+                                :reverse => sshfs['reverse'] || false,
+                                :sshfs_opts_append => sshfs['options'] || ''
+      end
     end
 
     def configure_vagrant_hostmanager(config)
@@ -325,6 +325,16 @@ module Forklift
     def merged_options(box, key)
       options = @settings.fetch(key, {})
       options.merge(box.fetch(key, {}))
+    end
+
+    def normalize_synced_folder(folder_definition)
+      if folder_definition.nil?
+        []
+      elsif folder_definition.is_a? Hash
+        [folder_definition]
+      else
+        folder_definition
+      end
     end
 
   end
