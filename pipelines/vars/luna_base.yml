@@ -32,3 +32,4 @@ server_box:
 proxy_box:
   box: centos7
   memory: 3072
+pipeline_run_tests: True
