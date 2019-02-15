@@ -63,8 +63,6 @@
     bats_tests_additional:
       - fb-proxy.bats
   vars_files:
-    - vars/katello_base.yml
     - vars/katello_{{ katello_version }}.yml
   roles:
-    - role: foreman_testing
-      when: pipeline_run_tests
+    - foreman_testing
