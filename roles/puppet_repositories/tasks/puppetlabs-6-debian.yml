@@ -1,0 +1,9 @@
+---
+- name: 'Install Puppetlabs GPG key'
+  apt_key:
+    url: https://apt.puppetlabs.com/DEB-GPG-KEY-puppet
+
+- name: 'Install Puppetlabs Puppet 6 repository'
+  apt_repository:
+    repo: deb http://apt.puppetlabs.com {{ ansible_distribution_release }} puppet6
+    state: present

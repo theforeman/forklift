@@ -1,0 +1,7 @@
+---
+- name: 'Setup Puppet 6 Repository'
+  yum:
+    name: https://yum.puppetlabs.com/puppet6/puppet6-release-el-{{ ansible_distribution_major_version }}.noarch.rpm
+    state: present
+  tags:
+    - packages
