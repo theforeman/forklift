@@ -3,7 +3,6 @@
 - name: 'disable default context for admin'
   shell: >
     {{ foreman_provisioning_hammer }} user update --login admin --default-organization-id 0 --default-location-id 0
-  when: foreman_provisioning_use_taxonomies
 
 # Get the smart proxy ID of the local katello:
 - name: 'get smart proxy id'
@@ -22,12 +21,10 @@
 - name: 'prepare hammer taxonomy options'
   set_fact:
     foreman_provisioning_hammer_taxonomy_params: "--organizations '{{ foreman_provisioning_organization }}' --locations '{{ foreman_provisioning_location }}'"
-  when: foreman_provisioning_use_taxonomies
 
-- name: 'prepare blank hammer taxonomy options'
-  set_fact:
-    foreman_provisioning_hammer_taxonomy_params: ""
-  when: not foreman_provisioning_use_taxonomies
+- name: 'Set taxonomies for proxy'
+  shell: >
+    {{ foreman_provisioning_hammer }} proxy update --id {{ foreman_provisioning_smart_proxy.Id }} {{ foreman_provisioning_hammer_taxonomy_params }}
 
 # Compute Resource
 - name: 'find compute resource'
