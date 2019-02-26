@@ -66,6 +66,11 @@ fi
   [ $count -gt 1 ]
 }
 
+@test "Assign proxy and environment to default taxonomies" {
+  hammer proxy update --name=$(hostname -f) --locations "Default Location" --organizations "Default Organization"
+  hammer environment update --name=production --locations "Default Location" --organizations "Default Organization"
+}
+
 @test "assign puppet class to host" {
   id=$(hammer --csv puppet-class list --search 'name = ntp' | tail -n1 | cut -d, -f1)
   pc_ids=$(hammer host update --help | awk '/class-ids/ {print $1}')
