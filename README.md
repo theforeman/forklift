@@ -72,6 +72,8 @@ By default, the boxes are set with `example.com` domain.
 If you're using NetworkManager, [this advanced DNS configuration](https://m0dlx.com/blog/Automatic_DNS_updates_from_libvirt_guests.html)
 allows completely automated dns resolution using dnsmasq from host to guest and guest to guest.
 
+You can disable hostmanager in `settings.yaml` by setting `hostmanager_enabled` option.
+
 ### Adding Custom Boxes
 
 Sometimes you want to spin up the same box type (e.g. centos7-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
@@ -140,6 +142,20 @@ static:
   hostname: mystatic.box.com
   libvirt_options:
     management_network_address: 172.23.99.0/24
+```
+
+Example with openstack provider:  
+You will need to install vagrant openstack provider. For more information click [here](https://github.com/ggiamarchi/vagrant-openstack-provider).  
+Do not forget to set openstack API credentials.
+To use openstack provider as default look [here](https://www.vagrantup.com/docs/providers/default.html).
+
+```
+openstack-centos7:
+  image_name: 'Centos7'
+  username: 'centos'  #root by default
+  hostname: 'john-doe'
+  openstack_flavor: 'm1.medium'
+  sync_type: 'disabled'
 ```
 
 #### Using SSHFS to share folders
