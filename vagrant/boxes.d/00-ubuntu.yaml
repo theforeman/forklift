@@ -5,6 +5,10 @@ boxes:
     pty: true
     scenarios:
       - foreman
+    shell:
+      # Work around external nameservers in generic/ubuntu1604
+      # https://github.com/lavabit/robox/issues/11
+      sed -i 's/allow-hotplug eth0/auto eth0/ ; /^dns-nameserver/d ; /^pre-up sleep 2$/d' /etc/network/interfaces && systemctl restart networking
     ansible:
       variables:
         ansible_python_interpreter: /usr/bin/python3
