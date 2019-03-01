@@ -1,0 +1,29 @@
+- hosts: localhost
+  vars_files:
+    - vars/foreman_base.yml
+  roles:
+    - forklift
+
+- hosts:
+  - pipeline-foreman-{{ foreman_version }}-{{ foreman_os }}
+  become: yes
+  vars_files:
+    - vars/foreman_base.yml
+    - vars/foreman_base_staging.yml
+  roles:
+    - disable_firewall
+    - foreman
+
+- hosts: pipeline-foreman-{{ foreman_version }}-{{ foreman_os }}
+  become: true
+  vars:
+    bats_tests:
+      - "fb-verify-packages.bats"
+      - "fb-test-foreman.bats"
+      - "fb-test-puppet.bats"
+    bats_teardown:
+      - "fb-finish.bats"
+  vars_files:
+    - vars/foreman_{{ foreman_version }}.yml
+  roles:
+    - foreman_testing
