@@ -7,7 +7,7 @@
 
 - hosts:
   - pipeline-{{ server_type | default('katello') }}-{{ target_version }}-centos7
-  - pipeline-{{ proxy_type | default('proxy') }}-{{ target_version }}-centos7
+  - pipeline-{{ server_type | default('katello') }}proxy-{{ target_version }}-centos7
   become: yes
   vars:
     foreman_installer_skip_installer: true
@@ -32,7 +32,7 @@
   roles:
     - foreman_installer
 
-- hosts: pipeline-{{ proxy_type | default('proxy') }}-{{ target_version }}-centos7
+- hosts: pipeline-{{ server_type | default('katello') }}proxy-{{ target_version }}-centos7
   become: yes
   vars:
     foreman_proxy_content_server: pipeline-{{ server_type | default('katello') }}-{{ target_version }}-centos7
