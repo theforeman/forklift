@@ -22,7 +22,7 @@
       foreman_server_repositories_katello_client: katello_version == 'nightly' or katello_version is number and katello_version is version('3.9', '>=') | bool
     - role: update_os_packages
     - role: katello
-      when: katello_version is number or katello_version == "nightly"
+      when: katello_version != "devel"
     - role: katello_devel
       when: katello_version == "devel"
 
