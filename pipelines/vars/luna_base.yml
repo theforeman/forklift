@@ -32,3 +32,4 @@ server_box:
 proxy_box:
   box: "{{ pipeline_os | default ('centos7') }}"
   memory: 3072
+forklift_name: "pipeline-luna-{{ pipeline_version }}"

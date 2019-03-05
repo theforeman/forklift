@@ -1,4 +1,3 @@
-forklift_name: pipeline-luna-3.7
 forklift_boxes:
   pipeline-luna-3.7-centos7: "{{ server_box }}"
   pipeline-lunaproxy-3.7-centos7: "{{ proxy_box }}"

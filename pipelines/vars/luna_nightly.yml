@@ -1,4 +1,3 @@
-forklift_name: pipeline-luna-nightly
 forklift_boxes:
   pipeline-luna-nightly-centos7: "{{ server_box }}"
   pipeline-lunaproxy-nightly-centos7: "{{ proxy_box }}"
