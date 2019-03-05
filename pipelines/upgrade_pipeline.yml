@@ -1,6 +1,6 @@
 - hosts: localhost
   vars_files:
-    - vars/{{ pipeline_type | default('katello') }}_base.yml
+    - vars/{{ pipeline_type }}_base.yml
   vars:
     forklift_name: pipeline-upgrade-nightly
     forklift_boxes:
@@ -12,10 +12,10 @@
   become: yes
   vars:
   vars_files:
-    - vars/{{ pipeline_type | default('katello') }}_base.yml
-    - vars/{{ pipeline_type | default('katello') }}_base_release.yml
-    - vars/{{ pipeline_type | default('katello') }}_upgrade_{{ pipeline_version }}.yml
-    - vars/{{ pipeline_type | default('katello') }}_{{ pipeline_version_start }}.yml
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_base_release.yml
+    - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
+    - vars/{{ pipeline_type }}_{{ pipeline_version_start }}.yml
   roles:
     - umask
     - selinux
@@ -30,10 +30,10 @@
 - hosts: pipeline-upgrade-centos7
   become: true
   vars_files:
-    - vars/{{ pipeline_type | default('katello') }}_base.yml
-    - vars/{{ pipeline_type | default('katello') }}_base_release.yml
-    - vars/{{ pipeline_type | default('katello') }}_upgrade_{{ pipeline_version }}.yml
-    - vars/{{ pipeline_type | default('katello') }}_{{ pipeline_version_intermediate }}.yml
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_base_release.yml
+    - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
+    - vars/{{ pipeline_type }}_{{ pipeline_version_intermediate }}.yml
   vars:
     foreman_installer_upgrade: True
     foreman_installer_skip_installer: "{{ true if pipeline_version_start == pipeline_version_intermediate else false }}"
@@ -47,10 +47,10 @@
   vars:
     foreman_installer_upgrade: True
   vars_files:
-    - vars/{{ pipeline_type | default('katello') }}_base.yml
-    - vars/{{ pipeline_type | default('katello') }}_base_staging.yml
-    - vars/{{ pipeline_type | default('katello') }}_upgrade_{{ pipeline_version }}.yml
-    - vars/{{ pipeline_type | default('katello') }}_{{ pipeline_version_final }}.yml
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_base_staging.yml
+    - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
+    - vars/{{ pipeline_type }}_{{ pipeline_version_final }}.yml
   roles:
     - foreman_server_repositories
     - foreman_client_repositories
@@ -59,7 +59,7 @@
 - hosts: pipeline-upgrade-centos7
   become: yes
   vars_files:
-    - vars/{{ pipeline_type | default('katello') }}_upgrade_{{ pipeline_version }}.yml
-    - vars/{{ pipeline_type | default('katello') }}_{{ pipeline_version_final }}.yml
+    - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
+    - vars/{{ pipeline_type }}_{{ pipeline_version_final }}.yml
   roles:
     - foreman_testing
