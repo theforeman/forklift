@@ -1,0 +1,15 @@
+---
+- name: 'Foreman Client Staging Repository'
+  yum_repository:
+    name: foreman-client-koji
+    description: "Foreman {{ foreman_client_repositories_version }} Client Koji Repository"
+    baseurl: "http://koji.katello.org/releases/yum/foreman-client-{{ foreman_client_repositories_version }}/el{{ ansible_distribution_major_version }}/x86_64/"
+    priority: 1
+    gpgcheck: 0
+  when: foreman_client_repositories_environment == "staging"
+
+- name: 'Setup Foreman Client Release Repository'
+  yum:
+    name: https://yum.theforeman.org/client/{{ foreman_client_repositories_version }}/{{ foreman_client_repositories_dists[ansible_os_family] }}{{ ansible_distribution_major_version }}/x86_64/foreman-client-release.rpm
+    state: present
+  when: foreman_client_repositories_environment == "release"
