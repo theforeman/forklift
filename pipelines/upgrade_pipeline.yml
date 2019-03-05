@@ -5,7 +5,7 @@
   roles:
     - forklift
 
-- hosts: pipeline-upgrade-{{ pipeline_os }}
+- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version}}-{{ pipeline_os }}
   become: yes
   vars:
   vars_files:
@@ -24,7 +24,7 @@
     - disable_firewall
     - foreman_installer
 
-- hosts: pipeline-upgrade-{{ pipeline_os }}
+- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version}}-{{ pipeline_os }}
   become: true
   vars_files:
     - vars/{{ pipeline_type }}_base.yml
@@ -39,7 +39,7 @@
     - foreman_client_repositories
     - foreman_installer
 
-- hosts: pipeline-upgrade-{{ pipeline_os }}
+- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version}}-{{ pipeline_os }}
   become: yes
   vars:
     foreman_installer_upgrade: True
@@ -53,7 +53,7 @@
     - foreman_client_repositories
     - foreman_installer
 
-- hosts: pipeline-upgrade-{{ pipeline_os }}
+- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version}}-{{ pipeline_os }}
   become: yes
   vars_files:
     - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
