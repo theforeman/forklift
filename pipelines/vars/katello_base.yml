@@ -9,9 +9,8 @@ foreman_installer_options_internal_use_only:
 foreman_installer_additional_packages:
   - katello
 server_box:
-  box: centos7
+  box: "{{ pipeline_os | default ('centos7') }}"
   memory: 8192
 proxy_box:
-  box: centos7
+  box: "{{ pipeline_os | default ('centos7') }}"
   memory: 3072
-

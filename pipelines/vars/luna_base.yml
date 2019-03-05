@@ -27,9 +27,8 @@ foreman_installer_additional_packages:
   - tfm-rubygem-foreman_virt_who_configure
   - tfm-rubygem-hammer_cli_foreman_virt_who_configure
 server_box:
-  box: centos7
+  box: "{{ pipeline_os | default ('centos7') }}"
   memory: 8192
 proxy_box:
-  box: centos7
+  box: "{{ pipeline_os | default ('centos7') }}"
   memory: 3072
-pipeline_run_tests: True
