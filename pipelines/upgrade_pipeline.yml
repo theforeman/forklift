@@ -1,14 +1,11 @@
 - hosts: localhost
   vars_files:
     - vars/{{ pipeline_type }}_base.yml
-  vars:
-    forklift_name: pipeline-upgrade-nightly
-    forklift_boxes:
-      pipeline-upgrade-centos7: "{{ server_box }}"
+    - vars/{{ pipeline_type }}_upgrade_base.yml
   roles:
     - forklift
 
-- hosts: pipeline-upgrade-centos7
+- hosts: pipeline-upgrade-{{ pipeline_os }}
   become: yes
   vars:
   vars_files:
@@ -27,7 +24,7 @@
     - disable_firewall
     - foreman_installer
 
-- hosts: pipeline-upgrade-centos7
+- hosts: pipeline-upgrade-{{ pipeline_os }}
   become: true
   vars_files:
     - vars/{{ pipeline_type }}_base.yml
@@ -42,7 +39,7 @@
     - foreman_client_repositories
     - foreman_installer
 
-- hosts: pipeline-upgrade-centos7
+- hosts: pipeline-upgrade-{{ pipeline_os }}
   become: yes
   vars:
     foreman_installer_upgrade: True
@@ -56,7 +53,7 @@
     - foreman_client_repositories
     - foreman_installer
 
-- hosts: pipeline-upgrade-centos7
+- hosts: pipeline-upgrade-{{ pipeline_os }}
   become: yes
   vars_files:
     - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
