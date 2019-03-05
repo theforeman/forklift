@@ -14,4 +14,7 @@ server_box:
 proxy_box:
   box: "{{ pipeline_os | default ('centos7') }}"
   memory: 3072
-forklift_name: "pipeline-katello-{{ pipeline_version }}"
+forklift_name: "pipeline-katello-{{ pipeline_version }}-{{ pipeline_os }}"
+forklift_proxyname: "pipeline-katelloproxy-{{ pipeline_version }}-{{ pipeline_os }}"
+forklift_boxes:
+  "{{ {forklift_name: server_box, forklift_proxyname: proxy_box} }}"
