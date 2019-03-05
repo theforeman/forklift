@@ -19,7 +19,7 @@
     - role: disable_firewall
     - role: disable_ipv6
     - role: foreman_server_repositories
-      foreman_server_repositories_katello_client: katello_version == 'nightly' or katello_version is number and katello_version is version('3.9', '>=') | bool
+      foreman_server_repositories_foreman_client: katello_version == "nightly" or katello_version is version('3.9', '>=') | bool
     - role: update_os_packages
     - role: katello
 
