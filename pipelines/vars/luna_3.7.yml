@@ -1,3 +1,1 @@
-katello_repositories_version: '3.7'
-katello_repositories_pulp_version: '2.16'
-foreman_repositories_version: '1.18'
+katello_3.7.yml
