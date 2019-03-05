@@ -59,9 +59,6 @@
 
 - hosts: pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
   become: true
-  vars:
-    bats_tests_additional:
-      - fb-proxy.bats
   vars_files:
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_{{ pipeline_version }}.yml

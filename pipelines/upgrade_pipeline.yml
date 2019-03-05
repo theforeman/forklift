@@ -56,6 +56,8 @@
 - hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version}}-{{ pipeline_os }}
   become: yes
   vars_files:
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_upgrade_base.yml
     - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
     - vars/{{ pipeline_type }}_{{ pipeline_version_final }}.yml
   roles:
