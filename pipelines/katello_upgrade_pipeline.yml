@@ -20,9 +20,8 @@
     - umask
     - selinux
     - etc_hosts
-    - foreman_server_repositories
-    - role: foreman_client_repositories
-      when: katello_version_start == "nightly" or katello_version_start is version('3.9', '>=')
+    - role: foreman_server_repositories
+      foreman_server_repositories_foreman_client: katello_version_start == "nightly" or katello_version_start is version('3.9', '>=') | bool
     - update_os_packages
     - haveged
     - disable_firewall
@@ -39,9 +38,8 @@
     foreman_installer_upgrade: True
     foreman_installer_skip_installer: "{{ true if katello_version_start == katello_version_intermediate else false }}"
   roles:
-    - foreman_server_repositories
-    - role: foreman_client_repositories
-      when: katello_version_intermediate == "nightly" or katello_version_intermediate is version('3.9', '>=')
+    - role: foreman_server_repositories
+      foreman_server_repositories_foreman_client: katello_version_intermediate == "nightly" or katello_version_intermediate is version('3.9', '>=') | bool
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
@@ -54,9 +52,8 @@
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_final }}.yml
   roles:
-    - foreman_server_repositories
-    - role: foreman_client_repositories
-      when: katello_version_final == "nightly" or katello_version_final is version('3.9', '>=')
+    - role: foreman_server_repositories
+      foreman_server_repositories_foreman_client: katello_version_final == "nightly" or katello_version_final is version('3.9', '>=') | bool
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
