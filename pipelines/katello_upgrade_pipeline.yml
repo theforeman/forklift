@@ -20,8 +20,8 @@
     - umask
     - selinux
     - etc_hosts
-    - role: foreman_server_repositories
-      foreman_server_repositories_foreman_client: true
+    - foreman_server_repositories
+    - foreman_client_repositories
     - update_os_packages
     - haveged
     - disable_firewall
@@ -38,8 +38,8 @@
     foreman_installer_upgrade: True
     foreman_installer_skip_installer: "{{ true if katello_version_start == katello_version_intermediate else false }}"
   roles:
-    - role: foreman_server_repositories
-      foreman_server_repositories_foreman_client: true
+    - foreman_server_repositories
+    - foreman_client_repositories
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
@@ -52,8 +52,8 @@
     - vars/katello_upgrade_{{ katello_version }}.yml
     - vars/katello_{{ katello_version_final }}.yml
   roles:
-    - role: foreman_server_repositories
-      foreman_server_repositories_foreman_client: true
+    - foreman_server_repositories
+    - foreman_client_repositories
     - foreman_installer
 
 - hosts: pipeline-upgrade-centos7
