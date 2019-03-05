@@ -19,7 +19,7 @@
     - role: disable_firewall
     - role: disable_ipv6
     - role: foreman_server_repositories
-      foreman_server_repositories_foreman_client: true
+    - role: foreman_client_repositories
     - role: update_os_packages
     - role: katello
 
