@@ -1,3 +1,5 @@
 ---
 - include_tasks: repo.yml
-  when: foreman_client_repositories_version == "nightly" or foreman_client_repositories_version is version('1.20', '>=')
+  when:
+    - foreman_client_repositories_version == "nightly" or foreman_client_repositories_version is version('1.20', '>=')
+    - ansible_os_family == 'RedHat'
