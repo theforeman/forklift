@@ -64,7 +64,6 @@ When you are finished with the test, you can tear down the associated infrastruc
   Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian9)
   Expects the `pipeline_type` variable to be set to a known type (currently: foreman, katello, luna)
   Expects the `pipeline_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, 3.11, nightly).
-* `pipeline_foreman_nightly` - Installs a nightly Foreman VM and runs the `foreman_testing` role to verify the setup.
 
 #### Examples
 
