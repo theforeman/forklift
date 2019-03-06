@@ -9,10 +9,10 @@ foreman_installer_options_internal_use_only:
 foreman_installer_additional_packages:
   - katello
 server_box:
-  box: "{{ pipeline_os | default ('centos7') }}"
+  box: "{{ pipeline_os }}"
   memory: 8192
 proxy_box:
-  box: "{{ pipeline_os | default ('centos7') }}"
+  box: "{{ pipeline_os }}"
   memory: 3072
 forklift_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}"
 forklift_proxyname: "pipeline-{{ pipeline_type }}proxy-{{ pipeline_version }}-{{ pipeline_os }}"

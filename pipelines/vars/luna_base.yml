@@ -27,10 +27,10 @@ foreman_installer_additional_packages:
   - tfm-rubygem-foreman_virt_who_configure
   - tfm-rubygem-hammer_cli_foreman_virt_who_configure
 server_box:
-  box: "{{ pipeline_os | default ('centos7') }}"
+  box: "{{ pipeline_os }}"
   memory: 8192
 proxy_box:
-  box: "{{ pipeline_os | default ('centos7') }}"
+  box: "{{ pipeline_os }}"
   memory: 3072
 forklift_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}"
 forklift_proxyname: "pipeline-{{ pipeline_type }}proxy-{{ pipeline_version }}-{{ pipeline_os }}"

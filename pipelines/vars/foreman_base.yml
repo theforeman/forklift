@@ -6,7 +6,7 @@ foreman_installer_options_internal_use_only:
   - "--puppet-server-jvm-max-heap-size 1G"
 foreman_repositories_version: "{{ pipeline_version }}"
 server_box:
-  box: "{{ pipeline_os | default ('centos7') }}"
+  box: "{{ pipeline_os }}"
   memory: 4680
 forklift_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}"
 forklift_boxes:
