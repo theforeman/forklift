@@ -40,7 +40,7 @@ class LookupModule(LookupBase):
 
         for term in terms:
             display.debug("Forklift lookup term: %s" % term)
-            lookup_params = {key: value for (key, value) in [x.split('=') for x in term.split()]}
+            lookup_params = dict(x.split('=', 1) for x in term.split())
             scenario = lookup_params['scenario']
             scenario_version = lookup_params['scenario_version']
 
