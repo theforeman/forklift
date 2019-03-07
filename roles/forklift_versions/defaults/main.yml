@@ -1,0 +1,1 @@
+forklift_versions_file: "{{ playbook_dir | dirname }}/vagrant/config/versions.yaml"
