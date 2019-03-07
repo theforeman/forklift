@@ -12,8 +12,10 @@
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
     - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
-    - vars/{{ pipeline_type }}_{{ pipeline_version_start }}.yml
   roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version_start }}"
     - umask
     - selinux
     - etc_hosts
@@ -30,11 +32,13 @@
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
     - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
-    - vars/{{ pipeline_type }}_{{ pipeline_version_intermediate }}.yml
   vars:
     foreman_installer_upgrade: True
     foreman_installer_skip_installer: "{{ true if pipeline_version_start == pipeline_version_intermediate else false }}"
   roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version_intermediate }}"
     - foreman_server_repositories
     - foreman_client_repositories
     - foreman_installer
@@ -47,8 +51,10 @@
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_staging.yml
     - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
-    - vars/{{ pipeline_type }}_{{ pipeline_version_final }}.yml
   roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version_final }}"
     - foreman_server_repositories
     - foreman_client_repositories
     - foreman_installer
@@ -59,6 +65,5 @@
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_upgrade_base.yml
     - vars/{{ pipeline_type }}_upgrade_{{ pipeline_version }}.yml
-    - vars/{{ pipeline_type }}_{{ pipeline_version_final }}.yml
   roles:
     - foreman_testing
