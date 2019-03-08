@@ -86,6 +86,10 @@ class LookupModule(LookupBase):
                         upgrade_versions.add(scenario_version)
                     elif 1 <= len(upgrade_versions) < 3:
                         upgrade_versions.add(version[scenario])
+
+                if len(upgrade_versions) == 0:
+                    raise AnsibleLookupError("could not find %s/%s" % (scenario, scenario_version))
+
                 upgrade_versions = sorted(upgrade_versions, key=version_sort_key)
                 while len(upgrade_versions) < 3:
                     upgrade_versions.insert(0, upgrade_versions[0])
