@@ -5,6 +5,8 @@
 :log_name: katello-devel.log
 :log_level: DEBUG
 :no_prefix: false
+# Forklift always overwrites the answers so let's not pretend we save them
+:dont_save_answers: true
 :answer_file: /etc/foreman-installer/scenarios.d/katello-devel-answers.yaml
 :installer_dir: /usr/share/foreman-installer/katello
 :module_dirs: /usr/share/foreman-installer/modules
