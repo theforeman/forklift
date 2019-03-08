@@ -1,7 +1,6 @@
 - hosts: localhost
   vars_files:
     - vars/{{ pipeline_type }}_base.yml
-    - vars/{{ pipeline_type }}_{{ pipeline_version }}.yml
   roles:
     - forklift
 
@@ -66,6 +65,5 @@
   become: true
   vars_files:
     - vars/{{ pipeline_type }}_base.yml
-    - vars/{{ pipeline_type }}_{{ pipeline_version }}.yml
   roles:
     - foreman_testing
