@@ -67,5 +67,6 @@ class LookupModule(LookupBase):
                             'puppet_repositories_version': version['puppet'],
                             }
                     ret.append(forklift_vars)
+                    break
 
         return ret
