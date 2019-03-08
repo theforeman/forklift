@@ -85,10 +85,7 @@ class LookupModule(LookupBase):
                     if version[scenario] == scenario_version:
                         upgrade_versions.add(scenario_version)
                     elif 1 <= len(upgrade_versions) < 3:
-                        if scenario == 'foreman':
-                            upgrade_versions.add(version['foreman'])
-                        else:
-                            upgrade_versions.add(version['katello'])
+                        upgrade_versions.add(version[scenario])
                 upgrade_versions = sorted(upgrade_versions, key=version_sort_key)
                 while len(upgrade_versions) < 3:
                     upgrade_versions.insert(0, upgrade_versions[0])
