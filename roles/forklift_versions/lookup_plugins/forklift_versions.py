@@ -84,7 +84,7 @@ class LookupModule(LookupBase):
                 for version in reversed(versions['installers']):
                     if version[scenario] == scenario_version:
                         upgrade_versions.add(scenario_version)
-                    elif len(upgrade_versions) >= 1 and len(upgrade_versions) < 3:
+                    elif 1 <= len(upgrade_versions) < 3:
                         if scenario == 'foreman':
                             upgrade_versions.add(version['foreman'])
                         else:
