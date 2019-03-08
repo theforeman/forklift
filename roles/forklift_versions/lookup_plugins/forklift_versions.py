@@ -6,9 +6,9 @@ DOCUMENTATION = """
       lookup: forklift_versions
         author: Evgeni Golov <evgeni@redhat.com>
         version_added: "0.9"
-        short_description: fetch Foreman/Katello versions from Forklift's versions.yaml
+        short_description: fetch versions from Forklift's versions.yaml
         description:
-            - This lookup returns the component versions of a Foreman/Katello scenario
+            - This lookup returns the component versions of a Forklift scenario
         options:
           file:
             description: path to versions.yaml
@@ -23,7 +23,7 @@ DOCUMENTATION = """
           - this lookup will match the katello version for all other scenarios
 """
 import yaml
-from ansible.errors import AnsibleError, AnsibleParserError
+from ansible.errors import AnsibleParserError, AnsibleLookupError
 from ansible.plugins.lookup import LookupBase
 
 try:
@@ -40,19 +40,21 @@ class LookupModule(LookupBase):
 
         for term in terms:
             display.debug("Forklift lookup term: %s" % term)
+
             lookup_params = dict(x.split('=', 1) for x in term.split())
-            scenario = lookup_params['scenario']
-            scenario_version = lookup_params['scenario_version']
 
-            # Find the file in the expected search path, using a class method
-            # that implements the 'expected' search path for Ansible plugins.
-            #lookupfile = self.find_file_in_search_path(variables, 'files', term)
+            try:
+                scenario = lookup_params['scenario']
+                scenario_version = lookup_params['scenario_version']
+                versions_file_name = lookup_params['file']
+            except KeyError:
+                raise AnsibleParserError("missing required param for forklift_version")
 
-            # Don't use print or your own logging, the display class
-            # takes care of it in a unified way.
-            #display.vvvv(u"File lookup using %s as file" % lookupfile)
-            with open(lookup_params['file'], 'r') as versionsfile:
-                versions = yaml.safe_load(versionsfile)
+            try:
+                with open(versions_file_name, 'r') as versions_file:
+                    versions = yaml.safe_load(versions_file)
+            except Exception:
+                raise AnsibleLookupError("couldn't read '%s'" % versions_file_name)
             for version in versions['installers']:
                 if ((scenario == 'foreman' and version['foreman'] == scenario_version) or
                    (scenario != 'foreman' and version['katello'] == scenario_version)):
