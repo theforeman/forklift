@@ -1,3 +1,0 @@
-pipeline_version_start: '3.9'
-pipeline_version_intermediate: '3.10'
-pipeline_version_final: '{{ pipeline_version }}'
