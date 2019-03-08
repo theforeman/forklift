@@ -1,0 +1,253 @@
+---
+- hosts: all
+  become: true
+  vars:
+    selinux_state: permissive
+    pod_network: 10.244.0.0/16
+    flannel_version: a70459be0084506e4ec919aa1c114638878db11b
+    multus_version: master
+    kubevirt_version: v0.13.2
+    ovs_cni_version: master
+  roles:
+    - selinux
+    - epel_repositories
+  tasks:
+    - name: disable swap
+      command: swapoff -a
+
+    - name: deconfigure swap
+      mount:
+        src: /swapfile
+        fstype: swap
+        path: none
+        state: absent
+    - name: modprobe br_netfilter
+      modprobe:
+        name: br_netfilter
+
+    - name: configure bridge iptables
+      sysctl:
+        name: "{{ item }}"
+        value: 1
+        sysctl_file: /etc/sysctl.d/k8s.conf
+      with_items:
+        - net.bridge.bridge-nf-call-ip6tables
+        - net.bridge.bridge-nf-call-iptables
+
+    - name: install docker
+      yum:
+        name: docker
+
+    - name: enable docker
+      service:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: enable CentOS OpenStack repository
+      yum_repository:
+        name: centos-openstack-rocky
+        description: CentOS OpenStack
+        baseurl: http://mirror.centos.org/centos/$releasever/cloud/$basearch/openstack-rocky/
+        enabled: true
+        gpgcheck: false
+
+    - name: install openvswitch
+      yum:
+        name: openvswitch
+
+    - name: enable openvswitch
+      service:
+        name: openvswitch
+        enabled: true
+        state: started
+
+    - name: add foreman bridge
+      openvswitch_bridge:
+        bridge: foreman
+        state: present
+
+    - name: add port to foreman bridge
+      openvswitch_port:
+        bridge: foreman
+        port: eth1
+        state: present
+
+
+    - name: k8s repo
+      yum_repository:
+        name: kubernetes
+        description: Kubernetes
+        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+        enabled: true
+        gpgcheck: true
+        repo_gpgcheck: true
+        gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+        exclude: kube*
+
+    - name: install kubelet kubeadm kubectl
+      yum:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+        disable_excludes: kubernetes
+
+    - name: enable kubelet accounting
+      copy:
+        dest: /etc/systemd/system/kubelet.service.d/11-cgroups.conf
+        content: |
+          [Service]
+          CPUAccounting=true
+          MemoryAccounting=true
+
+    - name: reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: enable kubelet
+      service:
+        name: kubelet
+        enabled: true
+        state: started
+
+    - name: init cluster
+      command: kubeadm init --pod-network-cidr={{ pod_network }} --apiserver-advertise-address={{ ansible_eth0['ipv4']['address'] }}
+      args:
+        creates: /etc/kubernetes/admin.conf
+
+    - name: untaint master
+      command: kubectl taint nodes --all node-role.kubernetes.io/master-
+      register: untaint_master
+      failed_when: false
+      changed_when: untaint_master.rc == 0
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: deploy multus
+      command: kubectl apply -f https://raw.githubusercontent.com/intel/multus-cni/{{ multus_version }}/images/multus-daemonset.yml
+      args:
+        creates: /etc/cni/net.d/multus.d/multus.kubeconfig
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: deploy flannel
+      command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/{{ flannel_version }}/Documentation/kube-flannel.yml
+      args:
+        creates: /etc/cni/net.d/10-flannel.conflist
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: deploy kubevirt
+      command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt.yaml
+      args:
+        creates: /var/lib/kubelet/device-plugins/kubevirt-tun.sock
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: deploy ovs-cni
+      command: kubectl apply -f https://raw.githubusercontent.com/kubevirt/ovs-cni/{{ ovs_cni_version }}/examples/kubernetes-ovs-cni.yml
+      args:
+        creates: /opt/cni/bin/ovs
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: install virtctl
+      get_url:
+        url: https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/virtctl-{{ kubevirt_version }}-linux-amd64
+        dest: /usr/bin/virtctl
+        mode: u=rwx,g=rx,o=rx
+
+    - name: check for ovs-foreman NetworkAttachmentDefinition
+      command: kubectl get net-attach-def ovs-foreman
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      failed_when: false
+      changed_when: false
+      register: ovs_foreman_net_attach
+
+    - name: prepare ovs-foreman NetworkAttachmentDefinition file
+      copy:
+        dest: /tmp/ovs-foreman-net-attach-def
+        content: |
+          apiVersion: "k8s.cni.cncf.io/v1"
+          kind: NetworkAttachmentDefinition
+          metadata:
+            name: ovs-foreman
+          spec:
+            config: '{
+                "cniVersion": "0.3.1",
+                "type": "ovs",
+                "bridge": "foreman"
+              }'
+      when: ovs_foreman_net_attach.rc != 0
+
+    - name: create ovs-foreman NetworkAttachmentDefinition
+      command: kubectl create -f /tmp/ovs-foreman-net-attach-def
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      when: ovs_foreman_net_attach.rc != 0
+
+    - name: check for foreman-account ServiceAccount
+      command: kubectl get sa foreman-account
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      failed_when: false
+      changed_when: false
+      register: foreman_service_sa
+
+    - name: prepare foreman-account ServiceAccount file
+      copy:
+        dest: /tmp/foreman-account-sa
+        content: |
+          apiVersion: v1
+          kind: ServiceAccount
+          metadata:
+            name: foreman-account
+            namespace: default
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRoleBinding
+          metadata:
+            name: foreman-cluster-admin
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: cluster-admin
+          subjects:
+          - kind: ServiceAccount
+            name: foreman-account
+            namespace: default
+      when: foreman_service_sa.rc != 0
+
+    - name: create foreman-account ServiceAccount
+      command: kubectl create -f /tmp/foreman-account-sa
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      when: foreman_service_sa.rc != 0
+
+    - name: create /home/vagrant/.kube
+      file:
+        path: /home/vagrant/.kube
+        state: directory
+        owner: vagrant
+        group: vagrant
+
+    - name: deploy kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/vagrant/.kube/config
+        remote_src: yes
+        owner: vagrant
+        group: vagrant
+
+    - name: get foreman-account secret
+      shell: "kubectl get secrets $(kubectl get sa foreman-account -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 -d | xargs"
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      changed_when: false
+      register: foreman_account_secret
+
+    - name: show foreman-account secret
+      debug:
+        msg: "{{ foreman_account_secret.stdout }}"
