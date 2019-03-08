@@ -52,6 +52,8 @@ class LookupModule(LookupBase):
 
             try:
                 scenario = lookup_params['scenario']
+                if scenario != 'foreman':
+                    scenario = 'katello'
                 scenario_version = lookup_params['scenario_version']
                 versions_file_name = lookup_params['file']
                 upgrade = lookup_params.get('upgrade', False)
@@ -66,8 +68,7 @@ class LookupModule(LookupBase):
 
             if not upgrade:
                 for version in versions['installers']:
-                    if ((scenario == 'foreman' and version['foreman'] == scenario_version) or
-                       (scenario != 'foreman' and version['katello'] == scenario_version)):
+                    if version[scenario] == scenario_version:
                         forklift_vars = {
                                 'foreman_repositories_version': version['foreman'],
                                 'foreman_client_repositories_version': version['foreman'],
@@ -82,8 +83,7 @@ class LookupModule(LookupBase):
                 upgrade_versions = set()
                 versions['installers'].reverse()
                 for version in versions['installers']:
-                    if ((scenario == 'foreman' and version['foreman'] == scenario_version) or
-                       (scenario != 'foreman' and version['katello'] == scenario_version)):
+                    if version[scenario] == scenario_version:
                         upgrade_versions.add(scenario_version)
                     elif len(upgrade_versions) >= 1 and len(upgrade_versions) < 3:
                         if scenario == 'foreman':
