@@ -33,6 +33,9 @@ except ImportError:
     display = Display()
 
 
+TOTAL_UPGRADE_VERSIONS = 3
+
+
 def version_sort_key(version):
     try:
         return [int(u) for u in version.split('.')]
@@ -84,14 +87,14 @@ class LookupModule(LookupBase):
                 for version in reversed(versions['installers']):
                     if version[scenario] == scenario_version:
                         upgrade_versions.add(scenario_version)
-                    elif 1 <= len(upgrade_versions) < 3:
+                    elif 1 <= len(upgrade_versions) < TOTAL_UPGRADE_VERSIONS:
                         upgrade_versions.add(version[scenario])
 
                 if len(upgrade_versions) == 0:
                     raise AnsibleLookupError("could not find %s/%s" % (scenario, scenario_version))
 
                 upgrade_versions = sorted(upgrade_versions, key=version_sort_key)
-                while len(upgrade_versions) < 3:
+                while len(upgrade_versions) < TOTAL_UPGRADE_VERSIONS:
                     upgrade_versions.insert(0, upgrade_versions[0])
                 ret.append(upgrade_versions)
 
