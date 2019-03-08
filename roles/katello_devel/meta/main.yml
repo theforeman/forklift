@@ -15,5 +15,4 @@ dependencies:
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
       - "--katello-devel-scl-ruby={{ ruby_scl_version }}"
-      - "--katello-devel-enable-ostree=true"
       - "--katello-devel-admin-password {{ foreman_installer_admin_password }}"
