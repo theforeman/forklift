@@ -33,6 +33,13 @@ except ImportError:
     display = Display()
 
 
+def version_sort_key(version):
+    try:
+        return [int(u) for u in version.split('.')]
+    except ValueError:
+        return [9999, 9999, 9999]
+
+
 class LookupModule(LookupBase):
 
     def run(self, terms, variables=None, **kwargs):
@@ -47,6 +54,7 @@ class LookupModule(LookupBase):
                 scenario = lookup_params['scenario']
                 scenario_version = lookup_params['scenario_version']
                 versions_file_name = lookup_params['file']
+                upgrade = lookup_params.get('upgrade', False)
             except KeyError:
                 raise AnsibleParserError("missing required param for forklift_version")
 
@@ -55,18 +63,36 @@ class LookupModule(LookupBase):
                     versions = yaml.safe_load(versions_file)
             except Exception:
                 raise AnsibleLookupError("couldn't read '%s'" % versions_file_name)
-            for version in versions['installers']:
-                if ((scenario == 'foreman' and version['foreman'] == scenario_version) or
-                   (scenario != 'foreman' and version['katello'] == scenario_version)):
-                    forklift_vars = {
-                            'foreman_repositories_version': version['foreman'],
-                            'foreman_client_repositories_version': version['foreman'],
-                            'katello_repositories_version': version['katello'],
-                            'katello_repositories_pulp_version': version['pulp'],
-                            'pulp_repositories_version': version['pulp'],
-                            'puppet_repositories_version': version['puppet'],
-                            }
-                    ret.append(forklift_vars)
-                    break
+
+            if not upgrade:
+                for version in versions['installers']:
+                    if ((scenario == 'foreman' and version['foreman'] == scenario_version) or
+                       (scenario != 'foreman' and version['katello'] == scenario_version)):
+                        forklift_vars = {
+                                'foreman_repositories_version': version['foreman'],
+                                'foreman_client_repositories_version': version['foreman'],
+                                'katello_repositories_version': version['katello'],
+                                'katello_repositories_pulp_version': version['pulp'],
+                                'pulp_repositories_version': version['pulp'],
+                                'puppet_repositories_version': version['puppet'],
+                                }
+                        ret.append(forklift_vars)
+                        break
+            else:
+                upgrade_versions = set()
+                versions['installers'].reverse()
+                for version in versions['installers']:
+                    if ((scenario == 'foreman' and version['foreman'] == scenario_version) or
+                       (scenario != 'foreman' and version['katello'] == scenario_version)):
+                        upgrade_versions.add(scenario_version)
+                    elif len(upgrade_versions) >= 1 and len(upgrade_versions) < 3:
+                        if scenario == 'foreman':
+                            upgrade_versions.add(version['foreman'])
+                        else:
+                            upgrade_versions.add(version['katello'])
+                upgrade_versions = sorted(upgrade_versions, key=version_sort_key)
+                while len(upgrade_versions) < 3:
+                    upgrade_versions.insert(0, upgrade_versions[0])
+                ret.append(upgrade_versions)
 
         return ret

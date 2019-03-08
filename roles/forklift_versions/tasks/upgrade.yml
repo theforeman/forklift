@@ -1,0 +1,10 @@
+---
+- name: get forklift upgrade versions
+  set_fact:
+    forklift_upgrade_versions: "{{ lookup('forklift_versions', 'file='+forklift_versions_file+' scenario='+scenario+' scenario_version='+scenario_version+' upgrade=true') }}"
+
+- name: set individual upgrade vars
+  set_fact:
+    forklift_upgrade_version_start: "{{ forklift_upgrade_versions[0] }}"
+    forklift_upgrade_version_intermediate: "{{ forklift_upgrade_versions[1] }}"
+    forklift_upgrade_version_final: "{{ forklift_upgrade_versions[2] }}"
