@@ -1,3 +1,0 @@
----
-- name: 'Tag image'
-  command: "docker tag {{ image }} {{ registry }}/{{ project }}/{{ image }}:latest"

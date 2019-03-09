@@ -1,6 +1,0 @@
-[pulp]
-name=Pulp Community Release
-baseurl=https://repos.fedorapeople.org/repos/pulp/pulp/stable/2.16/7/x86_64
-gpgkey=https://repos.fedorapeople.org/repos/pulp/pulp/GPG-RPM-KEY-pulp-2
-enabled=1
-gpgcheck=1

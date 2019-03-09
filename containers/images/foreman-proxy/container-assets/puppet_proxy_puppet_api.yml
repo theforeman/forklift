@@ -1,5 +1,0 @@
----
-:puppet_ssl_ca: '/etc/puppet/ssl/certs/ca.pem'
-:puppet_ssl_cert: '/etc/puppet/ssl/certs/foreman-proxy.pem'
-:puppet_ssl_key: '/etc/puppet/ssl/private_keys/foreman-proxy.pem'
-:puppet_url: https://puppet:8140
