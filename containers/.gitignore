@@ -1,7 +1,0 @@
-*.retry
-.tmp/
-*.pyc
-plantuml.jar
-certs/
-.vault_pass
-galaxy_roles

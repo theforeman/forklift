@@ -1,6 +1,0 @@
----
-- import_playbook: build.yml
-  vars:
-    images:
-      - candlepin
-      - qpid

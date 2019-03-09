@@ -1,7 +1,0 @@
----
-project_dir: "{{ lookup('pipe', 'pwd') }}/../"
-working_dir: "{{ project_dir }}"
-certificates_ca_directory: "{{ working_dir }}/certs"
-build_dir: "{{ working_dir }}/certs"
-services: ''
-bin_dir: /usr/local/bin

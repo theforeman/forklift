@@ -1,9 +1,0 @@
----
-dependencies:
-  - {role: certificates}
-  - {role: memcached, when: ('memcached' in enabled_services)}
-  - {role: postgres, when: ('postgres' in enabled_services)}
-  - {role: puppet, when: ('puppet' in enabled_services)}
-  - {role: pulp, when: ('pulp' in enabled_services)}
-  - {role: candlepin, when: ('candlepin' in enabled_services)}
-  - {role: qpid, when: ('qpid' in enabled_services)}

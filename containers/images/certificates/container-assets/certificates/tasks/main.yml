@@ -1,5 +1,0 @@
----
-- include_tasks: ca.yml
-
-- include_tasks: certificate.yml
-  with_items: "{{ certificates_services }}"
