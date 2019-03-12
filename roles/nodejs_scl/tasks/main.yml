@@ -1,0 +1,19 @@
+- name: 'Install SCL repository'
+  yum:
+    name: centos-release-scl-rh
+    state: present
+
+- name: 'Install Nodejs SCL'
+  yum:
+    name:
+      - "{{ nodejs_scl_version }}"
+      - "{{ nodejs_scl_version }}"
+    state: present
+
+- name: 'Enable SCL at login'
+  blockinfile:
+    dest: /etc/profile.d/enable-{{ nodejs_scl_version }}.sh
+    create: yes
+    block: |
+      #!/bin/bash
+      source scl_source enable {{ nodejs_scl_version }}
