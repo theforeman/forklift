@@ -60,7 +60,7 @@ installers:
   - foreman: 'nightly'
     katello: 'nightly'
     pulp: 'nightly'
-    puppet: 5
+    puppet: 6
     boxes:
       - 'centos7'
       - 'centos7-fips'
