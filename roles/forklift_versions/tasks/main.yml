@@ -1,0 +1,6 @@
+---
+- include_tasks: versions.yml
+  when: not upgrade
+
+- include_tasks: upgrade.yml
+  when: upgrade

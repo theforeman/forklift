@@ -56,11 +56,14 @@ When you are finished with the test, you can tear down the associated infrastruc
 
 ### Existing Pipelines
 
-* `katello_pipeline` - Installs a Katello and a Content Proxy VMs and runs the `foreman_testing` role to verify the setup.
-  Expects the `katello_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, nightly)
-* `katello_upgrade_pipeline` - Installs a Katello VM, upgrades it twice and runs the `foreman_testing` role to verify the final upgrade.
-  Expects the `katello_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, nightly).
-* `pipeline_foreman_nightly` - Installs a nightly Foreman VM and runs the `foreman_testing` role to verify the setup.
+* `install_pipeline` - Installs a Server and a Proxy VMs and runs the `foreman_testing` role to verify the setup.
+  Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian9)
+  Expects the `pipeline_type` variable to be set to a known type (currently: foreman, katello, luna)
+  Expects the `pipeline_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, 3.11, nightly)
+* `upgrade_pipeline` - Installs a VM, upgrades it twice and runs the `foreman_testing` role to verify the final upgrade.
+  Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian9)
+  Expects the `pipeline_type` variable to be set to a known type (currently: foreman, katello, luna)
+  Expects the `pipeline_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, 3.11, nightly).
 
 #### Examples
 

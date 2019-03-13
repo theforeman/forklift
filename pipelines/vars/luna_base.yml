@@ -6,8 +6,26 @@ foreman_installer_options_internal_use_only:
   - "--puppet-server-max-active-instances 1"
   - "--puppet-server-jvm-min-heap-size 1G"
   - "--puppet-server-jvm-max-heap-size 1G"
+  - "--enable-foreman-plugin-ansible"
+  - "--enable-foreman-plugin-discovery"
+  - "--enable-foreman-plugin-bootdisk"
+  - "--enable-foreman-plugin-hooks"
+  - "--enable-foreman-plugin-openscap"
+  - "--enable-foreman-plugin-templates"
+  - "--enable-foreman-plugin-remote-execution"
+  - "--enable-foreman-proxy-plugin-remote-execution-ssh"
+  - "--enable-foreman-proxy-plugin-discovery"
+  - "--enable-foreman-proxy-plugin-ansible"
+  - "--enable-foreman-proxy-plugin-openscap"
+  - "--enable-foreman-cli-discovery"
+  - "--enable-foreman-cli-openscap"
+  - "--enable-foreman-cli-remote-execution"
+  - "--enable-foreman-cli-tasks"
+  - "--enable-foreman-cli-templates"
 foreman_installer_additional_packages:
   - katello
+  - tfm-rubygem-foreman_virt_who_configure
+  - tfm-rubygem-hammer_cli_foreman_virt_who_configure
 server_box:
   box: "{{ pipeline_os }}"
   memory: 8192

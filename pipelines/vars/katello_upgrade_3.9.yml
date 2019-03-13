@@ -1,3 +1,0 @@
-katello_version_start: '3.7'
-katello_version_intermediate: '3.8'
-katello_version_final: '{{ katello_version }}'

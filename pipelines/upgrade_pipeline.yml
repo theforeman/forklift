@@ -1,0 +1,78 @@
+- hosts: localhost
+  vars_files:
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_upgrade_base.yml
+  roles:
+    - forklift
+
+- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
+  become: yes
+  vars:
+  vars_files:
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_base_release.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+      upgrade: True
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ forklift_upgrade_version_start }}"
+    - umask
+    - selinux
+    - etc_hosts
+    - foreman_server_repositories
+    - foreman_client_repositories
+    - update_os_packages
+    - haveged
+    - disable_firewall
+    - foreman_installer
+
+- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
+  become: true
+  vars_files:
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_base_release.yml
+  vars:
+    foreman_installer_upgrade: True
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+      upgrade: True
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ forklift_upgrade_version_intermediate }}"
+    - foreman_server_repositories
+    - foreman_client_repositories
+    - role: foreman_installer
+      foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
+
+
+- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
+  become: yes
+  vars:
+    foreman_installer_upgrade: True
+  vars_files:
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_base_staging.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+      upgrade: True
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ forklift_upgrade_version_final }}"
+    - foreman_server_repositories
+    - foreman_client_repositories
+    - foreman_installer
+
+- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
+  become: yes
+  vars_files:
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_upgrade_base.yml
+  roles:
+    - foreman_testing

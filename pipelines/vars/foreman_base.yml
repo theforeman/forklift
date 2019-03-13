@@ -1,0 +1,18 @@
+foreman_installer_scenario: foreman
+foreman_installer_options_internal_use_only:
+  - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
+  - "--puppet-server-max-active-instances 1"
+  - "--puppet-server-jvm-min-heap-size 1G"
+  - "--puppet-server-jvm-max-heap-size 1G"
+server_box:
+  box: "{{ pipeline_os }}"
+  memory: 4680
+forklift_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}"
+forklift_boxes:
+  "{{ {forklift_name: server_box} }}"
+bats_tests:
+  - "fb-verify-packages.bats"
+  - "fb-test-foreman.bats"
+  - "fb-test-puppet.bats"
+bats_teardown:
+  - "fb-finish.bats"

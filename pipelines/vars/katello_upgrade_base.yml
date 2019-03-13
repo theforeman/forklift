@@ -1,0 +1,3 @@
+forklift_name: "pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version}}-{{ pipeline_os }}"
+forklift_boxes: "{{ {forklift_name: server_box} }}"
+bats_tests_additional: []

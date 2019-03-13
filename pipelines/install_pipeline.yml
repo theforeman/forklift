@@ -1,41 +1,47 @@
 - hosts: localhost
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_{{ katello_version }}.yml
+    - vars/{{ pipeline_type }}_base.yml
   roles:
     - forklift
 
 - hosts:
-  - pipeline-katello-{{ katello_version }}-centos7
-  - pipeline-proxy-{{ katello_version }}-centos7
+  - pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
+  - pipeline-{{ pipeline_type }}proxy-{{ pipeline_version }}-{{ pipeline_os }}
   become: yes
   vars:
     foreman_installer_skip_installer: true
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_staging.yml
-    - vars/katello_{{ katello_version }}.yml
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_base_staging.yml
   roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
     - role: disable_firewall
     - role: disable_ipv6
     - role: foreman_server_repositories
     - role: foreman_client_repositories
     - role: update_os_packages
+    - role: foreman
+      when: pipeline_type == 'foreman'
     - role: katello
+      when: pipeline_type != 'foreman'
 
-- hosts: pipeline-katello-{{ katello_version }}-centos7
+- hosts: pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
   become: yes
   vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_staging.yml
-    - vars/katello_{{ katello_version }}.yml
+    - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_base_staging.yml
   roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
     - foreman_installer
 
-- hosts: pipeline-proxy-{{ katello_version }}-centos7
+- hosts: pipeline-{{ pipeline_type }}proxy-{{ pipeline_version }}-{{ pipeline_os }}
   become: yes
   vars:
-    foreman_proxy_content_server: pipeline-katello-{{ katello_version }}-centos7
+    foreman_proxy_content_server: pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
     foreman_installer_scenario: foreman-proxy-content
     foreman_installer_options_internal_use_only:
       - "--disable-system-checks"
@@ -48,18 +54,16 @@
       - "--foreman-proxy-oauth-consumer-secret {{ oauth_consumer_secret.stdout }}"
       - "--foreman-proxy-content-parent-fqdn {{ server_fqdn.stdout }}"
       - "--puppet-server-foreman-url https://{{ server_fqdn.stdout }}"
-  vars_files:
-    - vars/katello_{{ katello_version }}.yml
   roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
     - foreman_proxy_content
     - foreman_installer
 
-- hosts: pipeline-katello-{{ katello_version }}-centos7
+- hosts: pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
   become: true
-  vars:
-    bats_tests_additional:
-      - fb-proxy.bats
   vars_files:
-    - vars/katello_{{ katello_version }}.yml
+    - vars/{{ pipeline_type }}_base.yml
   roles:
     - foreman_testing

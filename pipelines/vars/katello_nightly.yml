@@ -1,8 +1,0 @@
-forklift_name: pipeline-katello-nightly
-forklift_boxes:
-  pipeline-katello-nightly-centos7: "{{ server_box }}"
-  pipeline-proxy-nightly-centos7: "{{ proxy_box }}"
-katello_repositories_version: 'nightly'
-katello_repositories_pulp_version: 'nightly'
-foreman_repositories_version: 'nightly'
-foreman_client_repositories_version: "{{ foreman_repositories_version }}"

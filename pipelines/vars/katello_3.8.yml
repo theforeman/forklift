@@ -1,8 +1,0 @@
-forklift_name: pipeline-katello-3.8
-forklift_boxes:
-  pipeline-katello-3.8-centos7: "{{ server_box }}"
-  pipeline-proxy-3.8-centos7: "{{ proxy_box }}"
-katello_repositories_version: '3.8'
-katello_repositories_pulp_version: '2.16'
-foreman_repositories_version: '1.19'
-foreman_client_repositories_version: "{{ foreman_repositories_version }}"
