@@ -11,6 +11,7 @@
   vars_files:
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
+    - vars/os/{{ pipeline_os }}.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -34,6 +35,7 @@
   vars_files:
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
+    - vars/os/{{ pipeline_os }}.yml
   vars:
     foreman_installer_upgrade: True
   roles:
@@ -57,6 +59,7 @@
   vars_files:
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_staging.yml
+    - vars/os/{{ pipeline_os }}.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -74,5 +77,6 @@
   vars_files:
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_upgrade_base.yml
+    - vars/os/{{ pipeline_os }}.yml
   roles:
     - foreman_testing
