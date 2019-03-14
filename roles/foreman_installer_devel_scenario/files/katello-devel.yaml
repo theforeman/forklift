@@ -13,7 +13,7 @@
 :parser_cache_path:
 - /usr/share/foreman-installer/parser_cache/foreman.yaml
 - /usr/share/foreman-installer/parser_cache/katello.yaml
-:hiera_config: /usr/share/foreman-installer/config/foreman-hiera.conf
+:hiera_config: /usr/share/foreman-installer/config/foreman-hiera.yaml
 :colors: true
 :order:
 - certs
@@ -21,4 +21,3 @@
 - foreman_proxy::plugin::pulp
 - katello_devel
 - foreman_proxy_content
-:password: l7VtnWiPeKe412o2CVBM6yVbTkKGh6L_CKx4_zBkmUE
