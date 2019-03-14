@@ -8,6 +8,7 @@
     name:
       - "{{ ruby_scl_version }}"
       - "{{ ruby_scl_version }}-ruby-devel"
+      - "{{ ruby_scl_version }}-rubygem-bundler"
     state: present
 
 - name: Enable and configure SCL at login
