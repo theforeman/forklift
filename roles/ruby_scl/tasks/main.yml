@@ -10,10 +10,12 @@
       - "{{ ruby_scl_version }}-ruby-devel"
     state: present
 
-- name: 'Enable SCL at login'
+- name: Enable and configure SCL at login
   blockinfile:
     dest: /etc/profile.d/enable-{{ ruby_scl_version }}.sh
     create: yes
     block: |
       #!/bin/bash
       source scl_source enable {{ ruby_scl_version }}
+      export GEM_HOME=$(ruby -e 'print Gem.user_dir')
+      export PATH=$PATH:$(ruby -e 'print Gem.user_dir')/bin
