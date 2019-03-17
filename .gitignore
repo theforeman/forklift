@@ -22,3 +22,7 @@ vagrant/Gemfile.lock
 vagrant/settings.yaml
 vagrant/boxes.d/*-local.yaml
 vagrant/boxes.d/80-tmp-*.yaml
+
+# Packer
+templates/packer_cache/
+templates/output*
