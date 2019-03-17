@@ -57,6 +57,44 @@ cd foreman
 bundle exec foreman start
 ```
 
+### Stable Katello Development Box
+
+A stable box image of a fully installed Katello development environment is published to Vagrant cloud nightly (on successful installs). In the `vagrant/boxes.d/99-local.example` file, a box using this image is available under the name `centos7-katello-devel-stable`. If it's the first time spinning this box up, you can do:
+
+```
+vagrant up centos7-katello-devel-stable
+```
+
+This will spin up a Katello development environment in the time it takes to download from Vagrant cloud. At this moment, you will have to manually configure any personal customizations like github forks.
+
+After you have spun the box up once, if you would like a new box with the latest box image availble, you will need to destroy the existing box and update the underlying box image before spinning up the new box.
+
+For example:
+```
+vagrant destroy centos7-katello-devel-stable
+vagrant box update centos7-katello-devel-stable
+vagrant up centos7-katello-devel-stable
+```
+
+You may also want to clean up old box images:
+```
+vagrant box prune katello/katello-devel
+```
+
+And you will have to remove the corresponding volumes with virsh as well since vagrant won't remove them from libvirt. For example:
+```
+# sudo virsh vol-list --pool default
+ Name                                                                      Path
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1018.1354.img   /var/lib/libvirt/images/katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1018.1354.img
+ katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1021.1130.img   /var/lib/libvirt/images/katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1021.1130.img
+
+# sudo virsh vol-delete --pool default katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1018.1354.img
+Vol katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1018.1354.img deleted
+```
+
+For more information on how this box is created, see [the packer directory](packer/README.md)
+
 ### Starting the Development Server
 
 Our backend requires a rails server to be running. We also use a webpack server for the more "modern" parts of our front-end UI.

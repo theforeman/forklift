@@ -1,0 +1,61 @@
+{
+    "variables": {
+        "user": "vagrant",
+        "password": "vagrant",
+        "hostname": "centos7-katello-devel-stable.example.com"
+   },
+
+    "builders":
+    [
+        {
+            "name": "centos7-katello-devel-stable",
+            "type": "qemu",
+            "format": "qcow2",
+            "accelerator": "kvm",
+            "headless": true,
+            "iso_url": "http://mirrors.mit.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso",
+            "iso_checksum_type": "sha256",
+            "iso_checksum": "9a2c47d97b9975452f7d582264e9fc16d108ed8252ac6816239a3b58cef5c53d",
+            "http_directory": "http",
+            "ssh_username": "{{user `user`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_wait_timeout": "20m",
+            "http_directory": "http",
+            "boot_wait": "2s",
+            "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
+            "qemuargs": [
+                [ "-m", "8192M" ],
+                [ "-smp", "2" ]
+            ],
+            "boot_command": [
+              "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+            ]
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "scripts": [
+              "scripts/vagrant.sh",
+              "scripts/fix_hostname.sh"
+            ],
+            "environment_vars": [ "HOSTNAME={{user `hostname`}}" ]
+
+        },
+        {
+            "type": "ansible",
+            "playbook_file": "../playbooks/katello_devel.yml",
+            "ansible_env_vars": [ "ANSIBLE_CONFIG=../ansible.cfg" ]
+        }
+    ],
+
+    "post-processors": [
+        {
+            "type": "vagrant",
+            "keep_input_artifact": false,
+            "output": "centos7-katello-devel-stable.box"
+        }
+    ]
+}
