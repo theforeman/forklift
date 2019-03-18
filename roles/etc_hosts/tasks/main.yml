@@ -1,10 +1,10 @@
 ---
 - name: "Build hosts file"
-  lineinfile:
-    dest: /etc/hosts
-    regexp: ".*{{ item.replace('.', '-') }}$"
-    line: "{{ hostvars[item].ansible_host }} {{ item.replace('.', '-') }}.{{ etc_hosts_domain }} {{ item.replace('.', '-') }}"
-    state: present
+  include_tasks: "./hosts_file_record.yml"
+  vars:
+    ip: "{{ hostvars[item].ansible_host }}"
+    domain: "{{ etc_hosts_domain }}"
+    hostname: "{{ item }}"
   when: hostvars[item].ansible_host is defined
   become: yes
   with_items: "{{ groups['all'] }}"

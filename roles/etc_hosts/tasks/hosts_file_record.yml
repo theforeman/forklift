@@ -1,0 +1,27 @@
+---
+# expected vars:
+#  * ip
+#  * hostname
+#  * domain
+
+# the domain is not included in the hostname
+- name: "Add {{ hostname }} to hosts file: short and full"
+  lineinfile:
+    dest: /etc/hosts
+    regexp: ".*{{ hostname.replace('.', '-') }}$"
+    line: "{{ ip }} {{ hostname.replace('.', '-') }}.{{ domain }} {{ hostname.replace('.', '-') }}"
+    state: present
+  when: not hostname | regex_search(domain | regex_escape())
+  become: yes
+  tags: env_setup
+
+# the domain is part of the hostname
+- name: "Add {{ hostname }} to hosts file: full only"
+  lineinfile:
+    dest: /etc/hosts
+    regexp: ".*{{ hostname }}$"
+    line: "{{ ip }} {{ hostname }}"
+    state: present
+  when: hostname | regex_search(domain | regex_escape())
+  become: yes
+  tags: env_setup
