@@ -26,7 +26,7 @@
                 [ "-m", "8192M" ]
             ],
             "boot_command": [
-              "<tab> text biosdevname=0 net.iframes=0 ip=dhcp ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+              "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
             ]
         }
     ],
