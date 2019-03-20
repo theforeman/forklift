@@ -13,7 +13,7 @@
   yum_repository:
     name: pulp-repository
     description: Pulp nightly repository
-    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/testing/automation/2-master/stage/$releasever/$basearch"
+    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/testing/automation/2.19/stage/$releasever/$basearch"
     gpgcheck: no
     enabled: yes
   when:
