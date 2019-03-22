@@ -58,7 +58,7 @@ def get_ssh_configs(hosts):
     try:
         output = subprocess.check_output(cmd, stderr=DEVNULL)
     except subprocess.CalledProcessError:
-        return {}
+        return None
 
     config = paramiko.SSHConfig()
     config.parse(StringIO(output))
@@ -91,7 +91,8 @@ def get_configs(hosts):
         details = {}
         if host in variables:
             details.update(variables[host])
-        details.update(get_host_ssh_config(ssh_configs, host))
+        if ssh_configs:
+            details.update(get_host_ssh_config(ssh_configs, host))
         yield host, details
 
 
