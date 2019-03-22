@@ -19,6 +19,14 @@ boxes:
     pty: true
     scenarios:
       - foreman
+    shell: |
+      # Work around external nameservers in generic/ubuntu1804
+      # https://github.com/lavabit/robox/issues/11
+      sed -i 's/\(addresses:\).\+/\1 []/' /etc/netplan/01-netcfg.yaml
+      netplan generate
+      netplan apply
+      sed -i 's/^\(DNS=\)/#\1/' /etc/systemd/resolved.conf
+      systemctl restart systemd-resolved
     ansible:
       variables:
         ansible_python_interpreter: /usr/bin/python3
