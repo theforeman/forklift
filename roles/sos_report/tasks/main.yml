@@ -1,7 +1,10 @@
 ---
+- name: "Load OS variables"
+  include_vars: "{{ ansible_os_family }}.yml"
+
 - name: 'install sos'
   package:
-    name: 'sos'
+    name: '{{ sos_package }}'
     state: present
 
 - name: 'Generate sosreport'
