@@ -67,8 +67,8 @@ When you are finished with the test, you can tear down the associated infrastruc
 
 #### Examples
 
-    ansible-playbook pipelines/katello_upgrade_pipeline.yml -e forklift_state=up -e katello_version=nightly
-    ansible-playbook pipelines/katello_pipeline.yml -e forklift_state=up -e katello_version=3.10
+    ansible-playbook pipelines/install_pipeline.yml -e forklift_state=up -e pipeline_os=debian9 -e pipeline_type=foreman -e pipeline_version=nightly
+    ansible-playbook pipelines/update_pipeline.yml -e forklift_state=up -e pipeline_os=centos7 -e pipeline_type=katello -e pipeline_version=3.10
 
 ### Creating Pipelines
 
