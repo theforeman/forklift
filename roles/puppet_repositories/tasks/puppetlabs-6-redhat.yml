@@ -1,4 +1,11 @@
 ---
+- name: 'Remove Puppet 5 Repository'
+  yum:
+    name: puppet5-release
+    state: absent
+  tags:
+    - packages
+
 - name: 'Setup Puppet 6 Repository'
   yum:
     name: https://yum.puppetlabs.com/puppet6/puppet6-release-el-{{ ansible_distribution_major_version }}.noarch.rpm
