@@ -20,6 +20,7 @@
         name:
           - ansible
           - git
+          - rubygem-deep_merge
         state: 'present'
 
     - name: 'Clone Forklift'
