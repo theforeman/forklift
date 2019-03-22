@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+ENV['LANG'] = 'en_US.UTF-8'
+VAGRANTFILE_DIR = File.dirname(File.dirname(__FILE__))
+
+require 'json'
+require "#{VAGRANTFILE_DIR}/vagrant/lib/forklift"
+
+loader = Forklift::BoxLoader.new("#{VAGRANTFILE_DIR}/vagrant")
+loader.load!
+
+names = $*
+boxes = names.any? ? loader.boxes.select { |name, box| names.include?(name) } : loader.boxes
+puts Hash[boxes.map { |name, box| [name, (box['ansible'] || {})['variables'] || {}] }].to_json
