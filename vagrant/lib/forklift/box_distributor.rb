@@ -68,7 +68,7 @@ module Forklift
       config.vm.define box.fetch('name'), primary: primary, autostart: autostart do |machine|
         machine.vm.box = box.fetch('box_name', nil)
         config.ssh.forward_agent = box.fetch('ssh_forward_agent', nil) || @settings.fetch('ssh_forward_agent', false)
-        machine.vm.box_check_update = true if SUPPORT_BOX_CHECK_UPDATE
+        machine.vm.box_check_update = box.fetch('box_check_update', true) if SUPPORT_BOX_CHECK_UPDATE
 
         machine.vm.box_url = box.fetch('box_url') if box.key?('box_url')
 
