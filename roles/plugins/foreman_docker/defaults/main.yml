@@ -1,5 +1,0 @@
----
-foreman_docker_hammer: hammer
-foreman_docker_use_taxonomies: False
-foreman_docker_organization: Default Organization
-foreman_docker_location: Default Location
