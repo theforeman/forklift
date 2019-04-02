@@ -14,4 +14,3 @@
       - "--katello-devel-extra-plugins theforeman/foreman_openscap"
       - "--katello-devel-extra-plugins theforeman/foreman_templates"
       - "--katello-devel-extra-plugins theforeman/foreman_hooks"
-      - "--katello-devel-extra-plugins theforeman/foreman_docker"
