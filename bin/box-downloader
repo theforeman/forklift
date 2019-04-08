@@ -27,7 +27,7 @@ def download(url):
             click.echo('Downloading {} to {}'.format(filename, target))
             fp.write(response.content)
 
-            boxes = yaml.load(response.content)
+            boxes = yaml.safe_load(response.content)
             click.echo('Found boxes: {}'.format(' '.join(boxes.keys())))
 
 
