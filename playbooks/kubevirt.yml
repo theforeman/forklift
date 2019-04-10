@@ -3,6 +3,7 @@
   become: true
   vars:
     selinux_state: permissive
+    kubernetes_version: 1.13.5
     pod_network: 10.244.0.0/16
     flannel_version: a70459be0084506e4ec919aa1c114638878db11b
     multus_version: master
@@ -88,9 +89,9 @@
     - name: install kubelet kubeadm kubectl
       yum:
         name:
-          - kubelet
-          - kubeadm
-          - kubectl
+          - kubelet-{{ kubernetes_version }}
+          - kubeadm-{{ kubernetes_version }}
+          - kubectl-{{ kubernetes_version }}
         disable_excludes: kubernetes
 
     - name: enable kubelet accounting
