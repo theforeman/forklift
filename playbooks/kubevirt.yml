@@ -22,6 +22,7 @@
         fstype: swap
         path: none
         state: absent
+
     - name: modprobe br_netfilter
       modprobe:
         name: br_netfilter
@@ -93,6 +94,11 @@
           - kubeadm-{{ kubernetes_version }}
           - kubectl-{{ kubernetes_version }}
         disable_excludes: kubernetes
+
+    - name: create /etc/systemd/system/kubelet.service.d/
+      file:
+        path: /etc/systemd/system/kubelet.service.d/
+        state: directory
 
     - name: enable kubelet accounting
       copy:
