@@ -1,8 +1,7 @@
 ---
 - import_playbook: katello_devel.yml
   vars:
-    katello_devel_github_username: ''
-    foreman_installer_options_internal_use_only:
+    foreman_installer_options:
       - "--disable-system-checks"
       - "--katello-devel-github-username '{{ katello_devel_github_username }}'"
       - "--katello-devel-enable-ostree=true"
