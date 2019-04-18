@@ -1,0 +1,24 @@
+---
+- name: 'find compute profile'
+  shell: >
+    {{ foreman_provisioning_hammer }} compute-profile info --name "libvirt-profile"
+  register: foreman_provisioning_compute_profile
+  ignore_errors: True
+
+- name: 'create compute profile'
+  shell: >
+    {{ foreman_provisioning_hammer }} compute-profile create
+    --name "libvirt-profile"
+    --organization "{{ foreman_provisioning_organization }}"
+    --location "{{ foreman_provisioning_location }}"
+  when: "'Error' in foreman_provisioning_compute_profile.stderr"
+
+- name: 'create compute attributes'
+  shell: >
+    {{ foreman_provisioning_hammer }} compute-profile values create
+    --compute-profile libvirt-profile
+    --compute-resource libvirt
+    --volume pool_name=provision,capacity=15G,format_type=qcow2
+    --interface type=network,network=provision,model=virtio
+    --compute-attributes cpus=1,memory=2400000000,start=1
+  when: "'Error' in foreman_provisioning_compute_profile.stderr"

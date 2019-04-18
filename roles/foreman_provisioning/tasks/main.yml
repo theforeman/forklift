@@ -26,6 +26,10 @@
   set_fact:
     foreman_provisioning_compute_resource_option: "{{ '--compute-resource libvirt' if foreman_provisioning_foreman_version == 'nightly' else '' }}"
 
+- name: 'prepare compute profile option'
+  set_fact:
+    foreman_provisioning_compute_profile_option: "{{ '--compute-profile libvirt-profile' if 'Error' not in foreman_provisioning_compute_profile_cmd.stderr else '' }}"
+
 # TODO compute-profile can't be specified by name until http://projects.theforeman.org/issues/21580/ so we hardcode 1
 - name: 'create hostgroup Base'
   shell: >
@@ -37,7 +41,7 @@
     --puppet-ca-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
     --puppet-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
     --subnet '{{ foreman_provisioning_network }}/24'
-    --compute-profile-id 1
+    {{ foreman_provisioning_compute_profile_option }}
     {{ foreman_provisioning_compute_resource_option }}
     --root-pass changeme
     --pxe-loader "PXELinux BIOS"

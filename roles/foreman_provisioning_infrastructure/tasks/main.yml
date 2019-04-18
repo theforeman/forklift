@@ -43,6 +43,15 @@
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: foreman_provisioning_compute_resource.stderr.find('not found') != -1
 
+- name: 'Find out if compute profile command is available'
+  shell: >
+    {{ foreman_provisioning_hammer }} compute-profile
+  register: foreman_provisioning_compute_profile_cmd
+  ignore_errors: True
+
+- include: compute_profiles.yml
+  when: "'Error' not in foreman_provisioning_compute_profile_cmd.stderr"
+
 # Domain
 - name: 'find domain'
   shell: >
