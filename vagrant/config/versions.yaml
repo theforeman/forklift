@@ -57,6 +57,16 @@ installers:
       - 'debian9'
       - 'ubuntu1804'
 
+  - foreman: '1.22'
+    katello: '3.12'
+    pulp: '2.18'
+    puppet: 6
+    boxes:
+      - 'centos7'
+      - 'centos7-fips'
+      - 'debian9'
+      - 'ubuntu1804'
+
   - foreman: 'nightly'
     katello: 'nightly'
     pulp: '2.19'
@@ -65,5 +75,4 @@ installers:
       - 'centos7'
       - 'centos7-fips'
       - 'debian9'
-      - 'ubuntu1604'
       - 'ubuntu1804'
