@@ -25,6 +25,7 @@ installers:
       - 'centos7'
       - 'centos7-fips'
       - 'debian9'
+      - 'ubuntu1604'
       - 'ubuntu1804'
 
   - foreman: '1.20'
@@ -35,6 +36,7 @@ installers:
       - 'centos7'
       - 'centos7-fips'
       - 'debian9'
+      - 'ubuntu1604'
       - 'ubuntu1804'
 
   - foreman: '1.20'
@@ -45,6 +47,7 @@ installers:
       - 'centos7'
       - 'centos7-fips'
       - 'debian9'
+      - 'ubuntu1604'
       - 'ubuntu1804'
 
   - foreman: '1.21'
@@ -55,6 +58,7 @@ installers:
       - 'centos7'
       - 'centos7-fips'
       - 'debian9'
+      - 'ubuntu1604'
       - 'ubuntu1804'
 
   - foreman: '1.22'
@@ -65,6 +69,7 @@ installers:
       - 'centos7'
       - 'centos7-fips'
       - 'debian9'
+      - 'ubuntu1604'
       - 'ubuntu1804'
 
   - foreman: 'nightly'
@@ -75,4 +80,5 @@ installers:
       - 'centos7'
       - 'centos7-fips'
       - 'debian9'
+      - 'ubuntu1604'
       - 'ubuntu1804'
