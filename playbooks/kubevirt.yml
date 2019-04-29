@@ -141,15 +141,15 @@
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
-    - name: deploy kubevirt cr
-      command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-cr.yaml
+    - name: deploy kubevirt operator
+      command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-operator.yaml
       args:
         creates: /var/lib/kubelet/device-plugins/kubevirt-tun.sock
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
-    - name: deploy kubevirt operator
-      command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-operator.yaml
+    - name: deploy kubevirt cr
+      command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-cr.yaml
       args:
         creates: /var/lib/kubelet/device-plugins/kubevirt-tun.sock
       environment:
