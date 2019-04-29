@@ -58,14 +58,6 @@
         enabled: true
         state: started
 
-    - name: enable CentOS OpenStack repository
-      yum_repository:
-        name: centos-openstack-rocky
-        description: CentOS OpenStack
-        baseurl: http://mirror.centos.org/centos/$releasever/cloud/$basearch/openstack-rocky/
-        enabled: true
-        gpgcheck: false
-
     - name: k8s repo
       yum_repository:
         name: kubernetes
