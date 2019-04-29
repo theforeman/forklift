@@ -6,8 +6,8 @@
     kubernetes_version: 1.13.5
     pod_network: 10.244.0.0/16
     flannel_version: a70459be0084506e4ec919aa1c114638878db11b
-    multus_version: master
-    kubevirt_version: v0.13.2
+    network_operator: v0.3.0
+    kubevirt_version: v0.16.0
     ovs_cni_version: master
   roles:
     - selinux
@@ -36,6 +36,18 @@
         - net.bridge.bridge-nf-call-ip6tables
         - net.bridge.bridge-nf-call-iptables
 
+    - name: install needed network manager libs
+      yum:
+        name:
+        - NetworkManager-glib
+        - NetworkManager
+
+    - name: Configure bridge
+      nmcli:
+        state: present
+        type: bridge
+        conn_name: br0
+
     - name: install docker
       yum:
         name: docker
@@ -53,28 +65,6 @@
         baseurl: http://mirror.centos.org/centos/$releasever/cloud/$basearch/openstack-rocky/
         enabled: true
         gpgcheck: false
-
-    - name: install openvswitch
-      yum:
-        name: openvswitch
-
-    - name: enable openvswitch
-      service:
-        name: openvswitch
-        enabled: true
-        state: started
-
-    - name: add foreman bridge
-      openvswitch_bridge:
-        bridge: foreman
-        state: present
-
-    - name: add port to foreman bridge
-      openvswitch_port:
-        bridge: foreman
-        port: eth1
-        state: present
-
 
     - name: k8s repo
       yum_repository:
@@ -131,8 +121,22 @@
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
-    - name: deploy multus
-      command: kubectl apply -f https://raw.githubusercontent.com/intel/multus-cni/{{ multus_version }}/images/multus-daemonset.yml
+    - name: deploy network namespace
+      command: kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/{{ network_operator }}/namespace.yaml
+      args:
+        creates: /etc/cni/net.d/multus.d/multus.kubeconfig
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: deploy network crd
+      command: kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/{{ network_operator }}/network-addons-config.crd.yaml
+      args:
+        creates: /etc/cni/net.d/multus.d/multus.kubeconfig
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: deploy network operator
+      command: kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/{{ network_operator }}/operator.yaml
       args:
         creates: /etc/cni/net.d/multus.d/multus.kubeconfig
       environment:
@@ -145,17 +149,17 @@
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
-    - name: deploy kubevirt
-      command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt.yaml
+    - name: deploy kubevirt cr
+      command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-cr.yaml
       args:
         creates: /var/lib/kubelet/device-plugins/kubevirt-tun.sock
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
-    - name: deploy ovs-cni
-      command: kubectl apply -f https://raw.githubusercontent.com/kubevirt/ovs-cni/{{ ovs_cni_version }}/examples/kubernetes-ovs-cni.yml
+    - name: deploy kubevirt operator
+      command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-operator.yaml
       args:
-        creates: /opt/cni/bin/ovs
+        creates: /var/lib/kubelet/device-plugins/kubevirt-tun.sock
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
@@ -165,35 +169,39 @@
         dest: /usr/bin/virtctl
         mode: u=rwx,g=rx,o=rx
 
-    - name: check for ovs-foreman NetworkAttachmentDefinition
-      command: kubectl get net-attach-def ovs-foreman
+    - name: sleep for 300 seconds
+      wait_for: timeout=300
+
+    - name: check for bridge-foreman NetworkAttachmentDefinition
+      command: kubectl get net-attach-def bridge-foreman
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
       failed_when: false
       changed_when: false
-      register: ovs_foreman_net_attach
+      register: bridge_foreman_net_attach
 
-    - name: prepare ovs-foreman NetworkAttachmentDefinition file
+    - name: prepare bridge-foreman NetworkAttachmentDefinition file
       copy:
-        dest: /tmp/ovs-foreman-net-attach-def
+        dest: /tmp/bridge-foreman-net-attach-def
         content: |
           apiVersion: "k8s.cni.cncf.io/v1"
           kind: NetworkAttachmentDefinition
           metadata:
-            name: ovs-foreman
+            name: bridge-foreman
           spec:
             config: '{
                 "cniVersion": "0.3.1",
-                "type": "ovs",
-                "bridge": "foreman"
+                "type": "bridge",
+                "bridge": "foreman",
+                "ipam": {}
               }'
-      when: ovs_foreman_net_attach.rc != 0
+      when: bridge_foreman_net_attach.rc != 0
 
-    - name: create ovs-foreman NetworkAttachmentDefinition
-      command: kubectl create -f /tmp/ovs-foreman-net-attach-def
+    - name: create bridge-foreman NetworkAttachmentDefinition
+      command: kubectl create -f /tmp/bridge-foreman-net-attach-def
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
-      when: ovs_foreman_net_attach.rc != 0
+      when: bridge_foreman_net_attach.rc != 0
 
     - name: check for foreman-account ServiceAccount
       command: kubectl get sa foreman-account
