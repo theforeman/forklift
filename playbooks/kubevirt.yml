@@ -6,7 +6,7 @@
     kubernetes_version: 1.13.5
     pod_network: 10.244.0.0/16
     flannel_version: a70459be0084506e4ec919aa1c114638878db11b
-    network_operator: v0.3.0
+    network_operator: 0.5.0
     kubevirt_version: v0.16.0
     ovs_cni_version: master
   roles:
@@ -113,6 +113,13 @@
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
+    - name: deploy flannel
+      command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/{{ flannel_version }}/Documentation/kube-flannel.yml
+      args:
+        creates: /etc/cni/net.d/10-flannel.conflist
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
     - name: deploy network namespace
       command: kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/{{ network_operator }}/namespace.yaml
       args:
@@ -134,13 +141,6 @@
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
-    - name: deploy flannel
-      command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/{{ flannel_version }}/Documentation/kube-flannel.yml
-      args:
-        creates: /etc/cni/net.d/10-flannel.conflist
-      environment:
-        KUBECONFIG: /etc/kubernetes/admin.conf
-
     - name: deploy kubevirt operator
       command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-operator.yaml
       args:
@@ -154,6 +154,34 @@
         creates: /var/lib/kubelet/device-plugins/kubevirt-tun.sock
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: check for NetworkAddonsConfig
+      command: kubectl get networkaddonsconfigs cluster
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      failed_when: false
+      changed_when: false
+      register: netaddonsconfig
+
+    - name: prepare NetworkAddonsConfig file
+      copy:
+        dest: /tmp/netaddonsconfig
+        content: |
+          apiVersion: networkaddonsoperator.network.kubevirt.io/v1alpha1
+          kind: NetworkAddonsConfig
+          metadata:
+            name: cluster
+          spec:
+            imagePullPolicy: Always
+            kubeMacPool: {}
+            multus: {}
+      when: netaddonsconfig.rc != 0
+
+    - name: create NetworkAddonsConfig
+      command: kubectl create -f /tmp/netaddonsconfig
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+      when: netaddonsconfig.rc != 0
 
     - name: install virtctl
       get_url:
