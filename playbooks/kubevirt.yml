@@ -189,8 +189,10 @@
         dest: /usr/bin/virtctl
         mode: u=rwx,g=rx,o=rx
 
-    - name: sleep for 300 seconds
-      wait_for: timeout=300
+    - name: wait for the network to be ready
+      command: kubectl wait networkaddonsconfig cluster --for condition=Ready --timeout=300s
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
 
     - name: check for bridge-foreman NetworkAttachmentDefinition
       command: kubectl get net-attach-def bridge-foreman
