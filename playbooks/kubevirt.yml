@@ -46,7 +46,7 @@
       nmcli:
         state: present
         type: bridge
-        conn_name: br0
+        conn_name: foreman
 
     - name: install docker
       yum:
@@ -175,6 +175,7 @@
             imagePullPolicy: Always
             kubeMacPool: {}
             multus: {}
+            linuxBridge: {}
       when: netaddonsconfig.rc != 0
 
     - name: create NetworkAddonsConfig
@@ -214,6 +215,7 @@
             config: '{
                 "cniVersion": "0.3.1",
                 "type": "bridge",
+                "name": "bridge-foreman"
                 "bridge": "foreman",
                 "ipam": {}
               }'
