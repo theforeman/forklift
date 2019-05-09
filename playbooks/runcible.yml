@@ -13,7 +13,7 @@
         name: atomic7-testing
         description: "Atomic testing repository"
         baseurl: http://cbs.centos.org/repos/atomic7-testing/x86_64/os/
-        gpgcheck: no
+        gpgcheck: yes
         enabled: yes
       become: true
 
