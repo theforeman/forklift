@@ -6,8 +6,8 @@
     kubernetes_version: 1.13.5
     pod_network: 10.244.0.0/16
     flannel_version: a70459be0084506e4ec919aa1c114638878db11b
-    network_operator: 0.5.0
-    kubevirt_version: v0.16.0
+    network_operator: 0.7.0
+    kubevirt_version: v0.16.3
     ovs_cni_version: master
   roles:
     - selinux
@@ -215,7 +215,6 @@
             config: '{
                 "cniVersion": "0.3.1",
                 "type": "bridge",
-                "name": "bridge-foreman"
                 "bridge": "foreman",
                 "ipam": {}
               }'
