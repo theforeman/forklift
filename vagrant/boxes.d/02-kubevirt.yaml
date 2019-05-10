@@ -1,18 +1,3 @@
-centos7-devel-foreman-kubevirt:
-  box: centos7
-  ansible:
-    playbook: 'playbooks/katello_devel.yml'
-    group: 'devel'
-    variables:
-      foreman_installer_options:
-        - "--disable-system-checks"
-        - "--katello-devel-extra-plugins masayag/foreman_kubevirt"
-  networks:
-    - type: 'private_network'
-      options:
-        ip: 192.168.150.2
-        libvirt__network_name: foremankubevirt
-
 centos7-infra-kubevirt:
   box: centos7
   cpu_mode: host-passthrough
