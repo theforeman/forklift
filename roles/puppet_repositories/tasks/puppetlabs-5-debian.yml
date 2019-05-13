@@ -1,11 +1,11 @@
 ---
-- name: 'Install Puppetlabs GPG key'
+- name: 'Install Puppet GPG key'
   apt_key:
-    url: https://apt.puppetlabs.com/DEB-GPG-KEY-puppet
+    url: https://apt.puppet.com/DEB-GPG-KEY-puppet
 
-- name: 'Install Puppetlabs Puppet 5 repository'
+- name: 'Install Puppet 5 repository'
   apt_repository:
-    repo: deb http://apt.puppetlabs.com {{ ansible_distribution_release }} puppet5
+    repo: deb http://apt.puppet.com {{ ansible_distribution_release }} puppet5
     state: present
 
 - name: 'Install backports'
