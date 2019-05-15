@@ -6,8 +6,8 @@
     - forklift
 
 - hosts:
-  - "{{ forklift_server_name }}"
-  - "{{ forklift_proxy_name }}"
+    - "{{ forklift_server_name }}"
+    - "{{ forklift_proxy_name }}"
   become: yes
   vars:
     foreman_installer_skip_installer: true
@@ -29,7 +29,8 @@
     - role: katello
       when: pipeline_type != 'foreman'
 
-- hosts: "{{ forklift_server_name }}"
+- hosts:
+   - "{{ forklift_server_name }}"
   become: yes
   vars_files:
     - vars/install_base.yml
@@ -41,7 +42,8 @@
       scenario_version: "{{ pipeline_version }}"
     - foreman_installer
 
-- hosts: "{{ forklift_proxy_name }}"
+- hosts:
+    - "{{ forklift_proxy_name }}"
   become: yes
   vars_files:
     - vars/install_base.yml
@@ -66,7 +68,8 @@
     - foreman_proxy_content
     - foreman_installer
 
-- hosts: "{{ forklift_server_name }}"
+- hosts:
+    - "{{ forklift_server_name }}"
   become: true
   vars_files:
     - vars/install_base.yml
