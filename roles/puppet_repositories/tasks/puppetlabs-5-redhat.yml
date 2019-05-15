@@ -1,7 +1,7 @@
 ---
 - name: 'Setup Puppet 5 Repository'
   yum:
-    name: https://yum.puppetlabs.com/puppet5/puppet5-release-el-{{ ansible_distribution_major_version }}.noarch.rpm
+    name: https://yum.puppet.com/puppet5-release-el-{{ ansible_distribution_major_version }}.noarch.rpm
     state: present
   tags:
     - packages
