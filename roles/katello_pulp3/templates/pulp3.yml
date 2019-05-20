@@ -1,0 +1,5 @@
+:enabled: true
+:pulp_url: {{ ansible_hostname }}
+:pulp_dir: /var/lib/pulp
+:pulp_content_dir: /var/lib/pulp/content
+:mirror: false

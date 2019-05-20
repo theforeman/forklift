@@ -1,0 +1,8 @@
+---
+pulp_default_admin_password: password
+pulp_install_plugins:
+  pulp-file:
+    app_label: "file"
+pulp_secret_key: "unsafe_default"
+pulp_db_type: postgres
+pulp_install_db: false

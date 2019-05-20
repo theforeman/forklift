@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  vars:
+    forklift_name: katello-with-pulp3
+    forklift_boxes:
+      katello-with-pulp3:
+        box: centos7
+        memory: 10240
+  roles:
+    - forklift
+
+- hosts: katello-with-pulp3
+  become: true
+  roles:
+    - role: forklift_versions
+      scenario: "katello"
+      scenario_version: "3.12"
+    - role: foreman_server_repositories
+    - role: katello
+
+- hosts: katello-with-pulp3
+  become: true
+  roles:
+    - katello_pulp3
+  environment:
+    DJANGO_SETTINGS_MODULE: pulpcore.app.settings

@@ -1,0 +1,45 @@
+---
+- name: Correct pki permissions
+  file:
+    state: directory
+    path: /etc/pki/pulp
+    mode: 0755
+
+- include_role:
+    name: "{{ item }}"
+  with_items:
+    - pulp-database
+    - pulp-workers
+    - pulp-resource-manager
+    - pulp-content
+  vars:
+    pulp_default_admin_password: password
+    pulp_install_plugins:
+      pulp-file:
+        app_label: "file"
+    pulp_secret_key: "unsafe_default"
+    pulp_db_type: postgres
+    pulp_user: pulp
+    pulp_install_dir: /usr/local/lib/pulp
+
+- name: Deploy reverse proxy configuration
+  template:
+    src: templates/pulp-reverse-proxy.conf.j2
+    dest: /etc/httpd/conf.d/05-foreman-ssl.d/pulp-reverse-proxy.conf
+    owner: apache
+    group: apache
+
+- name: Configure smart proxy pulp3
+  template:
+    src: templates/pulp3.yml
+    dest: /etc/foreman-proxy/settings.d/pulp3.yml
+
+- name: restart foreman-proxy
+  service:
+    name: foreman-proxy
+    state: restarted
+
+- name: restart httpd
+  service:
+    name: httpd
+    state: restarted

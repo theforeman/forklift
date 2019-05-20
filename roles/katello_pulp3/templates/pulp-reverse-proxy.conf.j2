@@ -1,0 +1,4 @@
+ProxyRequests Off
+ProxyPreserveHost On
+ProxyPass /pulp/api/v3/ http://localhost:24817/pulp/api/v3/ retry=0
+ProxyPassReverse /pulp/api/v3/ http://localhost:24817/pulp/api/v3/
