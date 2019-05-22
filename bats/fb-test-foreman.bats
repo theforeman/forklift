@@ -10,7 +10,7 @@ set -o pipefail
 }
 
 @test "check web app is up" {
-  [ `curl -sk "https://localhost$URL_PREFIX/status" | jq .status` == '"ok"' ] 
+  [ `curl -sk "https://localhost$URL_PREFIX/status" | ruby -e "require 'json'; puts JSON.load(ARGF.read)['status']"` == 'ok' ]
 }
 
 @test "check smart proxy is registered" {
