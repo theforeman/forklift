@@ -19,7 +19,7 @@ fi
     run grep -q puppetlabs /etc/yum.repos.d/*.repo
     IS_NATIVE=$status
   elif tIsDebianCompatible ; then
-    run grep -q puppetlabs -R /etc/apt/sources.list*
+    run grep -q puppet\.com -R /etc/apt/sources.list*
     IS_NATIVE=$status
   else
     IS_NATIVE=1
