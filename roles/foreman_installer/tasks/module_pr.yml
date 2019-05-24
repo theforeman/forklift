@@ -1,7 +1,7 @@
 ---
 - set_fact:
     namespace: "{{ module.split('/')[0] }}"
-    module_name: "{{ module.split('/')[1] | replace('puppet-', '') }}"
+    module_name: "{{ module.split('/')[1] | replace('puppet-', '') | replace('puppetlabs-', '') }}"
     ref: "{{ module.split('/')[2] }}"
 
 - name: find puppet module
