@@ -6,5 +6,5 @@
   roles:
     - etc_hosts
     - epel_repositories
-    - katello_repositories
+    - foreman_client_repositories
     - katello_client
