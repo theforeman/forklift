@@ -2,25 +2,25 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-DOCUMENTATION = """
-      lookup: forklift_versions
-        author: Evgeni Golov <evgeni@redhat.com>
-        version_added: "0.9"
-        short_description: fetch versions from Forklift's versions.yaml
-        description:
-            - This lookup returns the component versions of a Forklift scenario
-        options:
-          file:
-            description: path to versions.yaml
-            required: True
-          scenario:
-            description: scenario to look up
-            required: True
-          scenario_version:
-            description: scenario version to look up
-        notes:
-          - this lookup will match the foreman version for the foreman scenatio
-          - this lookup will match the katello version for all other scenarios
+DOCUMENTATION = r"""
+lookup: forklift_versions
+author: Evgeni Golov <evgeni@redhat.com>
+version_added: "0.9"
+short_description: fetch versions from Forklift's versions.yaml
+description:
+    - This lookup returns the component versions of a Forklift scenario
+options:
+  file:
+    description: path to versions.yaml
+    required: True
+  scenario:
+    description: scenario to look up
+    required: True
+  scenario_version:
+    description: scenario version to look up
+notes:
+  - this lookup will match the foreman version for the foreman scenatio
+  - this lookup will match the katello version for all other scenarios
 """
 import yaml
 from ansible.errors import AnsibleParserError, AnsibleLookupError
