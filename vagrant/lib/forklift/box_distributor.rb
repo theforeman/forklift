@@ -193,11 +193,15 @@ module Forklift
       synced_folders = box.fetch('synced_folders', [])
       return if synced_folders.empty?
 
-      configure_private_network(machine, box)
+      configure_network = false
 
       synced_folders.each do |folder|
-        machine.vm.synced_folder folder['path'], folder['mount_point'], symbolized_options(folder['options'])
+        options = symbolized_options(folder['options'])
+        machine.vm.synced_folder folder['path'], folder['mount_point'], options
+        configure_network ||= options[:disabled] != true
       end
+
+      configure_private_network(machine, box) if configure_network
     end
 
     def configure_private_network(machine, box)
