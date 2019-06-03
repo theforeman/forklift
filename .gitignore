@@ -26,3 +26,4 @@ vagrant/boxes.d/80-tmp-*.yaml
 # Packer
 templates/packer_cache/
 templates/output*
+templates/forklift-centos7-katello-devel.box

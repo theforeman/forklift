@@ -33,6 +33,11 @@
 
     "provisioners": [
         {
+            "type": "shell",
+            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "scripts": ["scripts/vagrant.sh"]
+        },
+        {
             "type": "ansible",
             "playbook_file": "../playbooks/katello_devel.yml",
             "ansible_env_vars": [ "ANSIBLE_CONFIG=../ansible.cfg" ]
