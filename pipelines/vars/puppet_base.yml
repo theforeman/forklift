@@ -1,0 +1,19 @@
+pipeline_type: foreman
+pipeline_version: nightly
+pipeline_os: centos7
+foreman_installer_scenario: foreman
+server_box:
+  box: "{{ pipeline_os }}"
+  memory: 4096
+proxy_box:
+  box: "{{ pipeline_os }}"
+  memory: 2048
+puppet_box:
+  box: "{{ pipeline_os }}"
+  memory: 4096
+forklift_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}-split-puppet"
+forklift_server_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}-server"
+forklift_proxy_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}-proxy"
+forklift_puppet_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}-puppet"
+forklift_boxes:
+  "{{ {forklift_server_name: server_box, forklift_proxy_name: proxy_box, forklift_puppet_name: puppet_box} }}"
