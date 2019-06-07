@@ -1,16 +1,16 @@
 ---
 dependencies:
   - role: epel_repositories
-    when: foreman_server_repositories_epel
+    when: foreman_server_repositories_epel|bool
   - role: puppet_repositories
-    when: foreman_server_repositories_puppet
+    when: foreman_server_repositories_puppet|bool
   - role: foreman_repositories
-    when: foreman_server_repositories_foreman
+    when: foreman_server_repositories_foreman|bool
   - role: katello_repositories
-    when: foreman_server_repositories_katello
+    when: foreman_server_repositories_katello|bool
   - role: foreman_client_repositories
-    when: foreman_server_repositories_foreman_client
+    when: foreman_server_repositories_foreman_client|bool
   - role: katello_client_repositories
-    when: foreman_server_repositories_katello_client
+    when: foreman_server_repositories_katello_client|bool
   - role: ostree_repositories
-    when: foreman_server_repositories_ostree
+    when: foreman_server_repositories_ostree|bool
