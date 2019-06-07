@@ -1,0 +1,109 @@
+- hosts: localhost
+  vars_files:
+    - vars/puppet_base.yml
+  roles:
+    - forklift
+
+- hosts:
+  - "{{ forklift_server_name }}"
+  - "{{ forklift_proxy_name }}"
+  - "{{ forklift_puppet_name }}"
+  become: yes
+  vars:
+    foreman_installer_skip_installer: true
+  vars_files:
+    - vars/puppet_base.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+    - role: foreman_server_repositories
+    - role: update_os_packages
+    - role: foreman_installer
+
+- hosts: "{{ forklift_puppet_name }}"
+  become: yes
+  vars_files:
+    - vars/puppet_base.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+    - role: foreman_installer
+      foreman_installer_options_internal_use_only:
+        - "--no-enable-foreman"
+        - "--no-enable-foreman-cli"
+        - "--no-enable-foreman-proxy"
+        - "--puppet-server true"
+        - "--puppet-server-foreman-url https://{{ forklift_server_name }}.{{ ansible_domain }}"
+        - "--puppet-server-admin-api-whitelist localhost"
+        - "--puppet-server-admin-api-whitelist {{ forklift_puppet_name }}.{{ ansible_domain }}"
+        - "--puppet-server-admin-api-whitelist {{ forklift_proxy_name }}.{{ ansible_domain }}"
+        - "--puppet-server-ca-client-whitelist localhost"
+        - "--puppet-server-ca-client-whitelist {{ forklift_puppet_name }}.{{ ansible_domain }}"
+        - "--puppet-server-ca-client-whitelist {{ forklift_proxy_name }}.{{ ansible_domain }}"
+        - "--puppet-autosign-entries {{ forklift_server_name }}.{{ ansible_domain }}"
+        - "--puppet-autosign-entries {{ forklift_proxy_name }}.{{ ansible_domain }}"
+
+# TODO: set foreman's trusted hosts to [{{ forklift_puppet_name }}.{{ ansible_domain }}]
+- hosts: "{{ forklift_server_name }}"
+  become: yes
+  vars_files:
+    - vars/puppet_base.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+    - role: puppet_agent
+      puppet_agent_bootstrap_server: "{{ forklift_puppet_name }}.{{ ansible_domain }}"
+    - role: foreman_installer
+      foreman_installer_options_internal_use_only:
+        - "--enable-foreman"
+        - "--foreman-initial-admin-password changeme"
+        - "--foreman-oauth-consumer-key oauth-key"
+        - "--foreman-oauth-consumer-secret oauth-secret"
+        - "--enable-foreman-cli"
+        - "--no-enable-foreman-proxy"
+        - "--no-enable-puppet"
+
+- hosts: "{{ forklift_proxy_name }}"
+  become: yes
+  vars_files:
+    - vars/puppet_base.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+    - role: puppet_agent
+      puppet_agent_bootstrap_server: "{{ forklift_puppet_name }}.{{ ansible_domain }}"
+    - role: foreman_installer
+      foreman_installer_options_internal_use_only:
+        - "--no-enable-foreman"
+        - "--no-enable-foreman-cli"
+        - "--enable-foreman-proxy"
+        - "--foreman-proxy-dns false"
+        - "--foreman-proxy-dhcp false"
+        - "--foreman-proxy-tftp false"
+        - "--foreman-proxy-puppet true"
+        - "--foreman-proxy-puppetca true"
+        - "--foreman-proxy-puppet-url https://{{ forklift_puppet_name }}.{{ ansible_domain }}:8140"
+        - "--foreman-proxy-foreman-base-url https://{{ forklift_server_name }}.{{ ansible_domain }}"
+        - "--foreman-proxy-oauth-consumer-key oauth-key"
+        - "--foreman-proxy-oauth-consumer-secret oauth-secret"
+        - "--foreman-proxy-trusted-hosts {{ forklift_proxy_name }}.{{ ansible_domain }}"
+        - "--foreman-proxy-trusted-hosts {{ forklift_server_name }}.{{ ansible_domain }}"
+        - "--enable-puppet"
+        - "--puppet-server false"
+        - "--puppet-puppetmaster {{ forklift_puppet_name }}.{{ ansible_domain }}"
+
+- hosts: "{{ forklift_puppet_name }}"
+  become: yes
+  vars_files:
+    - vars/puppet_base.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+    - role: foreman_installer
+      foreman_installer_options_internal_use_only:
+        - "--reset-puppet-autosign-entries"
