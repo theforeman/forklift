@@ -1,0 +1,4 @@
+---
+pulp_default_admin_password: password
+pulp_db_type: postgres
+pulp_install_db: false

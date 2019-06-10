@@ -379,3 +379,13 @@ vagrant up centos7-dynflow-devel
 ```
 
 In the vagrant box, the dynflow repository is cloned to `/home/vagrant/dynflow`.
+
+## Pulp3 deployment
+
+To deploy pulp3 onto an existing box, within forklift run:
+```
+git clone https://github.com/pulp/ansible-pulp.git
+cd ansible-pulp
+ansible-galaxy install -r requirements.yml -p ./roles
+cd ..
+```
