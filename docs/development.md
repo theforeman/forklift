@@ -354,3 +354,12 @@ To use:
 4. You can then ssh into the smoker box. Ensure the hostname of the Foreman/Katello instance can be reached by the smoker box.
 5. From the smoker box, run tests as the vagrant user using the alias or running pytest commands manually. To change the testing options, please see [the smoker documentation](https://github.com/theforeman/smoker) and modify the alias or manually run pytest commands as necessary.
 
+## Pulp3 deployment
+
+To deploy pulp3 onto an existing box, within forklift run:
+```
+git clone https://github.com/pulp/ansible-pulp.git
+cd ansible-pulp
+ansible-galaxy install -r requirements.yml -p ./roles
+cd ..
+```

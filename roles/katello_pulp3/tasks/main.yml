@@ -1,0 +1,154 @@
+---
+- name: correct /var/lib/pulp permissions (adding group writable), fixed in 2.21.1
+  file:
+    path: '/var/lib/pulp/'
+    mode: '774'
+    owner: apache
+    group: pulp
+
+- include_role:
+    name: "{{ item }}"
+  with_items:
+    - pulp-database
+    - pulp-workers
+    - pulp-resource-manager
+    - pulp-content
+  vars:
+    pulp_default_admin_password: password
+    pulp_settings_file: /etc/pulp/settings.py
+    pulp_requirements_dir: "https://raw.githubusercontent.com/pulp/pulpcore/master/"
+    pulp_plugin_source_dir: "git+https://github.com/pulp/pulpcore-plugin.git#egg=pulpcore-plugin"
+    pulp_source_dir: "git+https://github.com/pulp/pulpcore.git@3.0#egg=pulpcore"
+    pulp_install_plugins:
+      pulp-2to3-migrate:
+        app_label: "pulp-2to3-migration"
+        source_dir: "git+https://github.com/pulp/pulp-2to3-migration.git#egg=pulp-2to3-migration"
+      pulp-file:
+        app_label: "file"
+        source_dir: "git+https://github.com/pulp/pulp_file.git@0.1#egg=pulp-file"
+      pulp-container:
+        app_label: "container"
+        source_dir: "git+https://github.com/pulp/pulp_container.git@1.0#egg=pulp-docker"
+      pulp-ansible:
+        app_label: "ansible"
+        source_dir: "git+https://github.com/pulp/pulp_ansible.git#egg=pulp-ansible"
+      pulp-rpm:
+        prereq_role: 'pulp.pulp_rpm_prerequisites'
+        app_label: "rpm"
+        source_dir: "git+https://github.com/pulp/pulp_rpm.git@3.0#egg=pulp-rpm"
+    pulp_settings:
+      secret_key: secret
+      content_origin: "{{ ansible_fqdn }}"
+      ANSIBLE_API_HOSTNAME: "{{ ansible_fqdn }}"
+      ANSIBLE_CONTENT_HOSTNAME: "https://{{ ansible_fqdn }}/pulp_ansible/content/"
+      PULP2_MONGODB:
+        name: "pulp_database"
+        seeds: "localhost:27017"
+        #ssl: True
+      databases:
+        default:
+            HOST: localhost
+            ENGINE: django.db.backends.postgresql_psycopg2
+            NAME: pulp
+            USER: pulp
+            PASSWORD: pulp
+            PORT: 7878
+    pulp_db_type: postgres
+    pulp_use_system_wide_pkgs: true
+    pulp_user: pulp
+    pulp_group: pulp
+    pulp_install_dir: /usr/local/lib/pulp
+    postgresql_packages: rh-postgresql96
+    postgresql_daemon: rh-postgresql96-postgresql
+    postgresql_bin_path: /opt/rh/rh-postgresql96/root/bin
+    postgresql_data_dir: /var/opt/rh/rh-postgresql96/lib/pgsql/data
+    postgresql_config_path: /var/opt/rh/rh-postgresql96/lib/pgsql/data
+    postgresql_global_config_options:
+      - option: port
+        value: 7878
+    postgresql_databases:
+      - name: pulp
+        port: 7878
+        user: pulp
+        password: pulp
+    postgresql_users:
+      - name: pulp
+        password: pulp
+        role_attr_flags: CREATEDB
+        port: 7878
+
+- name: Deploy reverse proxy configuration
+  template:
+    src: templates/pulp-reverse-proxy.conf.j2
+    dest: /etc/httpd/conf.d/05-foreman-ssl.d/pulp-reverse-proxy.conf
+    owner: root
+    group: apache
+
+- name: Delete old pulp_iso config
+  file:
+    path: '/etc/httpd/conf.d/pulp_iso.conf'
+    state: absent
+
+- name: Deploy pulp_file.conf for http
+  template:
+    src: templates/pulp_file.conf.j2
+    dest: /etc/httpd/conf.d/pulp_file.conf
+    owner: root
+    group: apache
+
+- name: Deploy pulp_file.conf for https
+  template:
+    src: templates/pulp_file.conf.j2
+    dest: /etc/httpd/conf.d/05-foreman-ssl.d/pulp_file.conf
+    owner: root
+    group: apache
+
+
+#ansible galaxy support
+- name: Deploy pulp_ansible.conf for https
+  template:
+    src: templates/pulp_ansible.conf.j2
+    dest: /etc/httpd/conf.d/05-foreman-ssl.d/pulp_ansible.conf
+    owner: root
+    group: apache
+
+
+#docker capusle syncing support   
+
+- stat:
+    path: /etc/httpd/conf.d/05-katello-ssl.conf
+  register: katello_ssl_result
+- name: Deploy ssl config for docker capsule syncing
+  when: katello_ssl_result.stat.exists
+  lineinfile:
+    dest: /etc/httpd/conf.d/05-katello-ssl.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    insertafter: '.*SSLEngine on'
+  with_items:
+    - { regexp: '.*RequestHeader set SSL_CLIENT_S_DN_X509.*', line: 'RequestHeader set SSL_CLIENT_S_DN_X509 "%{SSL_CLIENT_S_DN_X509}s"'}
+    - { regexp: '.*RequestHeader set SSL_CLIENT_S_DN .*', line: 'RequestHeader set SSL_CLIENT_S_DN "%{SSL_CLIENT_S_DN}s"'}
+    - { regexp: '.*RequestHeader set SSL_SERVER_S_DN_OU.*', line: 'RequestHeader set SSL_SERVER_S_DN_OU "%{SSL_SERVER_S_DN_OU}s"'}
+    - { regexp: '.*RequestHeader set SSL_CLIENT_VERIFY.*', line: 'RequestHeader set SSL_CLIENT_VERIFY "%{SSL_CLIENT_VERIFY}s"'}
+    - { regexp: '.*RequestHeader set SSL_CLIENT_I_DN.*', line: 'RequestHeader set SSL_CLIENT_I_DN "%{SSL_CLIENT_I_DN}s"'}
+- name: Allow /etc/pulp to be readable by 2 and 3
+  file:
+    path: /etc/pulp/
+    state: directory
+    owner: apache
+    group: pulp
+
+- name: Configure smart proxy pulp3
+  template:
+    src: templates/pulp3.yml
+    dest: /etc/foreman-proxy/settings.d/pulp3.yml
+
+- name: restart foreman-proxy
+  service:
+    name: foreman-proxy
+    state: restarted
+
+- name: restart httpd
+  service:
+    name: httpd
+    state: restarted

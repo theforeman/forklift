@@ -1,0 +1,8 @@
+ProxyRequests Off
+ProxyPreserveHost On
+ProxyPass /pulp_ansible/galaxy http://localhost:24817/pulp_ansible/galaxy retry=0
+ProxyPassReverse /pulp_ansible/galaxy http://localhost:24817/pulp_ansible/galaxy
+
+ProxyPass /pulp_ansible/content/ http://localhost:24816/pulp/content/
+ProxyPassReverse /pulp_ansible/content/ http://localhost:24816/pulp/content/
+
