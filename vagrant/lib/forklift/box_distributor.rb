@@ -232,6 +232,7 @@ module Forklift
         p.memory = box.fetch('memory').to_i * @settings['scale_memory'].to_i if box.fetch('memory', false)
         p.machine_virtual_size = box.fetch('disk_size') if box.fetch('disk_size', false)
         p.management_network_domain = create_domain(box) if p.respond_to?(:management_network_domain)
+        p.qemu_use_session = @settings['libvirt_qemu_use_session'] if @settings.key?('libvirt_qemu_use_session')
 
         box.fetch('add_disks', []).each do |disk|
           type = disk.fetch('type', 'raw')
