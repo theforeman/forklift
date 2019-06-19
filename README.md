@@ -109,6 +109,8 @@ Options:
 | domain             |  forklift uses short name of your host + 'example.com' as domain name for your boxes. You can use this option to override it. |
 | sshfs              |  if you have vagrant-sshfs plugin, you can use sshfs to share folders between your host and guest. See an example below for details. |
 | nfs                |  share folders between host and guest.  See an example below for details. |
+| autostart          |  set to true to automatically start when using 'vagrant up' |
+| primary            |  set the machine to be the default target of vagrant commands such as 'vagrant ssh' |
 
 Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
 
