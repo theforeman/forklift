@@ -50,5 +50,10 @@
   become: true
   yum: name=gcc-c++ state=present
 
+- name: 'Update bundler'
+  gem:
+    name: bundler
+    state: latest
+
 - name: 'Install gems'
   bundler: chdir=~/hammer-cli-foreman state=present
