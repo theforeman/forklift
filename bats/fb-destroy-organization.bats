@@ -12,5 +12,6 @@ setup() {
 }
 
 @test "Delete an Organization" {
+  sleep 20 # to prevent db deadlocks
   hammer organization delete --name="${ORGANIZATION}"
 }
