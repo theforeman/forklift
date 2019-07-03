@@ -14,9 +14,7 @@ server_box:
 proxy_box:
   box: "{{ pipeline_os }}"
   memory: 3072
-forklift_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}"
-forklift_proxyname: "pipeline-{{ pipeline_type }}proxy-{{ pipeline_version }}-{{ pipeline_os }}"
 forklift_boxes:
-  "{{ {forklift_name: server_box, forklift_proxyname: proxy_box} }}"
+  "{{ {forklift_server_name: server_box, forklift_proxy_name: proxy_box} }}"
 bats_tests_additional:
   - fb-proxy.bats

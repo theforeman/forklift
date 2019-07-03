@@ -1,11 +1,12 @@
 - hosts: localhost
   vars_files:
+    - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_upgrade_base.yml
   roles:
     - forklift
 
-- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
+- hosts: "{{ forklift_server_name }}"
   become: yes
   vars:
   vars_files:
@@ -29,9 +30,10 @@
     - disable_firewall
     - foreman_installer
 
-- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
+- hosts: "{{ forklift_server_name }}"
   become: true
   vars_files:
+    - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
   vars:
@@ -50,11 +52,12 @@
       foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
 
 
-- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
+- hosts: "{{ forklift_server_name }}"
   become: yes
   vars:
     foreman_installer_upgrade: True
   vars_files:
+    - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_staging.yml
   roles:
@@ -69,9 +72,10 @@
     - foreman_client_repositories
     - foreman_installer
 
-- hosts: pipeline-upgrade-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}
+- hosts: "{{ forklift_server_name }}"
   become: yes
   vars_files:
+    - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_upgrade_base.yml
   roles:
