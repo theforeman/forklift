@@ -234,16 +234,7 @@ module Forklift
         p.management_network_domain = create_domain(box) if p.respond_to?(:management_network_domain)
         p.qemu_use_session = @settings['libvirt_qemu_use_session'] if @settings.key?('libvirt_qemu_use_session')
 
-        box.fetch('add_disks', []).each do |disk|
-          type = disk.fetch('type', 'raw')
-          device = disk.fetch('device')
-          size = disk.fetch('size')
-          if type.nil? || device.nil? || size.nil?
-            raise "Error in add_disks configuration: type, device or size are missing #{disk}"
-          end
-
-          p.storage :file, :size => size, :type => type, :device => device
-        end
+        add_disks(box, p)
 
         merged_options(box, 'libvirt_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
@@ -329,6 +320,19 @@ module Forklift
     end
 
     private
+
+    def add_disks(box, provider)
+      box.fetch('add_disks', []).each do |disk|
+        type = disk.fetch('type', 'raw')
+        device = disk.fetch('device')
+        size = disk.fetch('size')
+        if type.nil? || device.nil? || size.nil?
+          raise "Error in add_disks configuration: type, device or size are missing #{disk}"
+        end
+
+        provider.storage :file, :size => size, :type => type, :device => device
+      end
+    end
 
     def symbolized_options(hash)
       hash.inject({}) { |memo, (k, v)| memo.update(k.to_sym => v) }
