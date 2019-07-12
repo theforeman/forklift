@@ -1,0 +1,3 @@
+forklift_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}"
+forklift_server_name: "pipeline-{{ pipeline_type }}-server-{{ pipeline_version }}-{{ pipeline_os }}"
+forklift_proxy_name: "pipeline-{{ pipeline_type }}-proxy-{{ pipeline_version }}-{{ pipeline_os }}"

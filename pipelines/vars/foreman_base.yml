@@ -7,9 +7,8 @@ foreman_installer_options_internal_use_only:
 server_box:
   box: "{{ pipeline_os }}"
   memory: 4680
-forklift_name: "pipeline-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}"
 forklift_boxes:
-  "{{ {forklift_name: server_box} }}"
+  "{{ {forklift_server_name: server_box} }}"
 bats_tests:
   - "fb-verify-packages.bats"
   - "fb-test-foreman.bats"
