@@ -25,10 +25,6 @@ setup() {
   hammer organization create --name="${ORGANIZATION}" | grep -q "Organization created"
 }
 
-@test "delete host if present" {
-  hammer host delete --name="`hostname`" || echo "Could not delete host"
-}
-
 @test "create a product" {
   hammer product create --organization="${ORGANIZATION}" --name="${PRODUCT}" | grep -q "Product created"
 }
@@ -123,6 +119,10 @@ enabled=1
 EOF
   fi
   tPackageExists subscription-manager || tPackageInstall subscription-manager
+}
+
+@test "delete host if present" {
+  hammer host delete --name="`hostname`" || echo "Could not delete host"
 }
 
 @test "register subscription manager with username and password" {
