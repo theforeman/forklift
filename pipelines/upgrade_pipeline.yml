@@ -10,6 +10,7 @@
   become: yes
   vars:
   vars_files:
+    - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
   roles:
