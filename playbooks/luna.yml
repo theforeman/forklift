@@ -21,7 +21,7 @@
       - "--enable-foreman-cli-remote-execution"
       - "--enable-foreman-cli-tasks"
       - "--enable-foreman-cli-templates"
-      - "--katello-enable-ostree"
+      - "--katello-enable-ostree true"
     foreman_installer_additional_packages:
       - tfm-rubygem-foreman_virt_who_configure
       - tfm-rubygem-hammer_cli_foreman_virt_who_configure
