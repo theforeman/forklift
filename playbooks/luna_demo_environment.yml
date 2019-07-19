@@ -17,7 +17,7 @@
     - foreman_repositories
     - katello_repositories
     - foreman_installer
-    - libvirt_setup
+    - libvirt
     - katello_provisioning
     - plugins/foreman_templates
 # openscap manual steps
@@ -50,22 +50,22 @@
       - foreman-rackspace
       - foreman-vmware
       - katello
-    foreman_installer_options: >
-      --foreman-admin-password {{ foreman_installer_admin_password }}
-      --foreman-organizations-enabled true 
-      --foreman-locations-enabled true 
-      --foreman-initial-organization {{ katello_provisioning_organization }}
-      --foreman-initial-location {{ katello_provisioning_location }} 
-      --puppet-show-diff=true
-      --foreman-proxy-dns true 
-      --foreman-proxy-dhcp true 
-      --foreman-proxy-dns-managed false 
-      --foreman-proxy-dhcp-managed false 
-      --foreman-proxy-dns-provider libvirt 
-      --foreman-proxy-dns-interface virbr1 
-      --foreman-proxy-dhcp-provider libvirt 
-      --foreman-proxy-libvirt-network provision 
-      --foreman-proxy-dhcp-interface virbr1 \
+    foreman_installer_options:
+      - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
+      - "--foreman-organizations-enabled true"
+      - "--foreman-locations-enabled true"
+      - "--foreman-initial-organization {{ katello_provisioning_organization }}"
+      - "--foreman-initial-location {{ katello_provisioning_location }}"
+      - "--puppet-show-diff=true"
+      - "--foreman-proxy-dns true"
+      - "--foreman-proxy-dhcp true"
+      - "--foreman-proxy-dns-managed false"
+      - "--foreman-proxy-dhcp-managed false"
+      - "--foreman-proxy-dns-provider libvirt"
+      - "--foreman-proxy-dns-interface virbr1"
+      - "--foreman-proxy-dhcp-provider libvirt"
+      - "--foreman-proxy-libvirt-network provision"
+      - "--foreman-proxy-dhcp-interface virbr1"
     foreman_repositories_environment: release
     katello_repositories_environment: release
     selinux_state: disabled
