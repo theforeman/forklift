@@ -23,7 +23,6 @@
         - '--foreman-proxy-register-in-foreman true'
         - '--foreman-proxy-oauth-consumer-key "{{ oauth_consumer_key.stdout }}"'
         - '--foreman-proxy-oauth-consumer-secret "{{ oauth_consumer_secret.stdout }}"'
-        - '--foreman-proxy-content-certs-tar "{{ foreman_proxy_content_certs_tar }}"'
         - '--foreman-proxy-content-parent-fqdn "{{ server_fqdn.stdout }}"'
         - '--puppet-server-foreman-url https://"{{ server_fqdn.stdout }}"'
       foreman_installer_additional_packages:
