@@ -44,18 +44,10 @@
       - "--disable-system-checks"
     foreman_installer_additional_packages:
       - rubygem-ruby-libvirt
-      - foreman-libvirt
-      - foreman-ec2
-      - foreman-gce
-      - foreman-openstack
-      - foreman-ovirt
-      - foreman-rackspace
-      - foreman-vmware
       - katello
+      - http://koji.katello.org/kojifiles/work/tasks/4129/214129/tfm-rubygem-hammer_cli_foreman-0.17.1-1.el7.noarch.rpm
     foreman_installer_options:
       - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
-      - "--foreman-organizations-enabled true"
-      - "--foreman-locations-enabled true"
       - "--foreman-initial-organization {{ katello_provisioning_organization }}"
       - "--foreman-initial-location {{ katello_provisioning_location }}"
       - "--puppet-show-diff=true"
@@ -68,6 +60,7 @@
       - "--foreman-proxy-dhcp-provider libvirt"
       - "--foreman-proxy-libvirt-network provision"
       - "--foreman-proxy-dhcp-interface virbr1"
+      - "--foreman-compute-{libvirt,ec2,gce,openstack,ovirt,rackspace,vmware}"
     foreman_repositories_environment: release
     katello_repositories_environment: release
     selinux_state: disabled
