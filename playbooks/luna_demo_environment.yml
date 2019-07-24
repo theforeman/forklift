@@ -60,7 +60,7 @@
       - "--foreman-proxy-dhcp-provider libvirt"
       - "--foreman-proxy-libvirt-network provision"
       - "--foreman-proxy-dhcp-interface virbr1"
-      - "--foreman-compute-{libvirt,ec2,gce,openstack,ovirt,rackspace,vmware}"
+      - "--enable-foreman-compute-{libvirt,ec2,gce,openstack,ovirt,rackspace,vmware}"
     foreman_repositories_environment: release
     katello_repositories_environment: release
     selinux_state: disabled
@@ -68,7 +68,7 @@
     katello_provisioning_sync_repos: True
     # if you want to speed up the setup and you don't care about packages being downloaded, you can change this to on_demand
     # valid options are on_demand, background, immediate
-    katello_provisioning_download_policy: immediate
+    katello_provisioning_download_policy: on_demand
 # MANUAL STEPS
 # 1. create a compute profile through UI (there's no API for it)
 #   define it as Small, 2 GB RAM, network type is Virtual (NAT) with network provision
