@@ -19,6 +19,12 @@ centos7-luna-devel:
     variables:
       katello_devel_github_username: <REPLACE ME>
 
+centos7-luna-demo:
+  box: centos7
+  memory: 10240
+  ansible:
+    playbook: playbooks/luna_demo_environment.yml
+
 centos7-hammer-devel:
   box: centos7
   memory: 512

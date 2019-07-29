@@ -46,6 +46,7 @@
       - rubygem-ruby-libvirt
       - katello
       - http://koji.katello.org/kojifiles/work/tasks/4129/214129/tfm-rubygem-hammer_cli_foreman-0.17.1-1.el7.noarch.rpm
+      - http://koji.katello.org/kojifiles/work/tasks/4715/214715/tfm-rubygem-hammer_cli_katello-0.18.2-1.el7.noarch.rpm
     foreman_installer_options:
       - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
       - "--foreman-initial-organization {{ katello_provisioning_organization }}"
