@@ -36,7 +36,7 @@ def get_running_hosts():
         return
 
     cmd = "vagrant status --machine-readable"
-    status = subprocess.check_output(cmd.split(), universal_newlines=True).rstrip()
+    status = subprocess.check_output(cmd.split(), universal_newlines=True).decode().rstrip()
 
     for line in status.split('\n'):
         if len(line.split(',')) == 4:
@@ -65,7 +65,7 @@ def list_running_hosts():
 def get_ssh_configs(hosts):
     cmd = ['vagrant', 'ssh-config'] + hosts
     try:
-        output = subprocess.check_output(cmd, universal_newlines=True, stderr=DEVNULL)
+        output = subprocess.check_output(cmd, universal_newlines=True, stderr=DEVNULL).decode()
     except subprocess.CalledProcessError:
         return None
 
@@ -85,7 +85,7 @@ def get_host_ssh_config(config, host):
 def get_variables(hosts):
     cmd = [os.path.join(os.path.dirname(os.path.dirname(__file__)), 'bin', 'ansible-vars')] + hosts
     try:
-        output = subprocess.check_output(cmd, universal_newlines=True, stderr=DEVNULL)
+        output = subprocess.check_output(cmd, universal_newlines=True, stderr=DEVNULL).decode()
     except subprocess.CalledProcessError:
         return {}
 
