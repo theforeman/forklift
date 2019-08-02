@@ -121,6 +121,11 @@ EOF
   tPackageExists subscription-manager || tPackageInstall subscription-manager
 }
 
+@test "disable puppet agent to prevent checkin from registering host to another org" {
+  systemctl is-active puppet || skip "Puppet is not active"
+  systemctl stop puppet
+}
+
 @test "delete host if present" {
   hammer host delete --name="`hostname`" || echo "Could not delete host"
 }
@@ -156,6 +161,11 @@ EOF
   echo "rc=${status}"
   echo "${output}"
   subscription-manager list --consumed | grep "${PRODUCT}"
+}
+
+@test "start puppet again" {
+  systemctl is-enabled puppet || skip "Puppet isn't enabled"
+  systemctl start puppet
 }
 
 @test "check content host is registered" {
