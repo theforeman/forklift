@@ -89,6 +89,7 @@ module Forklift
         configure_openstack_provider(machine, box)
         configure_google_provider(machine, box)
         configure_synced_folders(machine, box)
+        configure_private_network(machine, box)
         configure_sshfs(config, box)
         configure_nfs(config, box)
 
@@ -193,19 +194,16 @@ module Forklift
       synced_folders = box.fetch('synced_folders', [])
       return if synced_folders.empty?
 
-      configure_network = false
-
       synced_folders.each do |folder|
         options = symbolized_options(folder['options'])
         machine.vm.synced_folder folder['path'], folder['mount_point'], options
-        configure_network ||= options[:disabled] != true
       end
-
-      configure_private_network(machine, box) if configure_network
     end
 
     def configure_private_network(machine, box)
       ip = box.fetch('private_ip', nil)
+      return if ip.nil?
+
       options = {}.tap do |hash|
         if ip
           hash[:ip] = ip
