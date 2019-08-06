@@ -1,0 +1,14 @@
+---
+- name: 'Build command'
+  set_fact:
+    pytest_project_command: "{{ pytest_project_virtualenv_path }}/bin/py.test --junit-xml={{ pytest_project_junit_output }} {{ pytest_project_command_args }}"
+
+- name: 'Limit to markers'
+  set_fact:
+    pytest_project_command: "{{ pytest_project_command }} -m '{{ pytest_project_markers }}'"
+  when: pytest_project_markers|bool
+
+- name: 'Run tests'
+  command: "{{ pytest_project_command }}"
+  args:
+    chdir: "{{ pytest_project_directory }}"

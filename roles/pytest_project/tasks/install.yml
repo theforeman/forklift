@@ -1,0 +1,21 @@
+---
+- name: Install packages
+  become: true
+  package:
+    name: "{{ pytest_project_packages }}"
+    state: present
+
+- name: Clone project
+  git:
+    repo: "{{ pytest_project_url }}"
+    dest: "{{ pytest_project_directory }}"
+    version: "{{ pytest_project_version }}"
+    update: yes
+    force: yes
+
+- name: Install requirements
+  pip:
+    requirements: "{{ pytest_project_directory }}/{{ pytest_project_requirements }}"
+    virtualenv: "{{ pytest_project_virtualenv_path }}"
+    virtualenv_command: "{{ pytest_project_virtualenv_command }}"
+    chdir: "{{ pytest_project_directory }}"
