@@ -1,0 +1,32 @@
+---
+- name: 'Install browser'
+  become: true
+  package:
+    name: '{{ smoker_browser_packages }}'
+
+- name: 'Install Smoker via pytest_project'
+  include_role:
+    name: pytest_project
+    tasks_from: install
+  vars:
+    pytest_project_url: "{{ smoker_url }}"
+    pytest_project_version: "{{ smoker_version }}"
+    pytest_project_directory: "{{ smoker_directory }}"
+
+- name: "Show variables"
+  debug:
+    var: smoker_variables
+
+- name: 'Write variables.json'
+  copy:
+    dest: "{{ smoker_variables_path }}"
+    content: "{{ smoker_variables|to_json }}"
+
+- name: 'Run Smoker via pytest_project'
+  include_role:
+    name: pytest_project
+    tasks_from: run
+  vars:
+    pytest_project_directory: "{{ smoker_directory }}"
+    pytest_project_markers: "{{ smoker_markers }}"
+    pytest_project_command_args: "{{ smoker_command_args }}"
