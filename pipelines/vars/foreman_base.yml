@@ -8,7 +8,7 @@ server_box:
   box: "{{ pipeline_os }}"
   memory: 4680
 forklift_boxes:
-  "{{ {forklift_server_name: server_box} }}"
+  "{{ {forklift_server_name: server_box, forklift_smoker_name: smoker_box} }}"
 bats_tests:
   - "fb-verify-packages.bats"
   - "fb-test-foreman.bats"

@@ -89,3 +89,18 @@
     - role: foreman_client_repositories
       when: pipeline_type != 'foreman'
     - role: foreman_testing
+
+- name: run smoker
+  hosts:
+    - "{{ forklift_smoker_name }}"
+  vars_files:
+    - vars/install_base.yml
+    - vars/{{ pipeline_type }}_base.yml
+  vars:
+    smoker_base_url: "https://{{ forklift_server_name }}.{{ ansible_domain }}"
+    smoker_variables:
+      password: "{{ foreman_installer_admin_password|default('changeme') }}"
+  roles:
+    - role: epel_repositories
+      become: true
+    - smoker
