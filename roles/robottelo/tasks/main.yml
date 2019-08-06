@@ -1,6 +1,17 @@
 ---
+- name: 'Install Robottelo via pytest_project'
+  include_role:
+    name: pytest_project
+    tasks_from: install
+  vars:
+    pytest_project_packages: "{{ robottelo_packages }}"
+    pytest_project_url: "{{ robottelo_url }}"
+    pytest_project_directory: "{{ robottelo_directory }}"
+    pytest_project_requirements: "{{ robottelo_requirements }}"
+    pytest_project_virtualenv_command: "{{ robottelo_virtualenv_command }}"
+    pytest_project_version: "{{ robottelo_version }}"
+
 - include_tasks: ssh.yml
-- include_tasks: install.yml
 
 - name: robottelo properties file
   shell: cp robottelo.properties.sample robottelo.properties
@@ -34,9 +45,12 @@
     regexp: "^level=DEBUG"
     replace: "level=INFO"
 
-- name: Run tests
-  command: "{{ robottelo_virtualenv_path }}/bin/py.test --junit-xml={{ robottelo_junit_file }}
-             -m '{{ robottelo_test_options[robottelo_test_type] | default(robottelo_test_options.default) }}'
-             {{ robottelo_test_path[robottelo_test_type] | default(robottelo_test_path.default) }}"
-  args:
-    chdir: "{{ robottelo_directory }}"
+- name: 'Run Robottelo via pytest_project'
+  include_role:
+    name: pytest_project
+    tasks_from: run
+  vars:
+    pytest_project_directory: "{{ robottelo_directory }}"
+    pytest_project_junit_output: "{{ robottelo_junit_file }}"
+    pytest_project_markers: "{{ robottelo_test_options[robottelo_test_type] | default(robottelo_test_options.default) }}"
+    pytest_project_command_args: "{{ robottelo_test_path[robottelo_test_type] | default(robottelo_test_path.default) }}"

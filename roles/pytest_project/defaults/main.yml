@@ -1,0 +1,20 @@
+---
+# Shared
+pytest_project_directory: /tmp/pytest_project
+pytest_project_virtualenv_path: "{{ pytest_project_directory }}/venv"
+
+# Install
+pytest_project_packages:
+  - git
+  - python3
+  # This should match the ansible_python_interpreter rather than the pytest's python
+  - python-setuptools
+pytest_project_url:
+pytest_project_requirements: requirements.txt
+pytest_project_virtualenv_command: /usr/bin/python3 -m venv
+pytest_project_version: master
+
+# Run
+pytest_project_junit_output: junit.xml
+pytest_project_markers:
+pytest_project_command_args:
