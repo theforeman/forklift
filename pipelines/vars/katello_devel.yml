@@ -10,7 +10,7 @@ foreman_client_repositories_version: "{{ foreman_repositories_version }}"
 foreman_installer_scenario: katello-devel
 foreman_installer_additional_packages:
   - foreman-installer-katello
+foreman_installer_disable_system_checks: true
 foreman_installer_options_internal_use_only:
-  - "--disable-system-checks"
   - "--katello-devel-enable-ostree=true"
 

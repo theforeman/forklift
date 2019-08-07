@@ -3,7 +3,6 @@
   become: true
   vars:
     foreman_installer_options:
-      - "--disable-system-checks"
       - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
       - "--enable-foreman-cli-discovery"
       - "--enable-foreman-cli-openscap"

@@ -55,8 +55,8 @@
   become: yes
   vars:
     foreman_installer_scenario: katello
+    foreman_installer_disable_system_checks: true
     foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
       - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
       - "--enable-foreman-plugin-remote-execution"
       - "--enable-foreman-proxy-plugin-remote-execution-ssh"
@@ -87,8 +87,8 @@
     lbname: capsule.example.test
     foreman_proxy_content_server: katello01
     foreman_installer_scenario: foreman-proxy-content
+    foreman_installer_disable_system_checks: true
     foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
       - "--foreman-proxy-trusted-hosts {{ server_fqdn.stdout }}"
       - "--foreman-proxy-trusted-hosts {{ ansible_nodename }}"
       - "--foreman-proxy-foreman-base-url https://{{ server_fqdn.stdout }}"
