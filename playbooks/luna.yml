@@ -10,6 +10,7 @@
       - "--enable-foreman-cli-remote-execution"
       - "--enable-foreman-cli-tasks"
       - "--enable-foreman-cli-templates"
+      - "--enable-foreman-cli-virt-who-configure"
       - "--enable-foreman-plugin-ansible"
       - "--enable-foreman-plugin-bootdisk"
       - "--enable-foreman-plugin-discovery"
@@ -17,13 +18,11 @@
       - "--enable-foreman-plugin-openscap"
       - "--enable-foreman-plugin-remote-execution"
       - "--enable-foreman-plugin-templates"
+      - "--enable-foreman-plugin-virt-who-configure"
       - "--enable-foreman-proxy-plugin-ansible"
       - "--enable-foreman-proxy-plugin-discovery"
       - "--enable-foreman-proxy-plugin-openscap"
       - "--enable-foreman-proxy-plugin-remote-execution-ssh"
       - "--katello-enable-ostree true"
-    foreman_installer_additional_packages:
-      - tfm-rubygem-foreman_virt_who_configure
-      - tfm-rubygem-hammer_cli_foreman_virt_who_configure
   roles:
     - role: katello
