@@ -19,10 +19,9 @@ foreman_installer_module_prs_strategy: "merge"
 foreman_installer_module_branches: []
 
 # There are two options, so a user can supply their own, and a playbook can
-# specify theirs. For example, katello needs "--disable-system-checks" so we
-# put it in internal_use_only. It's an array. foreman_installer_options
-# is just a string appended to the installer, because vagrant can't
-# pass structured data through via the host variables interface.
+# specify theirs. For example, foreman-proxy needs "--foreman-proxy-foreman-url"
+# so we put it in internal_use_only in a role or playbook.
+# The foreman_installer_options is intended for the end user to override.
 foreman_installer_options: []
 foreman_installer_options_internal_use_only:
   - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
