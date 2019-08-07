@@ -3,7 +3,6 @@
   roles:
     - role: katello
       foreman_installer_options_internal_use_only:
-          - "--disable-system-checks"
           - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
           - "--enable-foreman-plugin-discovery"
           - "--enable-foreman-plugin-bootdisk"
