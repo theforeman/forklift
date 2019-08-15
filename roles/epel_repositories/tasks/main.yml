@@ -7,6 +7,14 @@
     - packages
   when: ansible_os_family == 'RedHat'
 
+- name: 'Disable mirror.ci.centos.org'
+  ini_file:
+    path: /etc/yum/pluginconf.d/fastestmirror.conf
+    section: main
+    option: exclude
+    value: mirror.ci.centos.org
+  when: ansible_distribution == 'CentOS'
+
 - name: 'Enable CentOS-CR Repository'
   ini_file:
     path: /etc/yum.repos.d/CentOS-CR.repo
