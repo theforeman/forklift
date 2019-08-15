@@ -15,6 +15,13 @@
     forklift_url: "https://github.com/theforeman/forklift"
     forklift_version: master
   tasks:
+    - name: 'Disable mirror.ci.centos.org'
+      ini_file:
+        path: /etc/yum/pluginconf.d/fastestmirror.conf
+        section: main
+        option: exclude
+        value: mirror.ci.centos.org
+
     - name: 'Install Forklift dependencies'
       package:
         name:
