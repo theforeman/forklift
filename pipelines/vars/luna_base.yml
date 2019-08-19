@@ -11,7 +11,6 @@ foreman_installer_options_internal_use_only:
   - "--enable-foreman-cli-remote-execution"
   - "--enable-foreman-cli-tasks"
   - "--enable-foreman-cli-templates"
-  - "--enable-foreman-cli-virt-who-configure"
   - "--enable-foreman-plugin-ansible"
   - "--enable-foreman-plugin-bootdisk"
   - "--enable-foreman-plugin-discovery"
@@ -19,13 +18,14 @@ foreman_installer_options_internal_use_only:
   - "--enable-foreman-plugin-openscap"
   - "--enable-foreman-plugin-remote-execution"
   - "--enable-foreman-plugin-templates"
-  - "--enable-foreman-plugin-virt-who-configure"
   - "--enable-foreman-proxy-plugin-ansible"
   - "--enable-foreman-proxy-plugin-discovery"
   - "--enable-foreman-proxy-plugin-openscap"
   - "--enable-foreman-proxy-plugin-remote-execution-ssh"
 foreman_installer_additional_packages:
   - katello
+  - tfm-rubygem-foreman_virt_who_configure
+  - tfm-rubygem-hammer_cli_foreman_virt_who_configure
 server_box:
   box: "{{ pipeline_os }}"
   memory: 8192
