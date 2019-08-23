@@ -1,0 +1,91 @@
+# This playbook is meant to bring up an environment for demoing
+# Foreman + Katello at conferences.  It can run in a VM or on a
+# baremetal CentOS 7 system.  At the end of this playbook are some
+# manual networking steps to follow and TODOs to make this playbook better.
+
+- hosts: all
+  become: true
+  roles:
+    - disable_ipv6
+    - disable_firewall
+    - selinux
+    - etc_hosts
+    - epel_repositories
+    - ostree_repositories
+    - puppet_repositories
+    - foreman_repositories
+    - katello_repositories
+    - foreman_installer
+    - libvirt
+    - katello_provisioning
+    - plugins/foreman_templates
+    - plugins/foreman_openscap
+    - plugins/foreman_discovery
+    - plugins/foreman_bootdisk
+    - plugins/foreman_remote_execution
+    - plugins/foreman_ansible 
+  vars:
+    katello_provisioning_organization: Demo
+    foreman_repositories_version: 1.22
+    katello_repositories_version: 3.12
+    katello_provisioning_location: Belgium
+    foreman_installer_scenario: katello
+    foreman_installer_options_internal_use_only:
+      - "--disable-system-checks"
+    foreman_installer_additional_packages:
+      - rubygem-ruby-libvirt
+      - katello
+    foreman_installer_options:
+      - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
+      - "--foreman-initial-organization {{ katello_provisioning_organization }}"
+      - "--foreman-initial-location {{ katello_provisioning_location }}"
+      - "--puppet-show-diff=true"
+      - "--foreman-proxy-dns true"
+      - "--foreman-proxy-dhcp true"
+      - "--foreman-proxy-dns-managed false"
+      - "--foreman-proxy-dhcp-managed false"
+      - "--foreman-proxy-dns-provider libvirt"
+      - "--foreman-proxy-dns-interface virbr1"
+      - "--foreman-proxy-dhcp-provider libvirt"
+      - "--foreman-proxy-libvirt-network provision"
+      - "--foreman-proxy-dhcp-interface virbr1"
+      - "--enable-foreman-compute-{libvirt,ec2,gce,openstack,ovirt,rackspace,vmware}"
+      - "--enable-foreman-plugin-openscap"
+      - "--enable-foreman-proxy-plugin-openscap"
+      - "--enable-foreman-plugin-ansible"
+      - "--enable-foreman-proxy-plugin-ansible"
+    foreman_repositories_environment: release
+    katello_repositories_environment: release
+    selinux_state: disabled
+    # if you're rerunning this playbook to save some time you may want to disable repo sync if they were synced recently
+    katello_provisioning_sync_repos: True
+    # if you want to speed up the setup and you don't care about packages being downloaded, you can change this to on_demand
+    # valid options are on_demand, background, immediate
+    katello_provisioning_download_policy: on_demand
+# MANUAL STEPS
+# 1. Ensure creation of the following provisioning network in libvirt:
+# <network>
+#  <name>provision</name>
+#  <uuid>17f7cccc-084f-4261-b9b1-6074ab9f314b</uuid>
+#  <forward mode='nat'>
+#    <nat>
+#      <port start='1024' end='65535'/>
+#    </nat>
+#  </forward>
+#  <bridge name='virbr1' stp='on' delay='0'/>
+#  <mac address='52:54:00:c0:72:fb'/>
+#  <domain name='example.com' localOnly='yes'/>
+#  <ip address='192.168.73.1' netmask='255.255.255.0'>
+#    <dhcp>
+#      <range start='192.168.73.2' end='192.168.73.254'/>
+#      <bootp file='pxelinux.0' server='192.168.73.1' />
+#    </dhcp>
+#  </ip>
+# </network>
+#
+# 2. Manually verify your host has FQDN set correctly
+# check it's in /etc/hosts /etc/hostname and hostname returns it, /etc/hosts first line should be 192.168.73.1  $fqdn
+# 3. In the Foreman UI, go to Settings and on the Provisioning tab, set Default PXE global template entry to discovery instead of local. This enables booting discovery for unknown hosts. To commit the change, click on Build PXE Default button. <Taken from https://theforeman.org/plugins/foreman_discovery/15.0/index.html#3.1ForemanDiscoveryplugin>
+
+# TODO - add role for setting up the machine - autologin in gdm, perhaps background image etc, installation of virt-manager, vim, htop
+# TODO - refactor katello_provisioning so that it does not run installer, it should only seed stuff, installer should be customized from playbook using foreman_installer's role variables

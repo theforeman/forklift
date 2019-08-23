@@ -45,6 +45,7 @@
     {{ foreman_provisioning_compute_resource_option }}
     --root-pass changeme
     --pxe-loader "PXELinux BIOS"
+    --organization '{{ foreman_provisioning_organization }}'
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: foreman_provisioning_hostgroup_base.stderr.find('not found') != -1
 
