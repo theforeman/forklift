@@ -1,15 +1,18 @@
 ---
-- name: 'get existing rails server pid'
-  command: cat {{ base_foreman_directory }}tmp/pids/server.pid
-  register: existing_rails_server
-  become_user: vagrant
-  ignore_errors: True
+- name: 'Get Server Hostname'
+  shell: hostname -f
   delegate_to: "{{ foreman_proxy_content_server }}"
+  register: server_fqdn
 
-- name: 'check for rails server'
-  fail: msg="No rails server detected running on {{ foreman_proxy_content_server }},
-             please run `rails s` on {{ foreman_proxy_content_server }}"
-  when: existing_rails_server.rc != 0
+- name: 'Query Foreman server'
+  uri:
+    url: "{{ 'https://' ~ server_fqdn.stdout }}"
+  ignore_errors: True
+  register: foreman_get
+
+- name: 'Check for rails server'
+  fail: msg="No rails server detected running on {{ foreman_proxy_content_server }}"
+  when: foreman_get.status != 200
 
 - name: 'Add group foreman'
   group: name=foreman state=present
