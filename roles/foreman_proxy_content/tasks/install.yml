@@ -30,11 +30,6 @@
   delegate_to: "{{ foreman_proxy_content_server }}"
   register: oauth_consumer_secret
 
-- name: 'Get pulp-oauth-secret'
-  shell: grep oauth_secret /etc/pulp/server.conf | tail -1 | cut -d ' ' -f 2
-  delegate_to: "{{ foreman_proxy_content_server }}"
-  register: pulp_oauth_secret
-
 - include_tasks: certs_generate.yml
 
 - name: 'Change cert permissions'
