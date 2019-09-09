@@ -1,2 +1,3 @@
+foreman_installer_scenario: katello
 foreman_installer_additional_packages:
   - katello

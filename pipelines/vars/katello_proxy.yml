@@ -1,2 +1,3 @@
+foreman_installer_scenario: foreman-proxy-content
 foreman_installer_additional_packages:
   - foreman-installer-katello

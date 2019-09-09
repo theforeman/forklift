@@ -59,7 +59,6 @@
     - vars/{{ pipeline_type }}_proxy.yml
   vars:
     foreman_proxy_content_server: "{{ forklift_server_name }}"
-    foreman_installer_scenario: foreman-proxy-content
     foreman_installer_disable_system_checks: true
     foreman_installer_options_internal_use_only:
       - "--certs-tar-file {{ foreman_proxy_content_certs_tar }}"
@@ -88,6 +87,7 @@
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
+    - vars/{{ pipeline_type }}_server.yml
   vars:
     foreman_installer_upgrade: True
   roles:
@@ -110,6 +110,7 @@
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
+    - vars/{{ pipeline_type }}_proxy.yml
   vars:
     foreman_installer_upgrade: True
     foreman_proxy_content_upgrade: True
@@ -137,6 +138,7 @@
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_staging.yml
+    - vars/{{ pipeline_type }}_server.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -160,6 +162,7 @@
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_staging.yml
+    - vars/{{ pipeline_type }}_proxy.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
