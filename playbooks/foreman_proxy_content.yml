@@ -26,4 +26,4 @@
         - '--foreman-proxy-content-parent-fqdn "{{ server_fqdn.stdout }}"'
         - '--puppet-server-foreman-url https://"{{ server_fqdn.stdout }}"'
       foreman_installer_additional_packages:
-          - foreman-installer-katello
+          - foreman-proxy-content
