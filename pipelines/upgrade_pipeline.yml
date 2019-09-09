@@ -40,6 +40,7 @@
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
+    - vars/{{ pipeline_type }}_server.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -55,6 +56,7 @@
   become: yes
   vars_files:
     - vars/upgrade_base.yml
+    - vars/{{ pipeline_type }}_proxy.yml
   vars:
     foreman_proxy_content_server: "{{ forklift_server_name }}"
     foreman_installer_scenario: foreman-proxy-content

@@ -36,6 +36,7 @@
     - vars/install_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_staging.yml
+    - vars/{{ pipeline_type }}_server.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -48,6 +49,7 @@
   vars_files:
     - vars/install_base.yml
     - vars/{{ pipeline_type }}_base_staging.yml
+    - vars/{{ pipeline_type }}_proxy.yml
   vars:
     foreman_proxy_content_server: "{{ forklift_server_name }}"
     foreman_installer_scenario: foreman-proxy-content

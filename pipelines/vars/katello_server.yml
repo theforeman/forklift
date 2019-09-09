@@ -1,0 +1,2 @@
+foreman_installer_additional_packages:
+  - katello

@@ -24,8 +24,6 @@ foreman_installer_options_internal_use_only:
   - "--enable-foreman-proxy-plugin-discovery"
   - "--enable-foreman-proxy-plugin-openscap"
   - "--enable-foreman-proxy-plugin-remote-execution-ssh"
-foreman_installer_additional_packages:
-  - katello
 server_box:
   box: "{{ pipeline_os }}"
   memory: 8192
