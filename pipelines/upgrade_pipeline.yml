@@ -1,11 +1,13 @@
-- hosts: localhost
+- name: create vagrant boxes
+  hosts: localhost
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
   roles:
     - forklift
 
-- hosts:
+- name: prepare boxes, update os, configure repos, configure os
+  hosts:
     - "{{ forklift_server_name }}"
     - "{{ forklift_proxy_name }}"
   become: yes
@@ -33,7 +35,8 @@
     - disable_firewall
     - foreman_installer
 
-- hosts:
+- name: install server
+  hosts:
     - "{{ forklift_server_name }}"
   become: yes
   vars_files:
@@ -51,7 +54,8 @@
       scenario_version: "{{ forklift_upgrade_version_start }}"
     - foreman_installer
 
-- hosts:
+- name: install proxy
+  hosts:
     - "{{ forklift_proxy_name }}"
   become: yes
   vars_files:
@@ -80,7 +84,8 @@
     - foreman_proxy_content
     - foreman_installer
 
-- hosts:
+- name: upgrade server to intermediate version
+  hosts:
     - "{{ forklift_server_name }}"
   become: true
   vars_files:
@@ -103,7 +108,8 @@
     - role: foreman_installer
       foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
 
-- hosts:
+- name: upgrade proxy to intermediate version
+  hosts:
     - "{{ forklift_proxy_name }}"
   become: true
   vars_files:
@@ -129,7 +135,8 @@
     - role: foreman_installer
       foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
 
-- hosts:
+- name: upgrade server to final version
+  hosts:
     - "{{ forklift_server_name }}"
   become: yes
   vars:
@@ -151,7 +158,8 @@
     - foreman_client_repositories
     - foreman_installer
 
-- hosts:
+- name: upgrade proxy to final version
+  hosts:
     - "{{ forklift_proxy_name }}"
   become: yes
   vars:
@@ -176,7 +184,8 @@
     - foreman_proxy_content
     - foreman_installer
 
-- hosts:
+- name: run tests
+  hosts:
     - "{{ forklift_server_name }}"
   become: yes
   vars_files:
