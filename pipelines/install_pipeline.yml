@@ -1,11 +1,13 @@
-- hosts: localhost
+- name: create vagrant boxes
+  hosts: localhost
   vars_files:
     - vars/install_base.yml
     - vars/{{ pipeline_type }}_base.yml
   roles:
     - forklift
 
-- hosts:
+- name: prepare boxes, update os, configure repos, configure os
+  hosts:
     - "{{ forklift_server_name }}"
     - "{{ forklift_proxy_name }}"
   become: yes
@@ -29,7 +31,8 @@
     - role: katello
       when: pipeline_type != 'foreman'
 
-- hosts:
+- name: install server
+  hosts:
    - "{{ forklift_server_name }}"
   become: yes
   vars_files:
@@ -43,7 +46,8 @@
       scenario_version: "{{ pipeline_version }}"
     - foreman_installer
 
-- hosts:
+- name: install proxy
+  hosts:
     - "{{ forklift_proxy_name }}"
   become: yes
   vars_files:
@@ -70,7 +74,8 @@
     - foreman_proxy_content
     - foreman_installer
 
-- hosts:
+- name: run tests
+  hosts:
     - "{{ forklift_server_name }}"
   become: true
   vars_files:
