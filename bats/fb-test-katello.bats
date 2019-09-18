@@ -3,6 +3,9 @@
 
 set -o pipefail
 
+load os_helper
+load foreman_helper
+
 @test "check hammer ping" {
   FOREMAN_VERSION=$(tForemanVersion)
   if [ $FOREMAN_VERSION == '1.24' ]; then
