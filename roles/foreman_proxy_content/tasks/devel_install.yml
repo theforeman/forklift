@@ -1,12 +1,8 @@
 ---
-- name: 'Get Server Hostname'
-  shell: hostname -f
-  delegate_to: "{{ foreman_proxy_content_server }}"
-  register: server_fqdn
-
 - name: 'Query Foreman server'
   uri:
-    url: "{{ 'https://' ~ server_fqdn.stdout }}"
+    url: http://localhost:3000/api/v2/ping
+  delegate_to: "{{ foreman_proxy_content_server }}"
   ignore_errors: True
   register: foreman_get
 
