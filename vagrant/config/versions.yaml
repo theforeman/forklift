@@ -1,26 +1,4 @@
 installers:
-  - foreman: '1.19'
-    katello: '3.8'
-    pulp: '2.16'
-    puppet: 5
-    boxes:
-      - 'centos7'
-      - 'centos7-fips'
-      - 'debian9'
-      - 'ubuntu1604'
-      - 'ubuntu1804'
-
-  - foreman: '1.20'
-    katello: '3.9'
-    pulp: '2.17'
-    puppet: 5
-    boxes:
-      - 'centos7'
-      - 'centos7-fips'
-      - 'debian9'
-      - 'ubuntu1604'
-      - 'ubuntu1804'
-
   - foreman: '1.20'
     katello: '3.10'
     pulp: '2.18'
