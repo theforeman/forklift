@@ -175,7 +175,6 @@ setup() {
 }
 
 @test "check available errata" {
-  skip # due to broken subscription-manager in EL7.7 -- https://bugzilla.redhat.com/show_bug.cgi?id=1741577
   local next_wait_time=0
   until hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'; do
     if [ $next_wait_time -eq 14 ]; then
