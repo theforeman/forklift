@@ -12,6 +12,19 @@
 - debug:
     msg: "Foreman installer version {{ foreman_installer_version_file['content'] | b64decode }}"
 
+- name: 'Clear initial admin password option'
+  set_fact:
+    foreman_installer_admin_password_option: ""
+
+- name: 'Set initial admin password option'
+  set_fact:
+    foreman_installer_admin_password_option: "--foreman-initial-admin-password '{{ foreman_installer_admin_password }}'"
+  when:
+    - foreman_installer_scenario != "foreman-proxy-content"
+    - foreman_installer_scenario != "katello-devel"
+    - not foreman_installer_upgrade|bool
+    - ('--foreman-initial-admin-password' not in foreman_installer_options_internal_use_only)
+
 - name: 'Join options'
   set_fact:
     foreman_installer_options_joined: "{{ foreman_installer_options | join(' ') }} {{ foreman_installer_options_internal_use_only | join(' ') }}"
@@ -34,6 +47,7 @@
       {{ (foreman_installer_no_colors|bool) | ternary("--no-colors", "") }}
       {{ (foreman_installer_disable_system_checks|bool) | ternary("--disable-system-checks", "") }}
       {{ foreman_installer_scenario_flag }} {{ foreman_installer_scenario }}
+      {{ foreman_installer_admin_password_option }}
       {{ foreman_installer_options_joined }}
   when: not foreman_installer_skip_installer
   tags:

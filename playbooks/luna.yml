@@ -3,7 +3,6 @@
   become: true
   vars:
     foreman_installer_options:
-      - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
       - "--enable-foreman-cli-discovery"
       - "--enable-foreman-cli-openscap"
       - "--enable-foreman-cli-remote-execution"

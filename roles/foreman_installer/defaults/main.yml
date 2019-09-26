@@ -24,5 +24,4 @@ foreman_installer_module_branches: []
 # so we put it in internal_use_only in a role or playbook.
 # The foreman_installer_options is intended for the end user to override.
 foreman_installer_options: []
-foreman_installer_options_internal_use_only:
-  - '{{ "--foreman-initial-admin-password" if foreman_installer_scenario != "foreman-proxy-content" else "" }} {{ foreman_installer_admin_password if foreman_installer_scenario != "foreman-proxy-content" else "" }}'
+foreman_installer_options_internal_use_only: []

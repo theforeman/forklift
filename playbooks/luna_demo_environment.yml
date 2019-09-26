@@ -36,7 +36,6 @@
       - rubygem-ruby-libvirt
       - katello
     foreman_installer_options:
-      - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
       - "--foreman-initial-organization {{ katello_provisioning_organization }}"
       - "--foreman-initial-location {{ katello_provisioning_location }}"
       - "--puppet-show-diff=true"
