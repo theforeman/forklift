@@ -95,6 +95,7 @@
     - vars/{{ pipeline_type }}_server.yml
   vars:
     foreman_installer_upgrade: True
+    foreman_installer_options_internal_use_only: []
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -119,6 +120,7 @@
     - vars/{{ pipeline_type }}_proxy.yml
   vars:
     foreman_installer_upgrade: True
+    foreman_installer_options_internal_use_only: []
     foreman_proxy_content_upgrade: True
     foreman_proxy_content_server: "{{ forklift_server_name }}"
   roles:
@@ -141,6 +143,7 @@
   become: yes
   vars:
     foreman_installer_upgrade: True
+    foreman_installer_options_internal_use_only: []
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
@@ -164,6 +167,7 @@
   become: yes
   vars:
     foreman_installer_upgrade: True
+    foreman_installer_options_internal_use_only: []
     foreman_proxy_content_upgrade: True
     foreman_proxy_content_server: "{{ forklift_server_name }}"
   vars_files:
