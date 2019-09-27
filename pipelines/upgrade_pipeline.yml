@@ -93,9 +93,6 @@
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
     - vars/{{ pipeline_type }}_server.yml
-  vars:
-    foreman_installer_upgrade: True
-    foreman_installer_options_internal_use_only: []
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -107,6 +104,8 @@
     - foreman_server_repositories
     - foreman_client_repositories
     - role: foreman_installer
+      foreman_installer_upgrade: True
+      foreman_installer_options_internal_use_only: []
       foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
 
 - name: upgrade proxy to intermediate version
@@ -119,10 +118,9 @@
     - vars/{{ pipeline_type }}_base_release.yml
     - vars/{{ pipeline_type }}_proxy.yml
   vars:
-    foreman_installer_upgrade: True
-    foreman_installer_options_internal_use_only: []
     foreman_proxy_content_upgrade: True
     foreman_proxy_content_server: "{{ forklift_server_name }}"
+    foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -134,16 +132,11 @@
     - foreman_server_repositories
     - foreman_client_repositories
     - foreman_proxy_content
-    - role: foreman_installer
-      foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
 
 - name: upgrade server to final version
   hosts:
     - "{{ forklift_server_name }}"
   become: yes
-  vars:
-    foreman_installer_upgrade: True
-    foreman_installer_options_internal_use_only: []
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
@@ -159,15 +152,15 @@
       scenario_version: "{{ forklift_upgrade_version_final }}"
     - foreman_server_repositories
     - foreman_client_repositories
-    - foreman_installer
+    - role: foreman_installer
+      foreman_installer_upgrade: True
+      foreman_installer_options_internal_use_only: []
 
 - name: upgrade proxy to final version
   hosts:
     - "{{ forklift_proxy_name }}"
   become: yes
   vars:
-    foreman_installer_upgrade: True
-    foreman_installer_options_internal_use_only: []
     foreman_proxy_content_upgrade: True
     foreman_proxy_content_server: "{{ forklift_server_name }}"
   vars_files:
@@ -186,7 +179,6 @@
     - foreman_server_repositories
     - foreman_client_repositories
     - foreman_proxy_content
-    - foreman_installer
 
 - name: run tests
   hosts:
