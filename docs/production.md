@@ -67,6 +67,7 @@ This use case assumes that you are on a box that has SSH access to the target bo
 2. Clone this repository - `git clone https://github.com/theforeman/forklift.git`
 3. Enter the repository - `cd forklift`
 4. [Create an inventory file](https://docs.ansible.com/ansible/latest/intro_inventory.html) with your hosts in the `inventories` subfolder. You can also pass a different inventory to `ansible-playbook` using `--inventory` or `-i`.
+5. Change the variable remote_user in ./ansible.cfg to the appropriate value (the user that will log into the remote machine)
 
 For a release version in production:
 
