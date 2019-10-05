@@ -50,7 +50,16 @@ def get_running_hosts():
 
 def list_running_hosts():
     hosts = list(get_running_hosts())
-    return dict(get_configs(hosts))
+    variables = dict(get_configs(hosts))
+
+    return {
+        "_meta": {
+            "hostvars": variables,
+        },
+        "all": {
+            "hosts": hosts,
+        },
+    }
 
 
 def get_ssh_configs(hosts):
@@ -104,6 +113,7 @@ def main():
     elif args.host:
         details = dict(get_configs([args.host]))
         json.dump(details[args.host], sys.stdout)
+
 
 if __name__ == '__main__':
     main()
