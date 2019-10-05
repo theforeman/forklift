@@ -1,0 +1,12 @@
+---
+puppet_agent_package_name: puppet-agent
+puppet_agent_package_state: installed
+puppet_agent_package_manage: true
+
+puppet_agent_group_name: puppet
+puppet_agent_group_state: present
+puppet_agent_group_manage: true
+
+puppet_agent_bootstrap_manage: true
+puppet_agent_bootstrap_server: ""
+puppet_agent_bootstrap_waitforcert: 0
