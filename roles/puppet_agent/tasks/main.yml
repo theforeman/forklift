@@ -1,0 +1,34 @@
+---
+- name: manage puppet package
+  package:
+    name: "{{ puppet_agent_package_name }}"
+    state: "{{ puppet_agent_package_state }}"
+  when: puppet_agent_package_manage
+
+- name: ensure puppet group
+  group:
+    name: "{{ puppet_agent_group_name }}"
+    state: "{{ puppet_agent_group_state }}"
+  when: puppet_agent_group_manage
+
+- name: puppet ssl bootstrap
+  when: puppet_agent_bootstrap_manage
+  block:
+    # This makes sure 'sudo puppet' works which is needed for bootstrapping
+    - name: setup sudo secure_path
+      copy:
+        content: "Defaults secure_path = \"/sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin\"\n"
+        dest: /etc/sudoers.d/puppet
+
+    - name: construct puppet ssl bootstrap command
+      set_fact:
+        puppet_agent_bootstrap_command: "puppet ssl bootstrap --waitforcert {{ puppet_agent_bootstrap_waitforcert }}"
+
+    - name: add server option
+      set_fact:
+        puppet_agent_bootstrap_command: "{{ puppet_agent_bootstrap_command }} --server {{ puppet_agent_bootstrap_server }}"
+      when: puppet_agent_bootstrap_server != ""
+
+    - name: run puppet ssl boostrap command
+      command: "{{ puppet_agent_bootstrap_command }}"
+
