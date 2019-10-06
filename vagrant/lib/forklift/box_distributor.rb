@@ -20,7 +20,7 @@ module Forklift
 
     def settings
       overrides = {}
-      settings_file = "#{File.dirname(__FILE__)}/../../settings.yaml"
+      settings_file = File.join(__dir__, '..', '..', 'settings.yaml')
       default_settings = {
         'memory' => 6144,
         'cpus' => 2,
