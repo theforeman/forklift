@@ -72,11 +72,10 @@ module Forklift
 
         machine.vm.box_url = box.fetch('box_url') if box.key?('box_url')
 
-        domain = create_domain(box)
-
         machine.vm.hostname = if box.fetch('hostname', false)
                                 box.fetch('hostname')
                               else
+                                domain = create_domain(box)
                                 "#{box.fetch('name').to_s.tr('.', '-')}.#{domain}"
                               end
 
