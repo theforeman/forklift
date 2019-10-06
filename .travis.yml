@@ -1,17 +1,12 @@
-sudo: false
 language: python
 python:
   - 2.7
-install:
-  - |
-    if git diff origin/master --name-only | grep -q "vagrant"; then
-      rvm install 2.2.4
-    fi
-
-  - |
-    if git diff origin/master --name-only | grep -q "playbooks\|roles\|containers/roles"; then
-      pip install ansible-lint
-    fi
+dist: bionic
+addons:
+  apt:
+    packages:
+      - ansible-lint
+      - ruby-bundler
 script:
   - |
     if git diff origin/master --name-only | grep -q "vagrant"; then
