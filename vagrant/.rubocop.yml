@@ -23,14 +23,8 @@ MethodLength:
 HashSyntax:
   Enabled: false # don't force 1.9 hash syntax
 
-Metrics/AbcSize:
-  Max: 20
-
 Layout/EmptyLinesAroundClassBody:
   EnforcedStyle: empty_lines
-
-Metrics/AbcSize:
-  Max: 20
 
 Metrics/AbcSize:
   Max: 60
