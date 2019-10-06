@@ -22,7 +22,7 @@ module Forklift
     private
 
     def default_root_dir
-      "#{File.dirname(__FILE__)}/../../"
+      File.join(__dir__, '..', '..')
     end
 
     def default_locations
