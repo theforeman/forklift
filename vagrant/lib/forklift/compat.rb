@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if Gem.loaded_specs['vagrant']
   require 'vagrant/util/deep_merge'
 else

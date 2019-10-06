@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Forklift
   class BoxDistributor
 
-    VAGRANTFILE_API_VERSION = '2'.freeze
+    VAGRANTFILE_API_VERSION = '2'
 
     if Gem.loaded_specs['vagrant']
       SUPPORT_NAMED_PROVISIONERS = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
