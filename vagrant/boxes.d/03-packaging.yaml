@@ -1,0 +1,6 @@
+---
+rpm-packaging:
+  box: fedora30
+  ansible:
+    playbook: 'playbooks/rpm_packaging.yml'
+...
