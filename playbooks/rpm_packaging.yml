@@ -1,7 +1,7 @@
 ---
 - hosts: all
   tasks:
-    - name: Install dependencies for packageing tooling
+    - name: Install dependencies for packaging tooling
       yum:
         name: "{{ package_list }}"
         state: present
