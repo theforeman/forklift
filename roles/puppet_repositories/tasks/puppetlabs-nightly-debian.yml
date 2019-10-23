@@ -1,4 +1,12 @@
 ---
+- name: 'Install GPG package'
+  package:
+    name: 'gpg'
+    state: present
+  tags:
+    - packages
+  when: ansible_distribution_release == "buster"
+
 - name: 'Install Puppet GPG key'
   apt_key:
     url: https://apt.puppet.com/DEB-GPG-KEY-puppet
