@@ -5,3 +5,10 @@ boxes:
     pty:        true
     scenarios:
       - foreman
+
+  debian10:
+    box_name:   'debian/buster64'
+    image_name: !ruby/regexp '/Debian.*Buster.*PVHVM/'
+    pty:        true
+    scenarios:
+      - foreman
