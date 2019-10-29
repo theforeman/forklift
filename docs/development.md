@@ -59,22 +59,30 @@ bundle exec foreman start
 
 ### Stable Katello Development Box
 
-A stable box image of a fully installed Katello development environment is published to Vagrant cloud nightly (on successful installs). In the `vagrant/boxes.d/99-local.example` file, a box using this image is available under the name `centos7-katello-devel-stable`. If it's the first time spinning this box up, you can do:
+#### Using the stable Katello development box
 
-```
-vagrant up centos7-katello-devel-stable
-```
+When spinning up a Katello development environment locally, it can take a while to install and isn't always guaranteed finish successfully. A stable box image of a fully installed Katello development environment is created nightly and [is published to Vagrant cloud](https://app.vagrantup.com/katello/boxes/katello-devel) when the install succeeds. This image will have a Katello development environment successfully installed, ready to use.
 
-This will spin up a Katello development environment in the time it takes to download from Vagrant cloud. At this moment, you will have to manually configure any personal customizations like github forks.
+In the `vagrant/boxes.d/99-local.example` file, a box using this image is available under the name `centos7-katello-devel-stable`. If it's the first time spinning this box up, you can do the following to create the box:
 
-After you have spun the box up once, if you would like a new box with the latest box image availble, you will need to destroy the existing box and update the underlying box image before spinning up the new box.
+1. Copy `vagrant/boxes.d/99-local.yaml.example` to `vagrant/boxes.d/99-local.yaml`. If you already have a `99-local.yaml`, you can copy the entries in `99-local.yaml.example` to your `99-local.yaml`.
+2. `vagrant up centos7-katello-devel-stable` to spin up the box
 
-For example:
-```
-vagrant destroy centos7-katello-devel-stable
-vagrant box update centos7-katello-devel-stable
-vagrant up centos7-katello-devel-stable
-```
+This will spin up a Katello development environment in the time it takes to download from Vagrant cloud. At this moment, you will have to manually configure any personal customizations such as github remotes.
+
+#### Creating a new Katello development box with the latest box image
+
+*Note: the following only is applicable after you have already spun up a `centos7-katello-devel-stable` box. If this is your first time spinning one up, only follow the instructions above*
+
+Once you have spun up the `centos7-katello-devel-stable` box once, you will want to update the box image used by Vagrant before spinning up another `centos7-katello-devel-stable` box. This is because Vagrant will use the latest image downloaded locally and you will want to use the latest image published to Vagrant cloud. This workflow is useful when you want an updated "fresh" environment. You can run the following to destroy your existing box, upgrade the box image to the latest one available, and spin up a new box.
+
+1. `vagrant destroy centos7-katello-devel-stable`
+2. `vagrant box update centos7-katello-devel-stable`
+3. `vagrant up centos7-katello-devel-stable`
+
+Note that it is recommended that you destroy your `centos7-katello-devel-stable` box and create a new one because the stable development environment uses a fixed hostname. If you would like to create multiple stable Katello devel boxes by using multiple box entries, you will need a way to manage having multiple machines with the same hostname. You can keep your `/etc/hosts` file on your hypervisor always pointed to the box you want to use. You don't have to worry about this if you only keep one environment around at a time.
+
+#### Cleanup after updating the `centos7-katello-devel-stable` box
 
 You may also want to clean up old box images:
 ```

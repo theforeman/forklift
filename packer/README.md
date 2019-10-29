@@ -2,6 +2,8 @@
 
 This directory contains [packer](https://www.packer.io/) templates to create images from provisioned VMs
 
+You can install packer using [the steps in their documentation](http://packer.io/intro/getting-started/install.html). For Fedora and Red Hat flavor distributions, be aware there can be another executable installed named `packer`, so you will have to install the `packer` executable under another name or call it with an absolute path. See [their documentation for more info](http://packer.io/intro/getting-started/install.html#troubleshooting)
+
 ### Local usage
 
 From this directory, use `packer build` followed by the json packer template to create an image
