@@ -93,7 +93,7 @@ And you will have to remove the corresponding volumes with virsh as well since v
 Vol katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1018.1354.img deleted
 ```
 
-For more information on how this box is created, see [the packer directory](packer/README.md)
+For more information on how this box is created, see [the packer directory](../packer/README.md)
 
 ### Starting the Development Server
 
