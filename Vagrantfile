@@ -5,6 +5,7 @@
 ENV['LANG'] = 'en_US.UTF-8'
 ENV['LC_ALL'] = 'en_US.UTF-8'
 VAGRANTFILE_DIR = File.dirname(__FILE__)
+ONLY_SUPPORTED = !ENV.key?('FORKLIFT_SHOW_UNSUPPORTED')
 
 require "#{VAGRANTFILE_DIR}/vagrant/lib/forklift"
 
@@ -36,7 +37,7 @@ end
 
 migrate_boxes!
 migrate_settings!
-loader = Forklift::BoxLoader.new("#{VAGRANTFILE_DIR}/vagrant")
+loader = Forklift::BoxLoader.new(File.join(VAGRANTFILE_DIR, 'vagrant'), nil, ONLY_SUPPORTED)
 loader.load!
 distributor = Forklift::BoxDistributor.new(loader.boxes)
 distributor.distribute!

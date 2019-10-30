@@ -11,9 +11,10 @@ module Forklift
 
     attr_accessor :boxes
 
-    def initialize(versions)
+    def initialize(versions, only_supported = true)
       @versions = versions
       @boxes = {}
+      @only_supported = only_supported
     end
 
     def add_boxes!(box_file)
@@ -50,6 +51,8 @@ module Forklift
 
     def process_versions(config)
       @versions['installers'].each do |version|
+        next if @only_supported && version['supported'] == false
+
         version['boxes'].each do |base_box|
           next unless config['boxes'].key?(base_box)
 

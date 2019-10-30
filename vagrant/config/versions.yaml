@@ -3,6 +3,7 @@ installers:
     katello: '3.10'
     pulp: '2.18'
     puppet: 5
+    supported: false
     boxes:
       - 'centos7'
       - 'centos7-fips'
@@ -14,6 +15,7 @@ installers:
     katello: '3.11'
     pulp: '2.18'
     puppet: 5
+    supported: false
     boxes:
       - 'centos7'
       - 'centos7-fips'

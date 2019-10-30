@@ -5,10 +5,10 @@ module Forklift
 
     attr_accessor :locations
 
-    def initialize(root_dir = nil, locations = nil)
+    def initialize(root_dir = nil, locations = nil, only_supported = true)
       @root_dir = root_dir || default_root_dir
       @locations = locations || default_locations
-      @box_factory = BoxFactory.new(versions)
+      @box_factory = BoxFactory.new(versions, only_supported)
     end
 
     def load!
