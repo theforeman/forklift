@@ -1,0 +1,4 @@
+# For roles to run after a stable Katello development image is provisioned
+- hosts: all
+  roles:
+    - customize_home

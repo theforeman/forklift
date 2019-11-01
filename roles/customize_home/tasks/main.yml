@@ -1,0 +1,13 @@
+- name: Check for specified files to copy to home directory
+  local_action: stat
+                path={{ role_path }}/files/
+  register: custom_home
+
+- name: Copy files to home directory
+  copy:
+    src: "{{ role_path }}/files/"
+    dest: "{{ ansible_env.HOME }}"
+  when: custom_home.stat.isdir is defined and custom_home.stat.isdir
+
+- include_tasks: clone_specified_repo.yml
+  when: custom_home_git_repo is defined

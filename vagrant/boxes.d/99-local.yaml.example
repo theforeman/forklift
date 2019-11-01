@@ -78,3 +78,5 @@ centos7-dynflow-devel:
 centos7-katello-devel-stable:
   box_name: katello/katello-devel
   hostname: centos7-katello-devel-stable.example.com
+  ansible:
+    playbook: 'playbooks/katello_stable.yml'
