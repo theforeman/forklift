@@ -79,3 +79,5 @@ centos7-katello-devel-stable:
   box_name: katello/katello-devel
   memory: 9000
   hostname: centos7-katello-devel-stable.example.com
+  ansible:
+    playbook: 'playbooks/katello_stable.yml'

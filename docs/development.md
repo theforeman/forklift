@@ -134,6 +134,37 @@ in your boxes.yaml entry to configure this on box creation.
 #### Additional info
 - `foreman start` can be run with `rails` or `webpack` to start just that server: i.e. `bundle exec foreman start rails`. This can be used to start servers separately.
 
+### Customizing the Development Environment
+
+#### Custom local files
+
+You can have files automatically copied over to the `vagrant` user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. To do so, follow these steps:
+
+1. In forklift's root directory, create the directory `roles/customize_home/files/`
+2. Add any files you want to be copied over to your development box to this folder.
+
+The directory `roles/customize_home/files` is ignored by git so the files won't be checked into version control. The files added to `roles/customize_home/files` will be copied over to `~/vagrant` on the development VM when it is created or provisioned.
+
+As an example, you can keep dotfiles such as `.bashrc` in this directory.
+
+#### Custom files from git repo
+
+A git repo's contents can be copied to the `vagrant` user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. This can be done by specifying the `custom_home_git_repo` ansible variable. For example:
+
+```
+centos7-katello-devel-stable:
+  box_name: katello/katello-devel
+  hostname: centos7-katello-devel-stable.example.com
+  ansible:
+    playbook: 'playbooks/katello_stable.yml'
+    variables:
+      custom_home_git_repo: https://github.com/johnpmitsch/config_settings
+```
+
+The contents of the specified repo will be copied to the home directory excluding the `.git` folder and `.gitignore` file.
+
+*Both of the local file and git repo custom file strategies are completely optional and are not required to spin up a development environment*
+
 ### Reviewing Pull Requests
 
 It's easy to checkout pull requests from projects that were installed in development environment. All projects are cloned in vagrant's home, e.g. ~/foreman, ~/katello etc. In order to apply some PR to any of this project, you can use a reviewer script. See following example

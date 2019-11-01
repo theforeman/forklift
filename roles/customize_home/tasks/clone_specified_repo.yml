@@ -1,0 +1,29 @@
+- name: Ensure temporary home directory does not exist
+  file:
+    path: "{{ ansible_env.HOME }}/tmp_custom_home/"
+    state: absent
+
+- name: Clone specified repo into temporary custom home directory
+  git:
+    repo: "{{ custom_home_git_repo }}"
+    dest: "{{ ansible_env.HOME }}/tmp_custom_home/"
+
+- name: Remove .git directory from temporary home directory after cloning
+  file:
+    path: "{{ ansible_env.HOME }}/tmp_custom_home/.git"
+    state: absent
+
+- name: Remove .gitignore from temporary home directory after cloning
+  file:
+    path: "{{ ansible_env.HOME }}/tmp_custom_home/.gitignore"
+    state: absent
+
+# Using command module because the copy module won't match hidden (dot) files and using copy with_fileglob isn't working as expected
+# see https://github.com/ansible/ansible/issues/17136 for more info on with_fileglob
+- name: Copy temporary home directory to actual home directory
+  command: "cp -r {{ ansible_env.HOME }}/tmp_custom_home/. {{ ansible_env.HOME}}/"
+
+- name: Remove temporary home directory
+  file:
+    path: "{{ ansible_env.HOME }}/tmp_custom_home/"
+    state: absent
