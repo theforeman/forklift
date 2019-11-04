@@ -24,6 +24,6 @@ load foreman_helper
   done
 }
 
-@test "check katello-service status" {
-  katello-service status
+@test "check service status" {
+  foreman-maintain service status
 }

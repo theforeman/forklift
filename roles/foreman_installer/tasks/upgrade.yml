@@ -1,6 +1,6 @@
 ---
-- name: 'Stop katello-services'
-  command: katello-service stop
+- name: 'Stop services'
+  command: foreman-maintain service stop
 
 - name: 'Update packages'
   import_role:
