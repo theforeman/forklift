@@ -22,7 +22,6 @@
       scenario: "{{ pipeline_type }}"
       scenario_version: "{{ pipeline_version }}"
     - role: disable_firewall
-    - role: disable_ipv6
     - role: foreman_server_repositories
     - role: foreman_client_repositories
     - role: update_os_packages

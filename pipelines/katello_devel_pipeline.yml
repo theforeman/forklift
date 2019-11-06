@@ -16,7 +16,6 @@
   - vars/katello_devel.yml
   roles:
   - role: disable_firewall
-  - role: disable_ipv6
   - role: foreman_server_repositories
   - role: update_os_packages
   - role: katello_devel
