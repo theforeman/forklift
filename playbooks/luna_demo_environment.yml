@@ -6,7 +6,6 @@
 - hosts: all
   become: true
   roles:
-    - disable_ipv6
     - disable_firewall
     - selinux
     - etc_hosts
@@ -23,7 +22,7 @@
     - plugins/foreman_discovery
     - plugins/foreman_bootdisk
     - plugins/foreman_remote_execution
-    - plugins/foreman_ansible 
+    - plugins/foreman_ansible
   vars:
     katello_provisioning_organization: Demo
     foreman_repositories_version: 1.22
