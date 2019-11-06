@@ -29,7 +29,8 @@
     - selinux
     - etc_hosts
     - foreman_server_repositories
-    - foreman_client_repositories
+    - role: foreman_client_repositories
+      when: pipeline_type != 'foreman'
     - update_os_packages
     - haveged
     - disable_firewall
@@ -104,7 +105,8 @@
       scenario: "{{ pipeline_type }}"
       scenario_version: "{{ forklift_upgrade_version_intermediate }}"
     - foreman_server_repositories
-    - foreman_client_repositories
+    - role: foreman_client_repositories
+      when: pipeline_type != 'foreman'
     - role: foreman_installer
       foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
 
@@ -130,7 +132,8 @@
       scenario: "{{ pipeline_type }}"
       scenario_version: "{{ forklift_upgrade_version_intermediate }}"
     - foreman_server_repositories
-    - foreman_client_repositories
+    - role: foreman_client_repositories
+      when: pipeline_type != 'foreman'
     - foreman_proxy_content
     - role: foreman_installer
       foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
@@ -155,7 +158,8 @@
       scenario: "{{ pipeline_type }}"
       scenario_version: "{{ forklift_upgrade_version_final }}"
     - foreman_server_repositories
-    - foreman_client_repositories
+    - role: foreman_client_repositories
+      when: pipeline_type != 'foreman'
     - foreman_installer
 
 - name: upgrade proxy to final version
@@ -180,7 +184,8 @@
       scenario: "{{ pipeline_type }}"
       scenario_version: "{{ forklift_upgrade_version_final }}"
     - foreman_server_repositories
-    - foreman_client_repositories
+    - role: foreman_client_repositories
+      when: pipeline_type != 'foreman'
     - foreman_proxy_content
     - foreman_installer
 

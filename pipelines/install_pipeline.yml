@@ -25,6 +25,7 @@
     - role: disable_ipv6
     - role: foreman_server_repositories
     - role: foreman_client_repositories
+      when: pipeline_type != 'foreman'
     - role: update_os_packages
     - role: foreman
       when: pipeline_type == 'foreman'
