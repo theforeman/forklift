@@ -23,8 +23,6 @@
       scenario_version: "{{ pipeline_version }}"
     - role: disable_firewall
     - role: foreman_server_repositories
-    - role: foreman_client_repositories
-      when: pipeline_type != 'foreman'
     - role: update_os_packages
     - role: foreman
       when: pipeline_type == 'foreman'
@@ -84,4 +82,6 @@
   environment:
     FOREMAN_EXPECTED_VERSION: "{{ foreman_expected_version | default('') }}"
   roles:
-    - foreman_testing
+    - role: foreman_client_repositories
+      when: pipeline_type != 'foreman'
+    - role: foreman_testing
