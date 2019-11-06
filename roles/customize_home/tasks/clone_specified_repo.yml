@@ -21,9 +21,19 @@
 # Using command module because the copy module won't match hidden (dot) files and using copy with_fileglob isn't working as expected
 # see https://github.com/ansible/ansible/issues/17136 for more info on with_fileglob
 - name: Copy temporary home directory to actual home directory
-  command: "cp -r {{ ansible_env.HOME }}/tmp_custom_home/. {{ ansible_env.HOME}}/"
+  command: "cp -r {{ ansible_env.HOME }}/tmp_custom_home/. {{ ansible_env.HOME }}/"
 
 - name: Remove temporary home directory
   file:
     path: "{{ ansible_env.HOME }}/tmp_custom_home/"
     state: absent
+
+- name: Check custom bootstrap script exists
+  stat:
+    path: "{{ ansible_env.HOME }}/{{ custom_bootstrap_script }}"
+  register: bootstrap_script_path
+
+# The script is already on the machine, so using 'command' instead of 'script', which copies the script from the Ansible controller
+- name: Run custom bootstrap script
+  command: "{{ ansible_env.HOME }}/{{ custom_bootstrap_script }}"
+  when: bootstrap_script_path.stat.exists
