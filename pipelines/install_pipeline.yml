@@ -82,6 +82,9 @@
   environment:
     FOREMAN_EXPECTED_VERSION: "{{ foreman_expected_version | default('') }}"
   roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
     - role: foreman_client_repositories
       when: pipeline_type != 'foreman'
     - role: foreman_testing
