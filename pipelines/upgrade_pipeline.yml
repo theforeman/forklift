@@ -186,6 +186,7 @@
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
+    - vars/{{ pipeline_type }}_base_staging.yml
   environment:
     FOREMAN_EXPECTED_VERSION: "{{ foreman_expected_version | default('') }}"
   roles:
