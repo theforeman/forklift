@@ -4,7 +4,7 @@
     name: katello-repos
     state: absent
 
-- name: 'Katello Koji repository'
+- name: 'Katello {{ katello_repositories_version }} Koji repository'
   yum_repository:
     name: katello-koji
     description: "Katello {{ katello_repositories_version }} Koji Repository"
@@ -20,7 +20,7 @@
     priority: 1
     gpgcheck: 0
 
-- name: Add Pulp Stable repository
+- name: 'Add Pulp {{ katello_repositories_pulp_version }} Stable repository'
   yum_repository:
     name: pulp-repository
     description: Pulp release repository
@@ -40,7 +40,7 @@
   when:
     - katello_repositories_pulp_version == "nightly"
 
-- name: 'Katello Client Koji repository'
+- name: 'Katello {{ katello_repositories_version }} Client Koji repository'
   yum_repository:
     name: katello-client-koji
     description: "Katello {{ katello_repositories_version }} Client Koji Repository"

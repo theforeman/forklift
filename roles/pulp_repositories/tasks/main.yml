@@ -1,5 +1,5 @@
 ---
-- name: Add Pulp stable repository
+- name: Add Pulp {{ pulp_repositories_version }} stable repository
   yum_repository:
     name: pulp-repository
     description: Pulp release repository

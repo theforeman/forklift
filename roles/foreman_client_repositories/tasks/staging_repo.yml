@@ -6,7 +6,7 @@
   tags:
     - packages
 
-- name: 'Foreman Client Staging Repository'
+- name: 'Foreman {{ foreman_client_repositories_version }} Client Staging Repository'
   yum_repository:
     name: foreman-client-koji
     description: "Foreman {{ foreman_client_repositories_version }} Client Koji Repository"
