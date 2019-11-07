@@ -3,7 +3,6 @@
 This section covers test infrastructure and environments that can be spun up using Forklift.
 
  * [Bats Testing](#bats-testing)
- * [Client Testing with Docker](#client-testing-with-docker)
  * [Running Robottelo Tests](#running-robottelo-tests)
 
 ## Bats Testing
@@ -97,42 +96,6 @@ foreman_client_repositories_version: "{{ foreman_repositories_version }}"
 katello_version_start: '3.9'
 katello_version_intermediate: '3.10'
 katello_version_final: '{{ katello_version }}'
-```
-
-## Client Testing With Docker
-
-The docker/clients directory contains setup and configuration to register clients via subscription-manager using an activation key and start katello-agent. Before using the client containers, Docker and docker-compose need to be installed and setup. On a Fedora based system (Fedora 23 or greater):
-
-```
-sudo yum install docker docker-compose
-sudo service docker start
-sudo chkconfig docker on
-sudo usermod -aG docker your_username
-```
-
-For other platforms see the official instructions at:
-
- * [docker](https://docs.docker.com/installation/)
- * [docker-compose](https://docs.docker.com/compose/install/)
-
-In order to use the client containers you will also need the following:
-
- * Foreman/Katello server IP address
- * Foreman/Katello server hostname
- * Foreman Organization
- * Activation Key
- * Katello version you have deployed (e.g. nightly, 2.2)
-
-Begin by changing into the docker/clients directory and copying the `docker-compose.yml.example` file to `docker-compose.yml` and filling in the necessary information gathered above. At this point, you can now spin-up one or more clients of varying types. For example, if you wanted to spin up a centos6 based client:
-
-```
-docker-compose up el6
-```
-
-If you want to spin up more than one client, let's say 10 for this example, the docker-compose scale command can be used:
-
-```
-docker-compose scale el6=10
 ```
 
 ## Running Robottelo Tests
