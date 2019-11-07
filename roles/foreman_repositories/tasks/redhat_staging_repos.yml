@@ -6,7 +6,7 @@
   tags:
     - packages
 
-- name: 'Foreman Koji repository'
+- name: 'Foreman {{ foreman_repositories_version }} Koji repository'
   yum_repository:
     name: foreman-koji
     description: "Foreman {{ foreman_repositories_version }} Koji Repository"
@@ -16,7 +16,7 @@
   tags:
     - packages
 
-- name: 'Foreman Plugins Koji repository'
+- name: 'Foreman {{ foreman_repositories_version }} Plugins Koji repository'
   yum_repository:
     name: foreman-plugins-koji
     state: "{{ foreman_repositories_plugins | ternary('present', 'absent') }}"
@@ -27,7 +27,7 @@
   tags:
     - packages
 
-- name: 'Foreman Rails SCL repository'
+- name: 'Foreman {{ foreman_repositories_version }} Rails SCL repository'
   yum_repository:
     name: foreman-rails
     description: "Rails SCL for Foreman {{ foreman_repositories_version }}"
