@@ -3,6 +3,11 @@
 This covers how to setup and configure a development environment using the Forklift tool suite.
 
  * [Development Environment Deployment](#development-environment-deployment)
+   * [Deploy a Katello Development Environment](#deploy-a-katello-development-environment)
+   * [Deploy a Stable Katello Development Box](#deploy-a-stable-katello-development-box)
+   * [Starting the Development Server](#starting-the-development-server)
+   * [Customizing the Development Environment](#customizing-the-development-environment)
+   * [Reviewing Pull Requests](#reviewing-pull-requests)
  * [Use Koji Scratch Builds](#koji-scratch-builds)
  * [Test Puppet Module Pull Requests](#test-puppet-module-pull-requests)
  * [Jenkins Job Builder](#jenkins-job-builder-development)
@@ -13,6 +18,8 @@ This covers how to setup and configure a development environment using the Forkl
  * [Dynflow](#dynflow-development)
 
 ## Development Environment Deployment
+
+### Deploy a Katello Development Environment
 
 A Katello development environment can be deployed on CentOS 7. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin. There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
 
@@ -57,7 +64,7 @@ cd foreman
 bundle exec foreman start
 ```
 
-### Stable Katello Development Box
+### Deploy a Stable Katello Development Box
 
 #### Using the stable Katello development box
 
@@ -138,32 +145,43 @@ in your boxes.yaml entry to configure this on box creation.
 
 #### Custom local files
 
-You can have files automatically copied over to the `vagrant` user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. To do so, follow these steps:
+You can have files automatically copied over to the working user's home directory (e.g. `~/vagrant`) when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. To do so, add any files you want to be copied over to your development box to `user_devel_env_files/` found in forklift's root directory
 
-1. In forklift's root directory, create the directory `roles/customize_home/files/`
-2. Add any files you want to be copied over to your development box to this folder.
-
-The directory `roles/customize_home/files` is ignored by git so the files won't be checked into version control. The files added to `roles/customize_home/files` will be copied over to `~/vagrant` on the development VM when it is created or provisioned.
+The directory `user_devel_env_files/` is ignored by git so the files won't be checked into version control. The files added to `user_devel_env_files/` will be copied over to `~/vagrant` on the development VM when it is created or provisioned.
 
 As an example, you can keep dotfiles such as `.bashrc` in this directory.
 
 #### Custom files from git repo
 
-A git repo's contents can be copied to the `vagrant` user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. This can be done by specifying the `custom_home_git_repo` ansible variable. For example:
+A git repo's contents can be copied to the working user's home directory (e.g. `~/vagrant`) when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. This can be done by specifying the `customize_home_git_repo` ansible variable. For example:
 
 ```
 centos7-katello-devel-stable:
   box_name: katello/katello-devel
   hostname: centos7-katello-devel-stable.example.com
   ansible:
-    playbook: 'playbooks/katello_stable.yml'
+    playbook: 'playbooks/setup_user_devel_environment.yml'
     variables:
-      custom_home_git_repo: https://github.com/johnpmitsch/config_settings
+      customize_home_git_repo: https://github.com/johnpmitsch/config_settings
 ```
 
 The contents of the specified repo will be copied to the home directory excluding the `.git` folder and `.gitignore` file.
 
+A file named `bootsrap` will be looked for in the home directory and executed if found. This can be used to run any commands you would like to during provisioning. Be sure to make the file executable and use the proper language [shebang](https://en.wikipedia.org/w/index.php?title=Shebang_(Unix)) at the top. A different script location can specified by using the `custom_bootstrap_script` variable. The `custom_bootstrap_script` variable needs to be specified in the format `path/to/my/script.sh` (don't prepend with `./`).
+
+As an example, you can keep dotfiles such as `.bashrc` in the root of your git repository and install packages with a `bootstrap` script using this structure:
+```
+mygitrepo
+- .bashrc
+- .vimrc
+- bootstrap
+```
+
 *Both of the local file and git repo custom file strategies are completely optional and are not required to spin up a development environment*
+
+#### Managing SSH keys
+
+Github [provides documentation](https://developer.github.com/v3/guides/using-ssh-agent-forwarding/) on how to manage ssh keys using ssh agent forwarding, this can be useful when deploying forklift boxes.
 
 ### Reviewing Pull Requests
 

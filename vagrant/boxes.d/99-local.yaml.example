@@ -79,4 +79,4 @@ centos7-katello-devel-stable:
   box_name: katello/katello-devel
   hostname: centos7-katello-devel-stable.example.com
   ansible:
-    playbook: 'playbooks/katello_stable.yml'
+    playbook: 'playbooks/setup_user_devel_environment.yml'

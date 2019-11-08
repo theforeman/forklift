@@ -1,13 +1,19 @@
 - name: Check for specified files to copy to home directory
-  local_action: stat
-                path={{ role_path }}/files/
+  local_action:
+    module: stat
+    path: "{{ role_path }}/files"
   register: custom_home
 
 - name: Copy files to home directory
   copy:
-    src: "{{ role_path }}/files/"
+    src: "{{ playbook_dir | dirname }}/user_devel_env_files/"
     dest: "{{ ansible_env.HOME }}"
   when: custom_home.stat.isdir is defined and custom_home.stat.isdir
 
+- name: Remove .gitkeep file copied over from custom directory
+  file:
+    path: "{{ ansible_env.HOME }}/.gitkeep/"
+    state: absent
+
 - include_tasks: clone_specified_repo.yml
-  when: custom_home_git_repo is defined
+  when: customize_home_git_repo is defined
