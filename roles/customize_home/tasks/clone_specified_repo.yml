@@ -5,7 +5,7 @@
 
 - name: Clone specified repo into temporary custom home directory
   git:
-    repo: "{{ custom_home_git_repo }}"
+    repo: "{{ customize_home_git_repo }}"
     dest: "{{ ansible_env.HOME }}/tmp_custom_home/"
 
 - name: Remove .git directory from temporary home directory after cloning
