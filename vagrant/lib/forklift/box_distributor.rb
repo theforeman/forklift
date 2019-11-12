@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'settings'
+
 module Forklift
   class BoxDistributor
 
@@ -21,8 +23,6 @@ module Forklift
     end
 
     def settings
-      overrides = {}
-      settings_file = File.join(__dir__, '..', '..', 'settings.yaml')
       default_settings = {
         'memory' => 6144,
         'cpus' => 2,
@@ -36,7 +36,7 @@ module Forklift
         'hostmanager_enabled' => true
       }
 
-      overrides = YAML.load_file(settings_file) if File.exist?(settings_file)
+      overrides = Settings.new.settings
 
       default_settings.merge(overrides)
     end

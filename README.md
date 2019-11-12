@@ -90,7 +90,7 @@ By default, the boxes are set with `example.com` domain.
 If you're using NetworkManager, [this advanced DNS configuration](https://m0dlx.com/blog/Automatic_DNS_updates_from_libvirt_guests.html)
 allows completely automated dns resolution using dnsmasq from host to guest and guest to guest.
 
-You can disable hostmanager in `settings.yaml` by setting `hostmanager_enabled` option.
+You can disable hostmanager in `vagrant/settings.yaml` by setting `hostmanager_enabled` option.
 
 ### Adding Custom Boxes
 
@@ -165,8 +165,8 @@ static:
     management_network_address: 172.23.99.0/24
 ```
 
-Example with openstack provider:  
-You will need to install vagrant openstack provider. For more information click [here](https://github.com/ggiamarchi/vagrant-openstack-provider).  
+Example with openstack provider:
+You will need to install vagrant openstack provider. For more information click [here](https://github.com/ggiamarchi/vagrant-openstack-provider).
 Do not forget to set openstack API credentials.
 To use openstack provider as default look [here](https://www.vagrantup.com/docs/providers/default.html).
 
@@ -234,7 +234,8 @@ with-nfs:
 
 ### Customize Deployment Settings
 
-Some settings can be customized for the entirety of the deployment, they are:
+
+Some settings can be customized for the entirety of the deployment by copying `vagrant/settings.yaml.example` to `vagrant/settings.yaml` and add, remove or updating:
 
  * memory: Memory to give boxes by default unless specified by a box
  * cpus: Number of CPUs to give boxes by default unless specified by a box
@@ -245,7 +246,18 @@ Some settings can be customized for the entirety of the deployment, they are:
  * domain: domain for your hosts, you can override this per-box by configuring your box with a domain directly
  * libvirt_options, virtualbox_options, rackspace_options, openstack_options, google_options: custom options for the various providers
 
-To customize any of these, copy `settings.yaml.example` to `settings.yaml` and add, remove or update the ones you wish to change'
+#### Customize Available Boxes
+
+The list of available boxes can be customized by setting an exclude list in `vagrant/settings.yaml`. This allows faster `vagrant status` calls as well as reducing the the scope of boxes a user sees to tailor to their use cases. To specify boxes to exclude add the following to `vagrant/settings.yaml`, for example, to remove fips, fedora and any Foreman 1.2X boxes from view:
+
+```
+boxes:
+  exclude:
+    - "katello" # exclude any box containing "katello"
+    - "ubuntu1604-foreman-1\\.24" # exclude only the box "ubuntu1604-foreman-1.24". Notice the escaped '.' character to match the specific character instead of any single character
+    - "^centos7-fips" # exclude any box that starts with "centos7-fips"
+    - "foreman-1\\.(?:[2][0-3])" # exclude any foreman-1.20 to foreman-1.23 version box
+```
 
 ### Post Install Playbooks
 

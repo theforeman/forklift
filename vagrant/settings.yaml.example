@@ -16,3 +16,7 @@ domain: 'example.com'
 google_project_id: "YOUR_GOOGLE_CLOUD_PROJECT_ID"
 google_client_email: "YOUR_SERVICE_ACCOUNT_EMAIL_ADDRESS"
 google_json_key_location: "/path/to/your/private-key.json"
+
+boxes:
+  exclude:
+    - fips
