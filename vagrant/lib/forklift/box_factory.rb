@@ -5,6 +5,7 @@ require 'erb'
 require 'yaml'
 
 require_relative 'compat'
+require_relative 'settings'
 
 module Forklift
   class BoxFactory
@@ -37,6 +38,10 @@ module Forklift
 
     def process_boxes!(boxes)
       boxes.each do |name, box|
+        box_config = Settings.new.settings.key?('boxes') ? Settings.new.settings['boxes'] : {}
+
+        next if box_config.key?('exclude') && box_config['exclude'].any? { |exclude| name.match(/#{exclude}/) }
+
         box['name'] = name
         box = layer_base_box(box)
 
