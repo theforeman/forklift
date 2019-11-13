@@ -202,7 +202,7 @@
 - name: 'get CentOS 7 info'
   set_fact:
     katello_provisioning_centos7: "{{ katello_provisioning_centos7_json.stdout|from_json }}"
-  when: katello_provisioning_centos7_json|succeeded
+  when: katello_provisioning_centos7_json is success
 
 - block:
     - name: 'Create CentOS_Linux 7'
