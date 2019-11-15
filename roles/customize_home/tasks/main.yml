@@ -1,7 +1,7 @@
 - name: Check for specified files to copy to home directory
   local_action:
     module: stat
-    path: "{{ role_path }}/files"
+    path: "{{ playbook_dir | dirname }}/user_devel_env_files/"
   register: custom_home
 
 - name: Copy files to home directory
