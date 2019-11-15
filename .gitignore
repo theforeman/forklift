@@ -15,7 +15,7 @@ user_playbooks
 playbooks/galaxy_roles
 requirements.yml
 inventories/local_*
-user_devel_env_files/*
+user_devel_env_files/
 
 # Vagrant
 .vagrant

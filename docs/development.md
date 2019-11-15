@@ -145,15 +145,18 @@ in your boxes.yaml entry to configure this on box creation.
 
 #### Custom local files
 
-You can have files automatically copied over to the working user's home directory (e.g. `~/vagrant`) when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. To do so, add any files you want to be copied over to your development box to `user_devel_env_files/` found in forklift's root directory
+You can have files automatically copied over to the target user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. Here are the steps to specify custom files to be copied over:
 
-The directory `user_devel_env_files/` is ignored by git so the files won't be checked into version control. The files added to `user_devel_env_files/` will be copied over to `~/vagrant` on the development VM when it is created or provisioned.
+1. Create the directoy `user_devel_env_files/` in Forklift's root directory.
+2. Add any files you want to be copied over to your development box to `user_devel_env_files/`
 
-As an example, you can keep dotfiles such as `.bashrc` in this directory.
+The directory `user_devel_env_files/` is ignored by git so the files won't be checked into version control. The files added to `user_devel_env_files/` will be copied over to the target user's home directory on the development VM when it is created or provisioned.
+
+As an example, you can keep sensitive files you don't want in version control here.
 
 #### Custom files from git repo
 
-A git repo's contents can be copied to the working user's home directory (e.g. `~/vagrant`) when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. This can be done by specifying the `customize_home_git_repo` ansible variable. For example:
+A git repo's contents can be copied to the target user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. This can be done by specifying the `customize_home_git_repo` ansible variable. For example:
 
 ```
 centos7-katello-devel-stable:
@@ -167,7 +170,7 @@ centos7-katello-devel-stable:
 
 The contents of the specified repo will be copied to the home directory excluding the `.git` folder and `.gitignore` file.
 
-A file named `bootsrap` will be looked for in the home directory and executed if found. This can be used to run any commands you would like to during provisioning. Be sure to make the file executable and use the proper language [shebang](https://en.wikipedia.org/w/index.php?title=Shebang_(Unix)) at the top. A different script location can specified by using the `custom_bootstrap_script` variable. The `custom_bootstrap_script` variable needs to be specified in the format `path/to/my/script.sh` (don't prepend with `./`).
+A file named `bootstrap` will be looked for in the home directory and executed if found. This can be used to run any commands you would like to during provisioning. Be sure to make the file executable and use the proper language [shebang](https://en.wikipedia.org/w/index.php?title=Shebang_(Unix)) at the top. A different script location can specified by using the `customize_home_bootstrap_script` variable. The `customize_home_bootstrap_script` variable needs to be specified in the format `path/to/my/script.sh` (don't prepend with `./`).
 
 As an example, you can keep dotfiles such as `.bashrc` in the root of your git repository and install packages with a `bootstrap` script using this structure:
 ```
