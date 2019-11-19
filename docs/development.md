@@ -87,7 +87,7 @@ Once you have spun up the `centos7-katello-devel-stable` box once, you will want
 2. `vagrant box update centos7-katello-devel-stable`
 3. `vagrant up centos7-katello-devel-stable`
 
-Note that it is recommended that you destroy your `centos7-katello-devel-stable` box and create a new one because the stable development environment uses a fixed hostname. If you would like to create multiple stable Katello devel boxes by using multiple box entries, you will need a way to manage having multiple machines with the same hostname. For example, you can keep your `/etc/hosts` file on your hypervisor always pointed to the box you want to use. You don't have to worry about this if you only keep one environment around at a time.
+Note that it is recommended that you destroy your `centos7-katello-devel-stable` box and create a new one because the stable development environment uses a fixed hostname. If you would like to create multiple stable Katello devel boxes by using multiple box entries, you will need a way to manage having multiple machines with the same hostname. For example, you can keep your `/etc/hosts` file on your hypervisor always pointed to the box you want to use. The previous box's entry in `~/.ssh/known_hosts` will have to be removed as well. You don't have to worry about this if you only keep one environment around at a time.
 
 #### Cleanup after updating the `centos7-katello-devel-stable` box
 
@@ -143,17 +143,6 @@ in your boxes.yaml entry to configure this on box creation.
 
 ### Customizing the Development Environment
 
-#### Custom local files
-
-You can have files automatically copied over to the target user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. Here are the steps to specify custom files to be copied over:
-
-1. Create the directoy `user_devel_env_files/` in Forklift's root directory.
-2. Add any files you want to be copied over to your development box to `user_devel_env_files/`
-
-The directory `user_devel_env_files/` is ignored by git so the files won't be checked into version control. The files added to `user_devel_env_files/` will be copied over to the target user's home directory on the development VM when it is created or provisioned.
-
-As an example, you can keep sensitive files you don't want in version control here.
-
 #### Custom files from git repo
 
 A git repo's contents can be copied to the target user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. This can be done by specifying the `customize_home_git_repo` ansible variable. For example:
@@ -179,6 +168,18 @@ mygitrepo
 - .vimrc
 - bootstrap
 ```
+
+#### Custom local files
+
+You can have files automatically copied over to the target user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. Here are the steps to specify custom files to be copied over:
+
+1. Create the directory `user_devel_env_files/` in Forklift's root directory.
+2. Add any files you want to be copied over to your development box to `user_devel_env_files/`
+
+The directory `user_devel_env_files/` is ignored by git so the files won't be checked into version control. The files added to `user_devel_env_files/` will be copied over to the target user's home directory on the development VM when it is created or provisioned.
+
+As an example, you can keep sensitive files you don't want in version control here.
+
 
 *Both of the local file and git repo custom file strategies are completely optional and are not required to spin up a development environment*
 
