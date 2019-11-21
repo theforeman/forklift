@@ -159,9 +159,7 @@ centos7-katello-devel-stable:
 
 The contents of the specified repo will be copied to the home directory excluding the `.git` folder and `.gitignore` file.
 
-A file named `bootstrap` will be looked for in the home directory and executed if found. This can be used to run any commands you would like to during provisioning. Be sure to make the file executable and use the proper language [shebang](https://en.wikipedia.org/w/index.php?title=Shebang_(Unix)) at the top. A different script location can specified by using the `customize_home_bootstrap_script` variable. The `customize_home_bootstrap_script` variable needs to be specified in the format `path/to/my/script.sh` (don't prepend with `./`).
-
-As an example, you can keep dotfiles such as `.bashrc` in the root of your git repository and install packages with a `bootstrap` script using this structure:
+As an example, you can keep dotfiles such as `.bashrc` in the root of your git repository and install packages [with a `bootstrap` script](#running-a-boostrap-script) using this structure:
 ```
 mygitrepo
 - .bashrc
@@ -178,10 +176,17 @@ You can have files automatically copied over to the target user's home directory
 
 The directory `user_devel_env_files/` is ignored by git so the files won't be checked into version control. The files added to `user_devel_env_files/` will be copied over to the target user's home directory on the development VM when it is created or provisioned.
 
-As an example, you can keep sensitive files you don't want in version control here.
-
+As an example, you can symlink files that are on your hypervisor to this directory and install packages [with a bootstrap script](#running-a-boostrap-script)
 
 *Both of the local file and git repo custom file strategies are completely optional and are not required to spin up a development environment*
+
+#### Running a boostrap script
+
+For both the git and custom local file strategies, you can run commands from a boostrap script found in root level of the git repo or in `user_devel_env_files`
+
+A file named `bootstrap` will be looked for in the home directory and executed if found. This can be used to run any commands you would like to during provisioning. Be sure use the proper language [shebang](https://en.wikipedia.org/w/index.php?title=Shebang_(Unix)) at the top.
+
+A different script location can specified by using the `customize_home_bootstrap_script` variable. The `customize_home_bootstrap_script` variable needs to be specified in the format `path/to/my/script.sh` (don't prepend with `./`).
 
 #### Managing SSH keys
 
