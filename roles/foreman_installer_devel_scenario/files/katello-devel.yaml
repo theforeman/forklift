@@ -14,6 +14,8 @@
 - /usr/share/foreman-installer/parser_cache/foreman.yaml
 - /usr/share/foreman-installer/parser_cache/katello.yaml
 :hiera_config: /usr/share/foreman-installer/config/foreman-hiera.yaml
+:facts:
+  tuning: default
 :colors: true
 :order:
 - certs
