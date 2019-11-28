@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # Adapted from Mark Mandel's implementation
 # https://github.com/ansible/ansible/blob/devel/plugins/inventory/vagrant.py
 import argparse
@@ -36,7 +36,7 @@ def get_running_hosts():
         return
 
     cmd = "vagrant status --machine-readable"
-    status = subprocess.check_output(cmd.split()).rstrip()
+    status = subprocess.check_output(cmd.split(), universal_newlines=True).rstrip()
 
     for line in status.split('\n'):
         if len(line.split(',')) == 4:
@@ -65,7 +65,7 @@ def list_running_hosts():
 def get_ssh_configs(hosts):
     cmd = ['vagrant', 'ssh-config'] + hosts
     try:
-        output = subprocess.check_output(cmd, stderr=DEVNULL)
+        output = subprocess.check_output(cmd, universal_newlines=True, stderr=DEVNULL)
     except subprocess.CalledProcessError:
         return None
 
@@ -85,7 +85,7 @@ def get_host_ssh_config(config, host):
 def get_variables(hosts):
     cmd = [os.path.join(os.path.dirname(os.path.dirname(__file__)), 'bin', 'ansible-vars')] + hosts
     try:
-        output = subprocess.check_output(cmd, stderr=DEVNULL)
+        output = subprocess.check_output(cmd, universal_newlines=True, stderr=DEVNULL)
     except subprocess.CalledProcessError:
         return {}
 
