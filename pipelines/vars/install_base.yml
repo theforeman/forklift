@@ -1,4 +1,5 @@
 pipeline_action: install
+forklift_directory: "{{ playbook_dir | dirname | dirname }}"
 forklift_name: "pipe-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}"
 forklift_server_name: "pipe-{{ pipeline_type }}-server-{{ pipeline_version }}-{{ pipeline_os }}"
 forklift_proxy_name: "pipe-{{ pipeline_type }}-proxy-{{ pipeline_version }}-{{ pipeline_os }}"

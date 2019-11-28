@@ -1,0 +1,17 @@
+help: |
+  Run an install pipeline
+variables:
+  forklift_state:
+    parameter: --state
+    help: Forklift state to ensure
+    # TODO: choices: up/rebuild/destroy
+  pipeline_os:
+    parameter: --os
+    help: Operating system to install, like centos8-stream, debian11 or ubuntu2004. Valid options depend on the pipeline
+  pipeline_type:
+    parameter: --type
+    help: Type of pipeline, like foreman, katello or luna
+    # TODO: choices: foreman/katello/luna
+  pipeline_version:
+    parameter: --version
+    help: Version to install, like nightly, 3.7 or 4.9

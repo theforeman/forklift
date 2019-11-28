@@ -68,57 +68,63 @@ _Note_: Bats tests are not idempotent, so you may have to do some cleanup or ski
 
 ## Pipeline Testing
 
-Under `pipelines` are a series of playbooks designed around testing scenarios for various version of the Foreman and Katello stack. To run one:
+Under `pipelines` are a series of playbooks designed around testing scenarios for various version of the Foreman and Katello stack.
+Use `./bin/forklift --help` to find out which ones and their aguments.
 
-    ansible-playbook pipelines/<pipeline>.yml -e forklift_state=up -e <vars required by pipeline>
+```console
+$ ./bin/forklift --help
+usage: forklift [-h] action ...
 
-When you are finished with the test, you can tear down the associated infrastructure:
+positional arguments:
+  action      which action to execute
+    install   Run an install pipeline
+    upgrade   Run an upgrade pipeline
 
-    ansible-playbook pipelines/<pipeline>.yml -e forklift_state=destroy -e <vars required by pipeline>
-
-### Existing Pipelines
-
-* `install_pipeline` - Installs a Server and a Proxy VMs and runs the `foreman_testing` role to verify the setup.
-  Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian10)
-  Expects the `pipeline_type` variable to be set to a known type (currently: foreman, katello, luna)
-  Expects the `pipeline_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, 3.11, nightly)
-* `upgrade_pipeline` - Installs a VM, upgrades it twice and runs the `foreman_testing` role to verify the final upgrade.
-  Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian10)
-  Expects the `pipeline_type` variable to be set to a known type (currently: foreman, katello, luna)
-  Expects the `pipeline_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, 3.11, nightly).
-
-#### Examples
-
-    ansible-playbook pipelines/install_pipeline.yml -e forklift_state=up -e pipeline_os=debian10 -e pipeline_type=foreman -e pipeline_version=nightly
-    ansible-playbook pipelines/upgrade_pipeline.yml -e forklift_state=up -e pipeline_os=centos7 -e pipeline_type=katello -e pipeline_version=3.10
-
-### Creating Pipelines
-
-If you wish to add a new version of an existing pipeline (e.g. a new Katello release), you only have to add the corresponding vars files to `pipelines/vars/`.
-
-For Katello 3.11, you'd be adding the following two files:
-
-`pipelines/vars/katello_3.11.yml`:
-```yaml
-forklift_name: pipeline-katello-3.11
-forklift_boxes:
-  pipeline-katello-3.11-centos7:
-    box: centos7
-    memory: 8192
-  pipeline-proxy-3.11-centos7:
-    box: centos7
-    memory: 3072
-katello_repositories_version: '3.11'
-katello_repositories_pulp_version: '2.19'
-foreman_repositories_version: '1.21'
-foreman_client_repositories_version: "{{ foreman_repositories_version }}"
+optional arguments:
+  -h, --help  show this help message and exit
 ```
 
-`pipelines/vars/katello_upgrade_3.11.yml`:
-```yaml
-katello_version_start: '3.9'
-katello_version_intermediate: '3.10'
-katello_version_final: '{{ katello_version }}'
+Individual pipelines also have help texts:
+```console
+$ ./bin/forklift install --help
+usage: forklift install [-h] [-v] [-e EXTRA_VARS] [--state FORKLIFT_STATE] [--os PIPELINE_OS] [--type PIPELINE_TYPE] [--version PIPELINE_VERSION]
+
+Run an install pipeline
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         verbose output
+  --state FORKLIFT_STATE
+                        Forklift state to ensure
+  --os PIPELINE_OS      Operating system to install, like centos8-stream, debian11 or ubuntu2004. Valid options depend on the pipeline
+  --type PIPELINE_TYPE  Type of pipeline, like foreman, katello or luna
+  --version PIPELINE_VERSION
+                        Version to install, like nightly, 3.7 or 4.9
+
+advanced arguments:
+  -e EXTRA_VARS, --extra-vars EXTRA_VARS
+                        set additional variables as key=value or YAML/JSON, if filename prepend with @
+```
+
+Pipelines typically have a state which defaults to `up`. Other valid values are `rebuild` and `destroy`. The latter one is useful to clean up which pipelines don't do by themselves.
+
+For example to run a Foreman Nightly installation pipeline on Debian Bullseye:
+
+```console
+$ ./bin/forklift install --os debian11 --type foreman --version nightly
+... lots of output
+```
+
+When you're done, you can delete the boxes by adding `--state destroy`:
+
+```console
+$ ./bin/forklift install --os debian11 --type foreman --version nightly --state destroy
+```
+
+Similarly a Katello Nightly upgrade pipeline on CentOS 8 Stream:
+
+```console
+$ ./bin/forklift upgrade --os centos8-stream --type katello --version nightly
 ```
 
 ## Running Robottelo Tests

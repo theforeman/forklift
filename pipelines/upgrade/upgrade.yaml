@@ -1,0 +1,12 @@
+---
+- import_playbook: 01-boxes.yml
+- import_playbook: 02-setup.yml
+- import_playbook: 03-install_server.yml
+- import_playbook: 04-install_proxy.yml
+- import_playbook: 05-server_to_intermediate.yml
+- import_playbook: 06-proxy_to_intermediate.yml
+- import_playbook: 07-server_to_final.yml
+- import_playbook: 08-tests.yml
+- import_playbook: 09-proxy_to_final.yml
+- import_playbook: 10-tests.yml
+- import_playbook: 11-smoker.yml
