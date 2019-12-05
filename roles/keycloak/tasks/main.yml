@@ -1,0 +1,38 @@
+---
+- name: Install OpenJDK
+  become: true
+  package:
+    name: "{{ keycloak_java_package }}"
+    state: present
+
+- name: Download keycloak
+  get_url:
+    url: "{{ keycloak_download_url }}"
+    dest: "{{ keycloak_download_dest }}"
+
+- name: Unpack keycloak
+  unarchive:
+    src: "{{ keycloak_download_dest }}"
+    remote_src: yes
+    dest: "{{ keycloak_directory_parent }}"
+    creates: "{{ keycloak_directory }}"
+
+- name: "Create user {{ keycloak_user_username }}"
+  command: "{{ keycloak_directory }}/bin/add-user-keycloak.sh -u '{{ keycloak_user_username }}' -p '{{ keycloak_user_password }}'"
+  args:
+    creates: "{{ keycloak_directory }}/standalone/configuration/keycloak-add-user.json"
+
+- name: "Create systemd service"
+  become: true
+  template:
+    src: "keycloak.service.j2"
+    dest: "/etc/systemd/system/keycloak.service"
+    mode: 0664
+
+- name: "Start keycloak"
+  become: true
+  systemd:
+    name: "keycloak.service"
+    enabled: true
+    state: started
+    daemon_reload: yes
