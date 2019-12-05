@@ -1,0 +1,9 @@
+---
+keycloak_version: "8.0.1"
+keycloak_download_url: "https://downloads.jboss.org/keycloak/{{ keycloak_version }}/keycloak-{{ keycloak_version }}.tar.gz"
+keycloak_download_dest: "/home/vagrant/keycloak-{{ keycloak_version }}.tar.gz"
+keycloak_directory_parent: "{{ ansible_env.HOME }}"
+keycloak_directory: "{{ keycloak_directory_parent }}/keycloak-{{ keycloak_version }}"
+keycloak_java_package: "java-1.8.0-openjdk-headless"
+keycloak_user_username: "admin"
+keycloak_user_password: "changeme"
