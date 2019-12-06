@@ -40,6 +40,16 @@
   when:
     - katello_repositories_pulp_version == "nightly"
 
+- name: 'Add Pulpcore repository'
+  yum_repository:
+    name: pulpcore-repository
+    description: Pulpcore repository for Katello {{ katello_repositories_version }}
+    baseurl: "https://koji.katello.org/releases/yum/katello-{{ katello_repositories_version }}/pulpcore/el{{ ansible_distribution_major_version }}/x86_64/"
+    gpgcheck: no
+    enable: yes
+  when:
+    - katello_repositories_version == "nightly" or katello_repositories_version is version('3.15', '>=')
+
 - name: 'Katello {{ katello_repositories_version }} Client Koji repository'
   yum_repository:
     name: katello-client-koji
