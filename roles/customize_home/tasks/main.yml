@@ -1,4 +1,5 @@
 - name: Check for specified files to copy to home directory
+  become: false
   local_action:
     module: stat
     path: "{{ playbook_dir | dirname }}/user_devel_env_files/"
