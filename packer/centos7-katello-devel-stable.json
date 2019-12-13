@@ -2,7 +2,7 @@
     "variables": {
         "user": "vagrant",
         "password": "vagrant",
-        "hostname": "centos7-katello-devel-stable.example.com"
+        "packer_hostname": "centos7-katello-devel-stable.example.com"
    },
 
     "builders":
@@ -24,8 +24,8 @@
             "boot_wait": "2s",
             "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
             "qemuargs": [
-                [ "-m", "8192M" ],
-                [ "-smp", "2" ]
+                [ "-m", "12G" ],
+                [ "-smp", "4" ]
             ],
             "boot_command": [
               "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
@@ -41,7 +41,7 @@
               "scripts/vagrant.sh",
               "scripts/fix_hostname.sh"
             ],
-            "environment_vars": [ "HOSTNAME={{user `hostname`}}" ]
+            "environment_vars": [ "PACKER_HOSTNAME={{user `packer_hostname`}}" ]
 
         },
         {
