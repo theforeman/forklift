@@ -18,3 +18,4 @@ pytest_project_version: master
 pytest_project_junit_output: junit.xml
 pytest_project_markers:
 pytest_project_command_args:
+pytest_project_ignore_errors: no
