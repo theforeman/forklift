@@ -44,31 +44,31 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_sync_repos
 
-# Katello Agent
-- name: 'find agent repo'
+# Foreman Client
+- name: 'find client repo'
   shell: >
     {{ katello_provisioning_hammer }} repository info
-    --name "Katello Agent"
+    --name "Foreman Client"
     --product "CentOS"
     --organization "{{ katello_provisioning_organization }}"
-  register: katello_agent_repo
+  register: foreman_client_repo
   ignore_errors: True
 
-- name: 'create agent repo'
+- name: 'create client repo'
   shell: >
     {{ katello_provisioning_hammer }} repository create
     --product="CentOS"
     --content-type="yum"
-    --name "Katello Agent"
-    --url https://fedorapeople.org/groups/katello/releases/yum/nightly/client/el7/x86_64/
+    --name "Foreman Client"
+    --url https://yum.theforeman.org/client/{{ foreman_repositories_version }}/el7/x86_64
     --download-policy {{ katello_provisioning_download_policy }}
     --organization "{{ katello_provisioning_organization }}"
-  when: katello_agent_repo.stderr.find('not found') != -1
+  when: foreman_client_repo.stderr.find('not found') != -1
 
-- name: 'sync the agent repo'
+- name: 'sync the client repo'
   shell: >
     {{ katello_provisioning_hammer }} repository synchronize
-    --name "Katello Agent"
+    --name "Foreman Client"
     --product "CentOS"
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_sync_repos
