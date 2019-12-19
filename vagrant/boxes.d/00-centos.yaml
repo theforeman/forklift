@@ -30,3 +30,7 @@ boxes:
     scenarios:
       - foreman
       - katello
+
+  centos8:
+    box_name: 'centos/8'
+    pty: true
