@@ -46,6 +46,30 @@ setup() {
     --product="${PRODUCT}" --name="${YUM_REPOSITORY}"
 }
 
+@test "create a file repository" {
+  hammer repository create --organization="${ORGANIZATION}" --url=https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file/ \
+    --product="${PRODUCT}" --content-type="file" --name "${FILE_REPOSITORY}" | grep -q "Repository created"
+}
+
+@test "sync file repository" {
+  hammer repository synchronize --organization="${ORGANIZATION}" \
+    --product="${PRODUCT}" --name="${FILE_REPOSITORY}"
+}
+
+@test "fetch file from file repository" {
+  curl http://$(hostname -f)/pulp/isos/${ORGANIZATION_LABEL}/Library/custom/${PRODUCT_LABEL}/${REPOSITORY_LABEL}/1.iso > /dev/null
+}
+
+@test "create a docker repository" {
+  hammer repository create --organization="${ORGANIZATION}" --docker-upstream-name="fedora/ssh" --url=https://registry-1.docker.io/ \
+    --product="${PRODUCT}" --content-type="docker" --name "${DOCKER_REPOSITORY}" | grep -q "Repository created"
+}
+
+@test "sync docker repository" {
+  hammer repository synchronize --organization="${ORGANIZATION}" \
+    --product="${PRODUCT}" --name="${DOCKER_REPOSITORY}"
+}
+
 @test "create puppet repository" {
   hammer repository create --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --content-type="puppet" --name "${PUPPET_REPOSITORY}" | grep -q "Repository created"
