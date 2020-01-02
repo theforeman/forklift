@@ -9,6 +9,7 @@ load fixtures/content
 
 setup() {
   tSetOSVersion
+  HOSTNAME=$(hostname -f)
 }
 
 # Ensure we have at least one organization present so that the test organization
@@ -57,7 +58,7 @@ setup() {
 }
 
 @test "fetch file from file repository" {
-  curl http://$(hostname -f)/pulp/isos/${ORGANIZATION_LABEL}/Library/custom/${PRODUCT_LABEL}/${REPOSITORY_LABEL}/1.iso > /dev/null
+  curl http://$HOSTNAME/pulp/isos/${ORGANIZATION_LABEL}/Library/custom/${PRODUCT_LABEL}/${REPOSITORY_LABEL}/1.iso > /dev/null
 }
 
 @test "create a docker repository" {
@@ -140,7 +141,7 @@ setup() {
 }
 
 @test "delete host if present" {
-  hammer host delete --name="`hostname`" || echo "Could not delete host"
+  hammer host delete --name=$HOSTNAME || echo "Could not delete host"
 }
 
 @test "register subscription manager with username and password" {
@@ -182,7 +183,7 @@ setup() {
 }
 
 @test "check content host is registered" {
-  hammer host info --name $(hostname -f)
+  hammer host info --name $HOSTNAME
 }
 
 @test "enable content view repo" {
@@ -199,11 +200,12 @@ setup() {
 }
 
 @test "check available errata" {
+  skip # due to broken subscription-manager in EL7.7 -- https://bugzilla.redhat.com/show_bug.cgi?id=1741577
   local next_wait_time=0
-  until hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'; do
+  until hammer host errata list --host $HOSTNAME | grep 'RHEA-2012:0055'; do
     if [ $next_wait_time -eq 14 ]; then
       # make one last try, also makes the error nice
-      hammer host errata list --host $(hostname -f) | grep 'RHEA-2012:0055'
+      hammer host errata list --host $HOSTNAME | grep 'RHEA-2012:0055'
     fi
     sleep $(( next_wait_time++ ))
   done
@@ -220,19 +222,19 @@ setup() {
 @test "install package remotely (katello-agent)" {
   # see http://projects.theforeman.org/issues/15089 for bug related to "|| true"
   run yum -y remove gorilla
-  timeout 300 hammer host package install --host $(hostname -f) --packages gorilla || true
+  timeout 300 hammer host package install --host $HOSTNAME --packages gorilla || true
   tPackageExists gorilla
 }
 
 @test "install errata remotely (katello-agent)" {
   # see http://projects.theforeman.org/issues/15089 for bug related to "|| true"
-  timeout 300 hammer host errata apply --errata-ids 'RHEA-2012:0055' --host $(hostname -f) || true
+  timeout 300 hammer host errata apply --errata-ids 'RHEA-2012:0055' --host $HOSTNAME || true
   tPackageExists walrus-5.21
 }
 
 # it seems walrus lingers around making subsequent runs fail, so lets test package removal!
 @test "package remove (katello-agent)" {
-  timeout 300 hammer host package remove --host $(hostname -f) --packages walrus
+  timeout 300 hammer host package remove --host $HOSTNAME --packages walrus
 }
 
 @test "add puppet module to content view" {
@@ -258,7 +260,7 @@ setup() {
   # Skipping because of http://projects.theforeman.org/issues/8244
   skip
   target_env=$(hammer environment list | grep KT_${ORGANIZATION_LABEL}_${LIFECYCLE_ENVIRONMENT_LABEL}_${CONTENT_VIEW_LABEL} | cut -d\| -f1)
-  hammer host update --name $(hostname -f) --environment-id=$target_env \
+  hammer host update --name $HOSTNAME --environment-id=$target_env \
     --puppetclass-ids=1 | grep -q "Host updated"
 }
 
@@ -266,3 +268,11 @@ setup() {
   skip # because of above
   puppet agent --test && grep -q Lorem /tmp/dummy
 }
+
+@test "try fetching docker content" {
+  tPackageInstall podman
+  podman login $HOSTNAME -u admin -p changeme
+  DOCKER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${DOCKER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`
+  podman pull "${HOSTNAME}/${DOCKER_PULL_LABEL}"
+}
+
