@@ -81,3 +81,18 @@ centos7-katello-devel-stable:
   hostname: centos7-katello-devel-stable.example.com
   ansible:
     playbook: 'playbooks/setup_user_devel_environment.yml'
+
+# This box's intended use is dual homed where one interface is in the
+# management network and the other in an IPv6-only network. If that's using an
+# ULA range or link local, it should have permission to request resources by
+# default. This depends on a manually defined network with a bridge named
+# virbr3.
+centos7-squid:
+  box: centos7
+  ansible:
+    playbook: 'playbooks/squid.yml'
+  networks:
+    - type: 'public_network'
+      options:
+        dev: 'virbr3'
+        type: 'bridge'

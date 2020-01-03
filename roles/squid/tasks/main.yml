@@ -1,0 +1,11 @@
+---
+- name: Install squid
+  package:
+    name: squid
+    state: present
+
+- name: "Start and enable squid"
+  service:
+    name: squid
+    state: started
+    enabled: yes
