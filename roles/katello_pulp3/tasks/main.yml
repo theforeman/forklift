@@ -39,6 +39,7 @@
     pulp_settings:
       secret_key: secret
       content_origin: "{{ ansible_fqdn }}"
+      REMOTE_USER_ENVIRON_NAME: "HTTP_REMOTE_USER"
       ANSIBLE_API_HOSTNAME: "{{ ansible_fqdn }}"
       ANSIBLE_CONTENT_HOSTNAME: "https://{{ ansible_fqdn }}/pulp_ansible/content/"
       PULP2_MONGODB:
@@ -131,6 +132,14 @@
     - { regexp: '.*RequestHeader set SSL_SERVER_S_DN_OU.*', line: 'RequestHeader set SSL_SERVER_S_DN_OU "%{SSL_SERVER_S_DN_OU}s"'}
     - { regexp: '.*RequestHeader set SSL_CLIENT_VERIFY.*', line: 'RequestHeader set SSL_CLIENT_VERIFY "%{SSL_CLIENT_VERIFY}s"'}
     - { regexp: '.*RequestHeader set SSL_CLIENT_I_DN.*', line: 'RequestHeader set SSL_CLIENT_I_DN "%{SSL_CLIENT_I_DN}s"'}
+
+- name: deploy http config for cert auth
+  lineinfile:
+    dest: /etc/httpd/conf.d/05-katello-ssl.conf
+    regexp: ".*RequestHeader set REMOTE_USER.*"
+    line: 'RequestHeader set REMOTE_USER "%{SSL_CLIENT_S_DN_CN}s" env=SSL_CLIENT_S_DN'
+    insertafter: '.*Location /pulp/api.*'
+
 - name: Allow /etc/pulp to be readable by 2 and 3
   file:
     path: /etc/pulp/
