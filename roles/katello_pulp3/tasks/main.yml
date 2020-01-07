@@ -149,8 +149,8 @@
 
 - name: Configure smart proxy pulp3
   template:
-    src: templates/pulp3.yml
-    dest: /etc/foreman-proxy/settings.d/pulp3.yml
+    src: templates/pulpcore.yml
+    dest: /etc/foreman-proxy/settings.d/pulpcore.yml
 
 - name: restart foreman-proxy
   service:
