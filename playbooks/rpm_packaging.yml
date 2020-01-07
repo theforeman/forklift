@@ -21,6 +21,14 @@
           - python3-click
           - python3-ruamel-yaml
           - crudini
+          - tito
+          - mock
+      become: true
+
+    - name: Install obal
+      pip:
+        name: obal
+        state: present
       become: true
 
     - name: Install gem-compare
@@ -35,4 +43,11 @@
         repo: https://github.com/theforeman/foreman-packaging.git
         dest: /home/vagrant/foreman-packaging
         version: rpm/develop
+
+    - name: Add vagrant user to mock group
+      user:
+        name: vagrant
+        groups: mock
+        append: true
+      become: true
 ...
