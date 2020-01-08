@@ -39,6 +39,7 @@
     pulp_settings:
       secret_key: secret
       content_origin: "{{ ansible_fqdn }}"
+      TOKEN_AUTH_DISABLED: True
       REMOTE_USER_ENVIRON_NAME: "HTTP_REMOTE_USER"
       ANSIBLE_API_HOSTNAME: "{{ ansible_fqdn }}"
       ANSIBLE_CONTENT_HOSTNAME: "https://{{ ansible_fqdn }}/pulp_ansible/content/"
@@ -84,6 +85,14 @@
     dest: /etc/httpd/conf.d/05-foreman-ssl.d/pulp-reverse-proxy.conf
     owner: root
     group: apache
+
+- name: deploy docker registry proxy
+  template:
+    src: templates/docker_proxy.conf.j2
+    dest: /etc/httpd/conf.d/05-foreman-ssl.d/docker_proxy.conf
+    owner: root
+    group: apache
+
 
 - name: Delete old pulp_iso config
   file:
