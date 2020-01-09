@@ -1,0 +1,58 @@
+pulp_default_admin_password: password
+pulp_requirements_dir: "https://raw.githubusercontent.com/pulp/pulpcore/master/"
+pulp_plugin_source_dir: "git+https://github.com/pulp/pulpcore-plugin.git#egg=pulpcore-plugin"
+pulp_source_dir: "git+https://github.com/pulp/pulpcore.git#egg=pulpcore"
+pulp_install_plugins:
+  pulp-2to3-migrate:
+    app_label: "pulp-2to3-migration"
+    source_dir: "git+https://github.com/pulp/pulp-2to3-migration.git#egg=pulp-2to3-migration"
+  pulp-file:
+    app_label: "file"
+    source_dir: "git+https://github.com/pulp/pulp_file.git#egg=pulp-file"
+  pulp-docker:
+    app_label: "docker"
+    source_dir: "git+https://github.com/pulp/pulp_docker.git#egg=pulp-docker"
+  pulp-ansible:
+    app_label: "ansible"
+    source_dir: "git+https://github.com/pulp/pulp_ansible.git#egg=pulp-ansible"
+  pulp-rpm:
+    app_label: "rpm"
+    source_dir: "git+https://github.com/pulp/pulp_rpm.git#egg=pulp-rpm"
+pulp_settings:
+  secret_key: secret
+  content_host: "{{ ansible_fqdn }}"
+  ANSIBLE_API_HOSTNAME: "{{ ansible_fqdn }}"
+  ANSIBLE_CONTENT_HOSTNAME: "https://{{ ansible_fqdn }}/pulp_ansible/content/"
+  PULP2_MONGODB:
+    name: "pulp_database"
+    seeds: "localhost:27017"
+    #ssl: True
+  databases:
+    default:
+        HOST: localhost
+        ENGINE: django.db.backends.postgresql_psycopg2
+        NAME: pulp
+        USER: pulp
+        PASSWORD: pulp
+pulp_db_type: postgres
+pulp_user: pulp
+pulp_group: pulp
+pulp_install_dir: /usr/local/lib/pulp
+postgresql_packages: rh-postgresql96
+postgresql_daemon: rh-postgresql96-postgresql
+postgresql_bin_path: /opt/rh/rh-postgresql96/root/bin
+postgresql_data_dir: /var/opt/rh/rh-postgresql96/lib/pgsql/data
+postgresql_config_path: /var/opt/rh/rh-postgresql96/lib/pgsql/data
+postgresql_global_config_options:
+  - option: port
+    value: 7878
+postgresql_databases:
+  - name: pulp
+    port: 7878
+    user: pulp
+    password: pulp
+postgresql_users:
+  - name: pulp
+    password: pulp
+    role_attr_flags: CREATEDB
+    port: 7878

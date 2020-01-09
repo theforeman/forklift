@@ -1,7 +1,9 @@
-<Location /pulpcore_registry/v2/>
-   SSLRequire %{SSL_CLIENT_S_DN_CN} eq "admin"
-</Location>
 
-ProxyPass /pulpcore_registry/v2/ http://127.0.0.1:24816/v2/
-ProxyPassReverse /pulpcore_registry/v2 http://127.0.0.1:24816/v2
+ProxyPass /pulpcore_registry/v2/ http://127.0.0.1:24817/v2/
+ProxyPassReverse /pulpcore_registry/v2/ http://127.0.0.1:24817/v2/
+
+ProxyPass /pulp/container http://127.0.0.1:24816/pulp/container
+ProxyPassReverse http://127.0.0.1:24816/pulp/container  /pulp/container
+
+
 

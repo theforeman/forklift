@@ -1,4 +1,48 @@
 ---
+- name: install updates
+  yum: name=* state=latest
+
+- name: do facts module to get latest information
+  setup:
+  #- name: refresh facts
+  #meta: clear_facts
+
+- name: Put SELinux in permissive mode
+  command: setenforce 0
+
+- name: install deps 
+  yum: 
+    state: present
+    name:
+      - gcc
+      - make
+      - cmake
+      - bzip2-devel
+      - expat-devel
+      - file-devel
+      - glib2-devel
+      - libcurl-devel
+      - libmodulemd2-devel
+      - ninja-build
+      - libxml2-devel
+      - python36-devel
+      - python36-gobject
+      - rpm-devel
+      - openssl-devel
+      - sqlite-devel
+      - xz-devel
+      - zchunk-devel
+      - zlib-devel
+      - swig3
+      - python3-setuptools
+      - python3-subscription-manager-rhsm
+
+#work around for setup tools bug      
+- name: install newer setup tools
+  command: pip3 install setuptools --upgrade
+  #- name: delete old setuptools
+  #shell: "rm -rf /usr/lib/python3.6/site-packages/setuptools* -rf"
+
 - name: correct /var/lib/pulp permissions (adding group writable), fixed in 2.21.1
   file:
     path: '/var/lib/pulp/'
@@ -9,39 +53,47 @@
 - include_role:
     name: "{{ item }}"
   with_items:
-    - pulp-database
-    - pulp-workers
-    - pulp-resource-manager
-    - pulp-content
+    - pulp_database
+    - pulp_database_config
+    - pulp_workers
+    - pulp_resource_manager
+    - pulp_content
+    - pulp_api
+    - pulp_redis
   vars:
     pulp_default_admin_password: password
     pulp_settings_file: /etc/pulp/settings.py
     pulp_requirements_dir: "https://raw.githubusercontent.com/pulp/pulpcore/master/"
     pulp_plugin_source_dir: "git+https://github.com/pulp/pulpcore-plugin.git#egg=pulpcore-plugin"
-    pulp_source_dir: "git+https://github.com/pulp/pulpcore.git@3.0#egg=pulpcore"
+    pulp_source_dir: "git+https://github.com/pulp/pulpcore.git@3.6.3#egg=pulpcore"
     pulp_install_plugins:
       pulp-2to3-migrate:
         app_label: "pulp-2to3-migration"
         source_dir: "git+https://github.com/pulp/pulp-2to3-migration.git#egg=pulp-2to3-migration"
       pulp-file:
         app_label: "file"
-        source_dir: "git+https://github.com/pulp/pulp_file.git@0.1#egg=pulp-file"
+        source_dir: "git+https://github.com/pulp/pulp_file.git@1.2.0#egg=pulp-file"
       pulp-container:
         app_label: "container"
-        source_dir: "git+https://github.com/pulp/pulp_container.git@1.0#egg=pulp-docker"
+        source_dir: "git+https://github.com/pulp/pulp_container.git@2.0.1#egg=pulp-docker"
       pulp-ansible:
         app_label: "ansible"
-        source_dir: "git+https://github.com/pulp/pulp_ansible.git#egg=pulp-ansible"
+        source_dir: "git+https://github.com/pulp/pulp_ansible.git@0.3.0#egg=pulp-ansible"
+      pulp-certguard:
+        app_label: "certguard"
+        source_dir: "git+https://github.com/pulp/pulp-certguard.git@1.0.2#egg=pulp-certguard"
       pulp-rpm:
         prereq_role: 'pulp.pulp_rpm_prerequisites'
         app_label: "rpm"
-        source_dir: "git+https://github.com/pulp/pulp_rpm.git@3.0#egg=pulp-rpm"
+        source_dir: "git+https://github.com/pulp/pulp_rpm.git@3.6.2#egg=pulp-rpm"
     pulp_settings:
       secret_key: secret
       content_origin: "{{ ansible_fqdn }}"
       TOKEN_AUTH_DISABLED: True
       REMOTE_USER_ENVIRON_NAME: "HTTP_REMOTE_USER"
       ANSIBLE_API_HOSTNAME: "{{ ansible_fqdn }}"
+      AUTHENTICATION_BACKENDS: ['pulpcore.app.authentication.PulpNoCreateRemoteUserBackend']
+      REST_FRAMEWORK__DEFAULT_AUTHENTICATION_CLASSES: ['rest_framework.authentication.SessionAuthentication', 'pulpcore.app.authentication.PulpRemoteUserAuthentication']
       ANSIBLE_CONTENT_HOSTNAME: "https://{{ ansible_fqdn }}/pulp_ansible/content/"
       PULP2_MONGODB:
         name: "pulp_database"
@@ -78,6 +130,14 @@
         password: pulp
         role_attr_flags: CREATEDB
         port: 7878
+
+- name: ensure httpd/conf.d/05-foreman-ssl.d
+  file:
+    path: /etc/httpd/conf.d/05-foreman-ssl.d/
+    state: directory
+    owner: apache
+    group: apache
+
 
 - name: Deploy reverse proxy configuration
   template:
@@ -122,16 +182,10 @@
     owner: root
     group: apache
 
-
 #docker capusle syncing support   
-
-- stat:
-    path: /etc/httpd/conf.d/05-katello-ssl.conf
-  register: katello_ssl_result
 - name: Deploy ssl config for docker capsule syncing
-  when: katello_ssl_result.stat.exists
   lineinfile:
-    dest: /etc/httpd/conf.d/05-katello-ssl.conf
+    dest: /etc/httpd/conf.d/05-pulp-https.conf
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     insertafter: '.*SSLEngine on'
@@ -141,13 +195,7 @@
     - { regexp: '.*RequestHeader set SSL_SERVER_S_DN_OU.*', line: 'RequestHeader set SSL_SERVER_S_DN_OU "%{SSL_SERVER_S_DN_OU}s"'}
     - { regexp: '.*RequestHeader set SSL_CLIENT_VERIFY.*', line: 'RequestHeader set SSL_CLIENT_VERIFY "%{SSL_CLIENT_VERIFY}s"'}
     - { regexp: '.*RequestHeader set SSL_CLIENT_I_DN.*', line: 'RequestHeader set SSL_CLIENT_I_DN "%{SSL_CLIENT_I_DN}s"'}
-
-- name: deploy http config for cert auth
-  lineinfile:
-    dest: /etc/httpd/conf.d/05-katello-ssl.conf
-    regexp: ".*RequestHeader set REMOTE_USER.*"
-    line: 'RequestHeader set REMOTE_USER "%{SSL_CLIENT_S_DN_CN}s" env=SSL_CLIENT_S_DN'
-    insertafter: '.*Location /pulp/api.*'
+    - { regexp: '.*IncludeOptional "/etc/httpd/conf.d/05-foreman-ssl.d/*.conf".*', line: 'IncludeOptional "/etc/httpd/conf.d/05-foreman-ssl.d/*.conf"'}
 
 - name: Allow /etc/pulp to be readable by 2 and 3
   file:
