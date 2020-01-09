@@ -1,5 +1,5 @@
 :enabled: true
-:pulp_url: https://{{ ansible_fqdn }}/pulp/
+:pulp_url: https://{{ ansible_fqdn }}/
 :content_app_url: https://{{ ansible_fqdn }}/pulp/content/
 :pulp_dir: /var/lib/pulp
 :pulp_content_dir: /var/lib/pulp/content
