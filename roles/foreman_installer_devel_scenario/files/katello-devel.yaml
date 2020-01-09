@@ -8,8 +8,10 @@
 # Forklift always overwrites the answers so let's not pretend we save them
 :dont_save_answers: true
 :answer_file: /etc/foreman-installer/scenarios.d/katello-devel-answers.yaml
-:installer_dir: /usr/share/foreman-installer/katello
+:installer_dir: /usr/share/foreman-installer
 :module_dirs: /usr/share/foreman-installer/modules
+:hook_dirs:
+- /usr/share/foreman-installer/katello
 :parser_cache_path:
 - /usr/share/foreman-installer/parser_cache/foreman.yaml
 - /usr/share/foreman-installer/parser_cache/katello.yaml
