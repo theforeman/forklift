@@ -4,7 +4,7 @@
   vars:
     bats_output_dir: '/root/bats_results'
     remote_dir: '/tmp/debug'
-    smoker_output_dir: '{{ ansible_env.HOME }}/smoker'
+    smoker_output_dir: '/home/vagrant/smoker'
   roles:
     - sos_report
   tasks:
@@ -24,7 +24,6 @@
       find:
         paths: "{{ smoker_output_dir }}"
         patterns: "*.xml"
-      become: false
       register: smoker_results
 
     - name: "Copy smoker results"
