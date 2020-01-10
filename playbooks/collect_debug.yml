@@ -29,5 +29,5 @@
     - name: "Copy smoker results"
       fetch:
         src: "{{ item.path }}"
-        dest: "{{ smoker_remote_dir }}"
+        dest: "{{ remote_dir }}"
       with_items: "{{ smoker_results.files }}"
