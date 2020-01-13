@@ -270,6 +270,10 @@ setup() {
 }
 
 @test "try fetching docker content" {
+  FOREMAN_VERSION=$(tForemanVersion)
+  if [[ $(echo "$FOREMAN_VERSION < 1.20" | bc) == 1 ]] ; then
+    skip "docker v2 API is not supported on this version"
+  fi
   tPackageInstall podman
   podman login $HOSTNAME -u admin -p changeme
   DOCKER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${DOCKER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`
