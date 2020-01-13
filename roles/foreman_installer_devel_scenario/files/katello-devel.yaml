@@ -11,7 +11,7 @@
 :installer_dir: /usr/share/foreman-installer
 :module_dirs: /usr/share/foreman-installer/modules
 :hook_dirs:
-- /usr/share/foreman-installer/katello
+- /usr/share/foreman-installer/katello/hooks
 :parser_cache_path:
 - /usr/share/foreman-installer/parser_cache/foreman.yaml
 - /usr/share/foreman-installer/parser_cache/katello.yaml
