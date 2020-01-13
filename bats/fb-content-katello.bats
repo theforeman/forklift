@@ -273,6 +273,9 @@ setup() {
   if [[ $(echo "${FOREMAN_VERSION}\n1.20" | sort --version-sort | tail -n 1) == "1.20" ]] ; then
     skip "docker v2 API is not supported on this version"
   fi
+  if [[ $(echo "${FOREMAN_VERSION}\n1.18" | sort --version-sort | tail -n 1) == "1.18" ]] ; then
+    skip "docker v2 API is not supported on this version"
+  fi
   tPackageInstall podman
   podman login $HOSTNAME -u admin -p changeme
   DOCKER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${DOCKER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`
