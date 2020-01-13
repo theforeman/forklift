@@ -270,7 +270,7 @@ setup() {
 
 @test "try fetching docker content" {
   FOREMAN_VERSION=$(tForemanVersion)
-  if [[ $(echo "$FOREMAN_VERSION < 1.20" | bc) == 1 ]] ; then
+  if [[ $(echo "${FOREMAN_VERSION}\n1.20" | sort --version-sort | tail -n 1) == "1.20" ]] ; then
     skip "docker v2 API is not supported on this version"
   fi
   tPackageInstall podman
