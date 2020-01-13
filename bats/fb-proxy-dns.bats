@@ -72,7 +72,6 @@ tFlushCache() {
 
 setup() {
   tSetOSVersion
-  FOREMAN_VERSION=$(tForemanVersion)
 
 	tCommandExists curl || tPackageInstall curl
 	tCommandExists dig || tPackageInstall bind-utils || tPackageInstall dnsutils
@@ -144,10 +143,6 @@ setup() {
 }
 
 @test "verify record type CNAME" {
-  if [[ $NAMESERVER == "bind" ]] && [[ $(echo "$FOREMAN_VERSION < 1.15" | bc) == 1 ]] ; then
-    skip "CNAME records are only supported on 1.15+"
-  fi
-
   local target=bats-test.example.com
   local alias=bats-alias.example.com
   local type=CNAME
