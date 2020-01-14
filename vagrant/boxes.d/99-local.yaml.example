@@ -96,3 +96,12 @@ centos7-squid:
       options:
         dev: 'virbr3'
         type: 'bridge'
+
+centos7-foreman-smoker:
+  box: centos7
+  ansible:
+    playbook: 'playbooks/smoker.yml'
+    variables:
+      smoker_base_url: "CHANGEME" # For example: "https://centos7-katello-devel-stable.example.com"
+      pytest_project_alias: "foreman_smoker"
+      pytest_run_tests: false

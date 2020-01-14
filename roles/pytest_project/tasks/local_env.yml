@@ -1,0 +1,14 @@
+- name: "Create alias for testing command"
+  lineinfile: 
+    dest: ~/.bash_profile 
+    line: "alias {{ pytest_project_alias }}=\"{{ pytest_project_command }}\""
+  when: pytest_project_alias != ""
+
+- debug:
+    msg: |
+      pytest is installed and testing can be run with
+      {{ pytest_project_command }}
+
+- debug:
+    msg: "The testing command is aliased as {{ pytest_project_alias }}"
+  when: pytest_project_alias != ""
