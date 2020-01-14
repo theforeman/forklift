@@ -13,3 +13,7 @@
   ignore_errors: "{{ pytest_project_ignore_errors }}"
   args:
     chdir: "{{ pytest_project_directory }}"
+  when: pytest_run_tests
+
+- include_tasks: local_env.yml
+  when: not pytest_run_tests
