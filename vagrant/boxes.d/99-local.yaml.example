@@ -77,7 +77,7 @@ centos7-dynflow-devel:
 
 centos7-katello-devel-stable:
   box_name: katello/katello-devel
-  memory: 9000
+  memory: 12288
   hostname: centos7-katello-devel-stable.example.com
   ansible:
     playbook: 'playbooks/setup_user_devel_environment.yml'
