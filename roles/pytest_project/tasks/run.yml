@@ -1,7 +1,7 @@
 ---
 - name: 'Build command'
   set_fact:
-    pytest_project_command: "{{ pytest_project_virtualenv_path }}/bin/py.test --junit-xml={{ pytest_project_junit_output }} {{ pytest_project_command_args }}"
+    pytest_project_command: "{{ pytest_project_virtualenv_path }}/bin/pytest --junit-xml={{ pytest_project_junit_output }} {{ pytest_project_command_args }}"
 
 - name: 'Limit to markers'
   set_fact:
