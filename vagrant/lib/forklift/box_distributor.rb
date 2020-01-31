@@ -173,6 +173,7 @@ module Forklift
           ansible_provisioner.groups = @ansible_groups
           ansible_provisioner.verbose = ansible['verbose'] || false
           ansible_provisioner.galaxy_role_file = ansible['galaxy_role_file'] if ansible['galaxy_role_file']
+          ansible_provisioner.inventory_path = ansible['inventory_path'] if ansible['inventory_path']
         end
       end
     end

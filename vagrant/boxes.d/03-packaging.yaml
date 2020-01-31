@@ -1,0 +1,8 @@
+---
+rpm-packaging:
+  box: fedora30
+  ansible:
+    playbook: 'playbooks/rpm_packaging.yml'
+    variables:
+      ansible_python_interpreter: "/usr/bin/python3"
+...

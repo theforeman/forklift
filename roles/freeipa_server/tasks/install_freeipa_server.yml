@@ -1,9 +1,11 @@
 - name: 'Install FreeIPA server packages (this could take a while)'
+  become: true
   yum:
     name: ipa-server,ipa-server-dns
     state: latest
 
 - name: 'Fix /etc/hosts record for self'
+  become: true
   lineinfile:
     dest: /etc/hosts
     regexp: ".*{{ ansible_nodename }}.*localhost.*"
@@ -11,16 +13,19 @@
     state: present
 
 - name: 'Fix /etc/hosts freeipa installation'
+  become: true
   replace:
     dest: /etc/hosts
     regexp: "127.*c7-freeipa-server.*"
     replace: ""
 
 - name: 'Ensure localhost record is in /etc/hosts'
+  become: true
   lineinfile:
     dest: /etc/hosts
     line: "127.0.0.1 localhost.localdomain localhost"
     state: present
 
 - name: 'Run FreeIPA Install'
+  become: true
   shell: ipa-server-install -U -r {{ freeipa_server_realm }} -p {{ freeipa_server_directory_manager_password }} -a {{ freeipa_server_directory_admin_password }} creates=/etc/krb5.keytab

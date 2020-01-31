@@ -1,0 +1,53 @@
+---
+- hosts: all
+  tasks:
+    - name: Install dependencies for packaging tooling
+      yum:
+        name: "{{ package_list }}"
+        state: present
+      vars:
+        package_list:
+          - git-core
+          - git-annex
+          - rubygem-nokogiri
+          - rpmspectool
+          - rubygem-gem2rpm
+          - make
+          - gcc
+          - redhat-rpm-config
+          - ruby-devel
+          - curl-devel
+          - gem
+          - python3-click
+          - python3-ruamel-yaml
+          - crudini
+          - tito
+          - mock
+      become: true
+
+    - name: Install obal
+      pip:
+        name: obal
+        state: present
+      become: true
+
+    - name: Install gem-compare
+      gem:
+        name: gem-compare
+        user_install: false
+        state: present
+      become: true
+
+    - name: Clone foreman-packaging
+      git:
+        repo: https://github.com/theforeman/foreman-packaging.git
+        dest: /home/vagrant/foreman-packaging
+        version: rpm/develop
+
+    - name: Add vagrant user to mock group
+      user:
+        name: vagrant
+        groups: mock
+        append: true
+      become: true
+...

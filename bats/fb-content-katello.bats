@@ -200,7 +200,6 @@ setup() {
 }
 
 @test "check available errata" {
-  skip # due to broken subscription-manager in EL7.7 -- https://bugzilla.redhat.com/show_bug.cgi?id=1741577
   local next_wait_time=0
   until hammer host errata list --host $HOSTNAME | grep 'RHEA-2012:0055'; do
     if [ $next_wait_time -eq 14 ]; then
@@ -270,6 +269,10 @@ setup() {
 }
 
 @test "try fetching docker content" {
+  FOREMAN_VERSION=$(tForemanVersion)
+  if [[ $(printf "${FOREMAN_VERSION}\n1.20" | sort --version-sort | tail -n 1) == "1.20" ]] ; then
+    skip "docker v2 API is not supported on this version"
+  fi
   tPackageInstall podman
   podman login $HOSTNAME -u admin -p changeme
   DOCKER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${DOCKER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`

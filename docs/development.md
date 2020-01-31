@@ -254,7 +254,7 @@ Single module PR in `99-local.yaml`:
 ansible:
   variables:
     foreman_installer_module_prs:
-      - katello/katello_devel/97
+      - theforeman/katello_devel/97
 ```
 
 Multiple modules:
@@ -262,8 +262,8 @@ Multiple modules:
 ansible:
   variables:
     foreman_installer_module_prs:
-      - katello/katello_devel/97
-      - katello/qpid/34
+      - theforeman/katello_devel/97
+      - theforeman/qpid/34
 ```
 
 ### Branches

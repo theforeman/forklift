@@ -31,6 +31,7 @@
     - foreman_server_repositories
     - update_os_packages
     - haveged
+    - enable_ipv6
     - disable_firewall
     - foreman_installer
 
