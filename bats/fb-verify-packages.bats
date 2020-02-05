@@ -12,7 +12,7 @@ load foreman_helper
 
   if tIsRedHatCompatible; then
     if [ $FOREMAN_VERSION == '1.20' ]; then
-      if [ `yum list installed | grep -q -E 'rh-ruby24|tfm-ror51'` ]; then
+      if [ `yum list installed | grep -q -E 'rh-ruby24|tfm-ror51|tfm-ror52'` ]; then
         exit 1
       fi
     fi
