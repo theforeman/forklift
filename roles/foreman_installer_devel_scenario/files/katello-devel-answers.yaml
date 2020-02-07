@@ -32,6 +32,7 @@ puppet:
 foreman_proxy::plugin::pulp:
   enabled: true
   pulpnode_enabled: false
+  pulpcore_enabled: true
 foreman_proxy::plugin::abrt: false
 foreman_proxy::plugin::ansible: false
 foreman_proxy::plugin::chef: false
