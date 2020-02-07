@@ -7,6 +7,7 @@ dependencies:
     foreman_server_repositories_foreman_client: true
   - role: ruby_scl
   - role: nodejs_scl
+  - role: postgresql_scl
   - role: foreman_installer_devel_scenario
   - role: foreman_installer
     katello_repositories_version: nightly
