@@ -1,0 +1,19 @@
+---
+- name: 'Install SCL repository'
+  yum:
+    name: centos-release-scl-rh
+    state: present
+
+- name: 'Install PostgreSQL SCL'
+  yum:
+    name:
+      - "{{ postgresql_scl_version }}"
+    state: present
+
+- name: Enable and configure SCL at login
+  blockinfile:
+    dest: /etc/profile.d/enable-{{ postgresql_scl_version }}.sh
+    create: yes
+    block: |
+      #!/bin/bash
+      source scl_source enable {{ postgresql_scl_version }}
