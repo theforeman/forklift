@@ -113,7 +113,19 @@
     owner: root
     group: apache
 
+- name: Deploy pulp_rpm.conf for http
+  template:
+    src: templates/pulp_rpm.conf.j2
+    dest: /etc/httpd/conf.d/pulp_rpm.conf
+    owner: root
+    group: apache
 
+- name: Deploy pulp_file.conf for https
+  template:
+    src: templates/pulp_rpm.conf.j2
+    dest: /etc/httpd/conf.d/05-foreman-ssl.d/pulp_rpm.conf
+    owner: root
+    group: apache
 #ansible galaxy support
 - name: Deploy pulp_ansible.conf for https
   template:

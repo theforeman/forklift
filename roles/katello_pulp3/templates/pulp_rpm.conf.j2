@@ -1,0 +1,5 @@
+ProxyRequests Off
+ProxyPreserveHost On
+ProxyPass /pulp/repos http://localhost:24816/pulp/content retry=0
+ProxyPassReverse /pulp/repos/ http://localhost:24816/pulp/content
+
