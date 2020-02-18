@@ -75,6 +75,11 @@ centos7-dynflow-devel:
       dynflow_devel_github_username: '<REPLACE ME>'
       dynflow_devel_github_fork_remote_name: 'origin'
 
+centos7-katello-nightly-stable:
+  box_name: katello/katello-nightly
+  memory: 12288
+  hostname: centos7-katello-nightly-stable.example.com
+
 centos7-katello-devel-stable:
   box_name: katello/katello-devel
   memory: 12288
