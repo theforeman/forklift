@@ -4,14 +4,11 @@ This covers how to setup and configure a development environment using the Forkl
 
  * [Development Environment Deployment](#development-environment-deployment)
    * [Deploy a Katello Development Environment](#deploy-a-katello-development-environment)
-   * [Deploy a Stable Katello Development Box](#deploy-a-stable-katello-development-box)
    * [Starting the Development Server](#starting-the-development-server)
    * [Customizing the Development Environment](#customizing-the-development-environment)
    * [Reviewing Pull Requests](#reviewing-pull-requests)
  * [Use Koji Scratch Builds](#koji-scratch-builds)
- * [Test Puppet Module Pull Requests](#test-puppet-module-pull-requests)
- * [Jenkins Job Builder](#jenkins-job-builder-development)
- * [Redmine Development](#redmine-development)
+ * [Test Puppet Module Pull Requests](#test-puppet-module)
  * [Hammer Development](#hammer-development)
  * [Capsule Development](#capsule-development)
  * [Client Development](#client-development)
@@ -69,47 +66,13 @@ bundle exec foreman start
 
 #### Using the stable Katello development box
 
-When spinning up a Katello development environment locally, it can take a while to install and isn't always guaranteed to finish successfully. A stable box image of a fully installed Katello development environment is created nightly and [is published to Vagrant cloud](https://app.vagrantup.com/katello/boxes/katello-devel) when the install succeeds. This image will have a Katello development environment successfully installed, ready to use. At this moment, you will have to manually configure any personal customizations such as github remotes.
+When spinning up a Katello development environment locally, it can take a while to install and isn't always guaranteed to finish successfully. A stable Katello development environment was created to ensure an environment is always available to developers.
 
-In the `vagrant/boxes.d/99-local.example` file, a box using this image is available under the name `centos7-katello-devel-stable`. If it's the first time spinning this box up, you can do the following to create the box:
+The Katello development stable box is named `centos7-katello-devel-stable`. Please see the [documentation on stable boxes](./stable_boxes.md) for more information on how to use this box.
 
-1. Copy `vagrant/boxes.d/99-local.yaml.example` to `vagrant/boxes.d/99-local.yaml`. If you already have a `99-local.yaml`, you can copy the entries in `99-local.yaml.example` to your `99-local.yaml`.
-2. `vagrant up centos7-katello-devel-stable` to spin up the box
+After spinning up `centos7-katello-devel-stable`, it's a good idea to pull the latest git branches and update gems and npm packages after spinning up a stable box. If a stable box image hasn't been published in a while, these can be out-of-date. 
 
-This will spin up a Katello development environment in the time it takes to download from Vagrant cloud.
-
-#### Creating a new stable Katello development box with the latest box image
-
-*Note: the following is only applicable after you have already spun up a `centos7-katello-devel-stable` box. If this is your first time spinning one up, only follow the instructions above*
-
-Once you have spun up the `centos7-katello-devel-stable` box once, you will want to update the box image used by Vagrant before spinning up another `centos7-katello-devel-stable` box. Without updating the box image, Vagrant will use the latest image downloaded locally instead of the latest image published to Vagrant cloud. This workflow is useful when you want an updated "fresh" environment with the latest backend systems, newer deployment changes, and updated packages. You can run the following to destroy your existing box, upgrade the box image to the latest one available, and spin up a new box.
-
-1. `vagrant destroy centos7-katello-devel-stable`
-2. `vagrant box update centos7-katello-devel-stable`
-3. `vagrant up centos7-katello-devel-stable`
-
-Note that it is recommended that you destroy your `centos7-katello-devel-stable` box and create a new one because the stable development environment uses a fixed hostname. If you would like to create multiple stable Katello devel boxes by using multiple box entries, you will need a way to manage having multiple machines with the same hostname. For example, you can keep your `/etc/hosts` file on your hypervisor always pointed to the box you want to use. The previous box's entry in `~/.ssh/known_hosts` will have to be removed as well. You don't have to worry about this if you only keep one environment around at a time.
-
-#### Cleanup after updating the `centos7-katello-devel-stable` box
-
-You may also want to clean up old box images:
-```
-vagrant box prune katello/katello-devel
-```
-
-And you will have to remove the corresponding volumes with virsh as well since vagrant won't remove them from libvirt. For example:
-```
-# sudo virsh vol-list --pool default
- Name                                                                      Path
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1018.1354.img   /var/lib/libvirt/images/katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1018.1354.img
- katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1021.1130.img   /var/lib/libvirt/images/katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1021.1130.img
-
-# sudo virsh vol-delete --pool default katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1018.1354.img
-Vol katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1018.1354.img deleted
-```
-
-For more information on how this box is created, see [the packer directory](../packer/README.md)
+At this moment, you will have to manually configure any personal customizations such as github remotes.
 
 ### Starting the Development Server
 
