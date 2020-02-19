@@ -13,6 +13,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
    - [Post Install Playbooks](#post-install-playbooks)
  * [Production Environments](docs/production.md)
  * [Development Environments](docs/development.md)
+ * [Stable Boxes](docs/stable_boxes.md)
  * [Testing Environments](docs/testing.md)
  * [Provisioning environment](docs/provision.md)
  * [Plugins](docs/plugins.md)
