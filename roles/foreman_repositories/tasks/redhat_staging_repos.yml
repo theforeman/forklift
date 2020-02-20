@@ -36,3 +36,6 @@
     gpgcheck: 0
   tags:
     - packages
+  when:
+    - foreman_repositories_version != "nightly"
+    - foreman_repositories_version is version('1.24', '<=')
