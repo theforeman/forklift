@@ -4,6 +4,7 @@ This covers how to setup and configure a development environment using the Forkl
 
  * [Development Environment Deployment](#development-environment-deployment)
    * [Deploy a Katello Development Environment](#deploy-a-katello-development-environment)
+   * [Deploy a Stable Katello Development Box](#deploy-a-stable-katello-development-box)
    * [Starting the Development Server](#starting-the-development-server)
    * [Customizing the Development Environment](#customizing-the-development-environment)
    * [Reviewing Pull Requests](#reviewing-pull-requests)
@@ -63,8 +64,6 @@ bundle exec foreman start
 ```
 
 ### Deploy a Stable Katello Development Box
-
-#### Using the stable Katello development box
 
 When spinning up a Katello development environment locally, it can take a while to install and isn't always guaranteed to finish successfully. A stable Katello development environment was created to ensure an environment is always available to developers.
 

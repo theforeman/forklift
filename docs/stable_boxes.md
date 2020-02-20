@@ -69,9 +69,9 @@ At this time any personalizations, such as github remotes, are not configured on
 
 #### The workflow
 
-Box images are created with Vagrant's [Packer tool](https://packer.io). To view development documentation, see [the packer directory's README](../packer/README).
+Box images are created with Vagrant's [Packer tool](https://packer.io). To view development documentation, see [the packer directory's README](../packer/README.md).
 
-Packer will create an image by bootstrapping an operating system from a kickstart file and then running the ansible playbook we specify in the Packer template. A cron job (or other automated job) will use Packer to create this box on a set schedule. If the box succeeds in it's installation, it is published to Vagrant cloud. This ensures that only successfully installed boxes are used for the stable image.
+Packer will create an image by bootstrapping an operating system from a kickstart file and then run the ansible playbook specified in the Packer template. A cron job (or other automated job) will use Packer to create this box on a set schedule. If the box succeeds in its installation, it is published to Vagrant cloud. This ensures that only successfully installed boxes are used for the stable image.
 
 #### Example publishing workflow
 
