@@ -29,6 +29,10 @@ puppet:
   server_foreman_ssl_ca: /etc/pki/katello/puppet/puppet_client_ca.crt
   server_foreman_ssl_cert: /etc/pki/katello/puppet/puppet_client.crt
   server_foreman_ssl_key: /etc/pki/katello/puppet/puppet_client.key
+  # Tune the server for a minimal deployment
+  puppet_server_jvm_max_heap_size: 1G
+  puppet_server_jvm_min_heap_size: 1G
+  puppet_server_max_active_instances: 1
 foreman_proxy::plugin::pulp:
   enabled: true
   pulpnode_enabled: false
