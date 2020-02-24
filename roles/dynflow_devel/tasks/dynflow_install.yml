@@ -24,7 +24,6 @@
   yum:
     name:
       - gcc-c++
-      - mysql-devel
       - postgresql-devel
       - sqlite-devel
     state: present
