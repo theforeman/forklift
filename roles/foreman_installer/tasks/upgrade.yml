@@ -8,6 +8,7 @@
 
 - set_fact:
     foreman_installer_options_internal_use_only: "{{ [ '--upgrade', '--certs-update-all' ] + foreman_installer_options_internal_use_only }}"
+  when: foreman_installer_version_file['content'] | b64decode is version('2.1', '<')
 
 - name: 'Run installer upgrade'
   import_tasks: "install.yml"
