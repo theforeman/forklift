@@ -4,14 +4,6 @@
     msg: 'foreman_installer_options must be an array'
   when: foreman_installer_options is string
 
-- name: 'Read installer version'
-  slurp:
-    src: /usr/share/foreman-installer/VERSION
-  register: foreman_installer_version_file
-
-- debug:
-    msg: "Foreman installer version {{ foreman_installer_version_file['content'] | b64decode }}"
-
 - name: 'Join options'
   set_fact:
     foreman_installer_options_joined: "{{ foreman_installer_options | join(' ') }} {{ foreman_installer_options_internal_use_only | join(' ') }}"
