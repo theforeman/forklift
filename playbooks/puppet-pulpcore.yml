@@ -1,0 +1,96 @@
+# This playbook uses https://github.com/theforeman/puppet-pulpcore to deploy a standalone pulp3 server.
+# It is useful both for testing changes to puppet-pulpcore as well as for setting up a pulp3 playground environment.
+#
+# You can edit the task "Clone puppet-pulpcore" to point to a different remote or branch as necessary.
+#
+# You can edit the task "Deploy test.pp" if you want to test the module using some different params.
+#
+# To use the playbook, first create a box, e.g. centos7: `$ vagrant up centos7`
+# Then run the playbook on the box you created: `$ ansible-playbook -l centos7 playbooks/puppet-pulpcore.yml`
+---
+- hosts: all
+  become: true
+  roles:
+    - puppet_repositories
+    - epel_repositories
+
+  tasks:
+    - name: "Enable pulpcore repository"
+      yum_repository:
+        name: pulpcore-nightly
+        description: Pulpcore nightly YUM repo
+        baseurl: https://fedorapeople.org/groups/katello/releases/yum/nightly/pulpcore/el7/x86_64/
+        gpgcheck: no
+        enabled: yes
+
+- hosts: all
+  tasks:
+
+    - name: 'Install packages'
+      yum:
+        name:
+          - ruby-devel
+          - rubygem-bundler
+          - libxml2-devel
+          - ruby
+          - rake
+          - gcc
+          - wget
+          - git
+          - nss
+          - puppet
+          - glib2
+          - centos-release-scl-rh
+        state: "present"
+      become: true
+
+    - name: "Install librarian-puppet"
+      gem:
+        name: librarian-puppet
+        state: present
+
+    - name: "Clone puppet-pulpcore"
+      git:
+        repo: https://github.com/theforeman/puppet-pulpcore.git
+        dest: "/home/vagrant/puppet-pulpcore"
+        version: master
+
+    - name: "Deploy Puppetfile"
+      copy:
+        content: "forge \"https://forgeapi.puppetlabs.com\"\nmetadata"
+        dest: "/home/vagrant/puppet-pulpcore/Puppetfile"
+
+    - name: "Install Puppet modules"
+      shell: "/home/vagrant/bin/librarian-puppet install"
+      args:
+        chdir: "/home/vagrant/puppet-pulpcore"
+      remote_user: "vagrant"
+
+    - name: "Link pulpcore puppet module"
+      file:
+        state: link
+        src: "/home/vagrant/puppet-pulpcore"
+        dest: "/home/vagrant/puppet-pulpcore/modules/pulpcore"
+
+    - name: "Deploy test.pp"
+      copy:
+        content: |
+          class { 'postgresql::globals':
+            version              => '10',
+            client_package_name  => 'rh-postgresql10-postgresql-syspaths',
+            server_package_name  => 'rh-postgresql10-postgresql-server-syspaths',
+            contrib_package_name => 'rh-postgresql10-postgresql-contrib-syspaths',
+            service_name         => 'postgresql',
+            datadir              => '/var/lib/pgsql/data',
+            confdir              => '/var/lib/pgsql/data',
+            bindir               => '/usr/bin',
+          }
+          class { pulpcore:
+            postgresql_manage_db => false,
+            postgresql_db_ssl    => true,
+          }
+        dest: "/home/vagrant/test.pp"
+
+    - name: "Run puppet apply"
+      become: true
+      shell: "/opt/puppetlabs/bin/puppet apply --modulepath=/home/vagrant/puppet-pulpcore/modules /home/vagrant/test.pp"
