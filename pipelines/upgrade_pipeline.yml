@@ -25,15 +25,15 @@
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
       scenario_version: "{{ forklift_upgrade_version_start }}"
-    - umask
-    - selinux
-    - etc_hosts
-    - foreman_server_repositories
-    - update_os_packages
-    - haveged
-    - enable_ipv6
-    - disable_firewall
-    - foreman_installer
+    - role: enable_ipv6
+    - role: disable_firewall
+    - role: foreman_server_repositories
+    - role: update_os_packages
+    - role: umask
+    - role: selinux
+    - role: etc_hosts
+    - role: koji
+    - role: haveged
 
 - name: install server
   hosts:

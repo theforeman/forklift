@@ -11,8 +11,6 @@
     - "{{ forklift_server_name }}"
     - "{{ forklift_proxy_name }}"
   become: yes
-  vars:
-    foreman_installer_skip_installer: true
   vars_files:
     - vars/install_base.yml
     - vars/{{ pipeline_type }}_base.yml
@@ -25,10 +23,11 @@
     - role: disable_firewall
     - role: foreman_server_repositories
     - role: update_os_packages
-    - role: foreman
-      when: pipeline_type == 'foreman'
-    - role: katello
-      when: pipeline_type != 'foreman'
+    - role: umask
+    - role: selinux
+    - role: etc_hosts
+    - role: koji
+    - role: haveged
 
 - name: install server
   hosts:
