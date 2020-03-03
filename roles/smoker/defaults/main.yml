@@ -5,7 +5,7 @@ smoker_directory: "{{ ansible_env.HOME }}/smoker"
 smoker_variables: {}
 smoker_variables_path: "{{ smoker_directory }}/variables.json"
 smoker_base_url:
-smoker_command_args: "--driver chrome --variables '{{ smoker_variables_path }}' --base-url '{{ smoker_base_url }}'"
+smoker_command_args: "--driver chrome --variables '{{ smoker_variables_path }}' --base-url '{{ smoker_base_url }}' -vv"
 smoker_markers:
 smoker_browser_packages:
   - chromium
