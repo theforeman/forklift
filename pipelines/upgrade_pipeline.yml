@@ -11,8 +11,6 @@
     - "{{ forklift_server_name }}"
     - "{{ forklift_proxy_name }}"
   become: yes
-  vars:
-    foreman_installer_skip_installer: true
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
