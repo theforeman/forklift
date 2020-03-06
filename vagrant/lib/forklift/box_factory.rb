@@ -42,8 +42,8 @@ module Forklift
 
         next if box_config.key?('exclude') && box_config['exclude'].any? { |exclude| name.match(/#{exclude}/) }
 
-        box['name'] = name
         box = layer_base_box(box)
+        box['name'] = name
 
         if @boxes[name]
           @boxes[name].deep_merge!(box)
@@ -77,7 +77,9 @@ module Forklift
     def layer_base_box(box)
       return box unless (base_box = find_base_box(box['box']))
 
-      deep_merge(base_box, box)
+      merged = clone_hash(base_box)
+      merged.deep_merge!(box)
+      merged
     end
 
     def find_base_box(name)
@@ -87,10 +89,10 @@ module Forklift
     end
 
     def build_box(base_box, group, playbook, version)
-      box = JSON.parse(JSON.dump(base_box))
+      box = clone_hash(base_box)
 
       variables = {}
-      variables.merge!(box['ansible']['variables']) if box['ansible'] && box['ansible']['variables']
+      variables.deep_merge!(box['ansible']['variables']) if box.dig('ansible', 'variables')
       variables.merge!(
         'foreman_repositories_version' => version['foreman'],
         'foreman_client_repositories_version' => version['foreman'],
@@ -107,6 +109,10 @@ module Forklift
       }
 
       box
+    end
+
+    def clone_hash(hash)
+      JSON.parse(JSON.dump(hash))
     end
 
   end
