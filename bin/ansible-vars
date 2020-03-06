@@ -11,4 +11,4 @@ loader.load!
 
 names = $*
 boxes = names.any? ? loader.boxes.select { |name, box| names.include?(name) } : loader.boxes
-puts Hash[boxes.map { |name, box| [name, (box['ansible'] || {})['variables'] || {}] }].to_json
+puts Hash[boxes.map { |name, box| [name, box.dig('ansible', 'variables') || {}] }].to_json
