@@ -1,12 +1,45 @@
 foreman_server_repositories_katello: true
-foreman_installer_scenario: katello
+foreman_server_repositories_ostree: true
 foreman_installer_disable_system_checks: true
 server_box:
   box: "{{ pipeline_os }}"
   memory: 8192
+  ansible:
+    variables:
+      foreman_installer_scenario: katello
+      foreman_installer_additional_packages:
+        - katello
+      foreman_installer_options:
+        - "--puppet-server-max-active-instances 1"
+        - "--puppet-server-jvm-min-heap-size 1G"
+        - "--puppet-server-jvm-max-heap-size 1G"
+        - "--enable-foreman-cli-discovery"
+        - "--enable-foreman-cli-openscap"
+        - "--enable-foreman-cli-remote-execution"
+        - "--enable-foreman-cli-tasks"
+        - "--enable-foreman-cli-templates"
+        - "--enable-foreman-cli-virt-who-configure"
+        - "--enable-foreman-plugin-ansible"
+        - "--enable-foreman-plugin-bootdisk"
+        - "--enable-foreman-plugin-discovery"
+        - "--enable-foreman-plugin-hooks"
+        - "--enable-foreman-plugin-openscap"
+        - "--enable-foreman-plugin-remote-execution"
+        - "--enable-foreman-plugin-templates"
+        - "--enable-foreman-plugin-virt-who-configure"
 proxy_box:
   box: "{{ pipeline_os }}"
   memory: 3072
+  ansible:
+    variables:
+      foreman_installer_scenario: foreman-proxy-content
+      foreman_installer_additional_packages:
+        - foreman-proxy-content
+      foreman_installer_options:
+        - "--enable-foreman-proxy-plugin-ansible"
+        - "--enable-foreman-proxy-plugin-discovery"
+        - "--enable-foreman-proxy-plugin-openscap"
+        - "--enable-foreman-proxy-plugin-remote-execution-ssh"
 forklift_boxes:
   "{{ {forklift_server_name: server_box, forklift_proxy_name: proxy_box, forklift_smoker_name: smoker_box} }}"
 bats_tests_additional:
