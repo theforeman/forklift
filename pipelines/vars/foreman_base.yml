@@ -1,12 +1,13 @@
 foreman_installer_scenario: foreman
-foreman_installer_options_internal_use_only:
-  - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
-  - "--puppet-server-max-active-instances 1"
-  - "--puppet-server-jvm-min-heap-size 1G"
-  - "--puppet-server-jvm-max-heap-size 1G"
 server_box:
   box: "{{ pipeline_os }}"
   memory: 4680
+  ansible:
+    variables:
+      foreman_installer_options:
+        - "--puppet-server-max-active-instances 1"
+        - "--puppet-server-jvm-min-heap-size 1G"
+        - "--puppet-server-jvm-max-heap-size 1G"
 forklift_boxes:
   "{{ {forklift_server_name: server_box, forklift_smoker_name: smoker_box} }}"
 bats_tests:

@@ -25,15 +25,11 @@
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
       scenario_version: "{{ forklift_upgrade_version_start }}"
-    - umask
-    - selinux
-    - etc_hosts
-    - foreman_server_repositories
-    - update_os_packages
-    - haveged
-    - enable_ipv6
-    - disable_firewall
-    - foreman_installer
+    - role: enable_ipv6
+    - role: disable_firewall
+    - role: foreman_server_repositories
+    - role: update_os_packages
+    - role: foreman
 
 - name: install server
   hosts:
@@ -43,7 +39,6 @@
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
-    - vars/{{ pipeline_type }}_server.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -60,10 +55,9 @@
   become: yes
   vars_files:
     - vars/upgrade_base.yml
-    - vars/{{ pipeline_type }}_proxy.yml
+    - vars/{{ pipeline_type }}_base.yml
   vars:
     foreman_proxy_content_server: "{{ forklift_server_name }}"
-    foreman_installer_disable_system_checks: true
     foreman_installer_options_internal_use_only:
       - "--certs-tar-file {{ foreman_proxy_content_certs_tar }}"
       - "--foreman-proxy-trusted-hosts {{ server_fqdn.stdout }}"
@@ -73,6 +67,9 @@
       - "--foreman-proxy-oauth-consumer-secret {{ oauth_consumer_secret.stdout }}"
       - "--foreman-proxy-content-parent-fqdn {{ server_fqdn.stdout }}"
       - "--puppet-server-foreman-url https://{{ server_fqdn.stdout }}"
+      - "--puppet-server-max-active-instances 1"
+      - "--puppet-server-jvm-min-heap-size 1G"
+      - "--puppet-server-jvm-max-heap-size 1G"
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -92,7 +89,6 @@
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
-    - vars/{{ pipeline_type }}_server.yml
   vars:
     foreman_installer_upgrade: True
   roles:
@@ -115,7 +111,6 @@
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_release.yml
-    - vars/{{ pipeline_type }}_proxy.yml
   vars:
     foreman_installer_upgrade: True
     foreman_proxy_content_upgrade: True
@@ -143,7 +138,6 @@
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_staging.yml
-    - vars/{{ pipeline_type }}_server.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -167,7 +161,6 @@
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
     - vars/{{ pipeline_type }}_base_staging.yml
-    - vars/{{ pipeline_type }}_proxy.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
