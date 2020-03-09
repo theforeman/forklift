@@ -45,11 +45,7 @@ module Forklift
         box = layer_base_box(box)
         box['name'] = name
 
-        if @boxes[name]
-          @boxes[name].deep_merge!(box)
-        else
-          @boxes[name] = box
-        end
+        @boxes[name] = @boxes.key?(name) ? deep_merge(@boxes[name], box) : box
       end
     end
 
@@ -78,8 +74,7 @@ module Forklift
       return box unless (base_box = find_base_box(box['box']))
 
       merged = clone_hash(base_box)
-      merged.deep_merge!(box)
-      merged
+      deep_merge(merged, box)
     end
 
     def find_base_box(name)
@@ -92,7 +87,7 @@ module Forklift
       box = clone_hash(base_box)
 
       variables = {}
-      variables.deep_merge!(box['ansible']['variables']) if box.dig('ansible', 'variables')
+      variables = clone_hash(box['ansible']['variables']) if box.dig('ansible', 'variables')
       variables.merge!(
         'foreman_repositories_version' => version['foreman'],
         'foreman_client_repositories_version' => version['foreman'],
