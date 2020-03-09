@@ -9,6 +9,9 @@
 - debug:
     msg: "Foreman installer version {{ foreman_installer_version_file['content'] | b64decode }}"
 
+- set_fact:
+    foreman_installer_version: "{{ foreman_installer_version_file['content'] | b64decode }}"
+
 - include_tasks: locales.yml
   when: ansible_os_family == 'Debian'
 

@@ -6,11 +6,18 @@
   import_role:
     name: update_os_packages
 
-- set_fact:
+- name: 'Set foreman installer options for upgrade'
+  set_fact:
     foreman_installer_options_internal_use_only: "{{ [ '--upgrade', '--certs-update-all' ] + foreman_installer_options_internal_use_only }}"
-  when: foreman_installer_version_file['content'] | b64decode is version('2.1', '<')
+  when: foreman_installer_version is version('2.1', '<')
+
+- name: 'Set foreman installer options for upgrade'
+  set_fact:
+    foreman_installer_options_internal_use_only: "{{ foreman_installer_options_internal_use_only.remove('--upgrade') }}"
+  when: foreman_installer_version is version('2.1', '>=') and '--upgrade' in foreman_installer_options_internal_use_only
 
 - name: 'Run installer upgrade'
   import_tasks: "install.yml"
   vars:
     foreman_installer_disable_system_checks: true
+    foreman_installer_options_internal_use_only: "{{ foreman_installer_options_internal_use_only }}"

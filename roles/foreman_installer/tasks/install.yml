@@ -4,6 +4,9 @@
     msg: 'foreman_installer_options must be an array'
   when: foreman_installer_options is string
 
+- debug:
+    msg: "{{ foreman_installer_options_internal_use_only }}"
+
 - name: 'Join options'
   set_fact:
     foreman_installer_options_joined: "{{ foreman_installer_options | join(' ') }} {{ foreman_installer_options_internal_use_only | join(' ') }}"
@@ -11,7 +14,7 @@
 - name: 'Replace certs-tar and --inital-admin parms with legacy options'
   set_fact:
     foreman_installer_options_joined: "{{ foreman_installer_options_joined | replace(item.new, item.old) }}"
-  when: foreman_installer_version_file['content'] | b64decode is version('1.21', '<')
+  when: foreman_installer_version is version('1.21', '<')
   with_items:
     - { new: '--certs-tar-file', old: '--foreman-proxy-content-certs-tar' }
     - { new: '--foreman-initial-admin-email', old: '--foreman-admin-email' }
