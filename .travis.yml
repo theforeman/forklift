@@ -1,23 +1,11 @@
-language: python
-python:
-  - 2.7
+language: ruby
+rvm:
+  - "2.0.0"
 dist: bionic
-addons:
-  apt:
-    packages:
-      - ansible-lint
-      - ruby-bundler
 script:
   - |
     if git diff origin/master --name-only | grep -q "vagrant"; then
       cd vagrant
-      bundle install
+      bundle install --jobs=3 --retry=3
       bundle exec rake
-    fi
-
-  - |
-    if git diff origin/master --name-only | grep -q "playbooks\|roles\|containers/roles"; then
-      ansible-lint -r rules/ playbooks/*
-      ansible-lint -r rules/ roles/*
-      ansible-lint -r rules/ containers/roles/*
     fi
