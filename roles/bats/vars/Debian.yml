@@ -3,4 +3,3 @@ bats_packages:
   - curl
   - ruby
   - git
-  - sosreport
