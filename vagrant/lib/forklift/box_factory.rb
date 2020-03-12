@@ -87,7 +87,7 @@ module Forklift
       box = clone_hash(base_box)
 
       variables = {}
-      variables = clone_hash(box['ansible']['variables']) if box.dig('ansible', 'variables')
+      variables = clone_hash(box['ansible']['variables']) if box['ansible'] && box['ansible']['variables']
       variables.merge!(
         'foreman_repositories_version' => version['foreman'],
         'foreman_client_repositories_version' => version['foreman'],
