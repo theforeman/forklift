@@ -25,5 +25,5 @@
   apt:
     name: 'openjdk-8-jre-headless'
     state: present
-    default_release: "{{ansible_distribution_release}}-backports"
+    default_release: "{{ ansible_distribution_release }}-backports"
   when: ansible_distribution_release == "jessie"

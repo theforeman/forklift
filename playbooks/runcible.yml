@@ -36,10 +36,10 @@
       become: true
 
     - name: "Install RVM gpg key"
-      shell: "gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3"
+      command: "gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3"
 
     - name: "Install RVM"
-      shell: "curl -sSL https://get.rvm.io | bash -s stable --ruby"
+      command: "curl -sSL https://get.rvm.io | bash -s stable --ruby"
 
     - name: "Install librarian-puppet"
       gem:
@@ -57,7 +57,7 @@
         dest: "/home/vagrant/puppet-pulp/Puppetfile"
 
     - name: "Install Puppet modules"
-      shell: "/home/vagrant/bin/librarian-puppet install"
+      command: "/home/vagrant/bin/librarian-puppet install"
       args:
         chdir: "/home/vagrant/puppet-pulp"
       remote_user: "vagrant"
@@ -83,7 +83,7 @@
 
     - name: "Run puppet apply"
       become: true
-      shell: "/opt/puppetlabs/bin/puppet apply --modulepath=/home/vagrant/puppet-pulp/modules /home/vagrant/test.pp"
+      command: "/opt/puppetlabs/bin/puppet apply --modulepath=/home/vagrant/puppet-pulp/modules /home/vagrant/test.pp"
 
     - name: "Open up permissions on server.conf"
       become: true
@@ -106,6 +106,6 @@
         chdir: "/home/vagrant/runcible"
 
     - name: "Run tests"
-      shell: "rake test mode=all"
+      command: "rake test mode=all"
       args:
         chdir: "/home/vagrant/runcible"

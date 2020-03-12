@@ -24,7 +24,8 @@
     mode: 0700
   become: true
 
-- lineinfile:
+- name: "Ensure public key is in authorized_keys"
+  lineinfile:
     line:  "{{ lookup('file', unpriviledged_user_import_ssh_pub_key) }}"
     path:  "/home/{{ unpriviledged_user_username }}/.ssh/authorized_keys"
     create: yes

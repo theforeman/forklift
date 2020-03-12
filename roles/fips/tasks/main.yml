@@ -1,6 +1,6 @@
 ---
 - name: 'Install dracut-fips'
-  package: 
+  package:
     name: dracut-fips
     state: present
 
@@ -21,7 +21,7 @@
   ignore_errors: true
 
 - name: Waiting for reboot
-  local_action: wait_for 
+  local_action: wait_for
                 host={{ ansible_ssh_host }}
                 state=started
 
