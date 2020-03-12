@@ -14,7 +14,7 @@
 - include_tasks: ssh.yml
 
 - name: robottelo properties file
-  shell: cp robottelo.properties.sample robottelo.properties
+  command: cp robottelo.properties.sample robottelo.properties
   args:
     chdir: "{{ robottelo_directory }}"
 
