@@ -8,12 +8,10 @@ class TaskVariableHasSpace(AnsibleLintRule):
     description = ''
     tags = ['task']
 
-    compiled = re.compile(ur'{{(\w*)}}')
+    compiled = re.compile(r'{{(\w*)}}')
 
     def match(self, file, text):
         m = self.compiled.search(text)
         if m:
             return True
         return False
-
-
