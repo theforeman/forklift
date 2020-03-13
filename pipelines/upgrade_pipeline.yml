@@ -16,7 +16,7 @@
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
-    - vars/{{ pipeline_type }}_base_release.yml
+    - vars/repos_release.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -38,7 +38,7 @@
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
-    - vars/{{ pipeline_type }}_base_release.yml
+    - vars/repos_release.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -88,7 +88,7 @@
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
-    - vars/{{ pipeline_type }}_base_release.yml
+    - vars/repos_release.yml
   vars:
     foreman_installer_upgrade: True
   roles:
@@ -110,7 +110,7 @@
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
-    - vars/{{ pipeline_type }}_base_release.yml
+    - vars/repos_release.yml
   vars:
     foreman_installer_upgrade: True
     foreman_proxy_content_upgrade: True
@@ -137,7 +137,7 @@
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
-    - vars/{{ pipeline_type }}_base_staging.yml
+    - vars/repos_staging.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -160,7 +160,7 @@
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
-    - vars/{{ pipeline_type }}_base_staging.yml
+    - vars/repos_staging.yml
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
@@ -180,7 +180,7 @@
   vars_files:
     - vars/upgrade_base.yml
     - vars/{{ pipeline_type }}_base.yml
-    - vars/{{ pipeline_type }}_base_staging.yml
+    - vars/repos_staging.yml
   environment:
     FOREMAN_EXPECTED_VERSION: "{{ foreman_expected_version | default('') }}"
   roles:
