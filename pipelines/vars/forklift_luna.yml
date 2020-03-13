@@ -1,11 +1,11 @@
-foreman_server_repositories_katello: true
-foreman_server_repositories_ostree: true
-foreman_installer_disable_system_checks: true
 server_box:
   box: "{{ pipeline_os }}"
   memory: 8192
   ansible:
     variables:
+      foreman_server_repositories_katello: true
+      foreman_server_repositories_ostree: true
+      foreman_installer_disable_system_checks: true
       foreman_installer_scenario: katello
       foreman_installer_additional_packages:
         - katello
@@ -27,11 +27,16 @@ server_box:
         - "--enable-foreman-plugin-remote-execution"
         - "--enable-foreman-plugin-templates"
         - "--enable-foreman-plugin-virt-who-configure"
+      bats_tests_additional:
+        - fb-proxy.bats
 proxy_box:
   box: "{{ pipeline_os }}"
   memory: 3072
   ansible:
     variables:
+      foreman_server_repositories_katello: true
+      foreman_server_repositories_ostree: true
+      foreman_installer_disable_system_checks: true
       foreman_installer_scenario: foreman-proxy-content
       foreman_installer_additional_packages:
         - foreman-proxy-content
@@ -42,5 +47,3 @@ proxy_box:
         - "--enable-foreman-proxy-plugin-remote-execution-ssh"
 forklift_boxes:
   "{{ {forklift_server_name: server_box, forklift_proxy_name: proxy_box, forklift_smoker_name: smoker_box} }}"
-bats_tests_additional:
-  - fb-proxy.bats
