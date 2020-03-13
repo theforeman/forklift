@@ -2,7 +2,7 @@
   hosts: localhost
   vars_files:
     - vars/install_base.yml
-    - vars/{{ pipeline_type }}_base.yml
+    - vars/forklift_{{ pipeline_type }}.yml
   roles:
     - forklift
 
@@ -15,7 +15,6 @@
     foreman_installer_skip_installer: true
   vars_files:
     - vars/install_base.yml
-    - vars/{{ pipeline_type }}_base.yml
     - vars/repos_staging.yml
   roles:
     - role: forklift_versions
@@ -33,7 +32,6 @@
   become: yes
   vars_files:
     - vars/install_base.yml
-    - vars/{{ pipeline_type }}_base.yml
     - vars/repos_staging.yml
   roles:
     - role: forklift_versions
@@ -47,7 +45,6 @@
   become: yes
   vars_files:
     - vars/install_base.yml
-    - vars/{{ pipeline_type }}_base.yml
     - vars/repos_staging.yml
   vars:
     foreman_proxy_content_server: "{{ forklift_server_name }}"
@@ -76,7 +73,6 @@
   become: true
   vars_files:
     - vars/install_base.yml
-    - vars/{{ pipeline_type }}_base.yml
     - vars/repos_staging.yml
   environment:
     FOREMAN_EXPECTED_VERSION: "{{ foreman_expected_version | default('') }}"
@@ -93,7 +89,6 @@
     - "{{ forklift_smoker_name }}"
   vars_files:
     - vars/install_base.yml
-    - vars/{{ pipeline_type }}_base.yml
   vars:
     smoker_base_url: "https://{{ forklift_server_name }}.{{ ansible_domain }}"
     smoker_variables:
