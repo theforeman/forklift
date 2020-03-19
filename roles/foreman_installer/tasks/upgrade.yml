@@ -16,4 +16,4 @@
 - name: 'Run installer upgrade'
   import_tasks: "install.yml"
   vars:
-    foreman_installer_disable_system_checks: foreman_installer_scenario != 'foreman'
+    foreman_installer_disable_system_checks: "{{ foreman_installer_scenario != 'foreman' }}"
