@@ -1,0 +1,17 @@
+---
+- name: run tests
+  hosts:
+    - "{{ forklift_server_name }}"
+  become: true
+  vars_files:
+    - ../vars/install_base.yml
+    - ../vars/repos_staging.yml
+  environment:
+    FOREMAN_EXPECTED_VERSION: "{{ foreman_expected_version | default('') }}"
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+    - role: foreman_client_repositories
+      when: pipeline_type != 'foreman'
+    - role: foreman_testing

@@ -1,0 +1,24 @@
+---
+- name: prepare boxes, update os, configure repos, configure os
+  hosts:
+    - "{{ forklift_server_name }}"
+    - "{{ forklift_proxy_name }}"
+  become: yes
+  vars:
+    foreman_installer_skip_installer: true
+  vars_files:
+    - ../vars/upgrade_base.yml
+    - ../vars/repos_release.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+      upgrade: True
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ forklift_upgrade_version_start }}"
+    - role: enable_ipv6
+    - role: disable_firewall
+    - role: foreman_server_repositories
+    - role: update_os_packages
+    - role: foreman

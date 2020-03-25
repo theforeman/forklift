@@ -1,0 +1,17 @@
+---
+- name: install server
+  hosts:
+    - "{{ forklift_server_name }}"
+  become: yes
+  vars_files:
+    - ../vars/upgrade_base.yml
+    - ../vars/repos_release.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+      upgrade: True
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ forklift_upgrade_version_start }}"
+    - foreman_installer
