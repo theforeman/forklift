@@ -1,0 +1,20 @@
+---
+- name: upgrade server to final version
+  hosts:
+    - "{{ forklift_server_name }}"
+  become: yes
+  vars:
+    foreman_installer_upgrade: True
+  vars_files:
+    - ../vars/upgrade_base.yml
+    - ../vars/repos_staging.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+      upgrade: True
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ forklift_upgrade_version_final }}"
+    - foreman_server_repositories
+    - foreman_installer

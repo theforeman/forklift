@@ -1,0 +1,21 @@
+---
+- name: run tests
+  hosts:
+    - "{{ forklift_server_name }}"
+  become: yes
+  vars_files:
+    - ../vars/upgrade_base.yml
+    - ../vars/repos_staging.yml
+  environment:
+    FOREMAN_EXPECTED_VERSION: "{{ foreman_expected_version | default('') }}"
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+      upgrade: True
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ forklift_upgrade_version_final }}"
+    - role: foreman_client_repositories
+      when: pipeline_type != 'foreman'
+    - role: foreman_testing

@@ -1,0 +1,21 @@
+---
+- name: upgrade server to intermediate version
+  hosts:
+    - "{{ forklift_server_name }}"
+  become: true
+  vars_files:
+    - ../vars/upgrade_base.yml
+    - ../vars/repos_release.yml
+  vars:
+    foreman_installer_upgrade: True
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ pipeline_version }}"
+      upgrade: True
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_version: "{{ forklift_upgrade_version_intermediate }}"
+    - foreman_server_repositories
+    - role: foreman_installer
+      foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
