@@ -1,6 +1,5 @@
 - hosts: localhost
   vars_files:
-    - vars/katello_base.yml
     - vars/katello_devel.yml
   roles:
     - forklift
@@ -8,23 +7,9 @@
 - hosts:
   - pipeline-katello-devel-centos7
   become: yes
-  vars:
-    foreman_installer_skip_installer: true
   vars_files:
-  - vars/katello_base.yml
-  - vars/katello_base_staging.yml
-  - vars/katello_devel.yml
+  - vars/repos_staging.yml
   roles:
   - role: disable_firewall
-  - role: foreman_server_repositories
   - role: update_os_packages
   - role: katello_devel
-
-- hosts: pipeline-katello-devel-centos7
-  become: yes
-  vars_files:
-    - vars/katello_base.yml
-    - vars/katello_base_staging.yml
-    - vars/katello_devel.yml
-  roles:
-    - foreman_installer

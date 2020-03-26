@@ -10,7 +10,6 @@ dependencies:
   - role: postgresql_scl
   - role: foreman_installer_devel_scenario
   - role: foreman_installer
-    katello_repositories_version: nightly
     foreman_installer_scenario: katello-devel
     foreman_installer_additional_packages:
       - foreman-installer-katello

@@ -1,16 +1,10 @@
-forklift_name: pipeline-katello-devel
+forklift_name: pipeline-katello-devel-centos7
 forklift_boxes:
   pipeline-katello-devel-centos7:
     box: centos7
     memory: 8192
-katello_repositories_version: nightly
-katello_repositories_pulp_version: nightly
-foreman_repositories_version: nightly
-foreman_client_repositories_version: "{{ foreman_repositories_version }}"
-foreman_installer_scenario: katello-devel
-foreman_installer_additional_packages:
-  - foreman-installer-katello
-foreman_installer_disable_system_checks: true
-foreman_installer_options_internal_use_only:
-  - "--katello-devel-enable-ostree=true"
-
+    variables:
+      katello_repositories_version: nightly
+      katello_repositories_pulp_version: nightly
+      foreman_repositories_version: nightly
+      foreman_client_repositories_version: nightly
