@@ -3,7 +3,6 @@
   local_action:
     module: stat
     path: "{{ playbook_dir | dirname }}/user_devel_env_files/"
-  become: no
   register: custom_home
 
 - name: Copy files to home directory
