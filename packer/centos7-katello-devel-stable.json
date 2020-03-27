@@ -20,7 +20,6 @@
             "ssh_username": "{{user `user`}}",
             "ssh_password": "{{user `password`}}",
             "ssh_wait_timeout": "20m",
-            "http_directory": "http",
             "boot_wait": "2s",
             "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
             "qemuargs": [
