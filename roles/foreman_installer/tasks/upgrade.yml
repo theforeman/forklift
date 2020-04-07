@@ -7,6 +7,8 @@
   import_role:
     name: update_os_packages
 
+- include_tasks: installer_version.yml
+
 - set_fact:
     foreman_installer_options_internal_use_only: "{{ [ '--upgrade', '--certs-update-all' ] + foreman_installer_options_internal_use_only }}"
   when:
