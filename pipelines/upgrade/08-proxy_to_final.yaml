@@ -4,7 +4,6 @@
     - "{{ forklift_proxy_name }}"
   become: yes
   vars:
-    foreman_installer_upgrade: True
     foreman_proxy_content_upgrade: True
     foreman_proxy_content_server: "{{ forklift_server_name }}"
   vars_files:
@@ -20,4 +19,3 @@
       scenario_version: "{{ forklift_upgrade_version_final }}"
     - foreman_server_repositories
     - foreman_proxy_content
-    - foreman_installer
