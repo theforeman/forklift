@@ -1,0 +1,7 @@
+- name: 'Read installer version'
+  slurp:
+    src: /usr/share/foreman-installer/VERSION
+  register: foreman_installer_version_file
+
+- debug:
+    msg: "Foreman installer version {{ foreman_installer_version_file['content'] | b64decode }}"

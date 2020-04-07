@@ -1,4 +1,6 @@
 ---
+- include_tasks: installer_version.yml
+
 - name: 'Check if foreman_installer_options is a string'
   fail:
     msg: 'foreman_installer_options must be an array'
