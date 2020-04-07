@@ -3,7 +3,7 @@
   hosts:
     - "{{ forklift_smoker_name }}"
   vars_files:
-    - ../vars/install_base.yml
+    - ../vars/upgrade_base.yml
   vars:
     smoker_base_url: "https://{{ forklift_server_name }}.{{ ansible_domain }}"
     smoker_variables:
