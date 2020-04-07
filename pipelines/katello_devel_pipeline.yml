@@ -1,15 +1,3 @@
-- hosts: localhost
-  vars_files:
-    - vars/katello_devel.yml
-  roles:
-    - forklift
-
-- hosts:
-  - pipeline-katello-devel-centos7
-  become: yes
-  vars_files:
-  - vars/repos_staging.yml
-  roles:
-  - role: disable_firewall
-  - role: update_os_packages
-  - role: katello_devel
+---
+- import_playbook: katello_devel/01-boxes.yaml
+- import_playbook: katello_devel/02-install.yaml
