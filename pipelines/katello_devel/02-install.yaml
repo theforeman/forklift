@@ -1,0 +1,10 @@
+---
+- hosts:
+  - pipeline-katello-devel-centos7
+  become: yes
+  vars_files:
+  - ../vars/repos_staging.yml
+  roles:
+  - role: disable_firewall
+  - role: update_os_packages
+  - role: katello_devel
