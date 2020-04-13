@@ -1,19 +1,20 @@
 ---
-- name: 'Ensure libselinux-python is installed'
-  package:
-    name: '{{ item }}'
-    state: present
-  with_items:
-    - libselinux-python
-    - libsemanage-python
-  tags:
-    - env_setup
-  when: ansible_os_family == 'RedHat'
+- when: ansible_os_family == 'RedHat'
+  block:
+    - set_fact:
+        selinux_packages: ['libselinux-python', 'libsemanage-python']
+      when: ansible_distribution_major_version == '7'
 
-- name: 'Set selinux state'
-  selinux:
-    policy: targeted
-    state: "{{ selinux_state }}"
-  tags:
-    - env_setup
-  when: ansible_os_family == 'RedHat'
+    - name: 'Ensure python selinux packages are installed'
+      package:
+        name: "{{ selinux_packages }}"
+        state: present
+      tags:
+        - env_setup
+
+    - name: 'Set selinux state'
+      selinux:
+        policy: targeted
+        state: "{{ selinux_state }}"
+      tags:
+        - env_setup
