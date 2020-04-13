@@ -1,2 +1,4 @@
 ---
 selinux_state: 'enforcing'
+selinux_packages:
+  - python3-libsemanage
