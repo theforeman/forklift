@@ -86,5 +86,12 @@ fi
 
 @test "apply class with puppet agent" {
   puppet agent -v -o --no-daemonize
-  grep -i puppet /etc/chrony.conf
+
+  if tIsDebianCompatible ; then
+    chrony_conf='/etc/chrony/chrony.conf'
+  else
+    chrony_conf='/etc/chrony.conf'
+  fi
+
+  grep -i puppet ${chrony_conf}
 }
