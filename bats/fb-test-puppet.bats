@@ -54,15 +54,15 @@ fi
     modpath=/etc/puppet/environments/production/modules
   fi
 
-  if [ ! -d $modpath/chrony ]; then
-    puppet module install -i $modpath -v 0.3.2 aboe/chrony
+  if [ ! -d $modpath/ntp ]; then
+    puppet module install -i $modpath -v 4.2.0 puppetlabs/ntp
   fi
-  [ -e $modpath/chrony/manifests/init.pp ]
+  [ -e $modpath/ntp/manifests/init.pp ]
 }
 
-@test "import chrony puppet class" {
+@test "import ntp puppet class" {
   hammer proxy import-classes --name $(hostname -f)
-  count=$(hammer --csv puppet-class list --search 'name = chrony' | wc -l)
+  count=$(hammer --csv puppet-class list --search 'name = ntp' | wc -l)
   [ $count -gt 1 ]
 }
 
@@ -79,12 +79,12 @@ fi
 }
 
 @test "assign puppet class to host" {
-  id=$(hammer --csv puppet-class list --search 'name = chrony' | tail -n1 | cut -d, -f1)
+  id=$(hammer --csv puppet-class list --search 'name = ntp' | tail -n1 | cut -d, -f1)
   pc_ids=$(hammer host update --help | awk '/class-ids/ {print $1}')
   hammer host update $pc_ids $id --name $(hostname -f)
 }
 
 @test "apply class with puppet agent" {
   puppet agent -v -o --no-daemonize
-  grep -i puppet /etc/chrony.conf
+  grep -i puppet /etc/ntp.conf
 }
