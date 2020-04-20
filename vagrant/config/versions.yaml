@@ -72,5 +72,6 @@ installers:
     boxes:
       - 'centos7'
       - 'centos7-fips'
+      - 'centos8'
       - 'debian10'
       - 'ubuntu1804'
