@@ -3,7 +3,6 @@
   become: true
   vars:
     vagrant_libvirt: true
-    vagrant_version: 2.1.1
   roles:
     - role: libvirt
     - role: vagrant
