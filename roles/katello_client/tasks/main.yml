@@ -16,6 +16,7 @@
     username: "{{ katello_client_username }}"
     password: "{{ katello_client_password }}"
     server_insecure: "{{ katello_client_insecure }}"
+  ignore_errors: "{{ katello_client_ignore_registration_errors }}"
   when:
     - katello_client_activationkey == ""
 
@@ -25,6 +26,7 @@
     org_id: "{{ katello_client_organization }}"
     activationkey: "{{ katello_client_activationkey }}"
     server_insecure: "{{ katello_client_insecure }}"
+  ignore_errors: "{{ katello_client_ignore_registration_errors }}"
   when:
     - katello_client_activationkey != ""
 
