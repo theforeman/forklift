@@ -80,8 +80,7 @@ fi
 
 @test "assign puppet class to host" {
   id=$(hammer --csv puppet-class list --search 'name = motd' | tail -n1 | cut -d, -f1)
-  pc_ids=$(hammer host update --help | awk '/class-ids/ {print $1}')
-  hammer host update $pc_ids $id --name $(hostname -f)
+  hammer host update --puppet-class-ids $id --name $(hostname -f)
 }
 
 @test "apply class with puppet agent" {
