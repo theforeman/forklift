@@ -6,6 +6,12 @@
   tags:
     - packages
 
+- name: 'Create module_hotfixes config file'
+  copy:
+    dest: /etc/yum/foreman.conf
+    content: |
+      module_hotfixes=1
+
 - name: 'Foreman {{ foreman_repositories_version }} Koji repository'
   yum_repository:
     name: foreman-koji
@@ -13,6 +19,7 @@
     baseurl: "http://koji.katello.org/releases/yum/foreman-{{ foreman_repositories_version }}/RHEL/{{ ansible_distribution_major_version }}/x86_64/"
     priority: 1
     gpgcheck: 0
+    include: /etc/yum/foreman.conf
   tags:
     - packages
 
@@ -24,6 +31,7 @@
     baseurl: "http://koji.katello.org/releases/yum/foreman-plugins-{{ foreman_repositories_version }}/RHEL/{{ ansible_distribution_major_version }}/x86_64/"
     priority: 1
     gpgcheck: 0
+    include: /etc/yum/foreman.conf
   tags:
     - packages
 
