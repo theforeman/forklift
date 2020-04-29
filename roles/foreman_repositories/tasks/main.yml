@@ -1,9 +1,9 @@
 ---
 - include_tasks: "{{ ansible_os_family|lower }}_{{ foreman_repositories_environment }}_repos.yml"
 
-- name: 'Install foreman-release-scl'
+- name: 'Install centos-release-scl-rh'
   yum:
-    name: foreman-release-scl
+    name: centos-release-scl-rh
     state: latest
     update_cache: yes
   tags:
