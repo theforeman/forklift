@@ -32,5 +32,5 @@
 
 - name: 'set default templates for Fedora 27'
   shell: >
-    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_fedora27.Id }} --config-template-id {{ item.Id }}
+    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_fedora27.Id }} --provisioning-template-id {{ item.Id }}
   with_items: "{{ kickstart_templates }}"

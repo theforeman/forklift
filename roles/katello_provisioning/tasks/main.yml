@@ -253,12 +253,12 @@
 
 - name: 'set default templates for CentOS 7'
   shell: >
-    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --config-template-id {{ item.Id }}
+    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --provisioning-template-id {{ item.Id }}
   with_items: "{{ kickstart_templates }}"
 
 - name: 'overwrite default templates with katello specific ones for CentOS 7'
   shell: >
-    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --config-template-id {{ item.Id }}
+    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --provisioning-template-id {{ item.Id }}
   with_items: "{{ katello_kickstart_templates }}"
 
 # Host group

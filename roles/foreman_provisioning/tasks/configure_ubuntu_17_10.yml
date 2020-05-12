@@ -32,5 +32,5 @@
 
 - name: 'set default templates for Ubuntu 17.10'
   shell: >
-    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_ubuntu1710.Id }} --config-template-id {{ item.Id }}
+    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_ubuntu1710.Id }} --provisioning-template-id {{ item.Id }}
   with_items: "{{ preseed_templates }}"
