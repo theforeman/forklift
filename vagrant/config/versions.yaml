@@ -65,6 +65,17 @@ installers:
       - 'debian10'
       - 'ubuntu1804'
 
+  - foreman: '2.1'
+    katello: '3.16'
+    pulp: '2.21'
+    puppet: 6
+    boxes:
+      - 'centos7'
+      - 'centos7-fips'
+      - 'centos8'
+      - 'debian10'
+      - 'ubuntu1804'
+
   - foreman: 'nightly'
     katello: 'nightly'
     pulp: '2.21'
