@@ -23,11 +23,6 @@ boxes:
         - 'playbooks/katello_provisioning.yml'
       group: 'server'
 
-  runcible:
-    box: centos7
-    ansible:
-      playbook: 'playbooks/runcible.yml'
-
   centos7-luna:
     box: centos7
     ansible:
