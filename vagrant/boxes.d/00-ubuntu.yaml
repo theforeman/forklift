@@ -26,6 +26,7 @@ boxes:
       netplan generate
       netplan apply
       sed -i 's/^\(DNS=\)/#\1/' /etc/systemd/resolved.conf
+      sed -i 's/^DNSSEC=.*/DNSSEC=no/' /etc/systemd/resolved.conf
       systemctl restart systemd-resolved
     ansible:
       variables:
