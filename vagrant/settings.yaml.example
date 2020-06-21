@@ -12,6 +12,10 @@ ssh_forward_agent: True
 
 domain: 'example.com'
 
+# define the hostmanager plugin to get the ip from a chosen network interface
+# usefull when using briged network
+# hostmanager_ip_resolver_device: 'eth1'
+
 # https://github.com/mitchellh/vagrant-google
 google_project_id: "YOUR_GOOGLE_CLOUD_PROJECT_ID"
 google_client_email: "YOUR_SERVICE_ACCOUNT_EMAIL_ADDRESS"
