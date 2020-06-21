@@ -130,6 +130,18 @@ module Forklift
       config.hostmanager.manage_host = true
       config.hostmanager.manage_guest = true
       config.hostmanager.include_offline = true
+
+      return unless (dev = @settings['hostmanager_ip_resolver_device'])
+
+      config.hostmanager.ip_resolver = proc do |vm|
+        if vm.ssh_info && vm.ssh_info[:host]
+          result = ''
+          vm.communicate.execute("ip addr show #{dev}") do |type, data|
+            result = "#{result}#{data}" if type == :stdout
+          end
+          (ip = /inet (\d+\.\d+\.\d+\.\d+)/.match(result)) && ip[1]
+        end
+      end
     end
 
     def configure_vagrant_cachier(config)

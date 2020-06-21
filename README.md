@@ -93,6 +93,12 @@ allows completely automated dns resolution using dnsmasq from host to guest and 
 
 You can disable hostmanager in `vagrant/settings.yaml` by setting `hostmanager_enabled` option.
 
+When using a briged network or with multiple network interfaces, the hostmanager would resolve the internal ip from the ssh-info, you can choose an ip of a particular network interface in `vagrant/settings.yaml` by setting `hostmanager_ip_resolver_device` option with the device name.
+
+```yaml
+hostmanager_ip_resolver_device: 'eth1'
+```
+
 ### Adding Custom Boxes
 
 Sometimes you want to spin up the same box type (e.g. centos7-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file in vagrant/boxes.d/. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
