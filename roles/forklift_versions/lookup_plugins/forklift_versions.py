@@ -57,6 +57,7 @@ class LookupModule(LookupBase):
                 scenario = lookup_params['scenario']
                 if scenario != 'foreman':
                     scenario = 'katello'
+                scenario_os = lookup_params['scenario_os']
                 scenario_version = lookup_params['scenario_version']
                 versions_file_name = lookup_params['file']
                 upgrade = lookup_params.get('upgrade', False)
@@ -71,6 +72,8 @@ class LookupModule(LookupBase):
 
             if not upgrade:
                 for version in versions['installers']:
+                    if not scenario_os in version['boxes']:
+                        continue
                     if version[scenario] == scenario_version:
                         forklift_vars = {
                                 'foreman_repositories_version': version['foreman'],
@@ -85,6 +88,8 @@ class LookupModule(LookupBase):
             else:
                 upgrade_versions = set()
                 for version in reversed(versions['installers']):
+                    if not scenario_os in version['boxes']:
+                        continue
                     if version[scenario] == scenario_version:
                         upgrade_versions.add(scenario_version)
                     elif 1 <= len(upgrade_versions) < TOTAL_UPGRADE_VERSIONS:

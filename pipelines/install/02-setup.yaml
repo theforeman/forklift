@@ -12,6 +12,7 @@
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ pipeline_version }}"
     - role: enable_ipv6
     - role: disable_firewall

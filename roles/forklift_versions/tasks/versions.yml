@@ -1,7 +1,7 @@
 ---
 - name: get forklift versions
   set_fact:
-    forklift_versions: "{{ lookup('forklift_versions', 'file='+forklift_versions_file+' scenario='+scenario+' scenario_version='+scenario_version) }}"
+    forklift_versions: "{{ lookup('forklift_versions', 'file='+forklift_versions_file+' scenario='+scenario+' scenario_version='+scenario_version+' scenario_os='+scenario_os) }}"
 
 - name: set individual component vars
   set_fact: "{{ item.key }}={{ item.value }}"

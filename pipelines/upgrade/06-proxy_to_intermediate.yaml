@@ -12,10 +12,12 @@
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ pipeline_version }}"
       upgrade: True
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ forklift_upgrade_version_intermediate }}"
     - foreman_server_repositories
     - role: foreman_proxy_content
