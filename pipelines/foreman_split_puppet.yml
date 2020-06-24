@@ -16,6 +16,7 @@
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ pipeline_version }}"
     - role: foreman_server_repositories
     - role: update_os_packages
@@ -28,6 +29,7 @@
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ pipeline_version }}"
     - role: foreman_installer
       foreman_installer_options_internal_use_only:
@@ -53,6 +55,7 @@
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ pipeline_version }}"
     - role: puppet_agent
       puppet_agent_bootstrap_server: "{{ forklift_puppet_name }}.{{ ansible_domain }}"
@@ -73,6 +76,7 @@
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ pipeline_version }}"
     - role: puppet_agent
       puppet_agent_bootstrap_server: "{{ forklift_puppet_name }}.{{ ansible_domain }}"
@@ -103,6 +107,7 @@
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ pipeline_version }}"
     - role: foreman_installer
       foreman_installer_options_internal_use_only:

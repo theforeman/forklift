@@ -11,6 +11,7 @@
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ pipeline_version }}"
     - role: foreman_client_repositories
       when: pipeline_type != 'foreman'

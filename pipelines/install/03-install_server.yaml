@@ -9,5 +9,6 @@
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ pipeline_version }}"
     - foreman_installer
