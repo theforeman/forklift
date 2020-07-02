@@ -17,3 +17,13 @@ tForemanVersion() {
     fi
   ) | cut -d. -f1-2
 }
+
+tIsPulp2() {
+  tPackageExists pulp-server
+}
+
+tSkipIfNoPulp2() {
+  if ! tIsPulp2; then
+   skip "${1} is not available in scenarios without Pulp 2"
+  fi
+}

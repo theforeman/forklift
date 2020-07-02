@@ -61,22 +61,26 @@ setup() {
   curl http://$HOSTNAME/pulp/isos/${ORGANIZATION_LABEL}/Library/custom/${PRODUCT_LABEL}/${REPOSITORY_LABEL}/1.iso > /dev/null
 }
 
-@test "create a docker repository" {
+@test "create a container repository" {
   hammer repository create --organization="${ORGANIZATION}" --docker-upstream-name="fedora/ssh" --url=https://registry-1.docker.io/ \
-    --product="${PRODUCT}" --content-type="docker" --name "${DOCKER_REPOSITORY}" | grep -q "Repository created"
+    --product="${PRODUCT}" --content-type="docker" --name "${CONTAINER_REPOSITORY}" | grep -q "Repository created"
 }
 
-@test "sync docker repository" {
+@test "sync container repository" {
   hammer repository synchronize --organization="${ORGANIZATION}" \
-    --product="${PRODUCT}" --name="${DOCKER_REPOSITORY}"
+    --product="${PRODUCT}" --name="${CONTAINER_REPOSITORY}"
 }
 
 @test "create puppet repository" {
+  tSkipIfNoPulp2 "Puppet content"
+
   hammer repository create --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --content-type="puppet" --name "${PUPPET_REPOSITORY}" | grep -q "Repository created"
 }
 
 @test "upload puppet module" {
+  tSkipIfNoPulp2 "Puppet content"
+
   curl -o /tmp/stbenjam-dummy-0.2.0.tar.gz https://forgeapi.puppetlabs.com/v3/files/stbenjam-dummy-0.2.0.tar.gz
   tFileExists /tmp/stbenjam-dummy-0.2.0.tar.gz && hammer repository upload-content \
     --organization="${ORGANIZATION}" --product="${PRODUCT}" --name="${PUPPET_REPOSITORY}" \
@@ -93,7 +97,7 @@ setup() {
     --name="${CONTENT_VIEW}" | grep -q "Content view created"
 }
 
-@test "add repo to content view" {
+@test "add yum repo to content view" {
   repo_id=$(hammer repository list --organization="${ORGANIZATION}" \
     | grep ${YUM_REPOSITORY} | cut -d\| -f1 | egrep -i '[0-9]+')
   hammer content-view add-repository --organization="${ORGANIZATION}" \
@@ -211,14 +215,20 @@ setup() {
 }
 
 @test "install katello-agent" {
+  tSkipIfNoPulp2 "katello-agent support"
+
   tPackageInstall katello-agent && tPackageExists katello-agent
 }
 
 @test "30 sec of sleep for groggy gofers" {
+  tSkipIfNoPulp2 "katello-agent support"
+
   sleep 30
 }
 
 @test "install package remotely (katello-agent)" {
+  tSkipIfNoPulp2 "katello-agent support"
+
   # see http://projects.theforeman.org/issues/15089 for bug related to "|| true"
   run yum -y remove gorilla
   timeout 300 hammer host package install --host $HOSTNAME --packages gorilla || true
@@ -226,6 +236,8 @@ setup() {
 }
 
 @test "install errata remotely (katello-agent)" {
+  tSkipIfNoPulp2 "katello-agent support"
+
   # see http://projects.theforeman.org/issues/15089 for bug related to "|| true"
   timeout 300 hammer host errata apply --errata-ids 'RHEA-2012:0055' --host $HOSTNAME || true
   tPackageExists walrus-5.21
@@ -233,10 +245,14 @@ setup() {
 
 # it seems walrus lingers around making subsequent runs fail, so lets test package removal!
 @test "package remove (katello-agent)" {
+  tSkipIfNoPulp2 "katello-agent support"
+
   timeout 300 hammer host package remove --host $HOSTNAME --packages walrus
 }
 
 @test "add puppet module to content view" {
+  tSkipIfNoPulp2 "Puppet content"
+
   repo_id=$(hammer repository list --organization="${ORGANIZATION}" \
     | grep Puppet | cut -d\| -f1 | egrep -i '[0-9]+')
   module_id=$(hammer puppet-module list --repository-id=$repo_id | grep dummy | cut -d\| -f1)
@@ -244,38 +260,27 @@ setup() {
     --content-view="${CONTENT_VIEW}" --id=$module_id | grep -q "Puppet module added to content view"
 }
 
-@test "publish content view" {
+@test "publish content view with puppet content" {
+  tSkipIfNoPulp2 "Puppet content"
+
   hammer content-view publish --organization="${ORGANIZATION}" \
     --name="${CONTENT_VIEW}"
 }
 
-@test "promote content view" {
+@test "promote content view with puppet content" {
+  tSkipIfNoPulp2 "Puppet content"
+
   hammer content-view version promote  --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW}" --to-lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" --from-lifecycle-environment="Library"
 }
 
-@test "add puppetclass to host" {
-  # FIXME: If katello host is subscribed to itself, should it's puppet env also be updated? #7364
-  # Skipping because of http://projects.theforeman.org/issues/8244
-  skip
-  target_env=$(hammer environment list | grep KT_${ORGANIZATION_LABEL}_${LIFECYCLE_ENVIRONMENT_LABEL}_${CONTENT_VIEW_LABEL} | cut -d\| -f1)
-  hammer host update --name $HOSTNAME --environment-id=$target_env \
-    --puppetclass-ids=1 | grep -q "Host updated"
-}
-
-@test "puppet run applies dummy module" {
-  skip # because of above
-  puppet agent --test && grep -q Lorem /tmp/dummy
-}
-
-@test "try fetching docker content" {
+@test "try fetching container content" {
   FOREMAN_VERSION=$(tForemanVersion)
   if [[ $(printf "${FOREMAN_VERSION}\n1.20" | sort --version-sort | tail -n 1) == "1.20" ]] ; then
     skip "docker v2 API is not supported on this version"
   fi
   tPackageInstall podman
   podman login $HOSTNAME -u admin -p changeme
-  DOCKER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${DOCKER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`
-  podman pull "${HOSTNAME}/${DOCKER_PULL_LABEL}"
+  CONTAINER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`
+  podman pull "${HOSTNAME}/${CONTAINER_PULL_LABEL}"
 }
-
