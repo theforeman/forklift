@@ -17,6 +17,9 @@
     forklift_config:
       libvirt_options:
         volume_cache: unsafe
+      boxes:
+        exclude:
+          - '^[^p]'
   tasks:
     - name: 'Install Forklift dependencies'
       package:
