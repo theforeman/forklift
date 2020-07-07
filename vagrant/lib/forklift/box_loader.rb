@@ -15,6 +15,7 @@ module Forklift
       @locations.sort_by { |f| File.basename(f) }.each do |box_file|
         @box_factory.add_boxes!(box_file)
       end
+      @box_factory.filter_boxes!
     end
 
     def boxes
