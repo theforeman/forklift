@@ -163,6 +163,7 @@ module Forklift
       end
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
     def configure_ansible(machine, ansible, box_name)
       return unless ansible
 
@@ -189,6 +190,7 @@ module Forklift
         end
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     def configure_shell(machine, box)
       return unless box.key?('shell') && !box['shell'].nil?
