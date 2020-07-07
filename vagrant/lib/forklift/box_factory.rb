@@ -31,10 +31,8 @@ module Forklift
 
     def filter_boxes!
       box_config = Settings.new.settings['boxes']
-      # rubocop:disable Style/SafeNavigation
       return unless box_config && box_config.key?('exclude')
 
-      # rubocop:enable Style/SafeNavigation
       @boxes.reject! do |name, _box|
         box_config['exclude'].any? { |exclude| name.match(/#{exclude}/) }
       end

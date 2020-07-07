@@ -5,7 +5,7 @@ require_relative 'settings'
 module Forklift
   class BoxDistributor
 
-    VAGRANTFILE_API_VERSION = '2'
+    VAGRANTFILE_API_VERSION = '2'.freeze
 
     if Gem.loaded_specs['vagrant']
       SUPPORT_NAMED_PROVISIONERS = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
@@ -163,7 +163,6 @@ module Forklift
       end
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def configure_ansible(machine, ansible, box_name)
       return unless ansible
 
@@ -190,7 +189,6 @@ module Forklift
         end
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def configure_shell(machine, box)
       return unless box.key?('shell') && !box['shell'].nil?
