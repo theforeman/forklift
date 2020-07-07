@@ -30,10 +30,11 @@ module Forklift
     end
 
     def filter_boxes!
-      box_config = Settings.new.settings.key?('boxes') ? Settings.new.settings['boxes'] : {}
+      box_config = Settings.new.settings['boxes']
+      return unless box_config&.key?('exclude')
 
       @boxes.reject! do |name, _box|
-        box_config.key?('exclude') && box_config['exclude'].any? { |exclude| name.match(/#{exclude}/) }
+        box_config['exclude'].any? { |exclude| name.match(/#{exclude}/) }
       end
     end
 
