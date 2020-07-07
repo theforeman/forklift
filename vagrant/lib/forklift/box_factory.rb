@@ -29,6 +29,14 @@ module Forklift
       end
     end
 
+    def filter_boxes!
+      box_config = Settings.new.settings.key?('boxes') ? Settings.new.settings['boxes'] : {}
+
+      @boxes.reject! do |name, _box|
+        box_config.key?('exclude') && box_config['exclude'].any? { |exclude| name.match(/#{exclude}/) }
+      end
+    end
+
     private
 
     def load_box_file(file)
@@ -38,10 +46,6 @@ module Forklift
 
     def process_boxes!(boxes)
       boxes.each do |name, box|
-        box_config = Settings.new.settings.key?('boxes') ? Settings.new.settings['boxes'] : {}
-
-        next if box_config.key?('exclude') && box_config['exclude'].any? { |exclude| name.match(/#{exclude}/) }
-
         box = layer_base_box(box)
         box['name'] = name
 
