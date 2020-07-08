@@ -21,6 +21,22 @@ jobs:
           ansible-lint -r rules/ playbooks/*
           ansible-lint -r rules/ roles/*
 
+  molecule:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install molecule
+        run: pip install molecule
+      - name: Run tests
+        run: |
+          for roledir in roles/*/molecule; do
+            pushd $(dirname $roledir)
+            molecule test
+            popd
+          done
+
   vagrant:
     runs-on: ubuntu-latest
     defaults:
