@@ -37,5 +37,5 @@
 
     - name: 'Configure Forklift'
       copy:
-        content: "{{ forklift_config | to_nice_yaml }}"
+        content: "{{ forklift_config | to_json | from_json | to_nice_yaml }}"
         dest: "{{ forklift_dest }}/vagrant/settings.yaml"
