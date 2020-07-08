@@ -37,5 +37,7 @@
 
     - name: 'Configure Forklift'
       copy:
+        # the to_json/from_json is a workaround for https://github.com/ansible/ansible-lint/issues/776
+        # it can be removed when we use ansible-lint 4.3.0 as that contains a fix
         content: "{{ forklift_config | to_json | from_json | to_nice_yaml }}"
         dest: "{{ forklift_dest }}/vagrant/settings.yaml"
