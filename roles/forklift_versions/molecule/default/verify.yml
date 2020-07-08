@@ -1,0 +1,54 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: False
+  vars:
+    forklift_versions_file: "{{ playbook_dir }}/fixtures/versions.yaml"
+    pipeline_type: katello
+    pipeline_os: centos7
+    pipeline_version: nightly
+  tasks:
+    - name: "Include forklift_versions for installs"
+      include_role:
+        name: "forklift_versions"
+      vars:
+        scenario: "{{ pipeline_type }}"
+        scenario_os: "{{ pipeline_os }}"
+        scenario_version: "{{ pipeline_version }}"
+    - name: Ensure versions have been set correctly
+      assert:
+        that:
+          - foreman_repositories_version == 'nightly'
+          - katello_repositories_version == 'nightly'
+
+    - name: "Include forklift_versions for upgrades"
+      include_role:
+        name: "forklift_versions"
+      vars:
+        scenario: "{{ pipeline_type }}"
+        scenario_os: "{{ pipeline_os }}"
+        scenario_version: "{{ pipeline_version }}"
+        upgrade: True
+    - name: Ensure upgrade steps have been determined correctly
+      assert:
+        that:
+          - forklift_upgrade_version_start == '3.15'
+          - forklift_upgrade_version_intermediate == '3.16'
+          - forklift_upgrade_version_final == 'nightly'
+
+    - name: "Include forklift_versions for EL8 upgrades"
+      include_role:
+        name: "forklift_versions"
+      vars:
+        scenario: "{{ pipeline_type }}"
+        scenario_os: "centos8"
+        scenario_version: "{{ pipeline_version }}"
+        upgrade: True
+    - name: Ensure 3.15 was properly skipped
+      assert:
+        that:
+          - forklift_upgrade_version_start == '3.16'
+          - forklift_upgrade_version_intermediate == '3.16'
+          - forklift_upgrade_version_final == 'nightly'
