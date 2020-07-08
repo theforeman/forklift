@@ -9,5 +9,5 @@
   when: foreman_devel_github_push_ssh
 
 - name: setup reviewing script
-  include_role: 
+  include_role:
     name: reviewer

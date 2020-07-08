@@ -9,7 +9,8 @@
 
 - include_tasks: installer_version.yml
 
-- set_fact:
+- name: 'Set internal installer options'
+  set_fact:
     foreman_installer_options_internal_use_only: "{{ [ '--upgrade', '--certs-update-all' ] + foreman_installer_options_internal_use_only }}"
   when:
     - foreman_installer_version_file['content'] | b64decode is version('2.1', '<')
