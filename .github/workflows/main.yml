@@ -1,0 +1,38 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  COLORTERM: 'yes'
+  TERM: 'xterm-256color'
+  PYTEST_ADDOPTS: '--color=yes'
+
+jobs:
+  ansible-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install ansible-lint
+        run: pip install ansible-lint
+      - name: Run tests
+        run: |
+          ansible-lint -r rules/ playbooks/*
+          ansible-lint -r rules/ roles/*
+
+  vagrant:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vagrant
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.6'
+      - name: Install
+        run: bundle install
+      - name: Run tests
+        run: bundle exec rake
