@@ -1,5 +1,6 @@
 ---
-- set_fact:
+- name: set namespace, module_name and ref facts
+  set_fact:
     namespace: "{{ module.split('/')[0] }}"
     module_name: "{{ module.split('/')[1] | replace('puppet-', '') | replace('puppetlabs-', '') }}"
     ref: "{{ module.split('/')[2] }}"
@@ -18,11 +19,13 @@
     file_type: directory
   register: katello_module
 
-- set_fact:
+- name: define module_dir for foreman
+  set_fact:
     module_dir: /usr/share/foreman-installer/modules
   when: foreman_module.matched > 0
 
-- set_fact:
+- name: define module_dir for katello
+  set_fact:
     module_dir: /usr/share/katello-installer-base/modules
   when: katello_module.matched > 0
 
@@ -36,7 +39,7 @@
     repo: https://github.com/{{ namespace }}/puppet-{{ module_name }}.git
     dest: "{{ module_dir }}/{{ module_name }}"
 
-- name:
+- name: "fetch git PR"
   shell: >
       git fetch origin pull/{{ ref }}/head:pr &&
       git {{ foreman_installer_module_prs_strategy }} pr

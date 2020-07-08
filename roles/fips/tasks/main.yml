@@ -11,7 +11,7 @@
   command: 'findmnt -no uuid /boot'
   register: result
 
-- name: 'Edit kernel command-line to include the fips=1 and boot=UUID=XXXX or boot=LABEL=XXXX or boot=/dev/DEVICE argument'
+- name: 'Edit kernel command-line to include the fips=1 and boot=UUID=XXXX argument'
   shell: 'grubby --update-kernel=DEFAULT --args="fips=1 boot=UUID={{ result.stdout }}"'
 
 - name: reboot vm

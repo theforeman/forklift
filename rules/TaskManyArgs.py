@@ -7,7 +7,8 @@ class TaskManyArgs(AnsibleLintRule):
     tags = ['task']
 
     def match(self, file, text):
-        if text.lstrip().startswith('command:'):
+        text = text.lstrip()
+        if text.startswith('command:') or text.startswith('name:') or 'lookup(' in text:
             return False
 
         count = len([part for part in text.split(" ") if "=" in part])

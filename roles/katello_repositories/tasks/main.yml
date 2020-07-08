@@ -2,7 +2,8 @@
 - name: "Set up {{ katello_repositories_environment }} repositories"
   include_tasks: "{{ katello_repositories_environment }}_repos.yml"
 
-- command: dnf module -y enable pki-core
+- name: enable pki-core module
+  command: dnf module -y enable pki-core
   when: ansible_distribution_major_version == "8"
 
   # Required for el6 clients
