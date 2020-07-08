@@ -1,0 +1,7 @@
+---
+# this file is empty as the role does nothing but setting facts
+# see verify.yml for verification that this works properly
+- name: Converge
+  hosts: all
+  gather_facts: False
+  tasks: []
