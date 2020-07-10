@@ -1,2 +1,2 @@
 ---
-lint: yamllint --config-file ../../.yamllint --format parsable .
+lint: yamllint --config-file ${MOLECULE_PROJECT_DIRECTORY}/../../.yamllint --format parsable .
