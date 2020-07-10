@@ -1,0 +1,2 @@
+---
+lint: yamllint --config-file ../../.yamllint --format parsable .

@@ -7,4 +7,3 @@ driver:
       ansible_connection: local
 platforms:
  - name: instance
-lint: yamllint --config-file ../../.yamllint --format parsable .
