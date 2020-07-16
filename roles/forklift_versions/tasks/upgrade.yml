@@ -7,6 +7,7 @@
     scenario_os: "{{ scenario_os }}"
     upgrade: True
   register: forklift_upgrade_versions
+  delegate_to: localhost
 
 - name: set individual upgrade vars
   set_fact:
