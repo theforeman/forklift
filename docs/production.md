@@ -71,7 +71,7 @@ This use case assumes that you are on a box that has SSH access to the target bo
 
 For a release version in production:
 
-    ansible-playbook -l <target-host> playbooks/katello.yml -e foreman_repositories_version=1.17 -e katello_repositories_version=3.6
+    ansible-playbook -l <target-host> playbooks/katello.yml -e foreman_repositories_version=VERSIONYOUWANT -e katello_repositories_version=VERSIONYOUWANT
 
 For nightly production:
 
@@ -85,13 +85,14 @@ After installing a Katello server, you could then spin up a Capsule with the ass
 ### Local Deployment
 
 1. ssh to target machine **as root**
-2. Install Ansible -- `yum install ansible`
+2. Install Ansible -- `yum install ansible` (this will require the EPEL repo)
 3. Clone this repository - `git clone https://github.com/theforeman/forklift.git`
 4. Enter the repository - `cd forklift`
+5. Make sure DNS is set up properly. This is a Foreman requirement, not an Ansible requirement.
 
 For a release version in production:
 
-    ansible-playbook -l localhost playbooks/katello.yml -e foreman_repositories_version=1.17 -e katello_repositories_version=3.6
+    ansible-playbook -l localhost playbooks/katello.yml -e foreman_repositories_version=VERSIONYOUWANT -e katello_repositories_version=VERSIONYOUWANT
 
 For nightly production:
 
