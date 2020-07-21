@@ -1,8 +1,12 @@
+- name: 'set CentOS medium name'
+  set_fact:
+    centos_medium_name: "{{ 'CentOS 7 mirror' if foreman_provisioning_foreman_version == 'nightly' or (foreman_provisioning_foreman_version is version_compare('2.1', '>=')) else 'CentOS mirror' }}"
+
 - name: 'create CentOS 7'
   shell: >
     {{ foreman_provisioning_hammer }} os info --title "CentOS 7" ||
     {{ foreman_provisioning_hammer }} os create
-    --name CentOS --major 7 --architectures x86_64 --family 'Redhat' --media 'CentOS mirror' --partition-tables 'Kickstart default'
+    --name CentOS --major 7 --architectures x86_64 --family 'Redhat' --media '{{ centos_medium_name }}' --partition-tables 'Kickstart default'
 
 - name: 'find CentOS 7'
   shell: >

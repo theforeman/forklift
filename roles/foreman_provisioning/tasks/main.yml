@@ -60,7 +60,7 @@
     {{ foreman_provisioning_hammer }} hostgroup create
     --name 'CentOS 7 Mirror'
     --operatingsystem 'CentOS 7'
-    --medium 'CentOS mirror'
+    --medium '{{ centos_medium_name }}'
     --partition-table 'Kickstart default'
     --parent 'Base'
     {{ foreman_provisioning_hammer_taxonomy_params }}
