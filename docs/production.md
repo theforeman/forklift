@@ -85,7 +85,7 @@ After installing a Katello server, you could then spin up a Capsule with the ass
 ### Local Deployment
 
 1. ssh to target machine **as root**
-2. Install Ansible -- `yum install ansible` (this will require the EPEL repo)
+2. Install Ansible -- `yum install ansible` (for example from the EPEL repo)
 3. Clone this repository - `git clone https://github.com/theforeman/forklift.git`
 4. Enter the repository - `cd forklift`
 5. Make sure DNS is set up properly. This is a Foreman requirement, not an Ansible requirement.
