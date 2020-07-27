@@ -15,13 +15,16 @@ load foreman_helper
   fi
 
   local next_wait_time=0
-  until hammer ping; do
-    if [ $next_wait_time -eq 12 ]; then
-      # make one last try, also makes the error nice
-      hammer ping
-    fi
-    sleep $(( next_wait_time++ ))
+  until [ "${status:-1}" -eq 0 -o $next_wait_time -eq 12 ]; do
+    run hammer ping
+    [[ $status -eq 0 ]] || sleep $(( next_wait_time++ ))
   done
+
+  echo "${output}"
+
+  [ $status -eq 0 ]
+
+  [[ $output != *"FAIL"* ]]
 }
 
 @test "check service status" {
