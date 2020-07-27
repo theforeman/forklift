@@ -24,6 +24,8 @@ load foreman_helper
 
   [ $status -eq 0 ]
 
+  # Hammer exits with 0 on failures
+  # https://projects.theforeman.org/issues/30496
   [[ $output != *"FAIL"* ]]
 }
 
