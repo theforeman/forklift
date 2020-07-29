@@ -24,10 +24,16 @@ options:
     description: scenario version to look up
     required: True
   scenario_os:
-    descrption: scenario OS to look up
+    description: scenario OS to look up
     required: True
   upgrade:
     description: look up upgrade path instead of individual component versions
+    type: bool
+    default: False
+  upgrade_step:
+    description: how many versions to upgrade at once
+    type: int
+    default: 1
 """
 
 import yaml
@@ -51,7 +57,8 @@ def main():
             scenario=dict(type='str', required=True, choices=['foreman', 'katello', 'luna']),
             scenario_version=dict(type='str', required=True),
             scenario_os=dict(type='str', required=True),
-            upgrade=dict(type='bool', default=False)
+            upgrade=dict(type='bool', default=False),
+            upgrade_step=dict(type='int', default=1)
         ),
         supports_check_mode=True
     )
@@ -83,15 +90,14 @@ def main():
                 ret = forklift_vars
                 break
     else:
-        upgrade_versions = set()
+        possible_versions = set()
         for version in reversed(versions['installers']):
             if not scenario_os in version['boxes']:
                 continue
-            if version[scenario] == scenario_version:
-                upgrade_versions.add(scenario_version)
-            elif 1 <= len(upgrade_versions) < TOTAL_UPGRADE_VERSIONS:
-                upgrade_versions.add(version[scenario])
-
+            if version_sort_key(version[scenario]) <= version_sort_key(scenario_version):
+                possible_versions.add(version[scenario])
+        possible_versions = list(sorted(possible_versions, key=version_sort_key, reverse=True))
+        upgrade_versions = possible_versions[::module.params['upgrade_step']][:TOTAL_UPGRADE_VERSIONS]
         upgrade_versions = sorted(upgrade_versions, key=version_sort_key)
         while len(upgrade_versions) < TOTAL_UPGRADE_VERSIONS:
             upgrade_versions.insert(0, upgrade_versions[0])

@@ -38,6 +38,22 @@
           - forklift_upgrade_version_intermediate == '3.16'
           - forklift_upgrade_version_final == 'nightly'
 
+    - name: "Include forklift_versions for upgrades with upgrade_step=2"
+      include_role:
+        name: "forklift_versions"
+      vars:
+        scenario: "{{ pipeline_type }}"
+        scenario_os: "{{ pipeline_os }}"
+        scenario_version: "3.16"
+        upgrade: True
+        upgrade_step: 2
+    - name: Ensure upgrade steps have been determined correctly
+      assert:
+        that:
+          - forklift_upgrade_version_start == '3.12'
+          - forklift_upgrade_version_intermediate == '3.14'
+          - forklift_upgrade_version_final == '3.16'
+
     - name: "Include forklift_versions for EL8 upgrades"
       include_role:
         name: "forklift_versions"
