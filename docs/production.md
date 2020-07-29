@@ -92,7 +92,7 @@ After installing a Katello server, you could then spin up a Capsule with the ass
 
 For a release version in production:
 
-    ansible-playbook -l localhost playbooks/katello.yml -e foreman_repositories_version=VERSIONYOUWANT -e katello_repositories_version=VERSIONYOUWANT
+    ansible-playbook -l localhost playbooks/katello.yml -e foreman_repositories_version=WANTED_FOREMAN_VERSION -e katello_repositories_version=WANTED_KATELLO_VERSION
 
 For nightly production:
 
