@@ -48,7 +48,7 @@ setup() {
 }
 
 @test "create a file repository" {
-  hammer repository create --organization="${ORGANIZATION}" --url=https://repos.fedorapeople.org/repos/pulp/pulp/fixtures/file/ \
+  hammer repository create --organization="${ORGANIZATION}" --url=https://fixtures.pulpproject.org/file/ \
     --product="${PRODUCT}" --content-type="file" --name "${FILE_REPOSITORY}" | grep -q "Repository created"
 }
 
