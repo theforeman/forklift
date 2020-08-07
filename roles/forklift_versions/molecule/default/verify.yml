@@ -8,7 +8,7 @@
     forklift_versions_file: "{{ playbook_dir }}/fixtures/versions.yaml"
     pipeline_type: katello
     pipeline_os: centos7
-    pipeline_version: nightly
+    pipeline_version: '3.17'
   tasks:
     - name: "Include forklift_versions for installs"
       include_role:
@@ -20,8 +20,8 @@
     - name: Ensure versions have been set correctly
       assert:
         that:
-          - foreman_repositories_version == 'nightly'
-          - katello_repositories_version == 'nightly'
+          - foreman_repositories_version == '2.2'
+          - katello_repositories_version == '3.17'
 
     - name: "Include forklift_versions for upgrades"
       include_role:
@@ -36,7 +36,7 @@
         that:
           - forklift_upgrade_version_start == '3.15'
           - forklift_upgrade_version_intermediate == '3.16'
-          - forklift_upgrade_version_final == 'nightly'
+          - forklift_upgrade_version_final == '3.17'
 
     - name: "Include forklift_versions for upgrades with upgrade_step=2"
       include_role:
@@ -67,4 +67,4 @@
         that:
           - forklift_upgrade_version_start == '3.16'
           - forklift_upgrade_version_intermediate == '3.16'
-          - forklift_upgrade_version_final == 'nightly'
+          - forklift_upgrade_version_final == '3.17'
