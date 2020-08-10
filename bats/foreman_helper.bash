@@ -27,3 +27,12 @@ tSkipIfNoPulp2() {
    skip "${1} is not available in scenarios without Pulp 2"
   fi
 }
+
+tSkipIfHammerBelow018() {
+  RPM_VERSION=$(rpm -q --queryformat '%{VERSION}' tfm-rubygem-hammer_cli)
+
+  run rpmdev-vercmp $RPM_VERSION 0.18 > /dev/null
+  if [[ $status == 12 ]]; then
+   skip "Advanced content view tests are not available without hammer-cli >= 0.18"
+  fi
+}
