@@ -9,6 +9,7 @@
     upgrade_step: "{{ upgrade_step | default(omit) }}"
   register: forklift_upgrade_versions
   delegate_to: localhost
+  become: no
 
 - name: set individual upgrade vars
   set_fact:

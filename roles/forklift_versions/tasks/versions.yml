@@ -7,6 +7,7 @@
     scenario_os: "{{ scenario_os }}"
   register: forklift_versions
   delegate_to: localhost
+  become: no
 
 - name: set individual component vars
   set_fact: "{{ item.key }}={{ item.value }}"
