@@ -53,6 +53,7 @@ module Forklift
         config.vm.provider :libvirt do |domain|
           domain.memory = @settings['memory']
           domain.cpus   = @settings['cpus']
+          domain.random :model => 'random'
         end
 
         config.vm.provider :virtualbox do |domain|
