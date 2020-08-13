@@ -5,5 +5,4 @@ dependencies:
   - role: etc_hosts
   - role: koji
   - role: foreman_server_repositories
-  - role: haveged
   - role: foreman_installer
