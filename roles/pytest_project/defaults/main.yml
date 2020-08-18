@@ -7,6 +7,8 @@ pytest_project_virtualenv_path: "{{ pytest_project_directory }}/venv"
 pytest_project_packages:
   - git
   - python3
+  - python3-devel
+  - gcc
   # This should match the ansible_python_interpreter rather than the pytest's python
   - python-setuptools
 pytest_project_url:
