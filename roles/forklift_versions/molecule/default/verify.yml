@@ -22,6 +22,21 @@
         that:
           - foreman_repositories_version == '2.2'
           - katello_repositories_version == '3.17'
+          - pulpcore_repositories_version is not defined
+
+    - name: "Include forklift_versions for nightly installs"
+      include_role:
+        name: "forklift_versions"
+      vars:
+        scenario: "{{ pipeline_type }}"
+        scenario_os: "{{ pipeline_os }}"
+        scenario_version: "nightly"
+    - name: Ensure versions have been set correctly
+      assert:
+        that:
+          - foreman_repositories_version is defined
+          - katello_repositories_version is defined
+          - pulpcore_repositories_version is defined
 
     - name: "Include forklift_versions for upgrades"
       include_role:
