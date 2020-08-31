@@ -44,7 +44,7 @@
     - katello_repositories_pulp_version == "nightly"
     - ansible_distribution_major_version == '7'
 
-- name: 'Add Pulpcore repository'
+- name: 'Add Katello Pulpcore repository'
   yum_repository:
     name: pulpcore-repository
     description: Pulpcore repository for Katello {{ katello_repositories_version }}
@@ -53,7 +53,20 @@
     enabled: yes
     include: /etc/yum/foreman.conf
   when:
-    - katello_repositories_version == "nightly" or katello_repositories_version is version('3.15', '>=')
+    - katello_repositories_version != 'nightly'
+    - katello_repositories_version is version('3.15', '>=')
+    - katello_repositories_version is version('3.17', '<=')
+
+- name: 'Add Pulpcore repository'
+  yum_repository:
+    name: pulpcore-repository
+    description: Pulpcore repository for Katello {{ katello_repositories_version }}
+    baseurl: "https://yum.theforeman.org/pulpcore/{{ katello_repositories_pulpcore_version }}/el{{ ansible_distribution_major_version }}/x86_64/"
+    gpgcheck: no
+    enabled: yes
+    include: /etc/yum/foreman.conf
+  when:
+    - katello_repositories_version == "nightly" or katello_repositories_version is version('3.18', '>=')
 
 - name: 'Katello {{ katello_repositories_version }} Client Koji repository'
   yum_repository:
