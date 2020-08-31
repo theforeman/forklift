@@ -87,6 +87,8 @@ def main():
                         'pulp_repositories_version': version['pulp'],
                         'puppet_repositories_version': version['puppet'],
                         }
+                if 'pulpcore' in version:
+                    forklift_vars['pulpcore_repositories_version'] = version['pulpcore']
                 ret = forklift_vars
                 break
     else:

@@ -1,0 +1,8 @@
+---
+- name: "Add Pulpcore {{ pulpcore_repositories_version }} repository"
+  yum_repository:
+    name: pulpcore-repository
+    description: Pulpcore {{ pulpcore_repositories_version }}
+    baseurl: "https://yum.theforeman.org/pulpcore/{{ pulpcore_repositories_version }}/el{{ ansible_distribution_major_version }}/x86_64/"
+    gpgcheck: no
+    enabled: yes
