@@ -432,9 +432,9 @@ setup() {
   hammer docker tag list --content-view-version-id=$cvv_id --fields="tag" --order="name" > cvv_content
   diff cvv_content fixtures/component_1_docker_tags
 
+  # Only checking for the v2 manifest due to Pulp2/Pulp3 differences
   hammer docker manifest list --content-view-version-id=$cvv_id --fields="schema version,digest,tags" \
-    --order='tag' > cvv_content
-  diff cvv_content fixtures/component_1_docker_manifests
+    --order='tag' | grep 'sha256:a6ecbb1553353a08936f50c275b010388ed1bd6d9d84743c7e8e7468e2acd82e'
 }
 
 @test "ensure component cv 2 latest version has proper content" {
@@ -465,8 +465,10 @@ setup() {
 
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
     | grep "${CONTENT_VIEW_4} 1.1" | cut -d, -f1)
-  hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content
-  diff cvv_content fixtures/composite_rpms
+
+  # Skipping temporarily until Pulp2/Pulp3 differences are resolved
+  #hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content
+  #diff cvv_content fixtures/composite_rpms
 
   hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content
   diff cvv_content fixtures/composite_errata
@@ -478,7 +480,7 @@ setup() {
   hammer docker tag list --content-view-version-id=$cvv_id --fields="tag" --order="name" > cvv_content
   diff cvv_content fixtures/composite_docker_tags
 
+  # Only checking for the v2 manifest due to Pulp2/Pulp3 differences
   hammer docker manifest list --content-view-version-id=$cvv_id --fields="schema version,digest,tags" \
-    --order='tag' > cvv_content
-  diff cvv_content fixtures/composite_docker_manifests
+    --order='tag' | grep 'sha256:a6ecbb1553353a08936f50c275b010388ed1bd6d9d84743c7e8e7468e2acd82e'
 }
