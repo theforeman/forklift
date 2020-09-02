@@ -289,6 +289,8 @@ setup() {
 
 # TODO: Move modules-rpms to a more permanent repo https://pulp.plan.io/issues/7333
 @test "create and sync modules-rpms repo" {
+  tSkipIfHammerBelow018
+
   hammer repository create --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY_2}" \
     --url https://partha.fedorapeople.org/test-repos/separated/modules-rpms/ | grep -q "Repository created"
@@ -298,6 +300,8 @@ setup() {
 
 # TODO: Move rpm-deps to a more permanent repo https://pulp.plan.io/issues/7333
 @test "create and sync rpm-deps repo" {
+  tSkipIfHammerBelow018
+
   hammer repository create --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY_3}" \
     --url https://partha.fedorapeople.org/test-repos/separated/rpm-deps/ | grep -q "Repository created"
@@ -306,11 +310,15 @@ setup() {
 }
 
 @test "create first component content view" {
+  tSkipIfHammerBelow018
+
   hammer content-view create --organization="${ORGANIZATION}" \
     --name="${CONTENT_VIEW_2}" | grep -q "Content view created"
 }
 
 @test "add yum and docker repos to first component content view" {
+  tSkipIfHammerBelow018
+
   repo_id=$(hammer --csv --no-headers repository list --organization="${ORGANIZATION}" \
     | grep ${YUM_REPOSITORY} | cut -d, -f1)
   hammer content-view add-repository --organization="${ORGANIZATION}" \
@@ -330,6 +338,8 @@ setup() {
 }
 
 @test "add errata exclude filter to first component content view" {
+  tSkipIfHammerBelow018
+
   hammer content-view filter create --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW_2}" --name="${FILTER1}" --type=erratum
   hammer content-view filter rule create --organization="${ORGANIZATION}" \
@@ -337,6 +347,8 @@ setup() {
 }
 
 @test "add package exclude filter to first component content view" {
+  tSkipIfHammerBelow018
+
   hammer content-view filter create --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW_2}" --name="${FILTER2}" --type=rpm
   hammer content-view filter rule create --organization="${ORGANIZATION}" \
@@ -344,6 +356,8 @@ setup() {
 }
 
 @test "add module include filter to first component content view" {
+  tSkipIfHammerBelow018
+
   hammer content-view filter create --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW_2}" --name="${FILTER3}" --inclusion=true --type=modulemd
   modulemd_id=$(hammer --csv --no-headers module-stream list --organization="${ORGANIZATION}" \
@@ -353,44 +367,35 @@ setup() {
 }
 
 @test "publish first component content view" {
+  tSkipIfHammerBelow018
+
   hammer content-view publish --organization="${ORGANIZATION}" \
     --name="${CONTENT_VIEW_2}"
 }
 
-@test "create second component content view" {
-  hammer content-view create --organization="${ORGANIZATION}" \
-    --name="${CONTENT_VIEW_3}" | grep -q "Content view created"
-}
-
-@test "add needed-errata to the second component content view" {
-  repo_id=$(hammer --csv --no-headers repository list --organization="${ORGANIZATION}" \
-    | grep ${YUM_REPOSITORY} | cut -d, -f1)
-  hammer content-view add-repository --organization="${ORGANIZATION}" \
-    --name="${CONTENT_VIEW_3}" --repository-id=$repo_id | grep -q "The repository has been associated"
-}
-
-@test "publish second component content view" {
-  hammer content-view publish --organization="${ORGANIZATION}" \
-    --name="${CONTENT_VIEW_3}"
-}
-
 @test "create composite content view" {
-  cv_id1=$(hammer --csv --no-headers content-view list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_2}" | cut -d, -f1)
-  cv_id2=$(hammer --csv --no-headers content-view list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_3}" | cut -d, -f1)
+  tSkipIfHammerBelow018
+
+  cv_id1=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
+    | grep "${CONTENT_VIEW_2} 1.0" | cut -d, -f1)
+  cv_id2=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
+    | grep "${CONTENT_VIEW} 2.0" | cut -d, -f1)
   hammer content-view create --organization="${ORGANIZATION}" \
-    --name="${CONTENT_VIEW_4}" --composite --component-ids=$cv_id1,$cv_id2
+    --name="${CONTENT_VIEW_3}" --composite --component-ids=$cv_id1,$cv_id2
 }
 
 @test "publish and promote composite content view" {
+  tSkipIfHammerBelow018
+
   hammer content-view publish --organization="${ORGANIZATION}" \
-    --name="${CONTENT_VIEW_4}"
+    --name="${CONTENT_VIEW_3}"
   hammer content-view version promote --organization="${ORGANIZATION}" \
-    --content-view="${CONTENT_VIEW_4}" --to-lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" --from-lifecycle-environment="Library"
+    --content-view="${CONTENT_VIEW_3}" --to-lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" --from-lifecycle-environment="Library"
 }
 
 @test "incremental update first component cv with composite propagation" {
+  tSkipIfHammerBelow018
+
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
     | grep "${CONTENT_VIEW_2}" | cut -d, -f1)
   hammer content-view version incremental-update --organization="${ORGANIZATION}" \
@@ -399,6 +404,8 @@ setup() {
 }
 
 @test "ensure component cv 1 version 1.1 has proper environments" {
+  tSkipIfHammerBelow018
+
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
     | grep "${CONTENT_VIEW_2} 1.1" | cut -d, -f1)
   envs_found=$(hammer content-view version info --organization="${ORGANIZATION}" \
@@ -407,8 +414,10 @@ setup() {
 }
 
 @test "ensure composite cv version 1.1 has proper environments" {
+  tSkipIfHammerBelow018
+
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_4} 1.1" | cut -d, -f1)
+    | grep "${CONTENT_VIEW_3} 1.1" | cut -d, -f1)
   envs_found=$(hammer content-view version info --organization="${ORGANIZATION}" \
     --id=$cvv_id | grep -E "Name:  Library|Name:  ${LIFECYCLE_ENVIRONMENT}")
   echo $envs_found | grep -q "Name: Library Name: ${LIFECYCLE_ENVIRONMENT}"
@@ -425,7 +434,7 @@ setup() {
   hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content
   diff cvv_content fixtures/component_1_errata
 
-  hammer module-stream list --content-view-version-id=$cvv_id --order='name id' \
+  hammer module-stream list --content-view-version-id=$cvv_id --order='stream id' \
     --fields="module stream name,stream,version,architecture,context" > cvv_content
   diff cvv_content fixtures/component_1_modulemds
 
@@ -441,14 +450,14 @@ setup() {
   tSkipIfHammerBelow018
 
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_3} 1.0" | cut -d, -f1)
+    | grep "${CONTENT_VIEW} 2.0" | cut -d, -f1)
   hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content
   diff cvv_content fixtures/component_2_rpms
 
   hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content
   diff cvv_content fixtures/component_2_errata
 
-  hammer module-stream list --content-view-version-id=$cvv_id --order='name id' \
+  hammer module-stream list --content-view-version-id=$cvv_id --order='stream id' \
     --fields="module stream name,stream,version,architecture,context" > cvv_content
   diff cvv_content fixtures/component_2_modulemds
 
@@ -464,7 +473,7 @@ setup() {
   tSkipIfHammerBelow018
 
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_4} 1.1" | cut -d, -f1)
+    | grep "${CONTENT_VIEW_3} 1.1" | cut -d, -f1)
 
   # Skipping temporarily until Pulp2/Pulp3 differences are resolved
   #hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content
@@ -473,7 +482,7 @@ setup() {
   hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content
   diff cvv_content fixtures/composite_errata
 
-  hammer module-stream list --content-view-version-id=$cvv_id --order='name id' \
+  hammer module-stream list --content-view-version-id=$cvv_id --order='stream id' \
     --fields="module stream name,stream,version,architecture,context" > cvv_content
   diff cvv_content fixtures/composite_modulemds
 
