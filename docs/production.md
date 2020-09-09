@@ -52,7 +52,6 @@ Start the installation for CentOS 7:
 
     vagrant up centos7-katello-3.4
 
-This will create a libvirt based virtual machine running the Katello server on CentOS. 
 
 
 ## BYOB
@@ -68,7 +67,7 @@ This use case assumes that you are on a box that has SSH access to the target bo
 3. Enter the repository - `cd forklift`
 4. [Create an inventory file](https://docs.ansible.com/ansible/latest/intro_inventory.html) with your hosts in the `inventories` subfolder. You can also pass a different inventory to `ansible-playbook` using `--inventory` or `-i`.
 5. Change the variable remote_user in ./ansible.cfg to the appropriate value (the user that will log into the remote machine)
-6. Determine the compatible versions of Foreman and Katello you want to install based on the Katello install instructions at https://www.theforeman.org/plugins/katello/3.16/installation/index.html. Replace the 3.16 in the URL with whatever version of Katello you want to install.
+6. Determine the compatible versions of Foreman and Katello you want to install based on the Katello install instructions at https://github.com/theforeman/forklift/blob/master/vagrant/config/versions.yaml. Replace the 3.16 in the URL with whatever version of Katello you want to install.
 
 For a release version in production:
 
