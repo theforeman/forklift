@@ -409,8 +409,8 @@ setup() {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
     | grep "${CONTENT_VIEW_2} 1.1" | cut -d, -f1)
   envs_found=$(hammer content-view version info --organization="${ORGANIZATION}" \
-    --id=$cvv_id | grep -E "Name:  Library")
-  echo $envs_found | grep -q "Name: Library"
+    --id=$cvv_id | awk '/Lifecycle Environments/{flag=1;next}/Repositories/{flag=0}flag' | grep "Name:")
+  echo $envs_found | grep -q -E "Name:\s+Library"
 }
 
 @test "ensure composite cv version 1.1 has proper environments" {
@@ -419,8 +419,9 @@ setup() {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
     | grep "${CONTENT_VIEW_3} 1.1" | cut -d, -f1)
   envs_found=$(hammer content-view version info --organization="${ORGANIZATION}" \
-    --id=$cvv_id | grep -E "Name:  Library|Name:  ${LIFECYCLE_ENVIRONMENT}")
-  echo $envs_found | grep -q "Name: Library Name: ${LIFECYCLE_ENVIRONMENT}"
+    --id=$cvv_id | awk '/Lifecycle Environments/{flag=1;next}/Repositories/{flag=0}flag' | grep "Name:")
+  echo $envs_found | grep -q -E "Name:\s+Library"
+  echo $envs_found | grep -q -E "Name:\s+${LIFECYCLE_ENVIRONMENT}"
 }
 
 @test "ensure component cv 1 latest version has proper content" {
