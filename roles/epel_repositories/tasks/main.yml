@@ -2,6 +2,7 @@
 - name: 'Setup Epel Repository'
   yum:
     name: "{{ epel_repositories_name }}"
+    disable_gpg_check: True
     state: "{{ epel_repositories_state }}"
   tags:
     - packages
