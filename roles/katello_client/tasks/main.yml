@@ -6,6 +6,7 @@
 - name: 'Install bootstrap rpm'
   yum:
     name: "http://{{ katello_client_server }}/pub/katello-ca-consumer-latest.noarch.rpm"
+    disable_gpg_check: True
     state: "present"
 
 - name: 'Register client with subscription-manager as user {{ katello_client_username }}'

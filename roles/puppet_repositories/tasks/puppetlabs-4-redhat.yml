@@ -2,6 +2,7 @@
 - name: 'Setup Puppet 4 Repository'
   yum:
     name: https://release-archives.puppet.com/yum/puppetlabs-release-pc1-el-{{ ansible_distribution_major_version }}.noarch.rpm
+    disable_gpg_check: True
     state: present
   tags:
     - packages
