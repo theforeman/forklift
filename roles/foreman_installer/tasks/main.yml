@@ -1,8 +1,16 @@
 ---
+- name: "build installer from source when installer PR is specified"
+  set_fact:
+    foreman_installer_from_source: True
+  when: foreman_installer_git_pr_number is defined and foreman_installer_git_pr_number
+
 - include_tasks: packages.yml
 
 - include_tasks: locales.yml
   when: ansible_os_family == 'Debian'
+
+- include_tasks: installer_from_source.yml
+  when: foreman_installer_from_source == True
 
 - include_tasks: module_prs.yml
   when: (foreman_installer_module_prs|length > 0) or (foreman_installer_module_branches|length > 0)

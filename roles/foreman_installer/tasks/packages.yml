@@ -5,6 +5,7 @@
     state: latest
   tags:
     - packages
+  when: foreman_installer_from_source == False
 
 - name: 'Install additional packages'
   package:
@@ -12,3 +13,24 @@
     state: latest
   tags:
     - packages
+
+- name: "install foreman package (for scl dependency)"
+  package:
+    name: foreman
+    state: 'present'
+  tags:
+    - packages
+  when: foreman_installer_from_source == True
+
+- name: "get ruby scl version"
+  shell: scl --list | grep ruby | head -n1
+  register: scl_ruby_version
+  when: foreman_installer_from_source == True
+
+- name: "install other dependencies to build and run installer from source"
+  package:
+    name: git, {{ scl_ruby_version.stdout }}-ruby-devel, gcc, asciidoc, puppet-agent, puppetserver, augeas-devel
+    state: 'present'
+  tags:
+    - packages
+  when: foreman_installer_from_source == True

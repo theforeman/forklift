@@ -1,6 +1,8 @@
 ---
 dependencies:
   - role: foreman
+    foreman_installer_from_source: False
+    foreman_installer_git_pr_number:
     foreman_server_repositories_katello: true
     foreman_server_repositories_ostree: true
     foreman_installer_scenario: katello
