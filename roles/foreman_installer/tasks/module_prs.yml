@@ -1,5 +1,5 @@
 ---
-- name: "Determine if Puppet 4 is used"
+- name: "Determine if AIO Puppet is used"
   stat:
     path: /opt/puppetlabs/puppet/bin/gem
   register: puppetlabs_gem
