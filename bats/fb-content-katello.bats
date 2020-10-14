@@ -476,9 +476,10 @@ setup() {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
     | grep "${CONTENT_VIEW_3} 1.1" | cut -d, -f1)
 
-  # Skipping temporarily until Pulp2/Pulp3 differences are resolved
-  #hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content
-  #diff cvv_content fixtures/composite_rpms
+  # Sorting and removing duplicates due to Pulp2/Pulp3 differences (https://projects.theforeman.org/issues/30755)
+  hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' \
+    | awk '!seen[$0]++' > cvv_content
+  diff -w cvv_content fixtures/composite_rpms
 
   hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content
   diff cvv_content fixtures/composite_errata

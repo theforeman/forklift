@@ -1,20 +1,14 @@
 -----------------------------
 FILENAME                     
------------------------------
 zebra-0.1-2.noarch.rpm       
 wolf-9.4-2.noarch.rpm        
 whale-0.2-1.noarch.rpm       
-whale-0.2-1.noarch.rpm       
 walrus-0.71-1.noarch.rpm     
-walrus-0.71-1.noarch.rpm     
-walrus-5.21-1.noarch.rpm     
 walrus-5.21-1.noarch.rpm     
 trout-0.12-1.noarch.rpm      
 tiger-1.0-4.noarch.rpm       
 stork-0.12-2.noarch.rpm      
-stork-0.12-2.noarch.rpm      
 squirrel-0.1-1.noarch.rpm    
-shark-0.1-1.noarch.rpm       
 shark-0.1-1.noarch.rpm       
 pike-2.2-1.noarch.rpm        
 penguin-0.9.1-1.noarch.rpm   
@@ -38,4 +32,3 @@ cheetah-1.25.3-5.noarch.rpm
 cat-1.0-1.noarch.rpm         
 camel-0.1-1.noarch.rpm       
 bear-4.1-1.noarch.rpm        
------------------------------
