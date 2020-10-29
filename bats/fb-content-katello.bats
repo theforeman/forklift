@@ -262,16 +262,12 @@ setup() {
     --content-view="${CONTENT_VIEW}" --id=$module_id | grep -q "Puppet module added to content view"
 }
 
-@test "publish content view with puppet content" {
-  tSkipIfNoPulp2 "Puppet content"
-
+@test "publish first content view again" {
   hammer content-view publish --organization="${ORGANIZATION}" \
     --name="${CONTENT_VIEW}"
 }
 
-@test "promote content view with puppet content" {
-  tSkipIfNoPulp2 "Puppet content"
-
+@test "promote first content view again" {
   hammer content-view version promote  --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW}" --to-lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" --from-lifecycle-environment="Library"
 }
