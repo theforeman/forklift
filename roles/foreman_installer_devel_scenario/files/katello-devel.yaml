@@ -19,6 +19,7 @@
 :facts:
   tuning: default
 :colors: true
+:verbose: true
 :order:
 - certs
 - foreman_proxy
