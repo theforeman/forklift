@@ -82,6 +82,8 @@ module Forklift
                                 "#{box.fetch('name').to_s.tr('.', '-')}.#{domain}"
                               end
 
+        resize_disk(machine) if box.fetch('disk_size', false)
+
         networks = configure_networks(box.fetch('networks', []))
         configure_shell(machine, box)
         configure_ansible(machine, box['ansible'], box['name'])
@@ -96,6 +98,12 @@ module Forklift
         configure_nfs(config, box)
 
         yield machine if block_given?
+      end
+    end
+
+    def resize_disk(machine)
+      machine.vm.provision('disk_resize', type: 'ansible') do |ansible_provisioner|
+        ansible_provisioner.playbook = 'playbooks/resize_disk.yaml'
       end
     end
 
