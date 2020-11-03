@@ -12,7 +12,7 @@ Metrics/LineLength:
   Max: 120
 
 Metrics/ClassLength:
-  Max: 300
+  Max: 325
 
 Documentation:
   Enabled: false # don't require documentation
