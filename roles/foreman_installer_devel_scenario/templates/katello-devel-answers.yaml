@@ -6,17 +6,11 @@ certs:
 katello_devel:
   deployment_dir: /home/vagrant
   user: vagrant
-  db_type: postgres
-  rvm: true
 foreman_proxy_content:
-  pulp_master: true
-  qpid_router_broker_addr: localhost
+  proxy_pulp_yum_to_pulpcore: true
 foreman_proxy:
-  custom_repo: true
   http: true
   ssl_port: '9090'
-  templates: false
-  tftp: false
   ssl_ca: /etc/foreman-proxy/ssl_ca.pem
   ssl_cert: /etc/foreman-proxy/ssl_cert.pem
   ssl_key: /etc/foreman-proxy/ssl_key.pem
@@ -34,7 +28,7 @@ puppet:
   puppet_server_jvm_min_heap_size: 1G
   puppet_server_max_active_instances: 1
 foreman_proxy::plugin::pulp:
-  enabled: true
+  enabled: {{ ansible_distribution_major_version == "7" }}
   pulpnode_enabled: false
   pulpcore_enabled: true
 foreman_proxy::plugin::abrt: false

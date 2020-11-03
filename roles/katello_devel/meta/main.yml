@@ -6,8 +6,11 @@ dependencies:
     foreman_server_repositories_katello: true
     foreman_server_repositories_foreman_client: true
   - role: ruby_scl
+    when: ansible_distribution_major_version == "7"
   - role: nodejs_scl
+    when: ansible_distribution_major_version == "7"
   - role: postgresql_scl
+    when: ansible_distribution_major_version == "7"
   - role: foreman_installer_devel_scenario
   - role: foreman_installer
     foreman_installer_scenario: katello-devel
@@ -15,6 +18,6 @@ dependencies:
       - foreman-installer-katello
     foreman_installer_disable_system_checks: true
     foreman_installer_options_internal_use_only:
-      - "--katello-devel-scl-ruby={{ ruby_scl_version }}"
+      - "{{ '--katello-devel-scl-ruby=' +  ruby_scl_version if ansible_distribution_major_version == '7' else '' }}"
       - "--katello-devel-admin-password {{ foreman_installer_admin_password }}"
   - role: customize_home

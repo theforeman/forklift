@@ -33,6 +33,7 @@ boxes:
 
   centos8:
     box_name: 'centos/8'
+    disk_size: 40
     pty: true
     scenarios:
       - foreman
