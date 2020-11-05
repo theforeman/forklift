@@ -90,7 +90,7 @@ installers:
   - foreman: '2.3'
     katello: '3.18'
     pulp: '2.21'
-    pulpcore: '3.6'
+    pulpcore: '3.7'
     puppet: 6
     boxes:
       - 'centos7'
@@ -102,7 +102,7 @@ installers:
   - foreman: 'nightly'
     katello: 'nightly'
     pulp: '2.21'
-    pulpcore: '3.6'
+    pulpcore: '3.7'
     puppet: 6
     boxes:
       - 'centos7'
