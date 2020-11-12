@@ -1,0 +1,9 @@
+---
+- name: create vagrant boxes
+  hosts: localhost
+  become: False
+  vars_files:
+    - ../vars/install_base.yml
+    - ../vars/forklift_{{ pipeline_type }}.yml
+  roles:
+    - forklift

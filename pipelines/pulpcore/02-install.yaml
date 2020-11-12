@@ -1,0 +1,13 @@
+---
+- name: install pulpcore
+  hosts:
+   - "{{ forklift_server_name }}"
+  become: True
+  vars_files:
+    - ../vars/install_base.yml
+    - ../vars/forklift_{{ pipeline_type }}.yml
+  environment:
+    DJANGO_SETTINGS_MODULE: pulpcore.app.settings
+  roles:
+    - epel_repositories
+    - pulp.pulp_installer.pulp_all_services
