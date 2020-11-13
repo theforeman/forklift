@@ -9,9 +9,9 @@ load fixtures/content
 
 setup() {
   tSetOSVersion
-  PROXY_INFO=$(hammer --output json proxy list --search "feature = \"Pulp Node\"")
-  PROXY_ID=$(echo $PROXY_INFO | ruby -e "require 'json'; puts JSON.load(ARGF.read).first['Id']")
-  PROXY_HOSTNAME=$(echo $PROXY_INFO | ruby -e "require 'json'; puts JSON.load(ARGF.read).first['Name']")
+  PROXY_ID=2
+  PROXY_INFO=$(hammer --output json proxy show --id $PROXY_ID)
+  PROXY_HOSTNAME=$(echo $PROXY_INFO | ruby -e "require 'json'; puts JSON.load(ARGF.read)['Name']")
 }
 
 @test "proxy is registered" {
