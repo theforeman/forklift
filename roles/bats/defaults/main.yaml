@@ -1,22 +1,17 @@
 ---
 bats_fetch_results: true
 bats_environment: {}
-bats_git_dir: "/root/bats"
-bats_forklift_dir: "/root/forklift"
-bats_forklift_repo: "https://github.com/theforeman/forklift.git"
-bats_forklift_version: HEAD
-bats_output_dir: "/root/bats_results"
+bats_git_dir: "/tmp/bats"
+bats_forklift_dir: "/tmp/forklift"
+bats_forklift_repo: "https://github.com/swadeley/forklift.git"
+bats_forklift_version: test-bootstrap-script
+bats_output_dir: "/tmp/bats_results"
 bats_remote_dir: "/tmp/debug-{{ pipeline_type | default('foreman') }}-{{ pipeline_version | default('nightly') }}-{{ pipeline_os | default('el7') }}"
 bats_update_forklift: "yes"
 bats_run: true
 bats_setup: []
 bats_tests:
-  - "fb-verify-packages.bats"
-  - "fb-test-foreman.bats"
-  - "fb-test-puppet.bats"
-  - "fb-test-katello.bats"
-  - "fb-content-katello.bats"
+  - "fb-test-bootstrap.bats"
 bats_tests_additional: []
 bats_teardown:
-  - "fb-destroy-organization.bats"
   - "fb-finish.bats"

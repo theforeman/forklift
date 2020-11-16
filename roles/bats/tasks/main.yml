@@ -29,6 +29,11 @@
   args:
     creates: "/usr/bin/bats"
 
+- name: "Forklift directory"
+  file:
+    state: "directory"
+    path: "{{ bats_forklift_dir }}"
+
 - name: "Clone forklift"
   git:
     repo: "{{ bats_forklift_repo }}"
@@ -46,14 +51,19 @@
       shell: "bats --tap {{ item }} > {{ bats_output_dir }}/{{ item }}.tap"
       args:
         chdir: "{{ bats_forklift_dir }}/bats"
+      vars:
+        bats_environment:
+          SERVERNAME: "{{ satdeploy_server_name }}.{{ ansible_domain }}"
       with_items:
         - "{{ bats_setup }}"
         - "{{ bats_tests }}"
-        - "{{ bats_tests_additional }}"
         - "{{ bats_teardown }}"
       register: "test_output"
       ignore_errors: true
       environment: "{{ bats_environment }}"
+      become: true
+      async: 220
+      poll: 60
 
     - name: "Read results"
       shell: "cat {{ bats_output_dir }}/{{ item }}.tap"
@@ -61,7 +71,6 @@
       with_items:
         - "{{ bats_setup }}"
         - "{{ bats_tests }}"
-        - "{{ bats_tests_additional }}"
         - "{{ bats_teardown }}"
 
     - name: "Output test results"

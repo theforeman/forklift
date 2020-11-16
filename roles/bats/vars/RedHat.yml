@@ -4,5 +4,3 @@ bats_packages:
   - ruby
   - git
   - yum-utils
-  - podman
-  - sos

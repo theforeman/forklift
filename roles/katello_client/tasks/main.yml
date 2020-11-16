@@ -1,6 +1,7 @@
 ---
-- name: 'Cleanup previous registrations'
-  include_tasks: cleanup.yml
+- block:
+  - name: 'Cleanup previous registrations'
+    include_tasks: cleanup.yml
   when: katello_client_cleanup
 
 - name: 'Install bootstrap rpm'
@@ -8,6 +9,10 @@
     name: "http://{{ katello_client_server }}/pub/katello-ca-consumer-latest.noarch.rpm"
     disable_gpg_check: True
     state: "present"
+  become: true
+  register: install_result
+
+- debug: var=install_result
 
 - name: 'Register client with subscription-manager as user {{ katello_client_username }}'
   redhat_subscription:
@@ -20,6 +25,7 @@
   ignore_errors: "{{ katello_client_ignore_registration_errors }}"
   when:
     - katello_client_activationkey == ""
+  become: true
 
 - name: 'Register client with subscription-manager using AK {{ katello_client_activationkey }}'
   redhat_subscription:
@@ -30,25 +36,44 @@
   ignore_errors: "{{ katello_client_ignore_registration_errors }}"
   when:
     - katello_client_activationkey != ""
+  become: yes
+  register: output
+  async: 220
+  poll: 30
 
 - name: 'Enable extra repositories'
   command: subscription-manager repos --enable {{ item }}
   with_items: "{{ katello_client_extra_repos }}"
+  become: true
+  register: output
+  async: 220
+  poll: 30
 
 - name: 'Install katello-host-tools'
   yum:
     name: "katello-host-tools"
     state: "present"
   ignore_errors: yes
+  become: true
+  register: output
+  async: 220
+  poll: 30
 
 - name: 'Install katello-agent'
   yum:
     name: "katello-agent"
     state: "present"
   when: katello_client_install_agent
+  register: output
+  async: 220
+  poll: 30
 
 - name: 'Install katello-host-tools-tracer'
   yum:
     name: "katello-host-tools-tracer"
     state: "present"
   when: katello_client_install_tracer
+  become: yes
+  register: output
+  async: 220
+  poll: 60
