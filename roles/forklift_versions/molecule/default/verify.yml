@@ -8,21 +8,34 @@
     forklift_versions_file: "{{ playbook_dir }}/fixtures/versions.yaml"
     pipeline_type: katello
     pipeline_os: centos7
-    pipeline_version: '3.17'
   tasks:
-    - name: "Include forklift_versions for installs"
+    - name: "Include forklift_versions for 3.16 installs"
       include_role:
         name: "forklift_versions"
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
-        scenario_version: "{{ pipeline_version }}"
+        scenario_version: "3.16"
+    - name: Ensure versions have been set correctly
+      assert:
+        that:
+          - foreman_repositories_version == '2.1'
+          - katello_repositories_version == '3.16'
+          - pulpcore_repositories_version is not defined
+
+    - name: "Include forklift_versions for 3.17 installs"
+      include_role:
+        name: "forklift_versions"
+      vars:
+        scenario: "{{ pipeline_type }}"
+        scenario_os: "{{ pipeline_os }}"
+        scenario_version: "3.17"
     - name: Ensure versions have been set correctly
       assert:
         that:
           - foreman_repositories_version == '2.2'
           - katello_repositories_version == '3.17'
-          - pulpcore_repositories_version is not defined
+          - pulpcore_repositories_version == '3.7'
 
     - name: "Include forklift_versions for nightly installs"
       include_role:
@@ -44,7 +57,7 @@
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
-        scenario_version: "{{ pipeline_version }}"
+        scenario_version: "3.17"
         upgrade: True
     - name: Ensure upgrade steps have been determined correctly
       assert:
@@ -75,7 +88,7 @@
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "centos8"
-        scenario_version: "{{ pipeline_version }}"
+        scenario_version: "3.17"
         upgrade: True
     - name: Ensure 3.15 was properly skipped
       assert:
