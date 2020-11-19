@@ -155,12 +155,8 @@ setup() {
     rpm -e `rpm -qf /etc/rhsm/ca/candlepin-local.pem`
   fi
 
-  run subscription-manager unregister
-  echo "rc=${status}"
-  echo "${output}"
-  run subscription-manager clean
-  echo "rc=${status}"
-  echo "${output}"
+  cleanSubscriptionManager
+
   run yum erase -y 'katello-ca-consumer-*'
   echo "rc=${status}"
   echo "${output}"
@@ -171,12 +167,8 @@ setup() {
 }
 
 @test "register subscription manager with activation key" {
-  run subscription-manager unregister
-  echo "rc=${status}"
-  echo "${output}"
-  run subscription-manager clean
-  echo "rc=${status}"
-  echo "${output}"
+  cleanSubscriptionManager
+
   run subscription-manager register --force --org="${ORGANIZATION_LABEL}" --activationkey="${ACTIVATION_KEY}"
   echo "rc=${status}"
   echo "${output}"
@@ -490,4 +482,8 @@ setup() {
   # Only checking for the v2 manifest due to Pulp2/Pulp3 differences
   hammer docker manifest list --content-view-version-id=$cvv_id --fields="schema version,digest,tags" \
     --order='tag' | grep 'sha256:a6ecbb1553353a08936f50c275b010388ed1bd6d9d84743c7e8e7468e2acd82e'
+}
+
+@test "cleanup subscription-manager after content tests" {
+  cleanSubscriptionManager
 }

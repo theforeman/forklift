@@ -41,3 +41,12 @@ tSkipIfHammerBelow018() {
    skip "Advanced content view tests are not available without hammer-cli >= 0.18"
   fi
 }
+
+cleanSubscriptionManager() {
+  run subscription-manager unregister
+  echo "rc=${status}"
+  echo "${output}"
+  run subscription-manager clean
+  echo "rc=${status}"
+  echo "${output}"
+}
