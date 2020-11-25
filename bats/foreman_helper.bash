@@ -19,7 +19,9 @@ tForemanVersion() {
 }
 
 tIsPulp2() {
-  tPackageExists pulp-server
+  ping=$(hammer --output json ping)
+  has_pulp=$(echo $ping | ruby -e "require 'json'; puts JSON.load(ARGF.read)[0].key?('pulp')")
+  [ $has_pulp = true ]
 }
 
 tSkipIfNoPulp2() {

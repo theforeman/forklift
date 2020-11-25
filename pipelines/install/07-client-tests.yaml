@@ -1,0 +1,26 @@
+---
+- name: run client tests
+  become: true
+  hosts:
+    - "{{ forklift_smoker_name }}"
+  vars_files:
+    - ../vars/install_base.yml
+  vars:
+    hammer_credentials_username: admin
+    hammer_credentials_password: changeme
+    hammer_credentials_host: "https://{{ forklift_server_name }}.{{ ansible_domain }}"
+    hammer_credentials_verify_ssl: false
+  environment:
+    REGISTRATION_HOSTNAME: "{{ forklift_server_name }}"
+  roles:
+    - role: etc_hosts
+      become: true
+    - role: epel_repositories
+      become: true
+    - role: foreman_repositories
+    - role: katello_repositories
+    - role: foreman_client_repositories
+    - role: hammer_credentials
+    - role: foreman_testing
+      bats_tests:
+        - "fb-katello-client.bats"

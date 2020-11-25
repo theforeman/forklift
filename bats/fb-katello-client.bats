@@ -30,7 +30,7 @@ load fixtures/content
   run yum erase -y 'katello-ca-consumer-*'
   echo "rc=${status}"
   echo "${output}"
-  run rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm
+  run rpm -Uvh http://$REGISTRATION_HOSTNAME/pub/katello-ca-consumer-latest.noarch.rpm
   echo "rc=${status}"
   echo "${output}"
   subscription-manager register --force --org="${ORGANIZATION_LABEL}" --username=admin --password=changeme --env=Library

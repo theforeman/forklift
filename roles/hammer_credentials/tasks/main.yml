@@ -1,4 +1,8 @@
 ---
+- name: Install hammer
+  package:
+    name: tfm-rubygem-hammer_cli_katello
+
 - name: 'Add hammer config directory'
   file:
     path: ~/.hammer
