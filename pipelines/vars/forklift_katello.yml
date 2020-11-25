@@ -14,7 +14,7 @@ server_box:
         - "--puppet-server-jvm-min-heap-size 1G"
         - "--puppet-server-jvm-max-heap-size 1G"
       bats_tests_additional:
-        "{{ ['fb-proxy.bats'] if pipeline_os != 'centos8' else [] }}"
+        "{{ ['fb-katello-proxy.bats'] if pipeline_os != 'centos8' else [] }}"
 proxy_box:
   box: "{{ pipeline_os }}"
   memory: 3072

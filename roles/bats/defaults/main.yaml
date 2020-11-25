@@ -15,7 +15,8 @@ bats_tests:
   - "fb-test-foreman.bats"
   - "fb-test-puppet.bats"
   - "fb-test-katello.bats"
-  - "fb-content-katello.bats"
+  - "fb-katello-content.bats"
+  - "fb-katello-client.bats"
 bats_tests_additional: []
 bats_teardown:
   - "fb-destroy-organization.bats"
