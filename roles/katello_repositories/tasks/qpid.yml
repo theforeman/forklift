@@ -1,9 +1,9 @@
 ---
 - name: 'Set up qpid Copr repository'
   yum_repository:
-    name: Qpid
-    description: Qpid copr repository for EL6
-    baseurl: https://copr-be.cloud.fedoraproject.org/results/@qpid/qpid/epel-6-$basearch/
+    name: qpid
+    description: Copr repo for qpid owned by @qpid
+    baseurl: https://download.copr.fedorainfracloud.org/results/@qpid/qpid/epel-{{ ansible_distribution_major_version }}-$basearch/
     state: present
     gpgcheck: yes
-    gpgkey: https://copr-be.cloud.fedoraproject.org/results/@qpid/qpid/pubkey.gpg
+    gpgkey: https://download.copr.fedorainfracloud.org/results/@qpid/qpid/pubkey.gpg
