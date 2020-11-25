@@ -2,7 +2,7 @@
 
 ORGANIZATION="Test Organization"
 PRODUCT="Test Product"
-CONTAINER_REPOSITORY="fedorassh"
+CONTAINER_REPOSITORY="foremanbusybox"
 FILE_REPOSITORY="file repo"
 PUPPET_REPOSITORY="Puppet Modules"
 YUM_REPOSITORY="Zoo"

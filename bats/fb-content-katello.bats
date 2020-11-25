@@ -64,7 +64,7 @@ setup() {
 }
 
 @test "create a container repository" {
-  hammer repository create --organization="${ORGANIZATION}" --docker-upstream-name="fedora/ssh" --url=https://registry-1.docker.io/ \
+  hammer repository create --organization="${ORGANIZATION}" --docker-upstream-name="foreman/busybox-test" --url=https://quay.io/ \
     --product="${PRODUCT}" --content-type="docker" --name "${CONTAINER_REPOSITORY}" | grep -q "Repository created"
 }
 
@@ -432,7 +432,7 @@ setup() {
 
   # Only checking for the v2 manifest due to Pulp2/Pulp3 differences
   hammer docker manifest list --content-view-version-id=$cvv_id --fields="schema version,digest,tags" \
-    --order='tag' | grep 'sha256:a6ecbb1553353a08936f50c275b010388ed1bd6d9d84743c7e8e7468e2acd82e'
+    --order='tag' | grep 'sha256:13280b5914050853a87d662c3229d42b61544e36dd4515f06e188835f3407468'
 }
 
 @test "ensure component cv 2 latest version has proper content" {
@@ -481,7 +481,7 @@ setup() {
 
   # Only checking for the v2 manifest due to Pulp2/Pulp3 differences
   hammer docker manifest list --content-view-version-id=$cvv_id --fields="schema version,digest,tags" \
-    --order='tag' | grep 'sha256:a6ecbb1553353a08936f50c275b010388ed1bd6d9d84743c7e8e7468e2acd82e'
+    --order='tag' | grep 'sha256:13280b5914050853a87d662c3229d42b61544e36dd4515f06e188835f3407468'
 }
 
 @test "cleanup subscription-manager after content tests" {
