@@ -1,7 +1,6 @@
 ---
 - include_tasks: "{{ foreman_client_repositories_environment }}_repo.yml"
   when:
-    - foreman_client_repositories_version == "nightly" or foreman_client_repositories_version is version('1.20', '>=')
     - ansible_os_family == 'RedHat'
 
 - name: 'Clean yum'
