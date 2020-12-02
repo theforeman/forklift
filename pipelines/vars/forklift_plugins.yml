@@ -1,0 +1,34 @@
+server_box:
+  box: "{{ pipeline_os }}"
+  memory: 8192
+  ansible:
+    variables:
+      foreman_installer_scenario: foreman
+      foreman_installer_options:
+        - "--puppet-server-max-active-instances 1"
+        - "--puppet-server-jvm-min-heap-size 1G"
+        - "--puppet-server-jvm-max-heap-size 1G"
+        - "--enable-foreman-cli-discovery"
+        - "--enable-foreman-cli-remote-execution"
+        - "--enable-foreman-cli-tasks"
+        - "--enable-foreman-cli-templates"
+        - "--enable-foreman-plugin-ansible"
+        - "--enable-foreman-plugin-bootdisk"
+        - "--enable-foreman-plugin-discovery"
+        - "--enable-foreman-plugin-hooks"
+        - "--enable-foreman-plugin-remote-execution"
+        - "--enable-foreman-plugin-templates"
+        - "--enable-foreman-proxy-plugin-ansible"
+        - "--enable-foreman-proxy-plugin-discovery"
+        - "--enable-foreman-proxy-plugin-remote-execution-ssh"
+        - "{{ '--enable-foreman-cli-openscap' if pipeline_os.startswith('centos') else '' }}"
+        - "{{ '--enable-foreman-plugin-openscap' if pipeline_os.startswith('centos') else '' }}"
+        - "{{ '--enable-foreman-proxy-plugin-openscap' if pipeline_os.startswith('centos') else '' }}"
+      bats_tests:
+        - "fb-verify-packages.bats"
+        - "fb-test-foreman.bats"
+        - "fb-test-puppet.bats"
+      bats_teardown:
+        - "fb-finish.bats"
+forklift_boxes:
+  "{{ {forklift_server_name: server_box, forklift_smoker_name: smoker_box} }}"

@@ -20,6 +20,7 @@ options:
       - foreman
       - katello
       - luna
+      - plugins
   scenario_version:
     description: scenario version to look up
     required: True
@@ -41,6 +42,7 @@ from ansible.module_utils.basic import AnsibleModule
 
 
 TOTAL_UPGRADE_VERSIONS = 3
+SCENARIO_MAP = {'plugins': 'foreman', 'luna': 'katello'}
 
 
 def version_sort_key(version):
@@ -54,7 +56,7 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             file=dict(type='path', required=True),
-            scenario=dict(type='str', required=True, choices=['foreman', 'katello', 'luna']),
+            scenario=dict(type='str', required=True, choices=['foreman', 'katello', 'luna', 'plugins']),
             scenario_version=dict(type='str', required=True),
             scenario_os=dict(type='str', required=True),
             upgrade=dict(type='bool', default=False),
@@ -65,9 +67,7 @@ def main():
 
     ret = {}
 
-    scenario = module.params['scenario']
-    if scenario != 'foreman':
-        scenario = 'katello'
+    scenario = SCENARIO_MAP.get(module.params['scenario'], module.params['scenario'])
     scenario_os = module.params['scenario_os']
     scenario_version = module.params['scenario_version']
 
