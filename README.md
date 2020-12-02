@@ -261,7 +261,7 @@ The list of available boxes can be customized by setting an exclude list in `vag
 boxes:
   exclude:
     - "katello" # exclude any box containing "katello"
-    - "ubuntu1604-foreman-1\\.24" # exclude only the box "ubuntu1604-foreman-1.24". Notice the escaped '.' character to match the specific character instead of any single character
+    - "ubuntu1804-foreman-2\\.0" # exclude only the box "ubuntu1804-foreman-2.0". Notice the escaped '.' character to match the specific character instead of any single character
     - "^centos7-fips" # exclude any box that starts with "centos7-fips"
     - "foreman-1\\.(?:[2][0-3])" # exclude any foreman-1.20 to foreman-1.23 version box
 ```

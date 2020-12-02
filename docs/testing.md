@@ -56,17 +56,17 @@ When you are finished with the test, you can tear down the associated infrastruc
 ### Existing Pipelines
 
 * `install_pipeline` - Installs a Server and a Proxy VMs and runs the `foreman_testing` role to verify the setup.
-  Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian9)
+  Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian10)
   Expects the `pipeline_type` variable to be set to a known type (currently: foreman, katello, luna)
   Expects the `pipeline_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, 3.11, nightly)
 * `upgrade_pipeline` - Installs a VM, upgrades it twice and runs the `foreman_testing` role to verify the final upgrade.
-  Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian9)
+  Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian10)
   Expects the `pipeline_type` variable to be set to a known type (currently: foreman, katello, luna)
   Expects the `pipeline_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, 3.11, nightly).
 
 #### Examples
 
-    ansible-playbook pipelines/install_pipeline.yml -e forklift_state=up -e pipeline_os=debian9 -e pipeline_type=foreman -e pipeline_version=nightly
+    ansible-playbook pipelines/install_pipeline.yml -e forklift_state=up -e pipeline_os=debian10 -e pipeline_type=foreman -e pipeline_version=nightly
     ansible-playbook pipelines/upgrade_pipeline.yml -e forklift_state=up -e pipeline_os=centos7 -e pipeline_type=katello -e pipeline_version=3.10
 
 ### Creating Pipelines
