@@ -72,15 +72,15 @@
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
-        scenario_version: "3.16"
+        scenario_version: "3.18"
         upgrade: True
         upgrade_step: 2
     - name: Ensure upgrade steps have been determined correctly
       assert:
         that:
-          - forklift_upgrade_version_start == '3.12'
-          - forklift_upgrade_version_intermediate == '3.14'
-          - forklift_upgrade_version_final == '3.16'
+          - forklift_upgrade_version_start == '3.14'
+          - forklift_upgrade_version_intermediate == '3.16'
+          - forklift_upgrade_version_final == '3.18'
 
     - name: "Include forklift_versions for EL8 upgrades"
       include_role:
