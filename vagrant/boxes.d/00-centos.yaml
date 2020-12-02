@@ -1,14 +1,4 @@
 boxes:
-  centos6:
-    box_name:   'centos/6'
-    image_name: !ruby/regexp '/CentOS 6.*PV/'
-    google_options:
-      image_family: 'centos-6'
-    pty:        true
-    scenarios:
-      - foreman
-      - katello
-
   centos7:
     box_name:   'centos/7'
     image_name: !ruby/regexp '/CentOS 7.*PV/'
