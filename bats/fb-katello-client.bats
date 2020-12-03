@@ -93,17 +93,15 @@ load fixtures/content
 @test "install package remotely (katello-agent)" {
   tSkipIfNoPulp2 "katello-agent support"
 
-  # see http://projects.theforeman.org/issues/15089 for bug related to "|| true"
   run yum -y remove gorilla
-  timeout 300 hammer host package install --host $HOSTNAME --packages gorilla || true
+  timeout 300 hammer host package install --host $HOSTNAME --packages gorilla
   tPackageExists gorilla
 }
 
 @test "install errata remotely (katello-agent)" {
   tSkipIfNoPulp2 "katello-agent support"
 
-  # see http://projects.theforeman.org/issues/15089 for bug related to "|| true"
-  timeout 300 hammer host errata apply --errata-ids 'RHEA-2012:0055' --host $HOSTNAME || true
+  timeout 300 hammer host errata apply --errata-ids 'RHEA-2012:0055' --host $HOSTNAME
   tPackageExists walrus-5.21
 }
 
