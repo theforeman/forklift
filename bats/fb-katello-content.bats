@@ -14,16 +14,6 @@ setup() {
   tCommandExists rpmdev-vercmp || tPackageInstall rpmdevtools
 }
 
-# Ensure we have at least one organization present so that the test organization
-# can be deleted at the end
-@test "Create an Empty Organization" {
-  run hammer organization info --name "Empty Organization"
-
-  if [ $status != 0 ]; then
-    hammer organization create --name="Empty Organization" | grep -q "Organization created"
-  fi
-}
-
 @test "create an Organization" {
   hammer organization create --name="${ORGANIZATION}" | grep -q "Organization created"
 }
@@ -116,6 +106,155 @@ setup() {
     --content-view="${CONTENT_VIEW}" --to-lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" --from-lifecycle-environment="Library"
 }
 
+@test "export content view version" {
+  tSkipIfNoPulp3
+  tSkipIfOlderThan318
+
+  hammer content-export complete version --organization="${ORGANIZATION}" \
+    --content-view="${CONTENT_VIEW}" --version="1.0"
+  export_version_id=$(hammer --output csv --no-headers content-view version show --version="1.0" --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}" \
+    --fields=id)
+  actual_size=$(du -k $(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path")/*.gz | cut -f 1)
+
+ [ $actual_size -ge 40 ]
+}
+
+@test "create skeleton org, product, content view, and repo for import" {
+  tSkipIfNoPulp3
+  tSkipIfOlderThan318
+
+  hammer organization create --name="${IMPORT_ORG}" | grep -q "Organization created"
+  hammer product create --organization="${IMPORT_ORG}" --name="${PRODUCT}" | grep -q "Product created"
+  hammer content-view create --import-only --organization="${IMPORT_ORG}" \
+    --name="${CONTENT_VIEW}" | grep -q "Content view created"
+  hammer repository create --organization="${IMPORT_ORG}" \
+    --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY}" \
+    --url https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/ | grep -q "Repository created"
+  repo_id=$(hammer --csv --no-headers repository info --name="${YUM_REPOSITORY}" --product="${PRODUCT}" --organization="${IMPORT_ORG}" --fields=id)
+  hammer content-view add-repository --organization="${IMPORT_ORG}" \
+  --name="${CONTENT_VIEW}" --repository-id=$repo_id | grep -q "The repository has been associated"
+}
+
+@test "import the exported content view" {
+  tSkipIfNoPulp3
+  tSkipIfOlderThan318
+
+  latest_export=$(hammer --output csv --no-headers content-export list --content-view "${CONTENT_VIEW}" --organization "${ORGANIZATION}"\
+   --content-view-version="1.0" --fields="Id,Path" --per-page=1 --order="id DESC")
+  # 16,,/var/lib/pulp/exports/Test_Organization/Test_CV/1.0/2020-12-11T16-04-08-00-00,Test CV 1.0,6,2020-12-11 16:04:12 UTC,2020-12-11 16:04:12 UTC
+  export_history_id=$(echo $latest_export | cut -d, -f1) # 16
+  export_path=$(echo $latest_export | cut -d, -f2)
+  # /var/lib/pulp/exports/Test_Organization/Test_CV/1.0/2020-12-11T16-04-08-00-00
+  import_path="/var/lib/pulp/imports/bats-test-$export_history_id"
+
+  mkdir -p $import_path
+  cp -r $export_path/* $import_path
+  if [ -f "${export_path}/metadata.json" ]; then
+    metadata_path="${export_path}/metadata.json"
+  else
+    metadata_path="$(pwd)/metadata-$export_history_id.json" # metadata-16.json
+  fi
+  # no grep here because hammer doesn't output any text on success
+  hammer content-import version --content-view="${CONTENT_VIEW}" --organization="${IMPORT_ORG}"\
+    --metadata-file=$metadata_path --path=$import_path
+}
+
+@test "compare contents of export and import" {
+  tSkipIfNoPulp3
+  tSkipIfOlderThan318
+  export_version=$(hammer --output csv --no-headers content-view version list --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}"\
+               --per-page=1 --fields="Version"  --order="version DESC")
+  export_repos=$(hammer --output csv --no-headers content-view version show --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}" \
+    --version="${export_version}" --fields="Repositories/Name")
+  import_repos=$(hammer --output csv --no-headers content-view version show --content-view="${CONTENT_VIEW}" --organization="${IMPORT_ORG}" \
+    --version="${export_version}" --fields="Repositories/Name")
+  [ "$export_repos" = "$import_repos" ]
+}
+
+@test "export the library" {
+  tSkipIfNoPulp3
+  tSkipIfOlderThan318
+
+  hammer content-export complete library --organization="${ORGANIZATION}"
+  export_version_id=$(hammer --output csv --no-headers content-view version list --content-view="${LIBRARY}" --organization="${ORGANIZATION}" \
+    --fields=id --per-page=1 --order="version DESC")
+  actual_size=$(du -k $(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path")/*.gz | cut -f 1)
+
+  [ $actual_size -ge 40 ]
+}
+
+@test "create org, product, and repository for library import" {
+  tSkipIfNoPulp3
+  tSkipIfOlderThan318
+
+  hammer organization create --name="${LIBRARY_IMPORT_ORG}"
+  hammer product create --organization="${LIBRARY_IMPORT_ORG}" --name="${PRODUCT}" | grep -q "Product created"
+  hammer repository create --organization="${LIBRARY_IMPORT_ORG}" \
+    --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY}" | grep -q "Repository created"
+}
+
+@test "import the library to the new organization" {
+  tSkipIfNoPulp3
+  tSkipIfOlderThan318
+
+  latest_export=$(hammer --output csv --no-headers content-export list --content-view "${LIBRARY}" --organization "${ORGANIZATION}"\
+    --fields="Id,Path" --per-page=1 --order="id DESC")
+  export_history_id=$(echo $latest_export | cut -d, -f1) # 16
+  export_path=$(echo $latest_export | cut -d, -f2)
+  # /var/lib/pulp/exports/Test_Organization/Export-Library/1.0/2020-12-11T16-04-08-00-00
+  import_path="/var/lib/pulp/imports/bats-test-library-$export_history_id"
+
+  mkdir -p $import_path
+  cp -r $export_path/* $import_path
+  hammer content-import library --organization="${LIBRARY_IMPORT_ORG}" --path="${import_path}"
+}
+
+@test "compare contents of library export and import" {
+  tSkipIfNoPulp3
+  tSkipIfOlderThan318
+
+  export_version=$(hammer --output csv --no-headers content-view version list --content-view="${LIBRARY}" --organization="${ORGANIZATION}"\
+               --per-page=1 --fields="Version"  --order="version DESC")
+  export_repos=$(hammer --output csv --no-headers content-view version show --content-view="${LIBRARY}" --organization="${ORGANIZATION}" \
+    --version="${export_version}" --fields="Repositories/Name")
+  import_repos=$(hammer --output csv --no-headers content-view version show --content-view="${IMPORT_LIBRARY}" --organization="${LIBRARY_IMPORT_ORG}" \
+    --version="${export_version}" --fields="Repositories/Name")
+
+  [ "$export_repos" = "$import_repos" ]
+}
+
+
+@test "publish content view again" {
+  hammer content-view publish --organization="${ORGANIZATION}" \
+    --name="${CONTENT_VIEW}"
+}
+
+@test "perform an incremental export" {
+  tSkipIfNoPulp3
+  tSkipIfOlderThan318
+  export_version_id=$(hammer --output csv --no-headers content-view version list --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}" \
+    --fields=id --per-page=1 --order="version DESC")
+
+  hammer content-export incremental version --organization="${ORGANIZATION}" \
+    --content-view="${CONTENT_VIEW}" --id="$export_version_id"
+  actual_size=$(du -k $(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path" --per-page=1)/*.gz  | cut -f 1)
+  # actual size of export should be less than 14K
+  [ $actual_size -le 14 ]
+}
+
+@test "perform an incremental library export" {
+  tSkipIfNoPulp3
+  tSkipIfOlderThan318
+  hammer content-export incremental library --organization="${ORGANIZATION}"
+
+  export_version_id=$(hammer --output csv --no-headers content-view version list --content-view="${LIBRARY}" --organization="${ORGANIZATION}" \
+    --fields=id --per-page=1 --order="version DESC")
+
+  actual_size=$(du -k $(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path"  --per-page=1)/*.gz | cut -f 1)
+
+  [ $actual_size -le 14 ]
+}
+
 @test "create activation key" {
   hammer activation-key create --organization="${ORGANIZATION}" \
     --name="${ACTIVATION_KEY}" --content-view="${CONTENT_VIEW}" --lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" \
@@ -145,11 +284,6 @@ setup() {
   module_id=$(hammer --csv --no-headers puppet-module list --repository-id=$repo_id | grep dummy | cut -d, -f1)
   hammer content-view puppet-module add --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW}" --id=$module_id | grep -q "Puppet module added to content view"
-}
-
-@test "publish first content view again" {
-  hammer content-view publish --organization="${ORGANIZATION}" \
-    --name="${CONTENT_VIEW}"
 }
 
 @test "promote first content view again" {
