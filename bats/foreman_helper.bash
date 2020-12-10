@@ -18,13 +18,30 @@ tForemanVersion() {
   ) | cut -d. -f1-2
 }
 
+tKatelloVersion() {
+  (
+    if tPackageExists tfm-rubygem-katello; then
+      tPackageVersion tfm-rubygem-katello
+    elif tPackageExists rubygem-katello; then
+      tPackageVersion rubygem-katello
+    fi
+  ) | cut -d. -f1-2
+}
+
+tSkipIfPulp3Only() {
+  KATELLO_VERSION=$(tKatelloVersion)
+  if [[ $KATELLO_VERSION == 4.* ]]; then
+    skip "${1} is not available in scenarios with only Pulp 3"
+  fi
+}
+
 tIsPulp2() {
   tPackageExists pulp-server
 }
 
 tSkipIfNoPulp2() {
   if ! tIsPulp2; then
-   skip "${1} is not available in scenarios without Pulp 2"
+    skip "${1} is not available in scenarios without Pulp 2"
   fi
 }
 
@@ -38,7 +55,7 @@ tSkipIfHammerBelow018() {
 
   run rpmdev-vercmp $RPM_VERSION 0.18 > /dev/null
   if [[ $status == 12 ]]; then
-   skip "Advanced content view tests are not available without hammer-cli >= 0.18"
+    skip "Advanced content view tests are not available without hammer-cli >= 0.18"
   fi
 }
 
