@@ -13,4 +13,5 @@
       become: true
     - role: epel_repositories
       become: true
+    - podman
     - smoker

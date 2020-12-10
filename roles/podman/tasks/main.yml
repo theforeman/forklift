@@ -1,0 +1,18 @@
+- name: 'Install podman'
+  become: true
+  package:
+    name: 'podman'
+
+- name: Set max user namespaces
+  become: true
+  sysctl:
+    name: user.max_user_namespaces
+    value: 100000
+
+- name: Set subuid range for user
+  become: true
+  command: usermod --add-subuids 10000-75535 {{ ansible_user }}
+
+- name: Set subgid range for user
+  become: true
+  command: usermod --add-subgids 10000-75535 {{ ansible_user }}
