@@ -74,14 +74,14 @@ setup() {
 }
 
 @test "create puppet repository" {
-  tSkipIfNoPulp2 "Puppet content"
+  tSkipIfPulp3Only "Puppet content"
 
   hammer repository create --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --content-type="puppet" --name "${PUPPET_REPOSITORY}" | grep -q "Repository created"
 }
 
 @test "upload puppet module" {
-  tSkipIfNoPulp2 "Puppet content"
+  tSkipIfPulp3Only "Puppet content"
 
   curl -o /tmp/stbenjam-dummy-0.2.0.tar.gz https://forgeapi.puppetlabs.com/v3/files/stbenjam-dummy-0.2.0.tar.gz
   tFileExists /tmp/stbenjam-dummy-0.2.0.tar.gz && hammer repository upload-content \
@@ -138,7 +138,7 @@ setup() {
 }
 
 @test "add puppet module to content view" {
-  tSkipIfNoPulp2 "Puppet content"
+  tSkipIfPulp3Only "Puppet content"
 
   repo_id=$(hammer --csv --no-headers repository list --organization="${ORGANIZATION}" \
     | grep Puppet | cut -d, -f1)
