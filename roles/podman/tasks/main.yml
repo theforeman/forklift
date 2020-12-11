@@ -3,6 +3,11 @@
   package:
     name: 'podman'
 
+- name: Install shadow-utils
+  become: true
+  package:
+    name: 'shadow-utils'
+
 - name: Set max user namespaces
   become: true
   sysctl:
