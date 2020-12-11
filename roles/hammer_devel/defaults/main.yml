@@ -14,6 +14,7 @@ hammer_devel_repositories:
   - theforeman/hammer-cli-foreman-admin
   - theforeman/hammer-cli-foreman-tasks
   - theforeman/hammer_cli_foreman_remote_execution
+  - theforeman/hammer-cli-foreman-virt-who-configure
   - katello/hammer-cli-csv
   - katello/hammer-cli-katello
 hammer_devel_local_gems: |-
@@ -22,4 +23,5 @@ hammer_devel_local_gems: |-
     gem 'hammer_cli_foreman_admin'
     gem 'hammer_cli_foreman_tasks'
     gem 'hammer_cli_foreman_remote_execution'
+    gem 'hammer_cli_foreman_virt_who_configure'
     gem 'hammer_cli_csv'
