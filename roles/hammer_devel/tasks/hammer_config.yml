@@ -69,6 +69,12 @@
     creates: ~/.hammer/cli.modules.d/foreman_remote_execution.yml
   when: ('theforeman/hammer_cli_foreman_remote_execution' in hammer_devel_repositories)
 
+- name: 'Configure hammer_cli_virt_who_configure'
+  command: cp ~/hammer-cli-foreman-virt-who-configure/config/foreman_virt_who_configure.yml ~/.hammer/cli.modules.d/
+  args:
+    creates: ~/.hammer/cli.modules.d/foreman_virt_who_configure.yml
+  when: ('theforeman/hammer-cli-foreman-virt-who-configure' in hammer_devel_repositories)
+
 - name: 'Alias hammer'
   lineinfile: dest=~/.bash_profile line="alias hammer='BUNDLE_GEMFILE=~/hammer-cli-foreman/Gemfile bundle exec hammer'"
 
