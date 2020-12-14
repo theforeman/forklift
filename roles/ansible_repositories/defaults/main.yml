@@ -1,0 +1,3 @@
+---
+ansible_repositories_state: present
+ansible_repositories_name: 'centos-release-ansible-29'

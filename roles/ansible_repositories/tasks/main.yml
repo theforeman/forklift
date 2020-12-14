@@ -1,0 +1,8 @@
+---
+- name: 'Setup Ansible Repository'
+  yum:
+    name: "{{ ansible_repositories_name }}"
+    state: "{{ ansible_repositories_state }}"
+  tags:
+    - packages
+  when: ansible_distribution == 'CentOS'
