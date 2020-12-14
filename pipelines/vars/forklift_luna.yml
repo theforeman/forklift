@@ -28,7 +28,7 @@ server_box:
         - "--enable-foreman-plugin-templates"
         - "--enable-foreman-plugin-virt-who-configure"
       bats_tests_additional:
-        - fb-katello-proxy.bats
+        "{{ ['fb-katello-proxy.bats'] if pipeline_os != 'centos8' else [] }}"
 proxy_box:
   box: "{{ pipeline_os }}"
   memory: 3072
