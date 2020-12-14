@@ -9,7 +9,7 @@ This covers how to setup and configure a development environment using the Forkl
    * [Customizing the Development Environment](#customizing-the-development-environment)
    * [Reviewing Pull Requests](#reviewing-pull-requests)
  * [Use Koji Scratch Builds](#koji-scratch-builds)
- * [Test Puppet Module Pull Requests](#test-puppet-module)
+ * [Test Installer Puppet Module](#test-installer-puppet-module)
  * [Hammer Development](#hammer-development)
  * [Capsule Development](#capsule-development)
  * [Client Development](#client-development)
@@ -69,7 +69,7 @@ When spinning up a Katello development environment locally, it can take a while 
 
 The Katello development stable box is named `centos7-katello-devel-stable`. Please see the [documentation on stable boxes](./stable_boxes.md) for more information on how to use this box.
 
-After spinning up `centos7-katello-devel-stable`, it's a good idea to pull the latest git branches and update gems and npm packages after spinning up a stable box. If a stable box image hasn't been published in a while, these can be out-of-date. 
+After spinning up `centos7-katello-devel-stable`, it's a good idea to pull the latest git branches and update gems and npm packages after spinning up a stable box. If a stable box image hasn't been published in a while, these can be out-of-date.
 
 At this moment, you will have to manually configure any personal customizations such as github remotes.
 
@@ -206,7 +206,7 @@ The Koji role and task ID variable can be added to download and configure a repo
     - katello
 ```
 
-## Test Puppet Module
+## Test Installer Puppet Module
 
 ### Pull Requests
 
@@ -248,6 +248,26 @@ ansible:
     foreman_installer_module_branches:
       - myfork/katello_devel/switch-to-scl
       - myfork/foreman/add-puma
+```
+
+### Local changes
+
+As an alternative you can use modules from local directories for testing out local changes before push.
+For the machine in `99-local.yaml`
+
+```yaml
+synced_folders:
+  - path: /home/myprojects/path/foreman-installer
+    mount_point: '/vagrant/foreman-installer'
+    options:
+      type: rsync
+ansible:
+  variables:
+    foreman_installer_module_locals:
+      - name: dhcp
+        path: '/vagrant/foreman-installer/puppet-dhcp/'
+      - name: foreman_proxy
+        path: '/vagrant/foreman-installer/puppet-foreman_proxy/'
 ```
 
 ## Hammer Development
@@ -348,7 +368,7 @@ In the vagrant box, the dynflow repository is cloned to `/home/vagrant/dynflow`.
 The testing tool [smoker](https://github.com/theforeman/smoker) can be set up with the `centos7-foreman-smoker` box and tests can be run against a separate Foreman/Katello instance.
 
 To use:
-1. Ensure that you have a running instance of Foreman/Katello.  
+1. Ensure that you have a running instance of Foreman/Katello.
 2. Follow the example box definition in `vagrant/boxes.d/99-local.yaml.example` for `centos7-foreman-smoker` and update the `smoker_base_url` variable. With `pytest_run_tests` set to false, smoker tests will not be run by the playbook, but the box will be set up with pytest and the smoker repository will be cloned to the `vagrant` user's home directory.
 3. Run `vagrant up centos7-foreman-smoker`. A debug message will print showing the command to run smoker tests and the alias that has been set up. The alias is defined in `~/.bash_profile` on the box itself.
 4. You can then ssh into the smoker box. Ensure the hostname of the Foreman/Katello instance can be reached by the smoker box.

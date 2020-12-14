@@ -218,7 +218,7 @@ module Forklift
       return if synced_folders.empty?
 
       synced_folders.each do |folder|
-        options = symbolized_options(folder['options'])
+        options = symbolized_options(folder['options'] || {})
         machine.vm.synced_folder folder['path'], folder['mount_point'], options
       end
     end
