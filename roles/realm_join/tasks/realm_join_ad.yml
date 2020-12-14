@@ -1,0 +1,116 @@
+---
+- name: Ensure pexpect to answer password
+  become: yes
+  package:
+    name: pexpect
+    state: latest
+  # on Fedora this will be True due to the major version. Not nice, but works.
+  when: ansible_os_family != "RedHat" or ansible_distribution_major_version >= '8'
+
+- name: Install pip to get supported pexpect version
+  become: yes
+  package:
+    name:
+      - epel-release
+      - python-pip
+    state: present
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version < '8'
+
+- name: Ensure pexpect to answer password from pip
+  become: yes
+  pip: name=pexpect
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version < '8'
+
+- name: Ensure realm packages
+  become: yes
+  package:
+    name:
+      - sssd
+      - adcli
+      - realmd
+      - ipa-python-compat
+      - krb5-workstation
+      - samba-common-tools
+      # Irrelevant, missing installer support for gssproxy
+      - gssproxy
+      - nfs-utils
+    state: present
+
+- name: Find user - to find out if server is already joined
+  command: id '{{ foreman_realm_directory_admin_name | quote }}@{{ foreman_realm_domain | quote }}'
+  register: realm_connected
+  ignore_errors: True
+
+- name: Join the realm
+  become: yes
+  expect:
+    command: '/usr/sbin/realm join -v {{ foreman_realm }}'
+    responses:
+      (?i)password: '{{ foreman_realm_directory_admin_password }}'
+  when: realm_connected is failed
+
+- name: Create the config file to get keytab
+  become: yes
+  template:
+    src: net-keytab.conf.j2
+    dest: /etc/net-keytab.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create httpd conf dir to put keytab [Hack - remove once using gssproxy]
+  become: yes
+  file:
+    path: /etc/httpd/conf
+    state: directory
+    mode: '0775'
+    recurse: yes
+
+- name: Get the keytab
+  become: yes
+  environment:
+    KRB5_KTNAME: 'FILE:/etc/httpd/conf/http.keytab'
+  expect:
+    command: "net ads keytab add HTTP -U {{ foreman_realm_directory_admin_name }} -d3 -s /etc/net-keytab.conf"
+    responses:
+      (?i)password: '{{ foreman_realm_directory_admin_password }}'
+    creates: /etc/httpd/conf/http.keytab
+
+- name: Change perms for keytab
+  become: yes
+  file:
+    path: /etc/httpd/conf/http.keytab
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "[Irrelevant] add gssproxy config"
+  become: yes
+  copy:
+    src: apache-gssproxy.conf
+    dest: /etc/gssproxy/80-http.conf
+
+- name: "[Irrelevant] start gssproxy service"
+  become: yes
+  service:
+    name: gssproxy
+    state: started
+    enabled: yes
+
+- name: "[Irrelevant] enable GSS_PROXY for httpd"
+  become: yes
+  copy:
+    src: httpd-gssproxy.service
+    dest: /etc/systemd/system/httpd.service
+
+- name: Create fake IPA conf dir
+  become: yes
+  file:
+    path: /etc/ipa
+    state: directory
+
+- name: Prepare fake IPA config used by Installer
+  become: yes
+  template:
+    src: fake-ipa.conf.j2
+    dest: /etc/ipa/default.conf

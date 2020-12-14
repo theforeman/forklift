@@ -1,0 +1,3 @@
+.include /lib/systemd/system/httpd.service
+[Service]
+Environment=GSS_USE_PROXY=1

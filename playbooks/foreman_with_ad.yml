@@ -1,0 +1,8 @@
+- hosts: all
+  become: true
+  vars:
+    foreman_installer_options_internal_use_only:
+      - '--foreman-ipa-authentication=true'
+  roles:
+    - role: realm_join
+    - role: foreman
