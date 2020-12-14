@@ -1,60 +1,67 @@
 {
-    "variables": {
-        "user": "vagrant",
-        "password": "vagrant",
-        "packer_hostname": "centos7-katello-devel-stable.example.com"
-   },
-
-    "builders":
-    [
-        {
-            "name": "centos7-katello-devel-stable",
-            "type": "qemu",
-            "format": "qcow2",
-            "accelerator": "kvm",
-            "headless": true,
-            "iso_url": "http://packages.oit.ncsu.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2003.iso",
-            "iso_checksum_type": "sha256",
-            "iso_checksum": "659691c28a0e672558b003d223f83938f254b39875ee7559d1a4a14c79173193",
-            "http_directory": "http",
-            "ssh_username": "{{user `user`}}",
-            "ssh_password": "{{user `password`}}",
-            "ssh_wait_timeout": "20m",
-            "boot_wait": "2s",
-            "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
-            "qemuargs": [
-                [ "-m", "12G" ],
-                [ "-smp", "4" ]
-            ],
-            "boot_command": [
-              "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
-            ]
-        }
-    ],
-
-    "provisioners": [
-        {
-            "type": "shell",
-            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
-            "scripts": [
-              "scripts/vagrant.sh",
-              "scripts/fix_hostname.sh"
-            ],
-            "environment_vars": [ "PACKER_HOSTNAME={{user `packer_hostname`}}" ]
-
-        },
-        {
-            "type": "ansible",
-            "playbook_file": "../playbooks/katello_devel.yml",
-            "ansible_env_vars": [ "ANSIBLE_CONFIG=../ansible.cfg" ]
-        }
-    ],
-
-    "post-processors": [
-        {
-            "type": "vagrant",
-            "keep_input_artifact": false,
-            "output": "centos7-katello-devel-stable.box"
-        }
-    ]
+  "variables": {
+    "packer_hostname": "centos7-katello-devel-stable",
+    "password": "vagrant",
+    "user": "vagrant",
+    "ansible_variables": "{}"
+  },
+  "builders": [
+    {
+      "accelerator": "kvm",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ],
+      "boot_wait": "2s",
+      "format": "qcow2",
+      "headless": true,
+      "http_directory": "http",
+      "iso_checksum": "sha256:07b94e6b1a0b0260b94c83d6bb76b26bf7a310dc78d7a9c7432809fb9bc6194a",
+      "iso_url": "http://packages.oit.ncsu.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
+      "name": "{{ user `packer_hostname` }}.example.com",
+      "qemuargs": [
+        [
+          "-m",
+          "12G"
+        ],
+        [
+          "-smp",
+          "4"
+        ]
+      ],
+      "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
+      "ssh_password": "{{user `password`}}",
+      "ssh_timeout": "20m",
+      "ssh_username": "{{user `user`}}",
+      "type": "qemu"
+    }
+  ],
+  "post-processors": [
+    {
+      "keep_input_artifact": false,
+      "output": "{{user `packer_hostname`}}.box",
+      "type": "vagrant"
+    }
+  ],
+  "provisioners": [
+    {
+      "environment_vars": [
+        "PACKER_HOSTNAME={{user `packer_hostname`}}.example.com"
+      ],
+      "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "scripts/vagrant.sh",
+        "scripts/fix_hostname.sh"
+      ],
+      "type": "shell"
+    },
+    {
+      "ansible_env_vars": [
+        "ANSIBLE_CONFIG=../ansible.cfg"
+      ],
+      "extra_arguments": ["--extra-vars", "{{ user `ansible_variables` }}"],
+      "playbook_file": "../playbooks/katello_devel.yml",
+      "type": "ansible"
+    }
+  ]
 }
+
