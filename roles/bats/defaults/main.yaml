@@ -20,4 +20,3 @@ bats_tests:
 bats_tests_additional: []
 bats_teardown:
   - "fb-destroy-organization.bats"
-  - "fb-finish.bats"
