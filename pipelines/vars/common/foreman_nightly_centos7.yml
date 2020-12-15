@@ -1,0 +1,4 @@
+---
+pipeline_type: foreman
+pipeline_os: centos7
+pipeline_version: nightly

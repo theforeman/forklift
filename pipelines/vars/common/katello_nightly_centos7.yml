@@ -1,0 +1,4 @@
+---
+pipeline_type: katello
+pipeline_os: centos7
+pipeline_version: nightly
