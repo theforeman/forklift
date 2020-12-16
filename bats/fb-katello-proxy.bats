@@ -10,7 +10,7 @@ load fixtures/content
 setup() {
   tSetOSVersion
   PROXY_ID=2
-  PROXY_INFO=$(hammer --output json proxy show --id $PROXY_ID)
+  PROXY_INFO=$(hammer --output json proxy info --id $PROXY_ID)
   PROXY_HOSTNAME=$(echo $PROXY_INFO | ruby -e "require 'json'; puts JSON.load(ARGF.read)['Name']")
 }
 
