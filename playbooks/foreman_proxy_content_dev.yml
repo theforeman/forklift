@@ -24,4 +24,4 @@
         - '--foreman-proxy-register-in-foreman true'
         - '--foreman-proxy-oauth-consumer-key "{{ oauth_consumer_key.stdout }}"'
         - '--foreman-proxy-oauth-consumer-secret "{{ oauth_consumer_secret.stdout }}"'
-        - '--foreman-proxy-content-parent-fqdn "{{ server_fqdn.stdout }}"'
+        - "{{ '' if (foreman_repositories_version == 'nightly' or 2.3 is version(foreman_repositories_version, '>')) else ('--foreman-proxy-content-parent-fqdn %s' % server_fqdn.stdout) }}"
