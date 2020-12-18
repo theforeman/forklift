@@ -12,7 +12,7 @@
   become: true
   sysctl:
     name: user.max_user_namespaces
-    value: 100000
+    value: '100000'
 
 - name: Set subuid range for user
   become: true

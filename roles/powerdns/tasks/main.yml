@@ -5,8 +5,8 @@
     description: "PowerDNS repository for PowerDNS Authoritative Server - version 4.0.X"
     baseurl: "http://repo.powerdns.com/centos/$basearch/$releasever/auth-40"
     gpgkey: "https://repo.powerdns.com/FD380FBB-pub.asc"
-    gpgcheck: "1"
-    enabled: "1"
+    gpgcheck: yes
+    enabled: yes
 
 - name: "Install PowerDNS"
   package:
