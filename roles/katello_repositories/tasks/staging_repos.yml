@@ -9,8 +9,8 @@
     name: katello-koji
     description: "Katello {{ katello_repositories_version }} Koji Repository"
     baseurl: "http://koji.katello.org/releases/yum/katello-{{ katello_repositories_version }}/katello/el{{ ansible_distribution_major_version }}/x86_64/"
-    priority: 1
-    gpgcheck: 0
+    priority: '1'
+    gpgcheck: no
     include: /etc/yum/foreman.conf
 
 - name: 'Candlepin Koji repository'
@@ -18,8 +18,8 @@
     name: candlepin-koji
     description: "Candlepin {{ katello_repositories_version }} Koji Repository"
     baseurl: "http://koji.katello.org/releases/yum/katello-{{ katello_repositories_version }}/candlepin/el{{ ansible_distribution_major_version }}/x86_64/"
-    priority: 1
-    gpgcheck: 0
+    priority: '1'
+    gpgcheck: no
     include: /etc/yum/foreman.conf
 
 - name: 'Add Pulp {{ katello_repositories_pulp_version }} Stable repository'
