@@ -93,6 +93,9 @@ def get_variables(hosts):
 
 
 def get_configs(hosts):
+    if not hosts:
+        return
+
     ssh_configs = get_ssh_configs(hosts)
     variables = get_variables(hosts)
 
