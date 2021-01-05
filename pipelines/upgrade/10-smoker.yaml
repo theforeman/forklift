@@ -5,7 +5,7 @@
   vars_files:
     - ../vars/upgrade_base.yml
   vars:
-    smoker_base_url: "https://{{ forklift_server_name }}.{{ ansible_domain }}"
+    smoker_base_url: "https://{{ hostvars[forklift_server_name].ansible_nodename }}"
     smoker_variables:
       password: "{{ foreman_installer_admin_password|default('changeme') }}"
   roles:
