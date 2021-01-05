@@ -1,24 +1,12 @@
 ---
+- name: 'Gather facts from {{ foreman_proxy_content_server }}'
+  setup:
+  delegate_to: "{{ foreman_proxy_content_server }}"
+  delegate_facts: true
+
 - name: 'Get Server Hostname'
-  shell: hostname -f
-  delegate_to: "{{ foreman_proxy_content_server }}"
-  register: server_fqdn
-
-- name: 'Get Server IP Address'
-  shell: ifconfig eth0 2>/dev/null|awk '/inet/ {print $2}'|sed 's/addr://'
-  delegate_to: "{{ foreman_proxy_content_server }}"
-  register: server_ip
-
-- name: 'Set fact for Server IP'
-  set_fact: server_ip="{{ server_ip.stdout.split('\n')[0] }}"
-
-- name: 'Add /etc/hosts record for foreman_proxy_content'
-  delegate_to: "{{ foreman_proxy_content_server }}"
-  lineinfile:
-    dest: /etc/hosts
-    regexp: ".*{{ ansible_nodename }}$"
-    line: "{{ foreman_proxy_content_ip }} {{ ansible_nodename }}"
-    state: present
+  set_fact:
+    server_fqdn: "{{ hostvars[foreman_proxy_content_server].ansible_nodename }}"
 
 - name: 'Get oauth-consumer-key'
   shell: grep oauth_consumer_key "{{ foreman_directory }}"settings.yaml | cut -d ' ' -f 2
