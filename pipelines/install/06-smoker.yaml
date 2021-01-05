@@ -8,6 +8,11 @@
     smoker_base_url: "https://{{ hostvars[forklift_server_name].ansible_nodename }}"
     smoker_variables:
       password: "{{ foreman_installer_admin_password|default('changeme') }}"
+  pre_tasks:
+    - name: Gather facts from server
+      setup:
+      delegate_to: "{{ forklift_server_name }}"
+      delegate_facts: true
   roles:
     - role: etc_hosts
       become: true
