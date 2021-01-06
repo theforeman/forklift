@@ -14,7 +14,7 @@
       - "--foreman-proxy-foreman-base-url https://{{ server_fqdn }}"
       - "--foreman-proxy-oauth-consumer-key {{ oauth_consumer_key.stdout }}"
       - "--foreman-proxy-oauth-consumer-secret {{ oauth_consumer_secret.stdout }}"
-      - "{{ '' if (2.3 is version(forklift_upgrade_version_start, '>') else ('--foreman-proxy-content-parent-fqdn %s' % server_fqdn) }}"
+      - "{{ '' if (2.3 is version(forklift_upgrade_version_start, '>')) else ('--foreman-proxy-content-parent-fqdn %s' % server_fqdn) }}"
       - "--puppet-server-foreman-url https://{{ server_fqdn }}"
       - "--puppet-server-max-active-instances 1"
       - "--puppet-server-jvm-min-heap-size 1G"
