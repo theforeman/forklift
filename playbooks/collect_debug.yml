@@ -23,7 +23,12 @@
     - name: "Find smoker files"
       find:
         paths: "{{ smoker_output_dir }}"
-        patterns: "*.xml"
+        patterns:
+          - "*.xml"
+          - "*.html"
+          - "*.css"
+          - "*.png"
+        recurse: True
       register: smoker_results
 
     - name: "Copy smoker results"
