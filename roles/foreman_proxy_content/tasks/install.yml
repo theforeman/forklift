@@ -8,15 +8,20 @@
   set_fact:
     server_fqdn: "{{ hostvars[foreman_proxy_content_server].ansible_nodename }}"
 
-- name: 'Get oauth-consumer-key'
-  shell: grep oauth_consumer_key "{{ foreman_directory }}"settings.yaml | cut -d ' ' -f 2
+- name: 'Get Foreman settings'
+  slurp:
+    src: "{{ foreman_directory }}/settings.yaml"
   delegate_to: "{{ foreman_proxy_content_server }}"
-  register: oauth_consumer_key
+  register: foreman_settings
 
-- name: 'Get oauth-consumer-secret'
-  shell: grep oauth_consumer_secret "{{ foreman_directory }}"settings.yaml | cut -d ' ' -f 2
-  delegate_to: "{{ foreman_proxy_content_server }}"
-  register: oauth_consumer_secret
+- name: 'Decode Foreman settings YAML'
+  set_fact:
+    foreman_settings_yaml: "{{ (foreman_settings['content'] | b64decode | from_yaml) }}"
+
+- name: 'Get OAuth consumer data from settings'
+  set_fact:
+    oauth_consumer_key: "{{ foreman_settings_yaml[':oauth_consumer_key'] }}"
+    oauth_consumer_secret: "{{ foreman_settings_yaml[':oauth_consumer_secret'] }}"
 
 - include_tasks: certs_generate.yml
 
