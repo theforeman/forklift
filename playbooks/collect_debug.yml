@@ -24,7 +24,7 @@
       find:
         paths: "{{ smoker_output_dir }}"
         patterns:
-          - "*.xml"
+          - "junit.xml"
           - "*.html"
           - "*.css"
           - "*.png"
