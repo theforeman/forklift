@@ -420,9 +420,9 @@ Provision it
 Test it
 
 ```vagrant ssh foreman-ad```
-```kinit test-domain-user``` # initialize kerberos with existing user in the AD domain
-```klist``` # verify above went smooth
-```curl -k -u : --negotiate https://foreman-ad.example.com/users/extlogin``` # substitude for your fqdn
+```kinit test-domain-user``` # initialize Kerberos with an existing user in the AD domain
+```klist``` # verify the above went smooth
+```curl -k -u : --negotiate https://foreman-ad.example.com/users/extlogin``` # substitute for your fqdn
 
 <html><body>You are being <a href="https://foreman-ad.example.com/users/4-ldapuserexample-com/edit">redirected</a>.</body></html>
 ```
