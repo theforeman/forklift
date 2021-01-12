@@ -5,7 +5,7 @@
     name: pexpect
     state: latest
   # on Fedora this will be True due to the major version. Not nice, but works.
-  when: ansible_os_family != "RedHat" or ansible_distribution_major_version >= '8'
+  when: ansible_os_family != "RedHat" or ansible_distribution_major_version is version('8', '>')
 
 - name: Install pip to get supported pexpect version
   become: yes
@@ -14,12 +14,17 @@
       - epel-release
       - python-pip
     state: present
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version < '8'
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version is version('8', '<')
 
 - name: Ensure pexpect to answer password from pip
   become: yes
-  pip: name=pexpect
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version < '8'
+  pip:
+    name: pexpect
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version is version('8', '<')
 
 - name: Ensure realm packages
   become: yes

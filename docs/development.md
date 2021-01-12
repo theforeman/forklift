@@ -370,7 +370,7 @@ You need the AD controller with domain controller you want to test this against.
 Easiest is to install Windows server (ideally core to save resources, but its harder to install AD and setup DNS).
 This controller doesn't need to be searchable in your environmnet, we will point libvirt there.
 
-I will be using the domain `example.com` and expect your AD controller runs on IP `192.168.1.8`.
+I will be using the domain `example.com` and expect your AD controller runs on IP `192.0.2.8`.
 
 #### Setup libvirt
 
@@ -384,7 +384,7 @@ Add the xmlns scope so the xml is valid and the dnsmasq option to point all `exa
 <network xmlns:dnsmasq="http://libvirt.org/schemas/network/dnsmasq/1.0">
   ....
   <dnsmasq:options>
-    <dnsmasq:option value="server=/example.com/192.168.1.8"/>
+    <dnsmasq:option value="server=/example.com/192.0.2.8"/>
   </dnsmasq:options>
 </network>
 
@@ -415,14 +415,16 @@ foreman-ad:
 
 Provision it
 
-```vagrant up foreman-ad```
+`vagrant up foreman-ad`
 
 Test it
 
-```vagrant ssh foreman-ad```
-```kinit test-domain-user``` # initialize Kerberos with an existing user in the AD domain
-```klist``` # verify the above went smooth
-```curl -k -u : --negotiate https://foreman-ad.example.com/users/extlogin``` # substitute for your fqdn
+```console
+$ vagrant ssh foreman-ad
+
+foreman-ad$ kinit test-domain-user # initialize Kerberos with an existing user in the AD domain
+foreman-ad$ klist # verify the above went smooth
+foreman-ad$ curl -k -u : --negotiate https://foreman-ad.example.com/users/extlogin # substitute for your fqdn
 
 <html><body>You are being <a href="https://foreman-ad.example.com/users/4-ldapuserexample-com/edit">redirected</a>.</body></html>
 ```
