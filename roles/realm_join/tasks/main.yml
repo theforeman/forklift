@@ -1,1 +1,5 @@
+- name: "Load OS specific variables"
+  include_vars: "{{ ansible_os_family }}.yml"
+- include_tasks: install_pexpect.yml
 - include_tasks: realm_join_ad.yml
+- include_tasks: prepare_httpd_mod_auth.yml
