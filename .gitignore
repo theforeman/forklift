@@ -14,7 +14,6 @@ repo
 user_playbooks
 playbooks/galaxy_roles
 playbooks/galaxy_collections
-requirements.yml
 inventories/local_*
 user_devel_env_files/
 
