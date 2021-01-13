@@ -17,4 +17,6 @@
     no_extra_spaces: True
   tags:
     - packages
-  when: ansible_distribution == 'CentOS'
+  when:
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version == '7'
