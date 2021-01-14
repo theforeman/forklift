@@ -8,6 +8,14 @@
     - ../vars/forklift_{{ pipeline_type }}.yml
   environment:
     DJANGO_SETTINGS_MODULE: pulpcore.app.settings
+  pre_tasks:
+    - name: install python3-policycoreutils
+      package:
+        name: python3-policycoreutils
+        state: present
+      when:
+        - ansible_os_family == 'RedHat'
+        - ansible_distribution_major_version == '8'
   roles:
     - epel_repositories
     - pulp.pulp_installer.pulp_all_services
