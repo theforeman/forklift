@@ -13,8 +13,8 @@ setup() {
 }
 
 @test "download bootstrap script from /pub and register to Satellite" {
+  source /root/.bash_profile
   curl -o   /root/bootstrap.py "http://${SERVERNAME}/pub/bootstrap.py"
-  chmod u+x /root/bootstrap.py
   python /root/bootstrap.py -s ${SERVERNAME} -o 'Default_Organization' -L 'Default Location' -a My_Activation_Key --hostgroup=My_Hostgroup --skip puppet --skip foreman --force
   echo "rc=${status}"
   echo "${output}"
@@ -24,6 +24,7 @@ setup() {
   }
 
 @test "Move client to get content from Capsule" {
+  source /root/.bash_profile
   python /root/bootstrap.py -s ${CAPSULENAME} -o 'Default_Organization' -L 'Default Location' -a My_Activation_Key --hostgroup=My_Hostgroup --skip puppet --skip foreman --force
   echo "rc=${status}"
   echo "${output}"
