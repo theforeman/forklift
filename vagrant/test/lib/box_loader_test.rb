@@ -25,7 +25,7 @@ class TestBoxLoader < Minitest::Test
     assert loader.boxes
     assert loader.boxes['rpm-packaging']
     assert_equal 'rpm-packaging', loader.boxes['rpm-packaging']['name']
-    assert_equal 'fedora/30-cloud-base', loader.boxes['rpm-packaging']['box_name']
+    assert_equal 'fedora/33-cloud-base', loader.boxes['rpm-packaging']['box_name']
   end
 
   private

@@ -1,15 +1,10 @@
 boxes:
-  fedora29:
-    box_name: 'fedora/29-cloud-base'
-    image_name: !ruby/regexp '/Fedora 29.*/'
+  fedora32:
+    box_name: 'fedora/32-cloud-base'
+    image_name: !ruby/regexp '/Fedora 32.*/'
     pty: true
 
-  fedora30:
-    box_name: 'fedora/30-cloud-base'
-    image_name: !ruby/regexp '/Fedora 30.*/'
-    pty: true
-
-  fedora31:
-    box_name: 'fedora/31-cloud-base'
-    image_name: !ruby/regexp '/Fedora 31.*/'
+  fedora33:
+    box_name: 'fedora/33-cloud-base'
+    image_name: !ruby/regexp '/Fedora 33.*/'
     pty: true
