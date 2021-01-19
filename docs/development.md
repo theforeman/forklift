@@ -84,8 +84,8 @@ Because we are using a webpack server in conjunction with a rails server, there 
 
 #### Run a rails and webpack server together using `foreman start`
 - Run `bundle exec foreman start` in `~/foreman`
-- Navigate to `https://centos7-katello-devel.<hostname>.example.com/` where `<hostname>` is the shortname of your hypervisor (machine your VM is running on).
-- Accept the self-signed certs at `https://centos7-katello-devel.<hostname>.example.com:3808`.
+- Navigate to `https://centos7-katello-devel.<hostname>.example.com/` where `<hostname>` is the shortname of your hypervisor (machine your VM is running on) and accept the self-signed certs.
+- Accept the self-signed certs on port 3808 at `https://centos7-katello-devel.<hostname>.example.com:3808`.
 - Everything should be set for you to run `bundle exec foreman start` to start your dev server as needed.
 
 NOTE: The `foreman` in `foreman start` is actually [this gem](https://github.com/ddollar/foreman) and not our `foreman`. It
