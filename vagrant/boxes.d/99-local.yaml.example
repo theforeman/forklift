@@ -48,6 +48,21 @@ centos7-hammer-devel:
       hammer_devel_github_username: <REPLACE ME>
       #hammer_devel_server: centos7-katello-devel.custom-domain
 
+# Useful for content-view version import/export where hammer must be run locally.
+centos7-katello-hammer-devel:
+  primary: true
+  box: centos7
+  memory: 8192
+  ansible:
+    playbook: 'playbooks/katello_hammer_devel.yml'
+    group: 'devel'
+    variables:
+      ssh_forward_agent: true
+      foreman_devel_github_push_ssh: True
+      katello_devel_github_username: <REPLACE ME>
+      hammer_devel_github_username: <REPLACE ME>
+      #hammer_devel_server: centos7-katello-hammer-devel.custom-domain
+
 katello-remote-execution:
   box: centos7-katello-nightly
   installer: --enable-foreman-remote-execution

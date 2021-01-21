@@ -1,0 +1,10 @@
+---
+- hosts: all
+  roles:
+    - role: katello_devel
+      become: yes
+    - etc_hosts
+    - git
+    - role: ruby_scl
+      become: yes
+    - hammer_devel
