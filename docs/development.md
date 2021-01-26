@@ -15,6 +15,7 @@ This covers how to setup and configure a development environment using the Forkl
  * [Client Development](#client-development)
  * [Dynflow](#dynflow-development)
  * [Smoker](#smoker)
+ * [Advanced foreman features](#advanced-playbooks)
 
 ## Development Environment Deployment
 
@@ -69,7 +70,7 @@ When spinning up a Katello development environment locally, it can take a while 
 
 The Katello development stable box is named `centos7-katello-devel-stable`. Please see the [documentation on stable boxes](./stable_boxes.md) for more information on how to use this box.
 
-After spinning up `centos7-katello-devel-stable`, it's a good idea to pull the latest git branches and update gems and npm packages after spinning up a stable box. If a stable box image hasn't been published in a while, these can be out-of-date. 
+After spinning up `centos7-katello-devel-stable`, it's a good idea to pull the latest git branches and update gems and npm packages after spinning up a stable box. If a stable box image hasn't been published in a while, these can be out-of-date.
 
 At this moment, you will have to manually configure any personal customizations such as github remotes.
 
@@ -348,9 +349,84 @@ In the vagrant box, the dynflow repository is cloned to `/home/vagrant/dynflow`.
 The testing tool [smoker](https://github.com/theforeman/smoker) can be set up with the `centos7-foreman-smoker` box and tests can be run against a separate Foreman/Katello instance.
 
 To use:
-1. Ensure that you have a running instance of Foreman/Katello.  
+1. Ensure that you have a running instance of Foreman/Katello.
 2. Follow the example box definition in `vagrant/boxes.d/99-local.yaml.example` for `centos7-foreman-smoker` and update the `smoker_base_url` variable. With `pytest_run_tests` set to false, smoker tests will not be run by the playbook, but the box will be set up with pytest and the smoker repository will be cloned to the `vagrant` user's home directory.
 3. Run `vagrant up centos7-foreman-smoker`. A debug message will print showing the command to run smoker tests and the alias that has been set up. The alias is defined in `~/.bash_profile` on the box itself.
 4. You can then ssh into the smoker box. Ensure the hostname of the Foreman/Katello instance can be reached by the smoker box.
 5. From the smoker box, run tests as the vagrant user using the alias or running pytest commands manually. To change the testing options, please see [the smoker documentation](https://github.com/theforeman/smoker) and modify the alias or manually run pytest commands as necessary.
 
+## Advanced features
+
+These are playbooks, roles and variables provided to use additional funcionalities to test advanced foreman features.
+This list should be organized by foreman feature.
+
+* [Kerberos](#foreman-with-active-directory)
+
+### Foreman with Active Directory
+
+#### Prepare AD controller
+
+You need the AD controller with domain controller you want to test this against.
+Easiest is to install Windows server (ideally core to save resources, but its harder to install AD and setup DNS).
+This controller doesn't need to be searchable in your environmnet, we will point libvirt there.
+
+I will be using the domain `example.com` and expect your AD controller runs on IP `192.0.2.8`.
+
+#### Setup libvirt
+
+Here we will edit the libvirt network, so its dnsmasq points the domain request to our controller.
+If you are using another provider, you are on your own to setup the internal dns lookups.
+
+Edit the libvirt network (`virsh net-edit network` or virt-manager -> connection details -> networks).
+Add the xmlns scope so the xml is valid and the dnsmasq option to point all `example.com` requests to our AD controller.
+
+```xml
+<network xmlns:dnsmasq="http://libvirt.org/schemas/network/dnsmasq/1.0">
+  ....
+  <dnsmasq:options>
+    <dnsmasq:option value="server=/example.com/192.0.2.8"/>
+  </dnsmasq:options>
+</network>
+
+```
+
+#### Setup forklift machine
+
+Then add the machine and specify the domain, playbook and password for the join user.
+I'm using a short name as longer names tend to have issues with NETBIOS names that end up shortened, and hostname != NETBIOS name could cause issues.
+If you choose longer name you're on your own, contributions with fixes welcome! :)
+
+```yaml
+# boxes.d/99-local.yaml
+
+foreman-ad:
+  box: centos7
+  memory: 4096
+  domain: 'example.com' # must be the AD domain
+  ansible:
+    playbook: 'playbooks/foreman_with_ad.yml'
+    group: server
+    variables:
+      foreman_realm_directory_admin_password: 'Admin123.'
+
+```
+
+#### Provision
+
+Provision it
+
+`vagrant up foreman-ad`
+
+Test it
+
+```console
+$ vagrant ssh foreman-ad
+
+foreman-ad$ kinit test-domain-user # initialize Kerberos with an existing user in the AD domain
+foreman-ad$ klist # verify the above went smooth
+foreman-ad$ curl -k -u : --negotiate https://foreman-ad.example.com/users/extlogin # substitute for your fqdn
+
+<html><body>You are being <a href="https://foreman-ad.example.com/users/4-ldapuserexample-com/edit">redirected</a>.</body></html>
+```
+
+If you've got You are being redirected message, everything worked and you are "all set".

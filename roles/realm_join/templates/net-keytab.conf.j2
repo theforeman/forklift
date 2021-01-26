@@ -1,0 +1,5 @@
+[global]
+workgroup = {{ foreman_realm.split(".")[0] }}
+realm = {{ foreman_realm }}
+kerberos method = system keytab
+security = ads

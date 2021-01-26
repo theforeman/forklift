@@ -1,0 +1,28 @@
+---
+- name: Ensure realm packages
+  become: yes
+  package:
+    name:
+      - sssd
+      - adcli
+      - realmd
+      - ipa-python-compat
+      - krb5-workstation
+      - samba-common-tools
+      # Irrelevant, missing installer support for gssproxy
+      - gssproxy
+      - nfs-utils
+    state: present
+
+- name: Find user - to find out if server is already joined
+  command: id '{{ foreman_realm_directory_admin_name | quote }}@{{ foreman_realm_domain | quote }}'
+  register: realm_connected
+  ignore_errors: True
+
+- name: Join the realm
+  become: yes
+  expect:
+    command: '/usr/sbin/realm join -v {{ foreman_realm }}'
+    responses:
+      (?i)password: '{{ foreman_realm_directory_admin_password }}'
+  when: realm_connected is failed

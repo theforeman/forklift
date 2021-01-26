@@ -1,0 +1,3 @@
+---
+realm_pexpect_package: python3-pexpect
+realm_pexpect_from_pip: "{{ ansible_distribution_major_version is version('8', '<') }}"

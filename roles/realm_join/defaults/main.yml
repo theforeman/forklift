@@ -1,0 +1,5 @@
+---
+foreman_realm: "{{ ansible_domain | upper }}"
+foreman_realm_domain: "{{ ansible_domain }}"
+foreman_realm_directory_admin_name: "Administrator"
+foreman_realm_directory_admin_password: "changeme"
