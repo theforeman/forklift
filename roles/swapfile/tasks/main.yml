@@ -33,7 +33,7 @@
 
 - name: "activate {{ swapfile_path }}"
   command: "swapon {{ swapfile_path }}"
-  when: swapfile_active | failed
+  when: swapfile_active is failed
 
 - name: set vm.swappiness to 60
   sysctl:
