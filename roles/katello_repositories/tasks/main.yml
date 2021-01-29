@@ -7,3 +7,7 @@
   when: ansible_distribution_major_version == "8"
   args:
     warn: false # dnf module can't handle modules
+
+- name: enable powertools for libdb_cxx used by qpid-cpp-server-linearstore
+  command: dnf config-manager --set-enabled powertools
+  when: ansible_distribution_major_version == "8"
