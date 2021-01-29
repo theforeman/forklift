@@ -89,7 +89,7 @@ After installing a Katello server, you could then spin up a Capsule with the ass
 3. Clone this repository - `git clone https://github.com/theforeman/forklift.git`
 4. Enter the repository - `cd forklift`
 5. Make sure DNS is set up properly. This is a Foreman requirement, not an Ansible requirement.
-6. Determine the compatible versions of Foreman and Katello you want to install based on the Katello install instructions at https://github.com/theforeman/forklift/blob/master/vagrant/config/versions.yaml. Replace the 3.16 in the URL with whatever version of Katello you want to install.
+6. Determine the compatible versions of Foreman and Katello you want to install based on the Katello install instructions at https://github.com/theforeman/forklift/blob/master/vagrant/config/versions.yaml.
 
 For a release version in production:
 
