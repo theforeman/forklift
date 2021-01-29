@@ -52,7 +52,7 @@ Start the installation for CentOS 7:
 
     vagrant up centos7-katello-3.4
 
-
+This will create a libvirt based virtual machine running the Katello server on CentOS.
 
 ## BYOB
 
