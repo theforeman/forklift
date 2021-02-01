@@ -54,6 +54,18 @@ installers:
       - 'debian10'
       - 'ubuntu1804'
 
+  - foreman: '2.4'
+    katello: '4.0'
+    pulp: '2.21'
+    pulpcore: '3.9'
+    puppet: 6
+    boxes:
+      - 'centos7'
+      - 'centos7-fips'
+      - 'centos8'
+      - 'debian10'
+      - 'ubuntu1804'
+
   - foreman: 'nightly'
     katello: 'nightly'
     pulp: '2.21'
