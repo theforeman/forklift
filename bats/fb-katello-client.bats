@@ -79,36 +79,26 @@ load fixtures/content
 }
 
 @test "install katello-agent" {
-  tSkipIfNoPulp2 "katello-agent support"
-
   tPackageInstall katello-agent && tPackageExists katello-agent
 }
 
 @test "30 sec of sleep for groggy gofers" {
-  tSkipIfNoPulp2 "katello-agent support"
-
   sleep 30
 }
 
 @test "install package remotely (katello-agent)" {
-  tSkipIfNoPulp2 "katello-agent support"
-
   run yum -y remove gorilla
   timeout 300 hammer host package install --host $HOSTNAME --packages gorilla
   tPackageExists gorilla
 }
 
 @test "install errata remotely (katello-agent)" {
-  tSkipIfNoPulp2 "katello-agent support"
-
   timeout 300 hammer host errata apply --errata-ids 'RHEA-2012:0055' --host $HOSTNAME
   tPackageExists walrus-5.21
 }
 
 # it seems walrus lingers around making subsequent runs fail, so lets test package removal!
 @test "package remove (katello-agent)" {
-  tSkipIfNoPulp2 "katello-agent support"
-
   timeout 300 hammer host package remove --host $HOSTNAME --packages walrus
 }
 
