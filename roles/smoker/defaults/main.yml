@@ -7,8 +7,6 @@ smoker_variables_path: "{{ smoker_directory }}/variables.json"
 smoker_base_url:
 smoker_command_args: "--driver chrome --variables '{{ smoker_variables_path }}' --base-url '{{ smoker_base_url }}' --html 'report/htmlreport.html' -vv --numprocesses 2"
 smoker_markers:
-# pinned to 86 as 87 hangs randomly: https://bugzilla.redhat.com/show_bug.cgi?id=1914166
 smoker_browser_packages:
-  - https://kojipkgs.fedoraproject.org//packages/chromium/86.0.4240.193/1.el7/x86_64/chromedriver-86.0.4240.193-1.el7.x86_64.rpm
-  - https://kojipkgs.fedoraproject.org//packages/chromium/86.0.4240.193/1.el7/x86_64/chromium-86.0.4240.193-1.el7.x86_64.rpm
-  - https://kojipkgs.fedoraproject.org//packages/chromium/86.0.4240.193/1.el7/x86_64/chromium-common-86.0.4240.193-1.el7.x86_64.rpm
+  - chromium
+  - chromedriver
