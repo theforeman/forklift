@@ -10,6 +10,7 @@
     - ../vars/install_base.yml
     - ../vars/repos_staging.yml
   roles:
+    - role: vagrant_workarounds
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
       scenario_os: "{{ pipeline_os }}"

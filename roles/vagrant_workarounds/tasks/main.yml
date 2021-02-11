@@ -1,0 +1,9 @@
+---
+- name: make grub not care that it can't be installed
+  debconf:
+    name: grub-pc
+    question: grub-pc/install_devices_empty
+    value: 'true'
+    vtype: boolean
+  when:
+    - ansible_os_family == 'Debian'
