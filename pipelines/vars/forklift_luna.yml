@@ -13,6 +13,7 @@ server_box:
         - "--puppet-server-max-active-instances 1"
         - "--puppet-server-jvm-min-heap-size 1G"
         - "--puppet-server-jvm-max-heap-size 1G"
+        - "--enable-foreman-cli-ansible"
         - "--enable-foreman-cli-discovery"
         - "--enable-foreman-cli-openscap"
         - "--enable-foreman-cli-remote-execution"
@@ -27,8 +28,11 @@ server_box:
         - "--enable-foreman-plugin-remote-execution"
         - "--enable-foreman-plugin-templates"
         - "--enable-foreman-plugin-virt-who-configure"
+        - "--foreman-proxy-plugin-remote-execution-ssh-install-key=true"
       bats_tests_additional:
-        "{{ ['fb-katello-proxy.bats'] if pipeline_os != 'centos8' else [] }}"
+        - "fb-test-foreman-rex.bats"
+        - "fb-test-foreman-ansible.bats"
+        - "fb-katello-proxy.bats"
 proxy_box:
   box: "{{ pipeline_os }}"
   memory: 3072

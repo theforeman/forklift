@@ -8,6 +8,7 @@ server_box:
         - "--puppet-server-max-active-instances 1"
         - "--puppet-server-jvm-min-heap-size 1G"
         - "--puppet-server-jvm-max-heap-size 1G"
+        - "--enable-foreman-cli-ansible"
         - "--enable-foreman-cli-discovery"
         - "--enable-foreman-cli-remote-execution"
         - "--enable-foreman-cli-tasks"
@@ -21,6 +22,7 @@ server_box:
         - "--enable-foreman-proxy-plugin-ansible"
         - "--enable-foreman-proxy-plugin-discovery"
         - "--enable-foreman-proxy-plugin-remote-execution-ssh"
+        - "--foreman-proxy-plugin-remote-execution-ssh-install-key=true"
         - "{{ '--enable-foreman-cli-openscap' if pipeline_os.startswith('centos') else '' }}"
         - "{{ '--enable-foreman-plugin-openscap' if pipeline_os.startswith('centos') else '' }}"
         - "{{ '--enable-foreman-proxy-plugin-openscap' if pipeline_os.startswith('centos') else '' }}"
@@ -28,6 +30,8 @@ server_box:
         - "fb-verify-packages.bats"
         - "fb-test-foreman.bats"
         - "fb-test-puppet.bats"
+        - "fb-test-foreman-rex.bats"
+        - "fb-test-foreman-ansible.bats"
       bats_teardown: []
 forklift_boxes:
   "{{ {forklift_server_name: server_box, forklift_smoker_name: smoker_box} }}"
