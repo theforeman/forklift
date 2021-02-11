@@ -5,10 +5,10 @@ dependencies:
       - foreman_server_repositories_epel|bool
       - ansible_distribution_major_version == '7'
   - role: ansible_repositories
-    when: 
+    when:
     - foreman_server_repositories_ansible|bool
     - ansible_distribution_major_version != '7'
-  - role: puppet_repositories
+  - role: theforeman.operations.puppet_repositories
     when: foreman_server_repositories_puppet|bool
   - role: foreman_repositories
     when: foreman_server_repositories_foreman|bool
