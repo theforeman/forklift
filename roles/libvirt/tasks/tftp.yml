@@ -33,7 +33,12 @@
   shell: cp /usr/share/syslinux/{pxelinux.0,menu.c32,chain.c32} /var/lib/tftpboot
 
 - name: 'chown /var/lib/tftpboot for foreman-proxy user'
-  shell: chown -R foreman-proxy:nobody /var/lib/tftpboot
+  file:
+    path: /var/lib/tftpboot
+    state: directory
+    owner: foreman-proxy
+    group: nobody
+    recursive: true
 
 - name: 'setuid on /var/lib/tftpboot'
   shell: find /var/lib/tftpboot/ -type d | xargs chmod g+s
