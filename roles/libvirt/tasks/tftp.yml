@@ -38,10 +38,10 @@
     state: directory
     owner: foreman-proxy
     group: nobody
-    recursive: true
+    recurse: true
 
 - name: 'setuid on /var/lib/tftpboot'
-  shell: find /var/lib/tftpboot/ -type d | xargs chmod g+s
+  shell: set -o pipefail && find /var/lib/tftpboot/ -type d | xargs chmod g+s
 
 - name: 'start the provision libvirt network'
   virt_net: state=active name=provision autostart=yes

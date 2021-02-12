@@ -3,7 +3,7 @@
   become: true
   tasks:
     - name: Find root partition
-      shell: df --output=source,fstype / | tail -n 1
+      shell: set -o pipefail && df --output=source,fstype / | tail -n 1
       register: root_partition
 
     - name: Install cloud-utils-growpart package

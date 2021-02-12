@@ -8,5 +8,4 @@ skip_list:
   - no-changed-when  # Commands should not change things if nothing needs doing
   - no-handler  # Tasks that run when changed should likely be handlers
   - package-latest  # Package installs should not use latest
-  - risky-shell-pipe  # Shells that use pipes should set the pipefail option
   - experimental
