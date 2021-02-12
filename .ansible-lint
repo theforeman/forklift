@@ -4,7 +4,6 @@ skip_list:
   - command-instead-of-shell  # Use shell only when shell functionality is required
   - deprecated-command-syntax  # Using command rather than an argument to e.g. file
   - deprecated-local-action  # Do not use 'local_action', use 'delegate_to: localhost'
-  - empty-string-compare  # Don't compare to empty string
   - experimental  # all rules tagged as experimental
   - git-latest  # Git checkouts must contain explicit version
   - meta-no-info  # meta/main.yml should contain relevant info
