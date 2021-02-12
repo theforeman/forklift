@@ -27,7 +27,7 @@
     - name: add server option
       set_fact:
         puppet_agent_bootstrap_command: "{{ puppet_agent_bootstrap_command }} --server {{ puppet_agent_bootstrap_server }}"
-      when: puppet_agent_bootstrap_server != ""
+      when: puppet_agent_bootstrap_server is defined
 
     - name: run puppet ssl boostrap command
       command: "{{ puppet_agent_bootstrap_command }}"

@@ -19,7 +19,7 @@
     server_insecure: "{{ katello_client_insecure }}"
   ignore_errors: "{{ katello_client_ignore_registration_errors }}"
   when:
-    - katello_client_activationkey == ""
+    - katello_client_activationkey is not defined
 
 - name: 'Register client with subscription-manager using AK {{ katello_client_activationkey }}'
   redhat_subscription:
@@ -29,7 +29,7 @@
     server_insecure: "{{ katello_client_insecure }}"
   ignore_errors: "{{ katello_client_ignore_registration_errors }}"
   when:
-    - katello_client_activationkey != ""
+    - katello_client_activationkey is defined
 
 - name: 'Enable extra repositories'
   command: subscription-manager repos --enable {{ item }}

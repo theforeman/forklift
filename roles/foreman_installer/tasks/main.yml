@@ -8,7 +8,7 @@
   when: (foreman_installer_module_prs|length > 0) or (foreman_installer_module_branches|length > 0)
 
 - include_tasks: custom_hiera.yml
-  when: foreman_installer_custom_hiera != ""
+  when: foreman_installer_custom_hiera
 
 - include_tasks: install.yml
   when: foreman_installer_upgrade == False

@@ -12,7 +12,7 @@
   locale_gen:
     name: "{{ item }}"
   loop: "{{ query('env', 'LANG', 'LC_ADDRESS', 'LC_ALL', 'LC_COLLATE', 'LC_CTYPE', 'LC_IDENTIFICATION', 'LC_MEASUREMENT', 'LC_MESSAGES', 'LC_MONETARY', 'LC_NAME', 'LC_NUMERIC', 'LC_PAPER', 'LC_TELEPHONE', 'LC_TIME') | list | unique }}"
-  when: item != ''
+  when: item
 
 - name: configure /etc/default/locale
   copy:
