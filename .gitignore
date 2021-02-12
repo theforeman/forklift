@@ -16,6 +16,7 @@ playbooks/galaxy_roles
 playbooks/galaxy_collections
 inventories/local_*
 user_devel_env_files/
+.cache
 
 # Vagrant
 .vagrant

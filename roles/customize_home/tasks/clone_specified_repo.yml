@@ -27,4 +27,3 @@
   file:
     path: "{{ ansible_env.HOME }}/tmp_custom_home/"
     state: absent
-

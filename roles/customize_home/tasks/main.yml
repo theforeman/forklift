@@ -26,4 +26,3 @@
 
 - include_tasks: boostrap_script.yml
   when: bootstrap_script_path.stat.exists
-
