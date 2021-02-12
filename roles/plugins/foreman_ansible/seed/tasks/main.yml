@@ -1,7 +1,7 @@
 ---
 - name: 'Setup ssh'
   template:
-    src: ../templates/ssh_config
+    src: "{{ role_path }}/templates/ssh_config"
     dest: ~foreman-proxy/.ssh/config
     owner: foreman-proxy
     group: foreman-proxy

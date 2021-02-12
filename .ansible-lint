@@ -12,7 +12,6 @@ skip_list:
   - no-changed-when  # Commands should not change things if nothing needs doing
   - no-handler  # Tasks that run when changed should likely be handlers
   - no-jinja-when  # No Jinja2 in when
-  - no-relative-paths  # Doesn't need a relative path in role
   - package-latest  # Package installs should not use latest
   - risky-shell-pipe  # Shells that use pipes should set the pipefail option
   - experimental
