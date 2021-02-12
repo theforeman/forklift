@@ -31,4 +31,3 @@
 
     - name: run puppet ssl boostrap command
       command: "{{ puppet_agent_bootstrap_command }}"
-

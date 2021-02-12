@@ -15,11 +15,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
       - name: Install ansible-lint
-        run: pip install 'ansible-lint<5.0'
+        run: pip install ansible-lint ansible
       - name: Run tests
         run: |
-          ansible-lint -r rules/ playbooks/*
-          ansible-lint -r rules/ roles/*
+          ansible-lint playbooks/
+          ansible-lint roles/
+          ansible-lint pipelines/
 
   molecule:
     runs-on: ubuntu-latest
