@@ -27,4 +27,4 @@
   delegate_to: localhost
 
 - name: 'Verify FIPS enabled - If failed means the machine is not FIPS enabled'
-  shell: cat /proc/sys/crypto/fips_enabled | grep 1
+  command: grep -q 1 /proc/sys/crypto/fips_enabled

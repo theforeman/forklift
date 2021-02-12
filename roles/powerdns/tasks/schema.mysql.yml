@@ -10,6 +10,7 @@
 
 - name: "Import DB schema"
   shell: >
+         set -o pipefail &&
          cat /usr/share/doc/pdns-backend-mysql-*/schema.mysql.sql |
          mysql
          -u {{ powerdns_db_user }}

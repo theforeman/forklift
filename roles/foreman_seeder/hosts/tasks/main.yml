@@ -1,6 +1,7 @@
 ---
 - name: 'Create hosts'
   shell: >
+    set -o pipefail &&
     {{ foreman_seeder_hosts_hammer }} host create
     --hostgroup '{{ item.hostgroup }}'
     {% if foreman_seeder_hosts_use_taxonomies %}
@@ -8,7 +9,7 @@
     --location '{{ foreman_seeder_hosts_location }}'
     {% endif %}
     --name '{{ item.name }}'
-    --mac $(echo -n 52:54:00:; openssl rand -hex 3 | sed 's/\(..\)/\1:/g; s/.$//')
+    --mac $(echo -n 52:54:00:;openssl rand -hex 3 | sed 's/\(..\)/\1:/g; s/.$//')
   with_items: '{{ foreman_seeder_hosts }}'
   tags:
     - seed

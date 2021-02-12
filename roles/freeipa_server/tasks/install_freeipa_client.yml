@@ -25,7 +25,7 @@
 - name: 'Run foreman-prepare-realm'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  shell: echo changeme | foreman-prepare-realm {{ freeipa_server_kerberos_principal }}@{{ freeipa_server_realm }} {{ katello_server }}
+  shell: set -o pipefail && echo changeme | foreman-prepare-realm {{ freeipa_server_kerberos_principal }}@{{ freeipa_server_realm }} {{ katello_server }}
   args:
     chdir: /root
     creates: /root/freeipa.keytab
@@ -33,7 +33,7 @@
 - name: 'Create HTTP principal'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  shell: echo changeme | kinit {{ freeipa_server_kerberos_principal }}
+  shell: set -o pipefail && echo changeme | kinit {{ freeipa_server_kerberos_principal }}
 
 - name: 'Add the host'
   become: true

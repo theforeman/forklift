@@ -280,7 +280,7 @@
         group: vagrant
 
     - name: get foreman-account secret
-      shell: "kubectl get secrets $(kubectl get sa foreman-account -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 -d | xargs"
+      shell: "set -o pipefail && kubectl get secrets $(kubectl get sa foreman-account -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 -d | xargs"
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
       changed_when: false
