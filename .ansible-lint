@@ -7,7 +7,6 @@ skip_list:
   - empty-string-compare  # Don't compare to empty string
   - experimental  # all rules tagged as experimental
   - git-latest  # Git checkouts must contain explicit version
-  - literal-compare  # Don't compare to literal True/False
   - meta-no-info  # meta/main.yml should contain relevant info
   - no-changed-when  # Commands should not change things if nothing needs doing
   - no-handler  # Tasks that run when changed should likely be handlers

@@ -22,7 +22,7 @@
   git:
     repo: "https://github.com/sstephenson/bats.git"
     dest: "{{ bats_git_dir }}"
-  when: bats_bin.stat.exists == False
+  when: not bats_bin.stat.exists
 
 - name: "Install bats"
   shell: "{{ bats_git_dir }}/install.sh /usr"
