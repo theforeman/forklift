@@ -54,8 +54,9 @@
         owner: "{{ unpriviledged_user_username }}"
         mode: 0600
         dest: "/home/{{ unpriviledged_user_username }}/.ssh/authorized_keys"
-      when: root_authorized_keys_file.stat.exists == True
+      when: root_authorized_keys_file.stat.exists
 
-  when: authorized_keys_file.stat.exists == False and
-        unpriviledged_user_import_ssh_pub_key | default(True)
+  when:
+    - not authorized_keys_file.stat.exists
+    - unpriviledged_user_import_ssh_pub_key | default(True)
   become: true

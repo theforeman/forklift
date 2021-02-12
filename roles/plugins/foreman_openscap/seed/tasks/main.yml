@@ -2,12 +2,12 @@
 - name: 'Import puppet classes'
   command: >
     {{ foreman_openscap_hammer }} proxy import-classes --name {{ foreman_openscap_proxy_name }}
-  when: foreman_openscap_proxy_name != False
+  when: foreman_openscap_proxy_name is defined
 
 - name: 'Import default scap content'
   command: >
     foreman-rake foreman_openscap:bulk_upload:default
-  when: foreman_openscap_proxy_name != False
+  when: foreman_openscap_proxy_name is defined
 
 # TODO: disabled until cli is fixed
 # - name: 'Create example policy'

@@ -28,9 +28,9 @@
 - name: 'Change cert permissions'
   file: path='/etc/pki/katello/private' mode=0775
   delegate_to: "{{ foreman_proxy_content_server }}"
-  when: devel is defined and devel == true
+  when: devel is defined and devel
 
 - name: 'Install Capsule Installer RPM'
   yum:
     name: foreman-proxy-content
-  when: custom_install == False
+  when: not custom_install
