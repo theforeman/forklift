@@ -32,6 +32,7 @@ server_box:
       bats_tests_additional:
         - "fb-test-foreman-rex.bats"
         - "fb-test-foreman-ansible.bats"
+        - "fb-test-foreman-templates.bats"
         - "fb-katello-proxy.bats"
 proxy_box:
   box: "{{ pipeline_os }}"
