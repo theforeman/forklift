@@ -5,4 +5,3 @@ foreman_seeder_puppet_modules:
  - puppetlabs-motd
  - puppetlabs-ntp
  - puppetlabs-apache
-foreman_seeder_puppet_modules_proxy_name: False
