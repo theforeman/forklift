@@ -1,8 +1,8 @@
 - name: Check for specified files to copy to home directory
   become: false
-  local_action:
-    module: stat
+  stat:
     path: "{{ playbook_dir | dirname }}/user_devel_env_files/"
+  delegate_to: localhost
   register: custom_home
 
 - name: Copy files to home directory
