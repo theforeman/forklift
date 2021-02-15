@@ -7,12 +7,8 @@
 - name: 'Run dracut to rebuild initramfs'
   command: dracut --force
 
-- name: 'Get boot_uuid'
-  command: 'findmnt -no uuid /boot'
-  register: result
-
 - name: 'Edit kernel command-line to include the fips=1 and boot=UUID=XXXX argument'
-  shell: 'grubby --update-kernel=DEFAULT --args="fips=1 boot=UUID={{ result.stdout }}"'
+  shell: 'grubby --update-kernel=DEFAULT --args="fips=1"'
 
 - name: reboot vm
   shell: sleep 2 && shutdown -r +1 "Ansible reboot"
