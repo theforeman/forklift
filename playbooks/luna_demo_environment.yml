@@ -33,7 +33,7 @@
       - "--disable-system-checks"
     foreman_installer_additional_packages:
       - rubygem-ruby-libvirt
-      - katello
+      - foreman-installer-katello
     foreman_installer_options:
       - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
       - "--foreman-initial-organization {{ katello_provisioning_organization }}"

@@ -26,4 +26,4 @@
         - "{{ '' if (foreman_repositories_version == 'nightly' or 2.3 is version(foreman_repositories_version, '>')) else ('--foreman-proxy-content-parent-fqdn %s' % server_fqdn) }}"
         - '--puppet-server-foreman-url https://"{{ server_fqdn }}"'
       foreman_installer_additional_packages:
-          - foreman-proxy-content
+          - foreman-installer-katello

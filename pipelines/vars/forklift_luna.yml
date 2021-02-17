@@ -8,7 +8,7 @@ server_box:
       foreman_installer_disable_system_checks: true
       foreman_installer_scenario: katello
       foreman_installer_additional_packages:
-        - katello
+        - foreman-installer-katello
       foreman_installer_options:
         - "--puppet-server-max-active-instances 1"
         - "--puppet-server-jvm-min-heap-size 1G"
@@ -44,7 +44,7 @@ proxy_box:
       foreman_installer_disable_system_checks: true
       foreman_installer_scenario: foreman-proxy-content
       foreman_installer_additional_packages:
-        - foreman-proxy-content
+        - foreman-installer-katello
       foreman_installer_options:
         - "--enable-foreman-proxy-plugin-ansible"
         - "--enable-foreman-proxy-plugin-discovery"
