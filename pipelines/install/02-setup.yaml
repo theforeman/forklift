@@ -1,5 +1,48 @@
 ---
-- name: prepare boxes, update os, configure repos, configure os
+- name: prepare boxes, update os, configure os
+  hosts:
+    - "{{ forklift_server_name }}"
+    - "{{ forklift_proxy_name }}"
+  become: yes
+  vars_files:
+    - ../vars/install_base.yml
+    - ../vars/repos_staging.yml
+  roles:
+    - role: vagrant_workarounds
+    - role: enable_ipv6
+    - role: disable_firewall
+    - role: update_os_packages
+
+- name: configure repos on server
+  hosts:
+    - "{{ forklift_server_name }}"
+  become: yes
+  vars_files:
+    - ../vars/install_base.yml
+    - ../vars/repos_staging.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
+      scenario_version: "{{ pipeline_version }}"
+    - role: foreman_server_repositories
+
+- name: configure repos on proxy
+  hosts:
+    - "{{ forklift_proxy_name }}"
+  become: yes
+  vars_files:
+    - ../vars/install_base.yml
+    - ../vars/repos_staging.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
+      scenario_version: "{{ pipeline_version }}"
+      scenario_delay: "{{ pipeline_proxy_delay | default(0) }}"
+    - role: foreman_server_repositories
+
+- name: install packages
   hosts:
     - "{{ forklift_server_name }}"
     - "{{ forklift_proxy_name }}"
@@ -10,13 +53,4 @@
     - ../vars/install_base.yml
     - ../vars/repos_staging.yml
   roles:
-    - role: vagrant_workarounds
-    - role: forklift_versions
-      scenario: "{{ pipeline_type }}"
-      scenario_os: "{{ pipeline_os }}"
-      scenario_version: "{{ pipeline_version }}"
-    - role: enable_ipv6
-    - role: disable_firewall
-    - role: foreman_server_repositories
-    - role: update_os_packages
     - role: foreman
