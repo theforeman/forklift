@@ -59,8 +59,9 @@ def main():
             scenario=dict(type='str', required=True, choices=['foreman', 'katello', 'luna', 'plugins']),
             scenario_version=dict(type='str', required=True),
             scenario_os=dict(type='str', required=True),
+            scenario_delay=dict(type='int', default=0),
             upgrade=dict(type='bool', default=False),
-            upgrade_step=dict(type='int', default=1)
+            upgrade_step=dict(type='int', default=1),
         ),
         supports_check_mode=True
     )
@@ -70,26 +71,29 @@ def main():
     scenario = SCENARIO_MAP.get(module.params['scenario'], module.params['scenario'])
     scenario_os = module.params['scenario_os']
     scenario_version = module.params['scenario_version']
+    scenario_delay = module.params['scenario_delay']
 
     with open(module.params['file'], 'r') as versions_file:
         versions = yaml.safe_load(versions_file)
 
     if not module.params['upgrade']:
+        all_forklift_vars = []
         for version in versions['installers']:
             if not scenario_os in version['boxes']:
                 continue
+            forklift_vars = {
+                    'foreman_repositories_version': version['foreman'],
+                    'foreman_client_repositories_version': version['foreman'],
+                    'katello_repositories_version': version['katello'],
+                    'katello_repositories_pulp_version': version['pulp'],
+                    'pulp_repositories_version': version['pulp'],
+                    'puppet_repositories_version': version['puppet'],
+                    }
+            if 'pulpcore' in version:
+                forklift_vars['pulpcore_repositories_version'] = version['pulpcore']
+            all_forklift_vars.append(forklift_vars)
             if version[scenario] == scenario_version:
-                forklift_vars = {
-                        'foreman_repositories_version': version['foreman'],
-                        'foreman_client_repositories_version': version['foreman'],
-                        'katello_repositories_version': version['katello'],
-                        'katello_repositories_pulp_version': version['pulp'],
-                        'pulp_repositories_version': version['pulp'],
-                        'puppet_repositories_version': version['puppet'],
-                        }
-                if 'pulpcore' in version:
-                    forklift_vars['pulpcore_repositories_version'] = version['pulpcore']
-                ret = forklift_vars
+                ret = all_forklift_vars[-(scenario_delay+1)]
                 break
     else:
         possible_versions = set()
