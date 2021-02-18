@@ -17,7 +17,6 @@ bats_tests:
   - "fb-test-katello.bats"
   - "fb-katello-content.bats"
   - "fb-katello-client.bats"
-  - "fb-verify-selinux.bats"
 bats_tests_additional: []
 bats_teardown:
   - "fb-destroy-organization.bats"
