@@ -11,7 +11,7 @@
 - name: 'Ensure ENV locales are available'
   locale_gen:
     name: "{{ item }}"
-  loop: "{{ query('env', 'LANG', 'LC_ADDRESS', 'LC_ALL', 'LC_COLLATE', 'LC_CTYPE', 'LC_IDENTIFICATION', 'LC_MEASUREMENT', 'LC_MESSAGES', 'LC_MONETARY', 'LC_NAME', 'LC_NUMERIC', 'LC_PAPER', 'LC_TELEPHONE', 'LC_TIME') | unique | select('ne', '') | list }}"
+  loop: "{{ query('env', 'LANG', 'LC_ADDRESS', 'LC_ALL', 'LC_COLLATE', 'LC_CTYPE', 'LC_IDENTIFICATION', 'LC_MEASUREMENT', 'LC_MESSAGES', 'LC_MONETARY', 'LC_NAME', 'LC_NUMERIC', 'LC_PAPER', 'LC_TELEPHONE', 'LC_TIME') | unique | select() | list }}"
   when: item
 
 - name: configure /etc/default/locale
