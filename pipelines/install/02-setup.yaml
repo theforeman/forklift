@@ -39,7 +39,7 @@
       scenario: "{{ pipeline_type }}"
       scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ pipeline_version }}"
-      scenario_delay: "{{ pipeline_proxy_delay | default(0) }}"
+      scenario_version_offset: "{{ pipeline_proxy_version_offset | default(0) }}"
     - role: foreman_server_repositories
 
 - name: install packages

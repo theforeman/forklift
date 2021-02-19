@@ -59,7 +59,7 @@ def main():
             scenario=dict(type='str', required=True, choices=['foreman', 'katello', 'luna', 'plugins']),
             scenario_version=dict(type='str', required=True),
             scenario_os=dict(type='str', required=True),
-            scenario_delay=dict(type='int', default=0),
+            scenario_version_offset=dict(type='int', default=0),
             upgrade=dict(type='bool', default=False),
             upgrade_step=dict(type='int', default=1),
         ),
@@ -71,7 +71,7 @@ def main():
     scenario = SCENARIO_MAP.get(module.params['scenario'], module.params['scenario'])
     scenario_os = module.params['scenario_os']
     scenario_version = module.params['scenario_version']
-    scenario_delay = module.params['scenario_delay']
+    scenario_version_offset = module.params['scenario_version_offset']
 
     with open(module.params['file'], 'r') as versions_file:
         versions = yaml.safe_load(versions_file)
@@ -93,7 +93,7 @@ def main():
                 forklift_vars['pulpcore_repositories_version'] = version['pulpcore']
             all_forklift_vars.append(forklift_vars)
             if version[scenario] == scenario_version:
-                ret = all_forklift_vars[-(scenario_delay+1)]
+                ret = all_forklift_vars[-(scenario_version_offset+1)]
                 break
     else:
         possible_versions = set()

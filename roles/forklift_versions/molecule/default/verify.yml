@@ -44,7 +44,7 @@
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
         scenario_version: "3.17"
-        scenario_delay: 1
+        scenario_version_offset: 1
     - name: Ensure versions have been set correctly
       assert:
         that:

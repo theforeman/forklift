@@ -5,7 +5,7 @@
     scenario: "{{ scenario }}"
     scenario_version: "{{ scenario_version }}"
     scenario_os: "{{ scenario_os }}"
-    scenario_delay: "{{ scenario_delay | default(omit) }}"
+    scenario_version_offset: "{{ scenario_version_offset | default(omit) }}"
   register: forklift_versions
   delegate_to: localhost
   become: no
