@@ -22,6 +22,5 @@
       - "--enable-foreman-proxy-plugin-discovery"
       - "--enable-foreman-proxy-plugin-openscap"
       - "--enable-foreman-proxy-plugin-remote-execution-ssh"
-      - "--katello-enable-ostree true"
   roles:
     - role: katello

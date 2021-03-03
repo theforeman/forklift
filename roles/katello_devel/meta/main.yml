@@ -2,7 +2,7 @@
 dependencies:
   - role: etc_hosts
   - role: foreman_server_repositories
-    foreman_server_repositories_ostree: true
+    foreman_server_repositories_ostree: false
     foreman_server_repositories_katello: true
     foreman_server_repositories_foreman_client: true
   - role: ruby_scl
