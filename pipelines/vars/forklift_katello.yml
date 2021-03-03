@@ -4,7 +4,7 @@ server_box:
   ansible:
     variables:
       foreman_server_repositories_katello: true
-      foreman_server_repositories_ostree: true
+      foreman_server_repositories_ostree: false
       foreman_installer_disable_system_checks: true
       foreman_installer_scenario: katello
       foreman_installer_additional_packages:
@@ -21,7 +21,7 @@ proxy_box:
   ansible:
     variables:
       foreman_server_repositories_katello: true
-      foreman_server_repositories_ostree: true
+      foreman_server_repositories_ostree: false
       foreman_installer_disable_system_checks: true
       foreman_installer_scenario: foreman-proxy-content
       foreman_installer_additional_packages:
