@@ -75,5 +75,6 @@ installers:
       - 'centos7'
       - 'centos7-fips'
       - 'centos8'
+      - 'centos8-stream'
       - 'debian10'
       - 'ubuntu1804'

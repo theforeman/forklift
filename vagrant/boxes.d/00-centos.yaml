@@ -28,3 +28,11 @@ boxes:
     scenarios:
       - foreman
       - katello
+
+  centos8-stream:
+    box_name: 'centos/stream8'
+    disk_size: 40
+    pty: true
+    scenarios:
+      - foreman
+      - katello
