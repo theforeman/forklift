@@ -131,6 +131,7 @@ Options:
 | rackspace_options        |  sets Rackspace specific options |
 | openstack_options        |  sets OpenStack specific options |
 | google_options           |  sets Google specific options |
+| docker_options           |  sets Docker specific options |
 | domain                   |  forklift uses short name of your host + 'example.com' as domain name for your boxes. You can use this option to override it. |
 | sshfs                    |  if you have vagrant-sshfs plugin, you can use sshfs to share folders between your host and guest. See an example below for details. |
 | nfs                      |  share folders between host and guest.  See an example below for details. |

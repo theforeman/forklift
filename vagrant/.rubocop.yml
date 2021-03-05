@@ -14,6 +14,9 @@ Metrics/LineLength:
 Metrics/ClassLength:
   Max: 325
 
+Metrics/BlockLength:
+  Max: 50
+
 Documentation:
   Enabled: false # don't require documentation
 
