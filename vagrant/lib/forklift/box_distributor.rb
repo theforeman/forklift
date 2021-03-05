@@ -88,11 +88,7 @@ module Forklift
         networks = configure_networks(box.fetch('networks', []))
         configure_shell(machine, box)
         configure_ansible(machine, box['ansible'], box['name'])
-        configure_libvirt(machine, box, networks)
-        configure_virtualbox(machine, box, networks)
-        configure_rackspace(machine, box)
-        configure_openstack_provider(machine, box)
-        configure_google_provider(machine, box)
+        configure_providers(machine, box, networks)
         configure_synced_folders(machine, box)
         configure_private_network(machine, box)
         configure_sshfs(config, box)
@@ -238,6 +234,15 @@ module Forklift
       machine.vm.network :private_network, options
     end
 
+    def configure_providers(machine, box, networks = [])
+      configure_libvirt(machine, box, networks)
+      configure_virtualbox(machine, box, networks)
+      configure_rackspace(machine, box)
+      configure_openstack_provider(machine, box)
+      configure_google_provider(machine, box)
+      configure_docker_provider(machine, box)
+    end
+
     def configure_libvirt(machine, box, networks = [])
       machine.vm.provider :libvirt do |p, override|
         override.vm.box_url = box.fetch('libvirt') if box.fetch('libvirt', false)
@@ -336,6 +341,14 @@ module Forklift
         override.vm.box = 'google/gce'
 
         merged_options(box, 'google_options').each do |opt, val|
+          p.instance_variable_set("@#{opt}", val)
+        end
+      end
+    end
+
+    def configure_docker_provider(machine, box)
+      machine.vm.provider :docker do |p|
+        merged_options(box, 'docker_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
       end
