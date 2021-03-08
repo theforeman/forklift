@@ -14,6 +14,7 @@
     forklift_url: "https://github.com/theforeman/forklift"
     forklift_dest: "{{ ansible_env.HOME }}/forklift"
     forklift_version: master
+    forklift_install_from_galaxy: True
     forklift_install_pulp_from_galaxy: False
     forklift_config:
       libvirt_options:
@@ -44,6 +45,12 @@
         dest: "{{ forklift_dest }}/vagrant/settings.yaml"
 
     - name: 'Install Forklift collection dependencies'
+      command:
+        cmd: ansible-galaxy collection install -r requirements.yml
+        chdir: "{{ forklift_dest }}"
+      when: forklift_install_from_galaxy
+
+    - name: 'Install Forklift Pulp collection dependencies'
       command:
         cmd: ansible-galaxy collection install -r requirements-pulp.yml
         chdir: "{{ forklift_dest }}"
