@@ -11,6 +11,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
    - [Adding Custom Boxes](#adding-custom-boxes)
    - [Customize Deployment Settings](#customize-deployment-settings)
    - [Post Install Playbooks](#post-install-playbooks)
+   - [Using Local Ansible Collection](#using-local-ansible-collection)
  * [Production Environments](docs/production.md)
  * [Development Environments](docs/development.md)
  * [Stable Boxes](docs/stable_boxes.md)
@@ -25,7 +26,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
 ### Requirements
 
 * Vagrant - 2.2+ - Both the VirtualBox and Libvirt providers are tested
-* Ansible - 2.7+
+* Ansible - 2.9+
 * [Vagrant Libvirt provider plugin](https://github.com/vagrant-libvirt/vagrant-libvirt) (if using Libvirt)
 * Virtualization enabled in BIOS
 
@@ -38,6 +39,7 @@ This will walk through the simplest path of spinning up a production test enviro
 ```
 git clone https://github.com/theforeman/forklift.git
 cd forklift
+ansible-galaxy collection install -r requirements.yml
 vagrant up centos7-foreman-nightly
 ```
 
@@ -280,4 +282,20 @@ ansible:
     playbook:
       - 'user_playbooks/vim.yml'
       - 'user_playbooks/zsh.yml'
+```
+
+### Using Local Ansible Collection
+
+If needing to use a local copy of an Ansible collection used by Forklift, such as developing updates to theforeman.operations collection, you can temporarily update the `requirements.yml` to point at your local checkout:
+
+```
+collections:
+  - name: git+file:///home/user/path/to/repo/.git
+    type: git
+```
+
+Then run `ansible-galaxy` install:
+
+```
+ansible-galaxy collection install -r requirements.yml --force
 ```
