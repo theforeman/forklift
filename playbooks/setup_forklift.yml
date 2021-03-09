@@ -14,7 +14,7 @@
     forklift_url: "https://github.com/theforeman/forklift"
     forklift_dest: "{{ ansible_env.HOME }}/forklift"
     forklift_version: master
-    forklift_install_from_galaxy: False
+    forklift_install_pulp_from_galaxy: False
     forklift_config:
       libvirt_options:
         volume_cache: unsafe
@@ -45,12 +45,12 @@
 
     - name: 'Install Forklift collection dependencies'
       command:
-        cmd: ansible-galaxy collection install -r requirements.yml
+        cmd: ansible-galaxy collection install -r requirements-pulp.yml
         chdir: "{{ forklift_dest }}"
-      when: forklift_install_from_galaxy
+      when: forklift_install_pulp_from_galaxy
 
     - name: 'Install Forklift pulp_installer role dependencies'
       command:
         cmd: ansible-galaxy role install -r playbooks/galaxy_collections/ansible_collections/pulp/pulp_installer/requirements.yml
         chdir: "{{ forklift_dest }}"
-      when: forklift_install_from_galaxy
+      when: forklift_install_pulp_from_galaxy
