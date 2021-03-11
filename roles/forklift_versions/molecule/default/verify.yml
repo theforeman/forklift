@@ -86,13 +86,29 @@
       include_role:
         name: "forklift_versions"
       vars:
-        scenario: "{{ pipeline_type }}"
+        scenario: "foreman"
         scenario_os: "centos8"
-        scenario_version: "3.17"
+        scenario_version: "2.2"
         upgrade: True
-    - name: Ensure 3.15 was properly skipped
+    - name: Ensure 2.0 was properly skipped
       assert:
         that:
-          - forklift_upgrade_version_start == '3.16'
-          - forklift_upgrade_version_intermediate == '3.16'
-          - forklift_upgrade_version_final == '3.17'
+          - forklift_upgrade_version_start == '2.1'
+          - forklift_upgrade_version_intermediate == '2.1'
+          - forklift_upgrade_version_final == '2.2'
+
+    # this will fail once 4.1 is out and nightly is 4.2
+    - name: "Include forklift_versions for Katello EL8 upgrades"
+      include_role:
+        name: "forklift_versions"
+      vars:
+        scenario: "{{ pipeline_type }}"
+        scenario_os: "centos8"
+        scenario_version: "nightly"
+        upgrade: True
+    - name: Ensure 3.18 was properly skipped
+      assert:
+        that:
+          - forklift_upgrade_version_start == '4.0'
+          - forklift_upgrade_version_intermediate == '4.0'
+          - forklift_upgrade_version_final == 'nightly'
