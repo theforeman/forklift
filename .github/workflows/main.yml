@@ -29,7 +29,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
       - name: Install molecule
-        run: pip install molecule
+        run: pip install molecule ansible
       - name: Run tests
         run: |
           for roledir in roles/*/molecule; do
