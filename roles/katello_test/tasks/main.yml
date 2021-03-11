@@ -1,0 +1,49 @@
+---
+- name: 'Loosen pulpcore gem restrictions'
+  ansible.builtin.lineinfile:
+    path: /home/vagrant/katello/katello.gemspec
+    regexp: 'gem.add_dependency "{{item}}"'
+    line: '  gem.add_dependency "{{item}}"'
+  loop:
+    - "pulpcore_client"
+    - "pulp_file_client"
+    - "pulp_ansible_client"
+    - "pulp_container_client"
+    - "pulp_deb_client"
+    - "pulp_rpm_client"
+    - "pulp_2to3_migration_client"
+    - "pulp_certguard_client"
+
+- name: 'Update bundled gems'
+  ansible.builtin.shell: |
+    source /etc/profile.d/enable-rh-ruby25.sh
+    source /etc/profile.d/enable-rh-postgresql12.sh
+    source /etc/profile.d/enable-rh-nodejs12.sh
+    bundle install
+  args:
+    executable: /bin/bash
+    chdir: /home/vagrant/foreman/
+
+- name: 'Prepare katello test database'
+  ansible.builtin.shell: |
+    source /etc/profile.d/enable-rh-ruby25.sh
+    source /etc/profile.d/enable-rh-postgresql12.sh
+    source /etc/profile.d/enable-rh-nodejs12.sh
+    RAILS_ENV=test bundle exec rake db:create
+  args:
+    executable: /bin/bash
+    chdir: /home/vagrant/foreman/
+
+- name: 'Run katello tests'
+  ansible.builtin.shell: |
+    source /etc/profile.d/enable-rh-ruby25.sh
+    source /etc/profile.d/enable-rh-postgresql12.sh
+    source /etc/profile.d/enable-rh-nodejs12.sh
+    bundle exec rake mode=all test:katello:test:pulpcore TESTOPTS="-v" --trace
+  args:
+    executable: /bin/bash
+    chdir: /home/vagrant/foreman/
+  register: hello
+
+- debug: msg="{{ hello.stdout }}"
+- debug: msg="{{ hello.stderr }}"
