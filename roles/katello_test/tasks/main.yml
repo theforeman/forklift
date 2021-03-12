@@ -2,8 +2,8 @@
 - name: 'Loosen pulpcore gem restrictions'
   ansible.builtin.lineinfile:
     path: /home/vagrant/katello/katello.gemspec
-    regexp: 'gem.add_dependency "{{item}}"'
-    line: '  gem.add_dependency "{{item}}"'
+    regexp: 'gem.add_dependency "{{ item }}"'
+    line: '  gem.add_dependency "{{ item }}"'
   loop:
     - "pulpcore_client"
     - "pulp_file_client"
@@ -39,11 +39,7 @@
     source /etc/profile.d/enable-rh-ruby25.sh
     source /etc/profile.d/enable-rh-postgresql12.sh
     source /etc/profile.d/enable-rh-nodejs12.sh
-    bundle exec rake mode=all test:katello:test:pulpcore TESTOPTS="-v" --trace
+    bundle exec rake mode=all jenkins:katello:pulpcore TESTOPTS="-v" --trace
   args:
     executable: /bin/bash
     chdir: /home/vagrant/foreman/
-  register: hello
-
-- debug: msg="{{ hello.stdout }}"
-- debug: msg="{{ hello.stderr }}"
