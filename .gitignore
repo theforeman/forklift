@@ -31,3 +31,11 @@ packer/packer_cache/
 packer/output*
 packer/*.box
 packer/build.*
+
+# VSCode
+.vscode
+
+# local development environment
+.env
+.venv
+.python-version
