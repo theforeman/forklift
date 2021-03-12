@@ -8,9 +8,9 @@ import subprocess
 import sys
 
 try:
-    from StringIO import StringIO
+    from StringIO import StringIO  # pyright: reportMissingImports=false
 except ImportError:
-    from io import StringIO
+    from io import StringIO  # pyright: reportMissingImports=false
 
 import paramiko
 
