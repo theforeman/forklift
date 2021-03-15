@@ -9,8 +9,6 @@
   shell: >
     {{ foreman_provisioning_hammer }} compute-profile create
     --name "libvirt-profile"
-    --organization "{{ foreman_provisioning_organization }}"
-    --location "{{ foreman_provisioning_location }}"
   when: "'Error' in foreman_provisioning_compute_profile.stderr"
 
 - name: 'create compute attributes'
