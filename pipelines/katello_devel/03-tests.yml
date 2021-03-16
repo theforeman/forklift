@@ -5,4 +5,7 @@
   vars_files:
   - ../vars/repos_staging.yml
   roles:
-  - role: katello_test
+  - ruby_scl
+  - nodejs_scl
+  - postgresql_scl
+  - katello_test
