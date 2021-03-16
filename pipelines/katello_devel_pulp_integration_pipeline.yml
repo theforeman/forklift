@@ -1,4 +1,4 @@
 ---
-#- import_playbook: katello_devel/01-boxes.yaml
-#- import_playbook: katello_devel/02-install.yaml
+- import_playbook: katello_devel/01-boxes.yaml
+- import_playbook: katello_devel/02-install.yaml
 - import_playbook: katello_devel/03-tests.yml
