@@ -19,21 +19,21 @@
     bundle install
   args:
     executable: /bin/bash
-    chdir: "{{ foreman_development_dir }}"
-  become_user: "{{ test_user }}"
+    chdir: "{{ katello_test_foreman_development_dir }}"
+  become_user: "{{ katello_test_test_user }}"
 
 - name: 'Prepare katello test database'
   ansible.builtin.shell: |
     RAILS_ENV=test bundle exec rake db:create
   args:
     executable: /bin/bash
-    chdir: "{{ foreman_development_dir }}"
-  become_user: "{{ test_user }}"
+    chdir: "{{ katello_test_foreman_development_dir }}"
+  become_user: "{{ katello_test_test_user }}"
 
 - name: 'Run katello tests'
   ansible.builtin.shell: |
-    bundle exec rake mode={{ test_vcr_mode }} jenkins:katello:pulpcore TESTOPTS="-v" --trace
+    bundle exec rake mode={{ katello_test_test_vcr_mode }} jenkins:katello:pulpcore TESTOPTS="-v" --trace
   args:
     executable: /bin/bash
-    chdir: "{{ foreman_development_dir }}"
-  become_user: "{{ test_user }}"
+    chdir: "{{ katello_test_foreman_development_dir }}"
+  become_user: "{{ katello_test_test_user }}"

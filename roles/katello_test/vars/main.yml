@@ -1,3 +1,1 @@
-foreman_development_dir: /home/vagrant/foreman/
-test_user: vagrant
-test_vcr_mode: all
+
