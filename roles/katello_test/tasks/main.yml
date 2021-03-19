@@ -14,14 +14,6 @@
     - "pulp_2to3_migration_client"
     - "pulp_certguard_client"
 
-- name: 'env'
-  ansible.builtin.shell: |
-    id
-  args:
-    executable: /bin/bash
-    chdir: "{{ foreman_development_dir }}"
-  become_user: "{{ test_user }}"
-
 - name: 'Update bundled gems'
   ansible.builtin.shell: |
     bundle install
