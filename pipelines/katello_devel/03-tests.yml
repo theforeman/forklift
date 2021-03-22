@@ -5,7 +5,10 @@
   vars_files:
   - ../vars/repos_staging.yml
   roles:
-  - ruby_scl
-  - nodejs_scl
-  - postgresql_scl
+  - role: ruby_scl
+    when: ansible_distribution_major_version == "7"
+  - role: nodejs_scl
+    when: ansible_distribution_major_version == "7"
+  - role: postgresql_scl
+    when: ansible_distribution_major_version == "7"
   - katello_test
