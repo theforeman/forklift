@@ -1,0 +1,14 @@
+---
+- hosts:
+  - pipeline-katello-devel-centos7
+  become: yes
+  vars_files:
+  - ../vars/repos_staging.yml
+  roles:
+  - role: ruby_scl
+    when: ansible_distribution_major_version == "7"
+  - role: nodejs_scl
+    when: ansible_distribution_major_version == "7"
+  - role: postgresql_scl
+    when: ansible_distribution_major_version == "7"
+  - katello_test

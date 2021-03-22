@@ -1,0 +1,3 @@
+katello_test_foreman_development_dir: /home/vagrant/foreman/
+katello_test_user: vagrant
+katello_test_vcr_mode: all
