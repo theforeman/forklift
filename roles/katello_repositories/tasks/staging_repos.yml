@@ -55,10 +55,10 @@
   when:
     - katello_repositories_version != 'nightly'
     - katello_repositories_version is version('3.15', '>=')
-    - katello_repositories_version is version('3.17', '<=')
+    - katello_repositories_version is version('3.17', '<')
 
 - name: 'Add Pulpcore repository'
   include_role:
     name: pulpcore_repositories
   when:
-    - katello_repositories_version == "nightly" or katello_repositories_version is version('3.18', '>=')
+    - katello_repositories_version == "nightly" or katello_repositories_version is version('3.17', '>=')
