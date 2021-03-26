@@ -10,7 +10,7 @@ pytest_project_packages:
   - python3-devel
   - gcc
   # This should match the ansible_python_interpreter rather than the pytest's python
-  - python-setuptools
+  - python3-setuptools
 pytest_project_url:
 pytest_project_requirements: requirements.txt
 pytest_project_virtualenv_command: /usr/bin/python3 -m venv
