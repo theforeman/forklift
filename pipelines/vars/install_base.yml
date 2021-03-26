@@ -3,5 +3,5 @@ forklift_server_name: "pipe-{{ pipeline_type }}-server-{{ pipeline_version }}-{{
 forklift_proxy_name: "pipe-{{ pipeline_type }}-proxy-{{ pipeline_version }}-{{ pipeline_os }}"
 forklift_smoker_name: "pipe-{{ pipeline_type }}-smoker-{{ pipeline_version }}-{{ pipeline_os }}"
 smoker_box:
-  box: centos7
+  box: centos8-stream
   memory: 2048
