@@ -48,9 +48,15 @@
         cmd: ansible-galaxy collection install -r requirements-pulp.yml
         chdir: "{{ forklift_dest }}"
       when: forklift_install_pulp_from_galaxy
+      retries: 3
+      register: result
+      until: result is succeeded
 
     - name: 'Install Forklift pulp_installer role dependencies'
       command:
         cmd: ansible-galaxy role install -r playbooks/galaxy_collections/ansible_collections/pulp/pulp_installer/requirements.yml
         chdir: "{{ forklift_dest }}"
       when: forklift_install_pulp_from_galaxy
+      retries: 3
+      register: result
+      until: result is succeeded
