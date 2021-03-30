@@ -15,6 +15,7 @@ server_box:
         - "--puppet-server-jvm-max-heap-size 1G"
       bats_tests_additional:
         - fb-katello-proxy.bats
+      pipeline_remove_pulp2: true
 proxy_box:
   box: "{{ pipeline_os }}"
   memory: 3072
