@@ -34,6 +34,7 @@ server_box:
         - "fb-test-foreman-ansible.bats"
         - "fb-test-foreman-templates.bats"
         - "fb-katello-proxy.bats"
+      pipeline_remove_pulp2: true
 proxy_box:
   box: "{{ pipeline_os }}"
   memory: 3072
