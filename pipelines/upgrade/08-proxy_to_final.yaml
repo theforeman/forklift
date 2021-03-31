@@ -24,4 +24,5 @@
     - role: remove_pulp2
       when:
         - forklift_upgrade_version_final == "4.0"
+        - pipeline_remove_pulp2 is defined
         - pipeline_remove_pulp2
