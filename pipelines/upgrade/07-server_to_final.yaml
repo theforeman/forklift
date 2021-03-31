@@ -6,6 +6,7 @@
   vars:
     foreman_installer_upgrade: True
   vars_files:
+    - ../vars/forklift_{{ pipeline_type }}.yml
     - ../vars/upgrade_base.yml
     - ../vars/repos_staging.yml
   roles:

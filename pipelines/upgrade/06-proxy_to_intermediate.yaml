@@ -4,6 +4,7 @@
     - "{{ forklift_proxy_name }}"
   become: true
   vars_files:
+    - ../vars/forklift_{{ pipeline_type }}.yml
     - ../vars/upgrade_base.yml
     - ../vars/repos_release.yml
   vars:
