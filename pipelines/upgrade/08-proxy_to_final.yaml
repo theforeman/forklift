@@ -7,6 +7,7 @@
     foreman_proxy_content_upgrade: True
     foreman_proxy_content_server: "{{ forklift_server_name }}"
   vars_files:
+    - ../vars/forklift_{{ pipeline_type }}.yml
     - ../vars/upgrade_base.yml
     - ../vars/repos_staging.yml
   roles:
