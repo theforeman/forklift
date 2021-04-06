@@ -78,6 +78,21 @@ load fixtures/content
   done
 }
 
+@test "try fetching container content" {
+  tPackageExists podman || tPackageInstall podman
+  podman login $HOSTNAME -u admin -p changeme
+  CONTAINER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`
+  podman pull "${HOSTNAME}/${CONTAINER_PULL_LABEL}"
+}
+
+@test "enable katello-agent" {
+  KATELLO_VERSION=$(tKatelloVersion)
+  if [[ $KATELLO_VERSION != 4.[1-9]* ]]; then
+    skip "Enabling katello-agent explicitly is only available with Katello 4.1+"
+  fi
+  foreman-installer --foreman-proxy-content-enable-katello-agent true
+}
+
 @test "install katello-agent" {
   tPackageInstall katello-agent && tPackageExists katello-agent
 }
@@ -100,13 +115,6 @@ load fixtures/content
 # it seems walrus lingers around making subsequent runs fail, so lets test package removal!
 @test "package remove (katello-agent)" {
   timeout 300 hammer host package remove --host $HOSTNAME --packages walrus
-}
-
-@test "try fetching container content" {
-  tPackageExists podman || tPackageInstall podman
-  podman login $HOSTNAME -u admin -p changeme
-  CONTAINER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`
-  podman pull "${HOSTNAME}/${CONTAINER_PULL_LABEL}"
 }
 
 @test "cleanup subscription-manager after content tests" {
