@@ -1,0 +1,8 @@
+---
+- name: Remove rh-ruby25 packages
+  package:
+    state: absent
+    name: rh-ruby25*
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version == '7'
