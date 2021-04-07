@@ -5,3 +5,5 @@ forklift_smoker_name: "pipe-{{ pipeline_type }}-smoker-{{ pipeline_version }}-{{
 smoker_box:
   box: centos7
   memory: 2048
+bats_tests_additional:
+  - "fb-verify-packages.bats"

@@ -27,7 +27,6 @@ server_box:
         - "{{ '--enable-foreman-plugin-openscap' if pipeline_os.startswith('centos') else '' }}"
         - "{{ '--enable-foreman-proxy-plugin-openscap' if pipeline_os.startswith('centos') else '' }}"
       bats_tests:
-        - "fb-verify-packages.bats"
         - "fb-test-foreman.bats"
         - "fb-test-puppet.bats"
         - "fb-test-foreman-rex.bats"

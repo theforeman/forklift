@@ -29,7 +29,12 @@ server_box:
         - "--enable-foreman-plugin-templates"
         - "--enable-foreman-plugin-virt-who-configure"
         - "--foreman-proxy-plugin-remote-execution-ssh-install-key=true"
-      bats_tests_additional:
+      bats_tests:
+        - "fb-test-foreman.bats"
+        - "fb-test-puppet.bats"
+        - "fb-test-katello.bats"
+        - "fb-katello-content.bats"
+        - "fb-katello-client.bats"
         - "fb-test-foreman-rex.bats"
         - "fb-test-foreman-ansible.bats"
         - "fb-test-foreman-templates.bats"
