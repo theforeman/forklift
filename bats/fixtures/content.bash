@@ -1,8 +1,8 @@
 # vim: ft=sh:sw=2:et
 
-ORGANIZATION="Test Organization"
-IMPORT_ORG="Import Organization"
-LIBRARY_IMPORT_ORG="Library Import Org"
+ORGANIZATION="Test Organization${ORG_SUFFIX}"
+IMPORT_ORG="Import Organization${ORG_SUFFIX}"
+LIBRARY_IMPORT_ORG="Library Import Org${ORG_SUFFIX}"
 PRODUCT="Test Product"
 CONTAINER_REPOSITORY="foremanbusybox"
 FILE_REPOSITORY="file repo"
