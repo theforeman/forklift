@@ -1,0 +1,26 @@
+---
+- name: run tests
+  hosts:
+    - "{{ forklift_server_name }}"
+  become: yes
+  vars_files:
+    - ../vars/upgrade_base.yml
+    - ../vars/repos_staging.yml
+  vars:
+    bats_output_dir: "/root/bats_results_proxy_n-1_upgrade"
+  environment:
+    FOREMAN_EXPECTED_VERSION: "{{ foreman_expected_version | default('') }}"
+    ORG_SUFFIX: "_proxy_n-1_upgrade"
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
+      scenario_version: "{{ pipeline_version }}"
+      upgrade: True
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
+      scenario_version: "{{ forklift_upgrade_version_final }}"
+    - role: foreman_client_repositories
+      when: pipeline_type != 'foreman'
+    - role: foreman_testing
