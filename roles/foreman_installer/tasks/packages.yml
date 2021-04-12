@@ -4,9 +4,10 @@
     name: '@ruby:2.7'
     state: present
   when:
-    - foreman_repositories_version == "nightly" or foreman_repositories_version is version ('2.5', '>=')
-    - ansible_distribution_major_version == '8'
     - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version == '8'
+    - foreman_repositories_version is defined
+    - foreman_repositories_version == "nightly" or foreman_repositories_version is version ('2.5', '>=')
 
 - name: 'Install foreman-installer'
   package:
