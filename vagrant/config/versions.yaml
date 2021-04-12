@@ -78,3 +78,4 @@ installers:
       - 'centos8-stream'
       - 'debian10'
       - 'ubuntu1804'
+      - 'ubuntu2004'
