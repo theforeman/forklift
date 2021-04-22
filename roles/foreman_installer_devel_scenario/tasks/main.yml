@@ -28,11 +28,22 @@
     state: absent
     path: "{{ foreman_installer_devel_scenario_modules }}/katello_devel"
 
+- name: 'Set katello_devel_branch'
+  set_fact:
+    katello_devel_branch: "KATELLO-{{ katello_repositories_version }}"
+  when: katello_repositories_version != 'nightly'
+
+- name: 'Set katello_devel_branch to master'
+  set_fact:
+    katello_devel_branch: "master"
+  when: katello_repositories_version == 'nightly'
+
 - name: 'Clone latest puppet-katello_devel'
   git:
     repo: https://github.com/theforeman/puppet-katello_devel
     dest: "{{ foreman_installer_devel_scenario_modules }}/katello_devel"
     update: yes
+    version: "{{ katello_devel_branch }}"
 
 - name: 'Install puppet-agent'
   package:
