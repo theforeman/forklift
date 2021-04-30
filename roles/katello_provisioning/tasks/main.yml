@@ -189,7 +189,7 @@
     {{ katello_provisioning_hammer }} activation-key add-subscription
     --organization '{{ katello_provisioning_organization }}'
     --name 'CentOS 7'
-    --subscription-id {{ item.ID }}
+    --subscription-id {{ item.Id }}
   with_items: "{{ subscriptions_json.stdout | from_json }}"
 
 # Associate templates
@@ -288,7 +288,7 @@
     --lifecycle-environment Library
     --query-organization "{{ katello_provisioning_organization }}"
     --content-source-id {{ foreman_provisioning_smart_proxy.Id }}
-    --kickstart-repository-id {{ katello_provisioning_repo_json.ID }}
+    --kickstart-repository-id {{ katello_provisioning_repo_json.Id }}
     --operatingsystem "CentOS 7"
     --partition-table 'Kickstart default'
     --parent 'Base'
