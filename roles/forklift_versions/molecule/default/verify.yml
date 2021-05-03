@@ -110,5 +110,5 @@
       assert:
         that:
           - forklift_upgrade_version_start == '4.0'
-          - forklift_upgrade_version_intermediate == '4.0'
+          - forklift_upgrade_version_intermediate == '4.1'
           - forklift_upgrade_version_final == 'nightly'
