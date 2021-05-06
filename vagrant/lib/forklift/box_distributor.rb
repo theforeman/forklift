@@ -169,6 +169,7 @@ module Forklift
       end
     end
 
+    # rubocop:disable Metrics/PerceivedComplexity
     def configure_ansible(machine, ansible, box_name)
       return unless ansible
 
@@ -184,8 +185,13 @@ module Forklift
       return unless (playbooks = ansible['playbook'])
 
       [playbooks].flatten.each_with_index do |playbook, index|
-        args = SUPPORT_NAMED_PROVISIONERS ? ["main#{index}", type: 'ansible'] : [:ansible]
-        machine.vm.provision(*args) do |ansible_provisioner|
+        if SUPPORT_NAMED_PROVISIONERS
+          args = ["main#{index}"]
+          kwargs = { type: 'ansible' }
+        else
+          args = [:ansible]
+        end
+        machine.vm.provision(*args, **kwargs) do |ansible_provisioner|
           ansible_provisioner.playbook = playbook
           ansible_provisioner.extra_vars = ansible['variables']
           ansible_provisioner.groups = @ansible_groups
@@ -195,6 +201,7 @@ module Forklift
         end
       end
     end
+    # rubocop:enable Metrics/PerceivedComplexity
 
     def configure_shell(machine, box)
       return unless box.key?('shell') && !box['shell'].nil?
@@ -252,7 +259,7 @@ module Forklift
           override.vm.network :public_network, :dev => box.fetch('bridged'), :mode => 'bridge'
         end
         networks.each do |network|
-          override.vm.network network['type'], network['options']
+          override.vm.network network['type'], **network['options']
         end
         p.cpus = box.fetch('cpus').to_i * @settings['scale_cpus'].to_i if box.fetch('cpus', false)
         p.cpu_mode = box.fetch('cpu_mode') if box.fetch('cpu_mode', false)
