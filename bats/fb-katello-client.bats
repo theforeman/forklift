@@ -91,6 +91,7 @@ load fixtures/content
     skip "Enabling katello-agent explicitly is only available with Katello 4.1+"
   fi
   foreman-installer --foreman-proxy-content-enable-katello-agent true
+  foreman-maintain packages unlock -y
 }
 
 @test "install katello-agent" {
