@@ -7,6 +7,7 @@ katello_devel:
   deployment_dir: /home/vagrant
   user: vagrant
 foreman_proxy_content:
+  enable_katello_agent: true
   proxy_pulp_yum_to_pulpcore: true
 foreman_proxy:
   http: true
