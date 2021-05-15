@@ -66,8 +66,8 @@ fi
   [ $count -gt 1 ]
 }
 
-@test "Assign environment to default taxonomies" {
-  hammer environment update --name=production --locations "Default Location" --organizations "Default Organization"
+@test "Assign puppet-environment to default taxonomies" {
+  hammer puppet-environment update --name=production --locations "Default Location" --organizations "Default Organization"
 }
 
 @test "Assign proxy to default taxonomies" {
