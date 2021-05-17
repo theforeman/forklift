@@ -7,6 +7,15 @@ load os_helper
 load foreman_helper
 load fixtures/content
 
+@test "enable katello-agent" {
+  KATELLO_VERSION=$(tKatelloVersion)
+  if [[ $KATELLO_VERSION != 4.[1-9]* ]]; then
+    skip "Enabling katello-agent explicitly is only available with Katello 4.1+"
+  fi
+  foreman-installer --foreman-proxy-content-enable-katello-agent true
+  foreman-maintain packages unlock -y
+}
+
 @test "install subscription manager" {
   tPackageExists subscription-manager || tPackageInstall subscription-manager
 }
@@ -83,15 +92,6 @@ load fixtures/content
   podman login $HOSTNAME -u admin -p changeme
   CONTAINER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`
   podman pull "${HOSTNAME}/${CONTAINER_PULL_LABEL}"
-}
-
-@test "enable katello-agent" {
-  KATELLO_VERSION=$(tKatelloVersion)
-  if [[ $KATELLO_VERSION != 4.[1-9]* ]]; then
-    skip "Enabling katello-agent explicitly is only available with Katello 4.1+"
-  fi
-  foreman-installer --foreman-proxy-content-enable-katello-agent true
-  foreman-maintain packages unlock -y
 }
 
 @test "install katello-agent" {
