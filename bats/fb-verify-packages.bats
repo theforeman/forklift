@@ -37,3 +37,19 @@ load foreman_helper
     exit 1
   fi
 }
+
+@test "verify no rh-ruby27 SCL packages before Foreman 2.5" {
+  tSetOSVersion
+  if ! tIsRHEL 7; then
+    skip "SCL package checks only applicable on EL 7 systems"
+  fi
+
+  FOREMAN_VERSION=$(tForemanVersion)
+  if [[ $FOREMAN_VERSION != 2.[0-4]* ]]; then
+    skip "Verification of no rh-ruby27 packages only applies to Foreman <= 2.4"
+  fi
+
+  if rpm --query --all | grep --quiet --extended-regexp 'rh-ruby27'; then
+    exit 1
+  fi
+}
