@@ -365,3 +365,11 @@ setup() {
   hammer docker manifest list --content-view-version-id=$cvv_id --fields="schema version,digest,tags" \
     --order='tag' | grep 'sha256:13280b5914050853a87d662c3229d42b61544e36dd4515f06e188835f3407468'
 }
+
+@test "fetch rpm from yum repository on old path" {
+  URL1="http://$HOSTNAME/pulp/repos/${ORGANIZATION_LABEL}/Library/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/walrus-0.71-1.noarch.rpm"
+  URL2="http://$HOSTNAME/pulp/repos/${ORGANIZATION_LABEL}/Library/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/Packages/w/walrus-0.71-1.noarch.rpm"
+  (cd /tmp; curl -f -L -O $URL1 || curl -f -L -O $URL2)
+  tFileExists /tmp/walrus-0.71-1.noarch.rpm && rpm -qp /tmp/walrus-0.71-1.noarch.rpm
+  tFileExists /tmp/walrus-0.71-1.noarch.rpm && rm /tmp/walrus-0.71-1.noarch.rpm
+}
