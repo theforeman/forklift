@@ -12,5 +12,5 @@ setup() {
 }
 
 @test "Delete an Organization" {
-  hammer organization delete --name="${ORGANIZATION}"
+  hammer organization delete --name="Empty Organization"
 }

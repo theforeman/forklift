@@ -14,6 +14,16 @@ setup() {
   tCommandExists rpmdev-vercmp || tPackageInstall rpmdevtools
 }
 
+# Ensure we have at least one organization present so that the test organization
+# can be deleted at the end
+@test "Create an Empty Organization" {
+  run hammer organization info --name "Empty Organization"
+
+  if [ $status != 0 ]; then
+    hammer organization create --name="Empty Organization" | grep -q "Organization created"
+  fi
+}
+
 @test "create an Organization" {
   hammer organization create --name="${ORGANIZATION}" | grep -q "Organization created"
 }
