@@ -20,6 +20,6 @@ dependencies:
     foreman_installer_options_internal_use_only:
       - "{{ '--katello-devel-scl-ruby=' +  ruby_scl_version if ansible_distribution_major_version == '7' else '' }}"
       - "--katello-devel-admin-password {{ foreman_installer_admin_password }}"
-      - "--katello-devel-github-username '{{ katello_devel_github_username }}'"
+      - "{{ '--katello-devel-github-username=' + katello_devel_github_username if katello_devel_github_username is defined }}"
       - "--katello-devel-extra-plugins theforeman/foreman_remote_execution"
   - role: customize_home
