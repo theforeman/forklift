@@ -5,7 +5,6 @@ boxes:
     google_options:
       image_family: 'centos-7'
     pty:        true
-    libvirt: https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-2004_01.LibVirt.box
     scenarios:
       - foreman
       - katello
@@ -26,7 +25,6 @@ boxes:
     box_name: 'centos/8'
     disk_size: 40
     pty: true
-    libvirt: https://cloud.centos.org/centos/8/vagrant/x86_64/images/CentOS-8-Vagrant-8.3.2011-20201204.2.x86_64.vagrant-libvirt.box
     scenarios:
       - foreman
       - katello
@@ -35,7 +33,6 @@ boxes:
     box_name: 'centos/stream8'
     disk_size: 40
     pty: true
-    libvirt: https://cloud.centos.org/centos/8-stream/x86_64/images/CentOS-Stream-Vagrant-8-20210210.0.x86_64.vagrant-libvirt.box
     scenarios:
       - foreman
       - katello
