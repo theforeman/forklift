@@ -1,0 +1,3 @@
+---
+- name: 'Allow Packages to be Installed'
+  command: "foreman-maintain packages unlock -y"  
