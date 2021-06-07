@@ -5,13 +5,8 @@
     bats_output_dir: '/root/bats_results'
     remote_dir: "/tmp/debug-{{ pipeline_type | default('foreman') }}-{{ pipeline_version | default('nightly') }}-{{ pipeline_os | default('el7') }}"
     smoker_output_dir: '/home/vagrant/smoker'
-  pre_tasks:
-    - name: Gather the package facts
-      package_facts:
-        manager: auto
   roles:
     - role: foreman_maintain_packages
-      when: "'rubygem-foreman_maintain' in ansible_facts.packages"
     - role: sos_report
   tasks:
     - name: "Find bats files"
