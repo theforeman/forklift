@@ -129,20 +129,11 @@ setup() {
  [ $actual_size -ge 40 ]
 }
 
-@test "create skeleton org, product, content view, and repo for import" {
+@test "create skeleton org for import" {
   tSkipIfNoPulp3
   tSkipIfOlderThan318
 
   hammer organization create --name="${IMPORT_ORG}" | grep -q "Organization created"
-  hammer product create --organization="${IMPORT_ORG}" --name="${PRODUCT}" | grep -q "Product created"
-  hammer content-view create --import-only --organization="${IMPORT_ORG}" \
-    --name="${CONTENT_VIEW}" | grep -q "Content view created"
-  hammer repository create --organization="${IMPORT_ORG}" \
-    --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY}" \
-    --url https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/ | grep -q "Repository created"
-  repo_id=$(hammer --csv --no-headers repository info --name="${YUM_REPOSITORY}" --product="${PRODUCT}" --organization="${IMPORT_ORG}" --fields=id)
-  hammer content-view add-repository --organization="${IMPORT_ORG}" \
-  --name="${CONTENT_VIEW}" --repository-id=$repo_id | grep -q "The repository has been associated"
 }
 
 @test "import the exported content view" {
@@ -165,7 +156,7 @@ setup() {
     metadata_path="$(pwd)/metadata-$export_history_id.json" # metadata-16.json
   fi
   # no grep here because hammer doesn't output any text on success
-  hammer content-import version --content-view="${CONTENT_VIEW}" --organization="${IMPORT_ORG}"\
+  hammer content-import version --organization="${IMPORT_ORG}"\
     --metadata-file=$metadata_path --path=$import_path
 }
 
@@ -193,14 +184,11 @@ setup() {
   [ $actual_size -ge 40 ]
 }
 
-@test "create org, product, and repository for library import" {
+@test "create org for library import" {
   tSkipIfNoPulp3
   tSkipIfOlderThan318
 
   hammer organization create --name="${LIBRARY_IMPORT_ORG}"
-  hammer product create --organization="${LIBRARY_IMPORT_ORG}" --name="${PRODUCT}" | grep -q "Product created"
-  hammer repository create --organization="${LIBRARY_IMPORT_ORG}" \
-    --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY}" | grep -q "Repository created"
 }
 
 @test "import the library to the new organization" {
