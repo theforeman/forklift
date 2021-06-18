@@ -150,6 +150,8 @@ setup() {
 
   mkdir -p $import_path
   cp -r $export_path/* $import_path
+  chown -R pulp:pulp $import_path
+
   if [ -f "${export_path}/metadata.json" ]; then
     metadata_path="${export_path}/metadata.json"
   else
@@ -204,6 +206,8 @@ setup() {
 
   mkdir -p $import_path
   cp -r $export_path/* $import_path
+  chown -R pulp:pulp $import_path
+
   hammer content-import library --organization="${LIBRARY_IMPORT_ORG}" --path="${import_path}"
 }
 
