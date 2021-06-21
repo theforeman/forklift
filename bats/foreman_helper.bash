@@ -28,9 +28,9 @@ tKatelloVersion() {
   ) | cut -d. -f1-2
 }
 
-tSkipIfOlderThan318() {
-  if [[ tKatelloVersion < 3.18 ]]; then
-    skip "pulpcore import/export is not available on Katello versions older than 3.18"
+tSkipIfOlderThan41() {
+  if [[ tKatelloVersion < 4.1 ]]; then
+    skip "pulpcore import/export tests are not available on Katello versions older than 4.1"
   fi
 }
 
@@ -48,35 +48,12 @@ tIsPulp2() {
 tSkipIfNotPulp3Only() {
   if tIsPulp2; then
     skip "${1} is not available in scenarios with Pulp 2"
-}
-
-tSkipIfNoPulp2() {
-  if ! tIsPulp2; then
-    skip "${1} is not available in scenarios without Pulp 2"
   fi
-}
-
-tIsPulpcore() {
-  tPackageExists python3-pulpcore
 }
 
 tSkipIfNoPulp3() {
   if ! tIsPulpcore; then
     skip "${1} is not available in scenarios without pulpcore"
-  fi
-}
-
-tSkipIfHammerBelow018() {
-  if tPackageExists tfm-rubygem-hammer_cli; then
-    RPM_PACKAGE=tfm-rubygem-hammer_cli
-  else
-    RPM_PACKAGE=rubygem-hammer_cli
-  fi
-  RPM_VERSION=$(rpm -q --queryformat '%{VERSION}' ${RPM_PACKAGE})
-
-  run rpmdev-vercmp $RPM_VERSION 0.18 > /dev/null
-  if [[ $status == 12 ]]; then
-    skip "Advanced content view tests are not available without hammer-cli >= 0.18"
   fi
 }
 
