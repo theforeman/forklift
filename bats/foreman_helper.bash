@@ -45,6 +45,12 @@ tSkipIfNoPulp2() {
   fi
 }
 
+tSkipIfPulp2() {
+  if tIsPulp2; then
+    skip "${1} is not available in scenarios with Pulp 2"
+  fi
+}
+
 tSkipIfHammerBelow018() {
   if tPackageExists tfm-rubygem-hammer_cli; then
     RPM_PACKAGE=tfm-rubygem-hammer_cli
