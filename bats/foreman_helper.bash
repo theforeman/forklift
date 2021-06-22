@@ -39,7 +39,7 @@ tIsPulp2() {
   tPackageExists pulp-server
 }
 
-tSkipIfPulp2() {
+tSkipIfNotPulp3Only() {
   if tIsPulp2; then
     skip "${1} is not available in scenarios with Pulp 2"
   fi
