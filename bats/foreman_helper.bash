@@ -45,20 +45,6 @@ tSkipIfPulp2() {
   fi
 }
 
-tSkipIfHammerBelow018() {
-  if tPackageExists tfm-rubygem-hammer_cli; then
-    RPM_PACKAGE=tfm-rubygem-hammer_cli
-  else
-    RPM_PACKAGE=rubygem-hammer_cli
-  fi
-  RPM_VERSION=$(rpm -q --queryformat '%{VERSION}' ${RPM_PACKAGE})
-
-  run rpmdev-vercmp $RPM_VERSION 0.18 > /dev/null
-  if [[ $status == 12 ]]; then
-    skip "Advanced content view tests are not available without hammer-cli >= 0.18"
-  fi
-}
-
 cleanSubscriptionManager() {
   run subscription-manager unregister
   echo "rc=${status}"
