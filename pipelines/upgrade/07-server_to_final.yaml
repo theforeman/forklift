@@ -20,6 +20,11 @@
       scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ forklift_upgrade_version_final }}"
     - foreman_server_repositories
+    # Drop when https://projects.theforeman.org/issues/32897 is resolved
+    - role: workaround_foreman_remote_execution_core
+      when:
+        - forklift_upgrade_version_final == "nightly"
+        - ansible_os_family == "RedHat"
     - foreman_installer
     - role: remove_pulp2
       when:

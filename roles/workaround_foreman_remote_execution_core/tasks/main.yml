@@ -1,0 +1,20 @@
+---
+- name: Update all packages on the system
+  include_role:
+    name: update_os_packages
+
+- name: Remove rubygem-foreman_remote_execution_core
+  package:
+    state: absent
+    name: rubygem-foreman_remote_execution_core
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version == '8'
+
+- name: Remove rubygem-foreman_remote_execution_core
+  package:
+    state: absent
+    name: tfm-rubygem-foreman_remote_execution_core
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version == '7'
