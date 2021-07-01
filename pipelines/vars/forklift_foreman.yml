@@ -11,7 +11,7 @@ server_box:
       bats_tests:
         - "fb-verify-packages.bats"
         - "fb-test-foreman.bats"
-        - "fb-test-puppet.bats"
+        - "{{ 'fb-test-puppet.bats' if pipeline_version != 'nightly' and pipeline_version is version('3.1', '<') else '' }}"
       bats_teardown: []
 forklift_boxes:
   "{{ {forklift_server_name: server_box, forklift_smoker_name: smoker_box} }}"
