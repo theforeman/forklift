@@ -70,14 +70,6 @@ fi
   hammer puppet-environment update --name=production --locations "Default Location" --organizations "Default Organization"
 }
 
-@test "Assign proxy to default taxonomies" {
-  # Foreman 1.20 and earlier didn't test with taxonomies on
-  # Foreman 1.23 is expected to have a fix for this via https://projects.theforeman.org/issues/26092
-  FOREMAN_VERSION=$(tForemanVersion)
-  [[ $FOREMAN_VERSION != '1.21' ]] && [[ $FOREMAN_VERSION != '1.22' ]] && skip "Assignment not needed"
-  hammer proxy update --name=$(hostname -f) --locations "Default Location" --organizations "Default Organization"
-}
-
 @test "assign puppet class to host" {
   id=$(hammer --csv puppet-class list --search 'name = motd' | tail -n1 | cut -d, -f1)
   hammer host update --puppet-class-ids $id --name $(hostname -f)
