@@ -11,7 +11,6 @@
     baseurl: "http://koji.katello.org/releases/yum/katello-{{ katello_repositories_version }}/katello/el{{ ansible_distribution_major_version }}/x86_64/"
     priority: '1'
     gpgcheck: no
-    include: /etc/yum/foreman.conf
 
 - name: 'Candlepin Koji repository'
   yum_repository:
@@ -20,7 +19,14 @@
     baseurl: "http://koji.katello.org/releases/yum/katello-{{ katello_repositories_version }}/candlepin/el{{ ansible_distribution_major_version }}/x86_64/"
     priority: '1'
     gpgcheck: no
-    include: /etc/yum/foreman.conf
+
+- name: 'Set module_hotfixes=1'
+  lineinfile:
+    path: "/etc/yum.repos.d/{{ item }}.repo"
+    line: module_hotfixes=1
+  loop:
+    - katello-koji
+    - candlepin-koji
 
 - name: 'Add Pulp {{ katello_repositories_pulp_version }} Stable repository'
   yum_repository:
