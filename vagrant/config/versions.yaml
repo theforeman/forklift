@@ -68,7 +68,6 @@ installers:
 
   - foreman: '2.5'
     katello: '4.1'
-    pulp: '2.21'
     pulpcore: '3.14'
     puppet: 6
     boxes:
