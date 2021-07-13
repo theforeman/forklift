@@ -51,12 +51,6 @@ tSkipIfNotPulp3Only() {
   fi
 }
 
-tSkipIfNoPulp3() {
-  if ! tIsPulpcore; then
-    skip "${1} is not available in scenarios without pulpcore"
-  fi
-}
-
 cleanSubscriptionManager() {
   run subscription-manager unregister
   echo "rc=${status}"

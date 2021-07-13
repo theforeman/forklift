@@ -117,7 +117,6 @@ setup() {
 }
 
 @test "export content view version" {
-  tSkipIfNoPulp3
   tSkipIfOlderThan41
 
   hammer content-export complete version --organization="${ORGANIZATION}" \
@@ -130,14 +129,12 @@ setup() {
 }
 
 @test "create skeleton org for import" {
-  tSkipIfNoPulp3
   tSkipIfOlderThan41
 
   hammer organization create --name="${IMPORT_ORG}" | grep -q "Organization created"
 }
 
 @test "import the exported content view" {
-  tSkipIfNoPulp3
   tSkipIfOlderThan41
 
   latest_export=$(hammer --output csv --no-headers content-export list --content-view "${CONTENT_VIEW}" --organization "${ORGANIZATION}"\
@@ -163,7 +160,6 @@ setup() {
 }
 
 @test "compare contents of export and import" {
-  tSkipIfNoPulp3
   tSkipIfOlderThan41
   export_version=$(hammer --output csv --no-headers content-view version list --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}"\
                --per-page=1 --fields="Version"  --order="version DESC")
@@ -175,7 +171,6 @@ setup() {
 }
 
 @test "export the library" {
-  tSkipIfNoPulp3
   tSkipIfOlderThan41
 
   hammer content-export complete library --organization="${ORGANIZATION}"
@@ -187,14 +182,12 @@ setup() {
 }
 
 @test "create org for library import" {
-  tSkipIfNoPulp3
   tSkipIfOlderThan41
 
   hammer organization create --name="${LIBRARY_IMPORT_ORG}"
 }
 
 @test "import the library to the new organization" {
-  tSkipIfNoPulp3
   tSkipIfOlderThan41
 
   latest_export=$(hammer --output csv --no-headers content-export list --content-view "${LIBRARY}" --organization "${ORGANIZATION}"\
@@ -212,7 +205,6 @@ setup() {
 }
 
 @test "compare contents of library export and import" {
-  tSkipIfNoPulp3
   tSkipIfOlderThan41
 
   export_version=$(hammer --output csv --no-headers content-view version list --content-view="${LIBRARY}" --organization="${ORGANIZATION}"\
@@ -232,7 +224,6 @@ setup() {
 }
 
 @test "perform an incremental export" {
-  tSkipIfNoPulp3
   tSkipIfOlderThan41
   export_version_id=$(hammer --output csv --no-headers content-view version list --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}" \
     --fields=id --per-page=1 --order="version DESC")
@@ -245,7 +236,6 @@ setup() {
 }
 
 @test "perform an incremental library export" {
-  tSkipIfNoPulp3
   tSkipIfOlderThan41
   hammer content-export incremental library --organization="${ORGANIZATION}"
 
