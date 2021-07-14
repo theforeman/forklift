@@ -14,3 +14,11 @@ setup() {
 @test "Delete an Organization" {
   hammer organization delete --name="${ORGANIZATION}"
 }
+
+@test "Delete Import Organization" {
+  hammer organization delete --name="${IMPORT_ORG}"
+}
+
+@test "Delete Library Import Organization" {
+  hammer organization delete --name="${LIBRARY_IMPORT_ORG}"
+}
