@@ -167,7 +167,11 @@ setup() {
     --version="${export_version}" --fields="Repositories/Name")
   import_repos=$(hammer --output csv --no-headers content-view version show --content-view="${CONTENT_VIEW}" --organization="${IMPORT_ORG}" \
     --version="${export_version}" --fields="Repositories/Name")
-  [ "$export_repos" = "$import_repos" ]
+
+  import_repos=$(echo $import_repos | tr "," "\n" | sort > import_repos)
+  export_repos=$(echo $export_repos | tr "," "\n" | sort > export_repos)
+
+  diff import_repos export_repos
 }
 
 @test "export the library" {
@@ -214,7 +218,10 @@ setup() {
   import_repos=$(hammer --output csv --no-headers content-view version show --content-view="${IMPORT_LIBRARY}" --organization="${LIBRARY_IMPORT_ORG}" \
     --version="${export_version}" --fields="Repositories/Name")
 
-  [ "$export_repos" = "$import_repos" ]
+  import_repos=$(echo $import_repos | tr "," "\n" | sort > library_import_repos)
+  export_repos=$(echo $export_repos | tr "," "\n" | sort > library_export_repos)
+
+  diff library_import_repos library_export_repos
 }
 
 
