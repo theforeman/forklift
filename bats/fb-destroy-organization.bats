@@ -16,9 +16,11 @@ setup() {
 }
 
 @test "Delete Import Organization" {
+  tSkipIfOlderThan41
   hammer organization delete --name="${IMPORT_ORG}"
 }
 
 @test "Delete Library Import Organization" {
+  tSkipIfOlderThan41
   hammer organization delete --name="${LIBRARY_IMPORT_ORG}"
 }
