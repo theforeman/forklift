@@ -163,13 +163,10 @@ setup() {
   tSkipIfOlderThan41
   export_version=$(hammer --output csv --no-headers content-view version list --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}"\
                --per-page=1 --fields="Version"  --order="version DESC")
-  export_repos=$(hammer --output csv --no-headers content-view version show --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}" \
-    --version="${export_version}" --fields="Repositories/Name")
-  import_repos=$(hammer --output csv --no-headers content-view version show --content-view="${CONTENT_VIEW}" --organization="${IMPORT_ORG}" \
-    --version="${export_version}" --fields="Repositories/Name")
-
-  import_repos=$(echo $import_repos | tr "," "\n" | sort > import_repos)
-  export_repos=$(echo $export_repos | tr "," "\n" | sort > export_repos)
+  hammer --output csv --no-headers content-view version show --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}" \
+    --version="${export_version}" --fields="Repositories/Name" | tr "," "\n" | sort > export_repos
+  hammer --output csv --no-headers content-view version show --content-view="${CONTENT_VIEW}" --organization="${IMPORT_ORG}" \
+    --version="${export_version}" --fields="Repositories/Name" | tr "," "\n" | sort > import_repos
 
   diff import_repos export_repos
 }
@@ -213,13 +210,10 @@ setup() {
 
   export_version=$(hammer --output csv --no-headers content-view version list --content-view="${LIBRARY}" --organization="${ORGANIZATION}"\
                --per-page=1 --fields="Version"  --order="version DESC")
-  export_repos=$(hammer --output csv --no-headers content-view version show --content-view="${LIBRARY}" --organization="${ORGANIZATION}" \
-    --version="${export_version}" --fields="Repositories/Name")
-  import_repos=$(hammer --output csv --no-headers content-view version show --content-view="${IMPORT_LIBRARY}" --organization="${LIBRARY_IMPORT_ORG}" \
-    --version="${export_version}" --fields="Repositories/Name")
-
-  import_repos=$(echo $import_repos | tr "," "\n" | sort > library_import_repos)
-  export_repos=$(echo $export_repos | tr "," "\n" | sort > library_export_repos)
+  hammer --output csv --no-headers content-view version show --content-view="${LIBRARY}" --organization="${ORGANIZATION}" \
+    --version="${export_version}" --fields="Repositories/Name" | tr "," "\n" | sort > library_export_repos
+  hammer --output csv --no-headers content-view version show --content-view="${IMPORT_LIBRARY}" --organization="${LIBRARY_IMPORT_ORG}" \
+    --version="${export_version}" --fields="Repositories/Name" | tr "," "\n" | sort > library_import_repos
 
   diff library_import_repos library_export_repos
 }
