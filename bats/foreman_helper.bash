@@ -29,7 +29,8 @@ tKatelloVersion() {
 }
 
 tSkipIfOlderThan41() {
-  if [[ tKatelloVersion < 4.1 ]]; then
+  KATELLO_VERSION=$(tKatelloVersion)
+  if [[ $KATELLO_VERSION != 4.* || $KATELLO_VERSION == 4.0 ]]; then
     skip "pulpcore import/export tests are not available on Katello versions older than 4.1"
   fi
 }
