@@ -26,7 +26,7 @@ load foreman_helper
 
   local next_wait_time=0
   until [ "${status:-1}" -eq 0 -o $next_wait_time -eq 12 ]; do
-    run hammer ping
+    run hammer --reload-cache ping
     [[ $status -eq 0 ]] || sleep $(( next_wait_time++ ))
   done
 
