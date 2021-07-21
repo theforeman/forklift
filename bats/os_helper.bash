@@ -107,6 +107,17 @@ tPackageUpgrade() {
   fi
 }
 
+tPackageRemove() {
+  if tIsRedHatCompatible; then
+    yum -y remove $*
+  elif tIsDebianCompatible; then
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" remove $*
+  else
+    false # not implemented
+  fi
+}
+
 tPackageVersion() {
   if tIsRedHatCompatible; then
     rpm -q --qf "%{VERSION}\n" "$1"
