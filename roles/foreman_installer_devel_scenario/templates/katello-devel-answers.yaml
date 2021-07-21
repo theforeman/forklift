@@ -9,6 +9,7 @@ katello_devel:
 foreman_proxy_content:
   enable_katello_agent: true
   proxy_pulp_yum_to_pulpcore: true
+  puppet: false
 foreman_proxy:
   http: true
   ssl_port: '9090'
@@ -18,16 +19,10 @@ foreman_proxy:
   foreman_ssl_ca: /etc/foreman-proxy/foreman_ssl_ca.pem
   foreman_ssl_cert: /etc/foreman-proxy/foreman_ssl_cert.pem
   foreman_ssl_key: /etc/foreman-proxy/foreman_ssl_key.pem
-puppet:
-  server: true
-  server_environments_owner: apache
-  server_foreman_ssl_ca: /etc/pki/katello/puppet/puppet_client_ca.crt
-  server_foreman_ssl_cert: /etc/pki/katello/puppet/puppet_client.crt
-  server_foreman_ssl_key: /etc/pki/katello/puppet/puppet_client.key
-  # Tune the server for a minimal deployment
-  puppet_server_jvm_max_heap_size: 1G
-  puppet_server_jvm_min_heap_size: 1G
-  puppet_server_max_active_instances: 1
+  manage_puppet_group: false
+  puppet: false
+  puppetca: false
+puppet: false
 foreman_proxy::plugin::abrt: false
 foreman_proxy::plugin::ansible: false
 foreman_proxy::plugin::chef: false
