@@ -17,6 +17,7 @@ bats_tests:
   - "fb-test-katello.bats"
   - "fb-katello-content.bats"
   - "fb-katello-client.bats"
+  - "fb-katello-client-global-registration.bats"
 bats_tests_additional: []
 bats_teardown:
   - "fb-destroy-organization.bats"
