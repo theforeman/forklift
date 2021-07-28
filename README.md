@@ -28,6 +28,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
 * Ansible - 2.7+
 * [Vagrant Libvirt provider plugin](https://github.com/vagrant-libvirt/vagrant-libvirt) (if using Libvirt)
 * Virtualization enabled in BIOS
+* Some environments (like `centos8-stream-foreman-nightly`) requires [Foreman Operations Collection](https://github.com/theforeman/foreman-operations-collection). You can install it from Ansible Galaxy by running `ansible-galaxy collection install theforeman.operations`
 
 See [Installing Vagrant](docs/vagrant.md) for installation instructions.
 
