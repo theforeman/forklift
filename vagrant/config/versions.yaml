@@ -82,7 +82,7 @@ installers:
   - foreman: 'nightly'
     katello: 'nightly'
     pulpcore: '3.14'
-    puppet: 6
+    puppet: 7
     boxes:
       - 'centos7'
       - 'centos7-fips'
