@@ -17,5 +17,6 @@ pulp_install_plugins:
   pulp-container: {}
   pulp-deb: {}
   pulp-file: {}
+  pulp-python: {}
   pulp-rpm: {}
 pulp_default_admin_password: password
