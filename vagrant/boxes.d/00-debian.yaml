@@ -5,3 +5,8 @@ boxes:
     pty:        true
     scenarios:
       - foreman
+  debian11:
+    box_name:   'debian/bullseye64'
+    pty:        true
+    scenarios:
+      - foreman
