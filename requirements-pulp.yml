@@ -1,3 +1,2 @@
 collections:
   - name: pulp.pulp_installer
-    version: 3.14.3-1
