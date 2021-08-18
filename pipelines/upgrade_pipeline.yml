@@ -6,6 +6,7 @@
 - import_playbook: upgrade/05-server_to_intermediate.yaml
 - import_playbook: upgrade/06-proxy_to_intermediate.yaml
 - import_playbook: upgrade/07-server_to_final.yaml
-- import_playbook: upgrade/08-proxy_to_final.yaml
-- import_playbook: upgrade/09-tests.yaml
-- import_playbook: upgrade/10-smoker.yaml
+- import_playbook: upgrade/08-tests.yaml
+- import_playbook: upgrade/09-proxy_to_final.yaml
+- import_playbook: upgrade/10-tests.yaml
+- import_playbook: upgrade/11-smoker.yaml
