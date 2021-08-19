@@ -253,6 +253,7 @@ Some settings can be customized for the entirety of the deployment by copying `v
  * scale_cpus: Factor to multiply CPUs of boxes that specify an own value
  * sync_type: type of sync to use for transfer to the Vagrant box
  * mount_options: options for the vagrant-cachier plugin
+ * hostname: you can override this per-box by configuring your box with a hostname directly
  * domain: domain for your hosts, you can override this per-box by configuring your box with a domain directly
  * libvirt_options, virtualbox_options, rackspace_options, openstack_options, google_options: custom options for the various providers
 
