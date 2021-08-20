@@ -11,12 +11,14 @@ pulp_pkg_repo_gpgcheck: False
 pulp_settings:
   secret_key: "unsafe_default"
   content_origin: "http://{{ ansible_fqdn }}"
-pulp_install_plugins:
+pulp_install_plugins_base:
   pulp-ansible: {}
   pulp-certguard: {}
   pulp-container: {}
   pulp-deb: {}
   pulp-file: {}
-  pulp-python: {}
   pulp-rpm: {}
+pulp_install_plugins_314:
+  pulp-python: {}
+pulp_install_plugins: "{{ pulp_install_plugins_base | combine(pulp_install_plugins_314 if pipeline_version is version('3.14', '>=') else {}) }}"
 pulp_default_admin_password: password
