@@ -118,6 +118,7 @@ load fixtures/content
   timeout 300 hammer host package remove --host $HOSTNAME --packages walrus
 }
 
-@test "cleanup subscription-manager after content tests" {
+@test "clean up subscription-manager and gofer after content tests" {
   cleanSubscriptionManager
+  tPackageRemove gofer
 }
