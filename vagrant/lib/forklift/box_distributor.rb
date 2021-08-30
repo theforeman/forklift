@@ -91,7 +91,7 @@ module Forklift
         configure_providers(machine, box, networks)
         configure_synced_folders(machine, box)
         configure_private_network(machine, box)
-        configure_sshfs(config, box)
+        configure_sshfs(machine, box)
         configure_nfs(config, box)
 
         yield machine if block_given?
@@ -118,13 +118,13 @@ module Forklift
       end
     end
 
-    def configure_sshfs(config, box)
+    def configure_sshfs(machine, box)
       normalize_synced_folder(box['sshfs']).each do |sshfs|
-        config.vm.synced_folder sshfs['host_path'],
-                                sshfs['guest_path'],
-                                :type => :sshfs,
-                                :reverse => sshfs['reverse'] || false,
-                                :sshfs_opts_append => sshfs['options'] || ''
+        machine.vm.synced_folder sshfs['host_path'],
+                                 sshfs['guest_path'],
+                                 :type => :sshfs,
+                                 :reverse => sshfs['reverse'] || false,
+                                 :sshfs_opts_append => sshfs['options'] || ''
       end
     end
 
