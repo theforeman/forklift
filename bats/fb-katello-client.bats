@@ -16,10 +16,6 @@ load fixtures/content
   foreman-maintain packages unlock -y
 }
 
-@test "install subscription manager" {
-  tPackageExists subscription-manager || tPackageInstall subscription-manager
-}
-
 @test "disable puppet agent to prevent checkin from registering host to another org" {
   systemctl is-active puppet || skip "Puppet is not active"
   systemctl stop puppet
@@ -39,7 +35,7 @@ load fixtures/content
   run yum erase -y 'katello-ca-consumer-*'
   echo "rc=${status}"
   echo "${output}"
-  run rpm -Uvh http://localhost/pub/katello-ca-consumer-latest.noarch.rpm
+  tPackageInstall http://localhost/pub/katello-ca-consumer-latest.noarch.rpm
   echo "rc=${status}"
   echo "${output}"
   subscription-manager register --force --org="${ORGANIZATION_LABEL}" --username=admin --password=changeme --env=Library
