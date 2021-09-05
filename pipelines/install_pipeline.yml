@@ -4,4 +4,6 @@
 - import_playbook: install/03-install_server.yaml
 - import_playbook: install/04-install_proxy.yaml
 - import_playbook: install/05-tests.yaml
-- import_playbook: install/06-smoker.yaml
+- import_playbook: install/06-proxy-tests.yaml
+- import_playbook: install/07-final-tests.yaml
+- import_playbook: install/08-smoker.yaml

@@ -24,6 +24,8 @@ tKatelloVersion() {
       tPackageVersion tfm-rubygem-katello
     elif tPackageExists rubygem-katello; then
       tPackageVersion rubygem-katello
+    elif tPackageExists foreman-proxy-content; then
+      tPackageVersion foreman-proxy-content
     fi
   ) | cut -d. -f1-2
 }

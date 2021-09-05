@@ -27,3 +27,35 @@
       scenario_version: "{{ pipeline_version }}"
     - foreman_proxy_content
     - foreman_installer
+  post_tasks:
+    - name: install hammer
+      package:
+        name: "{{ 'tfm-' if ansible_distribution_major_version == '7' else '' }}rubygem-hammer_cli_katello"
+
+    - name: deploy hammer config
+      copy:
+        dest: /etc/hammer/cli.modules.d/foreman.yml
+        content: |
+          :foreman:
+            # Enable/disable foreman commands
+            :enable_module: true
+
+            :username: 'admin'
+            :password: 'changeme'
+
+            # Your foreman server address
+            :host: 'https://{{ server_fqdn }}'
+
+            # Enable using sessions
+            # When sessions are enabled, hammer ignores credentials stored in the config file
+            # and asks for them interactively at the begining of each session.
+            :use_sessions: false
+
+            # Check API documentation cache status on each request
+            :refresh_cache: false
+
+            # API request timeout in seconds, set -1 for infinity
+            :request_timeout: 120
+
+          :ssl:
+            :ssl_ca_file: '/etc/pki/katello/certs/katello-server-ca.crt'
