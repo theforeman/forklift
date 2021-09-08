@@ -22,6 +22,10 @@ setup() {
   hammer capsule content add-lifecycle-environment --id=$PROXY_ID --environment="Library" --organization="${ORGANIZATION}"
 }
 
+@test "enable test lifecycle environment for proxy" {
+  hammer capsule content add-lifecycle-environment --id=$PROXY_ID --environment="Test" --organization="${ORGANIZATION}"
+}
+
 @test "sync proxy" {
   hammer capsule content synchronize --id=$PROXY_ID
 }

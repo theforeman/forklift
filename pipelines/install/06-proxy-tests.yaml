@@ -1,7 +1,7 @@
 ---
 - name: run tests
   hosts:
-    - "{{ forklift_server_name }}"
+    - "{{ forklift_proxy_name }}"
   become: true
   vars_files:
     - ../vars/install_base.yml
@@ -18,11 +18,5 @@
     - role: foreman_testing
       bats_tests:
         - "fb-verify-packages.bats"
-        - "fb-test-foreman.bats"
-        - "fb-test-puppet.bats"
-        - "fb-test-katello.bats"
-        - "fb-katello-content.bats"
         - "fb-katello-client.bats"
-        - "fb-katello-client-global-registration.bats"
-        - "fb-katello-proxy.bats"
       bats_teardown: []
