@@ -1,0 +1,9 @@
+server_box:
+  box: "{{ pipeline_os }}"
+  memory: 8192
+  ansible:
+    variables:
+      foreman_server_repositories_katello: true
+      foreman_server_repositories_ostree: false
+forklift_boxes:
+  "{{ {forklift_server_name: server_box} }}"
