@@ -1,0 +1,21 @@
+forklift_name: "pipe-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}"
+forklift_server_name: "pipe-{{ pipeline_type }}-server-{{ pipeline_version }}-{{ pipeline_os }}"
+
+clone_type: offline
+clone_source_url: https://downloads.theforeman.org/test-fixtures/backup/katello/
+backup_dir: /backup
+backup_files:
+  offline:
+    - .config.snar
+    - .postgres.snar
+    - .pulp.snar
+    - config_files.tar.gz
+    - metadata.yml
+    - pgsql_data.tar.gz
+    - pulp_data.tar
+  offline_no_pulp:
+    - .config.snar
+    - .postgres.snar
+    - config_files.tar.gz
+    - metadata.yml
+    - pgsql_data.tar.gz

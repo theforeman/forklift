@@ -1,0 +1,47 @@
+---
+- name: install server
+  hosts:
+   - "{{ forklift_server_name }}"
+  become: yes
+  vars_files:
+    - ../vars/clone_base.yml
+    - ../vars/repos_staging.yml
+  tasks:
+    - name: create backup dir
+      file:
+        path: "{{ backup_dir }}"
+        state: directory
+    - name: download backup files
+      get_url:
+        dest: "{{ backup_dir }}/{{ item }}"
+        url: "{{ clone_source_url }}/{{ pipeline_version }}-{{ clone_type }}/{{ item }}"
+      loop: "{{ backup_files[clone_type] }}"
+    - name: install satellite-clone
+      package:
+        name:
+          - ansible
+          - git
+          - rubygem-foreman_maintain
+        state: present
+    - name: clone satellite-clone
+      git:
+        repo: https://github.com/RedHatSatellite/satellite-clone
+        dest: /root/satellite-clone
+        version: master
+    - name: write satellite-clone-vars.yml
+      copy:
+        dest: /root/satellite-clone/satellite-clone-vars.yml
+        content: |
+          enable_repos: false
+          backup_dir: "{{ backup_dir }}"
+          satellite_scenario: katello
+          satellite_package: katello
+          satellite_installer_cmd: foreman-installer
+    - name: call clone
+      # to silly me tomorrow: yes, this needs to be shell, not command
+      # why? sat-clone uses "$PWD" and that's not updated to the chdir below if you use command
+      shell: ansible-playbook satellite-clone-playbook.yml
+      args:
+        chdir: /root/satellite-clone/
+      environment:
+        SATELLITE_CLONE_FORCE_VERSION: "6.10"
