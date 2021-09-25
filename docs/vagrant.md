@@ -35,6 +35,6 @@ usermod --append --groups libvirt `whoami`
 Install vagrant libvirt plugin:
 
 ```bash
-sudo yum -y install install libxslt-devel libxml2-devel libvirt-devel libguestfs-tools-c ruby-devel gcc
+sudo yum -y install libxslt-devel libxml2-devel libvirt-devel libguestfs-tools-c ruby-devel gcc
 vagrant plugin install vagrant-libvirt
 ```
