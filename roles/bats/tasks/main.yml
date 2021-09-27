@@ -47,10 +47,10 @@
       args:
         chdir: "{{ bats_forklift_dir }}/bats"
       with_items:
-        - "{{ bats_setup }}"
-        - "{{ bats_tests }}"
-        - "{{ bats_tests_additional }}"
-        - "{{ bats_teardown }}"
+        - "{{ bats_setup | select() | list }}"
+        - "{{ bats_tests | select() | list }}"
+        - "{{ bats_tests_additional | select() | list }}"
+        - "{{ bats_teardown | select() | list }}"
       register: "test_output"
       ignore_errors: true
       environment: "{{ bats_environment }}"
@@ -59,10 +59,10 @@
       shell: "cat {{ bats_output_dir }}/{{ item }}.tap"
       register: "test_results"
       with_items:
-        - "{{ bats_setup }}"
-        - "{{ bats_tests }}"
-        - "{{ bats_tests_additional }}"
-        - "{{ bats_teardown }}"
+        - "{{ bats_setup | select() | list }}"
+        - "{{ bats_tests | select() | list }}"
+        - "{{ bats_tests_additional | select() | list }}"
+        - "{{ bats_teardown | select() | list }}"
 
     - name: "Output test results"
       debug:
