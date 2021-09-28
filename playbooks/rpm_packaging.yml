@@ -31,13 +31,6 @@
         state: present
       become: true
 
-    - name: Install gem-compare
-      gem:
-        name: gem-compare
-        user_install: false
-        state: present
-      become: true
-
     - name: Clone foreman-packaging
       git:
         repo: https://github.com/theforeman/foreman-packaging.git
