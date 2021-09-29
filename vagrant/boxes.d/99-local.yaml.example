@@ -8,7 +8,6 @@ centos7-katello-devel:
     variables:
       ssh_forward_agent: true
       foreman_devel_github_push_ssh: True
-      katello_devel_github_username: <REPLACE ME>
 
 centos8-katello-devel:
   primary: true
@@ -29,8 +28,6 @@ centos7-luna-devel:
   ansible:
     playbook: 'playbooks/luna-devel.yml'
     group: 'devel'
-    variables:
-      katello_devel_github_username: <REPLACE ME>
 
 centos7-luna-demo:
   box: centos7
@@ -45,7 +42,6 @@ centos7-hammer-devel:
     playbook: 'playbooks/hammer_devel.yml'
     group: 'hammer-devel'
     variables: # defaults in roles/hammer_devel/defaults/main.yml
-      hammer_devel_github_username: <REPLACE ME>
       #hammer_devel_server: centos7-katello-devel.custom-domain
 
 katello-remote-execution:
@@ -93,7 +89,6 @@ centos7-dynflow-devel:
     group: 'dynflow_devel'
     playbook: 'playbooks/dynflow_devel.yml'
     variables:
-      dynflow_devel_github_username: '<REPLACE ME>'
       dynflow_devel_github_fork_remote_name: 'origin'
 
 centos7-katello-nightly-stable:
