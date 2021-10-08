@@ -3,7 +3,7 @@ dependencies:
   - role: epel_repositories
     when:
       - foreman_server_repositories_epel|bool
-      - ansible_distribution_major_version == '7'
+      - ansible_distribution_major_version > '6'
   - role: ansible_repositories
     when:
     - foreman_server_repositories_ansible|bool
