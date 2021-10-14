@@ -18,19 +18,32 @@ setup() {
   hammer proxy info --id $PROXY_ID
 }
 
-@test "enable lifecycle environment for proxy" {
+@test "enable Library lifecycle environment for proxy" {
   hammer capsule content add-lifecycle-environment --id=$PROXY_ID --environment="Library" --organization="${ORGANIZATION}"
+}
+
+@test "enable ${LIFECYCLE_ENVIRONMENT} lifecycle environment for proxy"
+  hammer capsule content add-lifecycle-environment --id=$PROXY_ID --environment="${LIFECYCLE_ENVIRONMENT}" --organization="${ORGANIZATION}"
 }
 
 @test "sync proxy" {
   hammer capsule content synchronize --id=$PROXY_ID
 }
 
-@test "content is available from proxy using old /pulp/repos" {
+@test "content is available from proxy in the Library LCE using old /pulp/repos" {
   tCheckPulpYumContent "${PROXY_HOSTNAME}" "pulp/repos" "Library"
 }
 
-@test "content is available from proxy using /pulp/content" {
+@test "content is available from proxy in the Library LCE using /pulp/content" {
   tSkipIfNotPulp3Only "/pulp/content"
   tCheckPulpYumContent "${PROXY_HOSTNAME}" "pulp/content" "Library"
+}
+
+@test "content is available from proxy in the ${LIFECYCLE_ENVIRONMENT} LCE using old /pulp/repos" {
+  tCheckPulpYumContent "${PROXY_HOSTNAME}" "pulp/repos" "${LIFECYCLE_ENVIRONMENT_LABEL}"
+}
+
+@test "content is available from proxy in the ${LIFECYCLE_ENVIRONMENT} LCE using /pulp/content" {
+  tSkipIfNotPulp3Only "/pulp/content"
+  tCheckPulpYumContent "${PROXY_HOSTNAME}" "pulp/content" "${LIFECYCLE_ENVIRONMENT_LABEL}"
 }
