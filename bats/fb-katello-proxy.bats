@@ -17,11 +17,14 @@ setup() {
 tCheckContentOnProxy() {
   BASE_PATH=$1
   LCE=$2
-  URL1="http://${PROXY_HOSTNAME}/${BASE_PATH}/${ORGANIZATION_LABEL}/${LCE}/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/walrus-0.71-1.noarch.rpm"
-  URL2="http://${PROXY_HOSTNAME}/${BASE_PATH}/${ORGANIZATION_LABEL}/${LCE}/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/Packages/w/walrus-0.71-1.noarch.rpm"
-  (cd /tmp; curl -f -L -O $URL1 || curl -f -L -O $URL2)
-  tFileExists /tmp/walrus-0.71-1.noarch.rpm && rpm -qp /tmp/walrus-0.71-1.noarch.rpm
-  tFileExists /tmp/walrus-0.71-1.noarch.rpm && rm /tmp/walrus-0.71-1.noarch.rpm
+  RPM_FILE=walrus-0.71-1.noarch.rpm
+  TEST_TMP=$(mktemp -d)
+  TEST_RPM_FILE="${TEST_TMP}/${RPM_FILE}"
+  URL1="http://${PROXY_HOSTNAME}/${BASE_PATH}/${ORGANIZATION_LABEL}/${LCE}/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/${RPM_FILE}"
+  URL2="http://${PROXY_HOSTNAME}/${BASE_PATH}/${ORGANIZATION_LABEL}/${LCE}/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/Packages/${RPM_FILE:0:1}/${RPM_FILE}"
+  curl -f -L --output ${TEST_RPM_FILE} $URL1 || curl -f -L --output ${TEST_RPM_FILE} $URL2
+  tFileExists ${TEST_RPM_FILE} && rpm -qp ${TEST_RPM_FILE}
+  tFileExists ${TEST_RPM_FILE} && rm ${TEST_RPM_FILE}
 }
 
 @test "proxy is registered" {
