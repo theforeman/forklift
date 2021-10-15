@@ -27,10 +27,10 @@ setup() {
 }
 
 @test "content is available from proxy using old /pulp/repos" {
-  tCheckContentOnProxy "${PROXY_HOSTNAME}" "pulp/repos" "Library"
+  tCheckPulpYumContent "${PROXY_HOSTNAME}" "pulp/repos" "Library"
 }
 
 @test "content is available from proxy using /pulp/content" {
   tSkipIfNotPulp3Only "/pulp/content"
-  tCheckContentOnProxy "${PROXY_HOSTNAME}" "pulp/content" "Library"
+  tCheckPulpYumContent "${PROXY_HOSTNAME}" "pulp/content" "Library"
 }
