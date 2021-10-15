@@ -1,0 +1,10 @@
+---
+- name: run tests
+  hosts:
+    - "{{ forklift_server_name }}"
+  become: true
+  vars_files:
+    - ../vars/install_base.yml
+    - ../vars/repos_staging.yml
+  roles:
+    - role: foreman_testing
