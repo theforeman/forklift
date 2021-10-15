@@ -60,7 +60,7 @@ setup() {
 }
 
 @test "fetch file from file repository" {
-  curl http://$HOSTNAME/pulp/isos/${ORGANIZATION_LABEL}/Library/custom/${PRODUCT_LABEL}/${REPOSITORY_LABEL}/1.iso > /dev/null
+  curl --fail --output /dev/null http://$HOSTNAME/pulp/isos/${ORGANIZATION_LABEL}/Library/custom/${PRODUCT_LABEL}/${FILE_REPOSITORY_LABEL}/1.iso
 }
 
 @test "create a container repository" {
