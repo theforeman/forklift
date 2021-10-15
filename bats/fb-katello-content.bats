@@ -462,5 +462,5 @@ setup() {
 }
 
 @test "fetch rpm from yum repository on old path" {
-  tCheckContentOnProxy "${HOSTNAME}" "pulp/repos" "Library"
+  tCheckPulpYumContent "${HOSTNAME}" "pulp/repos" "Library"
 }

@@ -67,7 +67,7 @@ tHttpGet() {
   curl --fail --location --output "${OUTPUT}" "${URL}"
 }
 
-tCheckContentOnProxy() {
+tCheckPulpYumContent() {
   CONTENT_SOURCE=$1
   BASE_PATH=$2
   LCE=$3
