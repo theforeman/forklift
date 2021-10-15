@@ -61,6 +61,12 @@ cleanSubscriptionManager() {
   echo "${output}"
 }
 
+tHttpGet() {
+  URL=$1
+  OUTPUT=${2:-/dev/null}
+  curl --fail --location --output "${OUTPUT}" "${URL}"
+}
+
 tCheckContentOnProxy() {
   CONTENT_SOURCE=$1
   BASE_PATH=$2
@@ -70,7 +76,7 @@ tCheckContentOnProxy() {
   TEST_RPM_FILE="${TEST_TMP}/${RPM_FILE}"
   URL1="http://${CONTENT_SOURCE}/${BASE_PATH}/${ORGANIZATION_LABEL}/${LCE}/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/${RPM_FILE}"
   URL2="http://${CONTENT_SOURCE}/${BASE_PATH}/${ORGANIZATION_LABEL}/${LCE}/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/Packages/${RPM_FILE:0:1}/${RPM_FILE}"
-  curl -f -L --output ${TEST_RPM_FILE} $URL1 || curl -f -L --output ${TEST_RPM_FILE} $URL2
+  tHttpGet $URL1 ${TEST_RPM_FILE} || tHttpGet $URL2 ${TEST_RPM_FILE}
   tFileExists ${TEST_RPM_FILE} && rpm -qp ${TEST_RPM_FILE}
   tFileExists ${TEST_RPM_FILE} && rm ${TEST_RPM_FILE}
 }
