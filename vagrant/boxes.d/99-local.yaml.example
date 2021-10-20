@@ -42,7 +42,7 @@ centos7-hammer-devel:
     playbook: 'playbooks/hammer_devel.yml'
     group: 'hammer-devel'
     variables: # defaults in roles/hammer_devel/defaults/main.yml
-      #hammer_devel_server: centos7-katello-devel.custom-domain
+      #hammer_devel_server: centos7-katello-devel.custom-domain.example.com
 
 katello-remote-execution:
   box: centos7-katello-nightly
