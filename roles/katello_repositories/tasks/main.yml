@@ -3,5 +3,5 @@
   include_tasks: "{{ katello_repositories_environment }}_repos.yml"
 
 - name: enable powertools for libdb_cxx used by qpid-cpp-server-linearstore
-  command: dnf config-manager --set-enabled powertools
+  command: subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
   when: ansible_distribution_major_version == "8"
