@@ -16,14 +16,13 @@
       foreman_installer_disable_system_checks: true
       foreman_installer_options_internal_use_only:
         - '--certs-tar-file "{{ foreman_proxy_content_certs_tar }}"'
-        - "{{ '' if (foreman_repositories_version == 'nightly' or 2.4 is version(foreman_repositories_version, '>')) else ('--foreman-proxy-content-enable-ostree true') }}"
+        - "{{ '' if (foreman_repositories_version is version(2.4, '>') and foreman_repositories_version is version(3.1, '<')) else '--foreman-proxy-content-enable-ostree true' }}"
         - '--foreman-proxy-trusted-hosts "{{ server_fqdn }}"'
         - '--foreman-proxy-trusted-hosts "{{ ansible_nodename }}"'
         - '--foreman-proxy-foreman-base-url "https://{{ server_fqdn }}"'
         - '--foreman-proxy-register-in-foreman true'
         - '--foreman-proxy-oauth-consumer-key "{{ oauth_consumer_key }}"'
         - '--foreman-proxy-oauth-consumer-secret "{{ oauth_consumer_secret }}"'
-        - "{{ '' if (foreman_repositories_version == 'nightly' or 2.3 is version(foreman_repositories_version, '>')) else ('--foreman-proxy-content-parent-fqdn %s' % server_fqdn) }}"
         - '--puppet-server-foreman-url https://"{{ server_fqdn }}"'
       foreman_installer_additional_packages:
           - foreman-installer-katello
