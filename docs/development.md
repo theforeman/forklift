@@ -36,8 +36,8 @@ A Katello development environment can be deployed on CentOS 7. Ensure that you h
 For example, if I wanted my upstream remotes to be origin and to install the remote execution and discovery plugins:
 
 ```yaml
-centos7-katello-devel:
-  box: centos7
+centos8-katello-devel:
+  box: centos8-stream
   ansible:
     playbook: 'playbooks/katello_devel.yml'
     group: 'devel'
@@ -46,18 +46,19 @@ centos7-katello-devel:
       foreman_installer_options:
         - "--katello-devel-extra-plugins theforeman/foreman_remote_execution"
         - "--katello-devel-extra-plugins theforeman/foreman_discovery"
+        - "--foreman-proxy-content-enable-ostree=true"
 ```
 
 Lastly, spin up the box:
 
 ```
-vagrant up centos7-katello-devel
+vagrant up centos8-katello-devel
 ```
 
 The box can now be accessed via ssh and the Rails server started directly (this assumes you are connecting as the default `vagrant` user):
 
 ```sh
-vagrant ssh centos7-katello-devel
+vagrant ssh centos8-katello-devel
 cd foreman
 bundle exec foreman start
 ```
