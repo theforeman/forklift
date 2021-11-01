@@ -11,7 +11,7 @@ centos7-katello-devel:
 
 centos8-katello-devel:
   primary: true
-  box: centos8
+  box: centos8-stream
   ansible:
     playbook: 'playbooks/katello_devel.yml'
     group: 'devel'
@@ -21,6 +21,9 @@ centos8-katello-devel:
       katello_devel_github_username: <REPLACE ME>
       foreman_repositories_environment: staging
       katello_repositories_environment: staging
+      foreman_installer_options:
+        - "--foreman-proxy-content-enable-ostree=true"
+
 
 centos7-luna-devel:
   box: centos7
