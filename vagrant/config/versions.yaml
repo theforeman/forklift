@@ -92,6 +92,18 @@ installers:
       - 'ubuntu1804'
       - 'ubuntu2004'
 
+  - foreman: '3.1'
+    katello: '4.3'
+    pulpcore: '3.15'
+    puppet: 7
+    boxes:
+      - 'centos7'
+      - 'centos7-fips'
+      - 'centos8'
+      - 'centos8-stream'
+      - 'debian10'
+      - 'ubuntu2004'
+
   - foreman: 'nightly'
     katello: 'nightly'
     pulpcore: '3.15'
