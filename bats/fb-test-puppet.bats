@@ -10,6 +10,14 @@ if [[ -e /etc/profile.d/puppet-agent.sh ]] ; then
   . /etc/profile.d/puppet-agent.sh
 fi
 
+@test "enable puppet feature" {
+  KATELLO_VERSION=$(tKatelloVersion)
+  if [[ $KATELLO_VERSION != 4.[3-9]* ]]; then
+    skip "Enabling Puppet explicitly is only needed with Katello 4.3+"
+  fi
+  foreman-installer --enable-foreman-plugin-puppet --enable-foreman-cli-puppet --foreman-proxy-puppet true --foreman-proxy-puppetca true --foreman-proxy-content-puppet true --enable-puppet --puppet-server true --puppet-server-foreman-ssl-ca /etc/pki/katello/puppet/puppet_client_ca.crt --puppet-server-foreman-ssl-cert /etc/pki/katello/puppet/puppet_client.crt --puppet-server-foreman-ssl-key /etc/pki/katello/puppet/puppet_client.key
+}
+
 @test "check smart proxy is registered" {
   hammer proxy info --name=$(hostname -f)
 }
