@@ -106,7 +106,7 @@ installers:
 
   - foreman: 'nightly'
     katello: 'nightly'
-    pulpcore: '3.15'
+    pulpcore: '3.16'
     puppet: 7
     boxes:
       - 'centos7'
