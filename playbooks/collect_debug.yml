@@ -5,6 +5,7 @@
     bats_output_dir: '/root/bats_results'
     remote_dir: "/tmp/debug-{{ pipeline_type | default('foreman') }}-{{ pipeline_version | default('nightly') }}-{{ pipeline_os | default('el7') }}"
     smoker_output_dir: '/home/vagrant/smoker'
+    backup_output_dir: '/var/tmp/foreman-backup'
   roles:
     - role: foreman_maintain_packages
     - role: sos_report
@@ -37,3 +38,15 @@
         src: "{{ item.path }}"
         dest: "{{ remote_dir }}"
       with_items: "{{ smoker_results.files }}"
+
+    - name: "Find backup files"
+      find:
+        paths: "{{ backup_output_dir }}"
+        recurse: True
+      register: backup_results
+
+    - name: "Copy backup results"
+      fetch:
+        src: "{{ item.path }}"
+        dest: "{{ remote_dir }}"
+      with_items: "{{ backup_results.files }}"
