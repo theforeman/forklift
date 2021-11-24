@@ -3,6 +3,7 @@
   yum:
     name: '*'
     update_cache: yes
+    allow_downgrade: yes
     state: latest
   tags:
     - packages
