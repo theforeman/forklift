@@ -94,7 +94,7 @@ installers:
 
   - foreman: '3.1'
     katello: '4.3'
-    pulpcore: '3.15'
+    pulpcore: '3.16'
     puppet: 7
     boxes:
       - 'centos7'
