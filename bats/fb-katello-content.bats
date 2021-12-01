@@ -10,8 +10,6 @@ load fixtures/content
 setup() {
   tSetOSVersion
   HOSTNAME=$(hostname -f)
-
-  tCommandExists rpmdev-vercmp || tPackageInstall rpmdevtools
 }
 
 # Ensure we have at least one organization present so that the test organization
