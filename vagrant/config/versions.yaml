@@ -114,4 +114,5 @@ installers:
       - 'centos8'
       - 'centos8-stream'
       - 'debian10'
+      - 'debian11'
       - 'ubuntu2004'
