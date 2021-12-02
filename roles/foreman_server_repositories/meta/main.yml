@@ -6,10 +6,16 @@ dependencies:
       - ansible_distribution_major_version == '7'
   - role: ansible_repositories
     when:
-    - foreman_server_repositories_ansible|bool
-    - ansible_distribution_major_version != '7'
+      - foreman_server_repositories_ansible|bool
+      - ansible_distribution_major_version != '7'
   - role: theforeman.operations.puppet_repositories
-    when: foreman_server_repositories_puppet|bool
+    when:
+      - foreman_server_repositories_puppet|bool
+      - ansible_distribution_release != 'bullseye'
+  - role: puppet_repositories_bullseye
+    when:
+      - foreman_server_repositories_puppet|bool
+      - ansible_distribution_release == 'bullseye'
   - role: foreman_repositories
     when: foreman_server_repositories_foreman|bool
   - role: katello_repositories
