@@ -35,6 +35,13 @@ tSkipIfOlderThan41() {
   fi
 }
 
+tSkipIfOlderThan43() {
+  KATELLO_VERSION=$(tKatelloVersion)
+  if [[ $KATELLO_VERSION == [0-3].* || $KATELLO_VERSION == 4.[0-2]* ]]; then
+    skip "Restricting proxy syncing to a content view only works with Katello 4.3+"
+  fi
+}
+
 tSkipIfPulp3Only() {
   KATELLO_VERSION=$(tKatelloVersion)
   if [[ $KATELLO_VERSION == 4.* ]]; then
@@ -71,11 +78,12 @@ tCheckPulpYumContent() {
   CONTENT_SOURCE=$1
   BASE_PATH=$2
   LCE=$3
-  RPM_FILE=walrus-0.71-1.noarch.rpm
+  RPM_FILE=${4:-walrus-0.71-1.noarch.rpm}
+  REPO_LABEL=${5:-${YUM_REPOSITORY_LABEL}}
   TEST_TMP=$(mktemp -d)
   TEST_RPM_FILE="${TEST_TMP}/${RPM_FILE}"
-  URL1="http://${CONTENT_SOURCE}/${BASE_PATH}/${ORGANIZATION_LABEL}/${LCE}/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/${RPM_FILE}"
-  URL2="http://${CONTENT_SOURCE}/${BASE_PATH}/${ORGANIZATION_LABEL}/${LCE}/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${YUM_REPOSITORY_LABEL}/Packages/${RPM_FILE:0:1}/${RPM_FILE}"
+  URL1="http://${CONTENT_SOURCE}/${BASE_PATH}/${ORGANIZATION_LABEL}/${LCE}/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${REPO_LABEL}/${RPM_FILE}"
+  URL2="http://${CONTENT_SOURCE}/${BASE_PATH}/${ORGANIZATION_LABEL}/${LCE}/${CONTENT_VIEW_LABEL}/custom/${PRODUCT_LABEL}/${REPO_LABEL}/Packages/${RPM_FILE:0:1}/${RPM_FILE}"
   tHttpGet $URL1 ${TEST_RPM_FILE} || tHttpGet $URL2 ${TEST_RPM_FILE}
   tFileExists ${TEST_RPM_FILE} && rpm -qp ${TEST_RPM_FILE}
   tFileExists ${TEST_RPM_FILE} && rm ${TEST_RPM_FILE}
