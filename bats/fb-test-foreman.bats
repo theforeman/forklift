@@ -29,6 +29,7 @@ load foreman_helper
 
   # Hammer exits with 0 on failures
   # https://projects.theforeman.org/issues/30496
+  # fixed since hammer 2.3.0 (Foreman 2.3)
   [[ $output != *"FAIL"* ]]
 }
 
