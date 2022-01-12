@@ -83,7 +83,6 @@ setup() {
 }
 
 @test "sync ostree repository" {
-
   if tIsRHEL 7; then
     skip "OSTree content is not applicable on EL 7 systems"
   fi
@@ -122,7 +121,6 @@ setup() {
   tar --exclude="index.html" -cvf "fixtures_small_repo.tar" -C fixtures.pulpproject.org/ostree "small"
   hammer repository upload-content --organization="${ORGANIZATION}" --product="${PRODUCT}" --name ${OSTREE_REPOSITORY} --content-type ostree_ref \
       --path fixtures_small_repo.tar --ostree-repository-name small
-
 }
 
 @test "create lifecycle environment" {
