@@ -71,6 +71,28 @@ setup() {
     --product="${PRODUCT}" --name="${CONTAINER_REPOSITORY}"
 }
 
+@test "create an ostree repository" {
+  if tIsRHEL 7; then
+    skip "OSTree content is not applicable on EL 7 systems"
+  fi
+
+  tSkipIfOlderThan43
+
+  hammer repository create --organization="${ORGANIZATION}" --url=https://fixtures.pulpproject.org/ostree/small/ \
+    --product="${PRODUCT}" --content-type="ostree" --name "${OSTREE_REPOSITORY}" | grep -q "Repository created"
+}
+
+@test "sync ostree repository" {
+  if tIsRHEL 7; then
+    skip "OSTree content is not applicable on EL 7 systems"
+  fi
+
+  tSkipIfOlderThan43
+  
+  hammer repository synchronize --organization="${ORGANIZATION}" \
+    --product="${PRODUCT}" --name="${OSTREE_REPOSITORY}"
+}
+
 @test "create puppet repository" {
   tSkipIfPulp3Only "Puppet content"
 
@@ -85,6 +107,20 @@ setup() {
   tFileExists /tmp/stbenjam-dummy-0.2.0.tar.gz && hammer repository upload-content \
     --organization="${ORGANIZATION}" --product="${PRODUCT}" --name="${PUPPET_REPOSITORY}" \
     --path="/tmp/stbenjam-dummy-0.2.0.tar.gz" | grep -q "Successfully uploaded"
+}
+
+@test "upload ostree_ref" {
+  if tIsRHEL 7; then
+    skip "OSTree content is not applicable on EL 7 systems"
+  fi
+
+  tSkipIfOlderThan43
+
+  wget --no-parent -r https://fixtures.pulpproject.org/ostree/small/
+  tDirectoryExists fixtures.pulpproject.org/ostree 
+  tar --exclude="index.html" -cvf "fixtures_small_repo.tar" -C fixtures.pulpproject.org/ostree "small"
+  hammer repository upload-content --organization="${ORGANIZATION}" --product="${PRODUCT}" --name ${OSTREE_REPOSITORY} --content-type ostree_ref \
+      --path fixtures_small_repo.tar --ostree-repository-name small
 }
 
 @test "create lifecycle environment" {

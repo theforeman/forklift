@@ -190,6 +190,10 @@ tFileExists() {
   [[ -f "$1" ]]
 }
 
+tDirectoryExists() {
+  [[ -d "$1" ]]
+}
+
 tRHSubscribeAttach() {
   if tIsRHEL; then
     [[ -z "$RHSM_USER" || -z "$RHSM_PASS" || -z "$RHSM_POOL" ]] && skip "No subscription-manager credentials and pool id"

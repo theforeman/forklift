@@ -38,7 +38,7 @@ tSkipIfOlderThan41() {
 tSkipIfOlderThan43() {
   KATELLO_VERSION=$(tKatelloVersion)
   if [[ $KATELLO_VERSION == [0-3].* || $KATELLO_VERSION == 4.[0-2]* ]]; then
-    skip "Restricting proxy syncing to a content view only works with Katello 4.3+"
+    skip "Restricting these tests to Katello 4.3+"
   fi
 }
 
