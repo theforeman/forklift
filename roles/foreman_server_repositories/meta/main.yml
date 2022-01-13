@@ -24,5 +24,3 @@ dependencies:
     when: foreman_server_repositories_foreman_client|bool
   - role: katello_client_repositories
     when: foreman_server_repositories_katello_client|bool
-  - role: ostree_repositories
-    when: foreman_server_repositories_ostree|bool
