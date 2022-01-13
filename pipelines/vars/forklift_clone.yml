@@ -4,7 +4,6 @@ server_box:
   ansible:
     variables:
       foreman_server_repositories_katello: true
-      foreman_server_repositories_ostree: false
       bats_tests:
         - "fb-verify-packages.bats"
         - "fb-test-foreman.bats"

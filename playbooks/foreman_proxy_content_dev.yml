@@ -5,7 +5,6 @@
     foreman_proxy_content_server_group: "server-{{ inventory_hostname }}"
     foreman_proxy_content_server: "{{ groups[foreman_proxy_content_server_group][0] }}"
     foreman_server_repositories_katello: true
-    foreman_server_repositories_ostree: false
     katello_repositories_version: nightly
   roles:
     - foreman_server_repositories

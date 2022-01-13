@@ -10,7 +10,6 @@
     - selinux
     - etc_hosts
     - epel_repositories
-    - ostree_repositories
     - theforeman.operations.puppet_repositories
     - foreman_repositories
     - katello_repositories
