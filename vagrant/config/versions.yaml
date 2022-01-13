@@ -109,6 +109,7 @@ installers:
     pulpcore: '3.16'
     puppet: 7
     boxes:
+      - 'almalinux8'
       - 'centos7'
       - 'centos7-fips'
       - 'centos8'

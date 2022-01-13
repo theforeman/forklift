@@ -1,0 +1,8 @@
+boxes:
+  almalinux8:
+    box_name: 'almalinux/8'
+    disk_size: 40
+    pty: true
+    scenarios:
+      - foreman
+      - katello

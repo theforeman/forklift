@@ -99,7 +99,7 @@ def main():
                 continue
             # this is a hack, to be removed once all Katello versions support EL8 in the same manner Foreman does
             # aka: when 4.4 is released
-            if scenario == 'katello' and scenario_os.startswith('centos8') and version_sort_key(version[scenario]) < version_sort_key('4.0'):
+            if scenario == 'katello' and (scenario_os.startswith('centos8') or scenario_os.startswith('almalinux8')) and version_sort_key(version[scenario]) < version_sort_key('4.0'):
                 continue
             if version_sort_key(version[scenario]) <= version_sort_key(scenario_version):
                 possible_versions.add(version[scenario])
