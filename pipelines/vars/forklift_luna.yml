@@ -42,6 +42,8 @@ server_box:
 
         - "--enable-foreman-cli-virt-who-configure"
         - "--enable-foreman-plugin-virt-who-configure"
+
+        - "{{ '--foreman-proxy-content-enable-ostree true' if (pipeline_os != 'centos7' and (pipeline_version == 'nightly' or pipeline_version is version('4.3', '>='))) else '' }}"
       bats_tests_additional:
         - "fb-test-foreman-rex.bats"
         - "fb-test-foreman-ansible.bats"
@@ -63,5 +65,6 @@ proxy_box:
         - "--enable-foreman-proxy-plugin-discovery"
         - "--enable-foreman-proxy-plugin-openscap"
         - "--enable-foreman-proxy-plugin-remote-execution-ssh"
+        - "{{ '--foreman-proxy-content-enable-ostree true' if (pipeline_os != 'centos7' and (pipeline_version == 'nightly' or pipeline_version is version('4.3', '>='))) else '' }}"
 forklift_boxes:
   "{{ {forklift_server_name: server_box, forklift_proxy_name: proxy_box, forklift_smoker_name: smoker_box} }}"
