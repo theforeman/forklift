@@ -1,0 +1,3 @@
+---
+- name: enable fips mode
+  command: /usr/bin/fips-mode-setup --enable
