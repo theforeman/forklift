@@ -1,5 +1,0 @@
----
-# workaround for https://tickets.puppetlabs.com/browse/SERVER-3096
-- name: 'Install Buster Puppet repository on Bullseye'
-  apt:
-    deb: https://apt.puppet.com/puppet{{ foreman_puppet_repositories_version }}-release-buster.deb

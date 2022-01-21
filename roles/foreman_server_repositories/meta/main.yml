@@ -11,11 +11,6 @@ dependencies:
   - role: theforeman.operations.puppet_repositories
     when:
       - foreman_server_repositories_puppet|bool
-      - ansible_distribution_release != 'bullseye'
-  - role: puppet_repositories_bullseye
-    when:
-      - foreman_server_repositories_puppet|bool
-      - ansible_distribution_release == 'bullseye'
   - role: foreman_repositories
     when: foreman_server_repositories_foreman|bool
   - role: katello_repositories
