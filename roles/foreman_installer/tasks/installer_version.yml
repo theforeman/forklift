@@ -3,6 +3,10 @@
     src: /usr/share/foreman-installer/VERSION
   register: foreman_installer_version_file
 
+- name: 'Decode installer version'
+  set_fact:
+    foreman_installer_version: "{{ foreman_installer_version_file['content'] | b64decode }}"
+
 - name: 'Print installer version'
   debug:
-    msg: "Foreman installer version {{ foreman_installer_version_file['content'] | b64decode }}"
+    msg: "Foreman installer version {{ foreman_installer_version }}"
