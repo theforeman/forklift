@@ -130,7 +130,6 @@ Options:
 | ansible                  |  updates the Ansible provisioner configuration including the playbook to be ran or any variables to set |
 | libvirt_options          |  sets Libvirt specific options, see [`config.rb` from `vagrant-libvirt`](https://github.com/vagrant-libvirt/vagrant-libvirt/blob/master/lib/vagrant-libvirt/config.rb) for possible options |
 | virtualbox_options       |  sets VirtualBox specific options |
-| rackspace_options        |  sets Rackspace specific options |
 | openstack_options        |  sets OpenStack specific options |
 | google_options           |  sets Google specific options |
 | docker_options           |  sets Docker specific options |
@@ -254,7 +253,7 @@ Some settings can be customized for the entirety of the deployment by copying `v
  * sync_type: type of sync to use for transfer to the Vagrant box
  * mount_options: options for the vagrant-cachier plugin
  * domain: domain for your hosts, you can override this per-box by configuring your box with a domain directly
- * libvirt_options, virtualbox_options, rackspace_options, openstack_options, google_options: custom options for the various providers
+ * libvirt_options, virtualbox_options, openstack_options, google_options: custom options for the various providers
 
 #### Customize Available Boxes
 

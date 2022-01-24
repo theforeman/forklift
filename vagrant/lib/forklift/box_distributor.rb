@@ -244,7 +244,6 @@ module Forklift
     def configure_providers(machine, box, networks = [])
       configure_libvirt(machine, box, networks)
       configure_virtualbox(machine, box, networks)
-      configure_rackspace(machine, box)
       configure_openstack_provider(machine, box)
       configure_google_provider(machine, box)
       configure_docker_provider(machine, box)
@@ -299,20 +298,6 @@ module Forklift
         end
 
         merged_options(box, 'virtualbox_options').each do |opt, val|
-          p.instance_variable_set("@#{opt}", val)
-        end
-      end
-    end
-
-    def configure_rackspace(machine, box)
-      machine.vm.provider :rackspace do |p, override|
-        override.vm.box  = 'dummy'
-        p.server_name    = machine.vm.hostname
-        p.flavor         = /4GB/
-        p.image          = box.fetch('image_name', nil)
-        override.ssh.pty = true if box.fetch('pty', nil)
-
-        merged_options(box, 'rackspace_options').each do |opt, val|
           p.instance_variable_set("@#{opt}", val)
         end
       end
