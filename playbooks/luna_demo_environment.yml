@@ -47,7 +47,7 @@
       - "--foreman-proxy-dhcp-provider libvirt"
       - "--foreman-proxy-libvirt-network provision"
       - "--foreman-proxy-dhcp-interface virbr1"
-      - "--enable-foreman-compute-{libvirt,ec2,gce,openstack,ovirt,rackspace,vmware}"
+      - "--enable-foreman-compute-{libvirt,ec2,gce,openstack,ovirt,vmware}"
       - "--enable-foreman-plugin-openscap"
       - "--enable-foreman-proxy-plugin-openscap"
       - "--enable-foreman-plugin-ansible"
