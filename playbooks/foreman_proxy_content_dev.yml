@@ -27,4 +27,3 @@
         - "--foreman-proxy-puppet false"
         - "--foreman-proxy-puppetca false"
         - "--foreman-proxy-content-puppet false"
-        - "{{ '' if (foreman_repositories_version == 'nightly' or 2.3 is version(foreman_repositories_version, '>')) else ('--foreman-proxy-content-parent-fqdn %s' % server_fqdn) }}"
