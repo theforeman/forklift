@@ -2,16 +2,7 @@
 - include_tasks: 'el{{ ansible_distribution_major_version }}.yml'
 
 - name: reboot vm
-  shell: sleep 2 && shutdown -r +1 "Ansible reboot"
-  async: 0
-  poll: 0
-  ignore_errors: true
-
-- name: Waiting for reboot
-  wait_for:
-    state: started
-    host: "{{ ansible_ssh_host }}"
-  delegate_to: localhost
+  reboot:
 
 - name: 'Verify FIPS enabled - If failed means the machine is not FIPS enabled'
   command: grep -q 1 /proc/sys/crypto/fips_enabled
