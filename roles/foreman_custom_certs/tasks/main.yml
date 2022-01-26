@@ -1,0 +1,10 @@
+---
+- name: Create custom certs
+  include_role:
+    name: ownca
+  vars:
+    ownca_cert_name: "{{ ansible_fqdn }}"
+
+- name: Update Installer parameters
+  set_fact:
+    foreman_installer_options: "{{ (foreman_installer_options|default([])) + ['--certs-server-cert /opt/ownca/{{ ansible_fqdn }}/{{ ansible_fqdn }}.crt', '--certs-server-key /opt/ownca/{{ ansible_fqdn }}/{{ ansible_fqdn }}.key', '--certs-server-ca-cert /opt/ownca/cacert.crt'] }}"
