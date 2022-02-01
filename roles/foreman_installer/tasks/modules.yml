@@ -1,0 +1,34 @@
+---
+- name: Enable ruby:2.7 module
+  dnf:
+    name: '@ruby:2.7'
+    state: present
+  when:
+    - foreman_repositories_version is defined
+    - foreman_repositories_version != "nightly"
+    - foreman_repositories_version is version('2.5', '>=')
+    - foreman_repositories_version is version('3.1', '<=')
+
+- name: Enable foreman:el8 module
+  command: dnf module enable -y foreman:el8
+  # can't use the `dnf` module for modules without a default stream
+  # https://github.com/ansible/ansible/issues/56504
+  # https://github.com/ansible/ansible/issues/64852
+  args:
+    warn: False
+    creates: /etc/dnf/modules.d/foreman.module
+  when:
+    - foreman_repositories_version is defined
+    - foreman_repositories_version == "nightly" or foreman_repositories_version is version('3.2', '>=')
+
+- name: Enable katello:el8 module
+  command: dnf module enable -y katello:el8
+  # can't use the `dnf` module for modules without a default stream
+  # https://github.com/ansible/ansible/issues/56504
+  # https://github.com/ansible/ansible/issues/64852
+  args:
+    warn: False
+    creates: /etc/dnf/modules.d/katello.module
+  when:
+    - katello_repositories_version is defined
+    - katello_repositories_version == "nightly" or katello_repositories_version is version('4.3', '>=')
