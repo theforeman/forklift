@@ -27,6 +27,9 @@
   loop:
     - katello-koji
     - candlepin-koji
+  when:
+    - katello_repositories_version != 'nightly'
+    - katello_repositories_version is version('4.2', '<=')
 
 - name: 'Add Pulp {{ katello_repositories_pulp_version }} Stable repository'
   yum_repository:
