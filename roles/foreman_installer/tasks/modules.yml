@@ -30,5 +30,6 @@
     warn: False
     creates: /etc/dnf/modules.d/katello.module
   when:
+    - foreman_installer_scenario != 'foreman'
     - katello_repositories_version is defined
     - katello_repositories_version == "nightly" or katello_repositories_version is version('4.3', '>=')
