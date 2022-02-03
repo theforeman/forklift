@@ -43,6 +43,7 @@
       find:
         paths: "{{ backup_output_dir }}"
         recurse: True
+        hidden: True
       register: backup_results
 
     - name: "Copy backup results"
