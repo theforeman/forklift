@@ -9,33 +9,33 @@
     pipeline_type: katello
     pipeline_os: centos7
   tasks:
-    - name: "Include forklift_versions for 3.16 installs"
+    - name: "Include forklift_versions for 4.3 installs"
       include_role:
         name: "forklift_versions"
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
-        scenario_version: "3.16"
+        scenario_version: "4.3"
     - name: Ensure versions have been set correctly
       assert:
         that:
-          - foreman_repositories_version == '2.1'
-          - katello_repositories_version == '3.16'
-          - pulpcore_repositories_version is not defined
+          - foreman_repositories_version == '3.1'
+          - katello_repositories_version == '4.3'
+          - pulpcore_repositories_version == '3.16'
 
-    - name: "Include forklift_versions for 3.17 installs"
+    - name: "Include forklift_versions for 4.4 installs"
       include_role:
         name: "forklift_versions"
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
-        scenario_version: "3.17"
+        scenario_version: "4.4"
     - name: Ensure versions have been set correctly
       assert:
         that:
-          - foreman_repositories_version == '2.2'
-          - katello_repositories_version == '3.17'
-          - pulpcore_repositories_version == '3.7'
+          - foreman_repositories_version == '3.2'
+          - katello_repositories_version == '4.4'
+          - pulpcore_repositories_version == '3.16'
 
     - name: "Include forklift_versions for nightly installs"
       include_role:
@@ -57,14 +57,14 @@
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
-        scenario_version: "3.17"
+        scenario_version: "4.4"
         upgrade: True
     - name: Ensure upgrade steps have been determined correctly
       assert:
         that:
-          - forklift_upgrade_version_start == '3.15'
-          - forklift_upgrade_version_intermediate == '3.16'
-          - forklift_upgrade_version_final == '3.17'
+          - forklift_upgrade_version_start == '4.2'
+          - forklift_upgrade_version_intermediate == '4.3'
+          - forklift_upgrade_version_final == '4.4'
 
     - name: "Include forklift_versions for upgrades with upgrade_step=2"
       include_role:
@@ -72,42 +72,12 @@
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
-        scenario_version: "3.18"
+        scenario_version: "4.4"
         upgrade: True
         upgrade_step: 2
     - name: Ensure upgrade steps have been determined correctly
       assert:
         that:
-          - forklift_upgrade_version_start == '3.14'
-          - forklift_upgrade_version_intermediate == '3.16'
-          - forklift_upgrade_version_final == '3.18'
-
-    - name: "Include forklift_versions for EL8 upgrades"
-      include_role:
-        name: "forklift_versions"
-      vars:
-        scenario: "foreman"
-        scenario_os: "centos8"
-        scenario_version: "2.2"
-        upgrade: True
-    - name: Ensure 2.0 was properly skipped
-      assert:
-        that:
-          - forklift_upgrade_version_start == '2.1'
-          - forklift_upgrade_version_intermediate == '2.1'
-          - forklift_upgrade_version_final == '2.2'
-
-    - name: "Include forklift_versions for Katello EL8 upgrades"
-      include_role:
-        name: "forklift_versions"
-      vars:
-        scenario: "{{ pipeline_type }}"
-        scenario_os: "centos8"
-        scenario_version: "4.1"
-        upgrade: True
-    - name: Ensure 3.18 was properly skipped
-      assert:
-        that:
           - forklift_upgrade_version_start == '4.0'
-          - forklift_upgrade_version_intermediate == '4.0'
-          - forklift_upgrade_version_final == '4.1'
+          - forklift_upgrade_version_intermediate == '4.2'
+          - forklift_upgrade_version_final == '4.4'
