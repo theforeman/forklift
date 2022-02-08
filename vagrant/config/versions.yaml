@@ -7,7 +7,6 @@ installers:
     boxes:
       - 'centos7'
       - 'centos7-fips'
-      - 'centos8'
       - 'debian10'
       - 'ubuntu1804'
 
@@ -18,7 +17,6 @@ installers:
     boxes:
       - 'centos7'
       - 'centos7-fips'
-      - 'centos8'
       - 'centos8-stream'
       - 'debian10'
       - 'ubuntu1804'
@@ -32,7 +30,6 @@ installers:
       - 'almalinux8'
       - 'centos7'
       - 'centos7-fips'
-      - 'centos8'
       - 'centos8-stream'
       - 'debian10'
       - 'ubuntu1804'
@@ -46,7 +43,6 @@ installers:
       - 'almalinux8'
       - 'centos7'
       - 'centos7-fips'
-      - 'centos8'
       - 'centos8-stream'
       - 'debian10'
       - 'ubuntu2004'
@@ -72,7 +68,6 @@ installers:
       - 'almalinux8'
       - 'centos7'
       - 'centos7-fips'
-      - 'centos8'
       - 'centos8-stream'
       - 'debian10'
       - 'debian11'
