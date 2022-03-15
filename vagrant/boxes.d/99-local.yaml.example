@@ -1,14 +1,4 @@
 ---
-centos7-katello-devel:
-  primary: true
-  box: centos7
-  ansible:
-    playbook: 'playbooks/katello_devel.yml'
-    group: 'devel'
-    variables:
-      ssh_forward_agent: true
-      foreman_devel_github_push_ssh: True
-
 centos8-katello-devel:
   primary: true
   box: centos8-stream
@@ -25,38 +15,31 @@ centos8-katello-devel:
         - "--foreman-proxy-content-enable-ostree=true"
         - "--katello-devel-modulestream-nodejs=12"
 
-
-centos7-luna-devel:
-  box: centos7
-  memory: 9000
-  ansible:
-    playbook: 'playbooks/luna-devel.yml'
-    group: 'devel'
-
-centos7-luna-demo:
-  box: centos7
+centos8-luna-demo:
+  box: centos8-stream
   memory: 10240
   ansible:
     playbook: playbooks/luna_demo_environment.yml
 
-centos7-hammer-devel:
-  box: centos7
+centos8-hammer-devel:
+  box: centos8-stream
   memory: 512
   ansible:
     playbook: 'playbooks/hammer_devel.yml'
     group: 'hammer-devel'
     variables: # defaults in roles/hammer_devel/defaults/main.yml
-      #hammer_devel_server: centos7-katello-devel.custom-domain.example.com
+      #hammer_devel_server: centos8-katello-devel.custom-domain.example.com
 
 katello-remote-execution:
-  box: centos7-katello-nightly
+  box: centos8-katello-nightly
   installer: --enable-foreman-remote-execution
-centos7-proxy-devel:
-    box: centos7
+
+centos8-proxy-devel:
+    box: centos8-stream
     ansible:
       playbook: 'playbooks/foreman_proxy_content_dev.yml'
       group: 'foreman-proxy-content'
-      server: 'centos7-katello-devel'
+      server: 'centos8-katello-devel'
 
 centos7-katello-client:
   box: centos7
@@ -64,18 +47,18 @@ centos7-katello-client:
     playbook: 'playbooks/katello_client.yml'
     group: 'client'
     variables:
-      katello_client_server: 'centos7-katello-devel'
+      katello_client_server: 'centos8-katello-devel'
 
 centos8-katello-client:
-  box: centos8
+  box: centos8-stream
   ansible:
     playbook: 'playbooks/katello_client.yml'
     group: 'client'
     variables:
-      katello_client_server: 'centos7-katello-devel'
+      katello_client_server: 'centos8-katello-devel'
 
-centos7-katello-bats-ci:
-  box: centos7
+centos8-katello-bats-ci:
+  box: centos8-stream
   ansible:
     playbook: 'playbooks/bats_pipeline_katello_nightly.yml'
     group: 'bats'
@@ -86,8 +69,8 @@ centos7-foreman-bats-ci:
     playbook: 'playbooks/bats_pipeline_foreman_nightly.yml'
     group: 'bats'
 
-centos7-dynflow-devel:
-  box: centos7
+centos8-dynflow-devel:
+  box: centos8-stream
   memory: 512
   ansible:
     group: 'dynflow_devel'
@@ -95,15 +78,15 @@ centos7-dynflow-devel:
     variables:
       dynflow_devel_github_fork_remote_name: 'origin'
 
-centos7-katello-nightly-stable:
+centos8-katello-nightly-stable:
   box_name: katello/katello-nightly
   memory: 12288
-  hostname: centos7-katello-nightly-stable.example.com
+  hostname: centos8-katello-nightly-stable.example.com
 
-centos7-katello-devel-stable:
+centos8-katello-devel-stable:
   box_name: katello/katello-devel
   memory: 12288
-  hostname: centos7-katello-devel-stable.example.com
+  hostname: centos8-katello-devel-stable.example.com
   ansible:
     playbook: 'playbooks/setup_user_devel_environment.yml'
 
@@ -112,8 +95,8 @@ centos7-katello-devel-stable:
 # ULA range or link local, it should have permission to request resources by
 # default. This depends on a manually defined network with a bridge named
 # virbr3.
-centos7-squid:
-  box: centos7
+centos8-squid:
+  box: centos8-stream
   ansible:
     playbook: 'playbooks/squid.yml'
   networks:
@@ -122,11 +105,11 @@ centos7-squid:
         dev: 'virbr3'
         type: 'bridge'
 
-centos7-foreman-smoker:
-  box: centos7
+centos8-foreman-smoker:
+  box: centos8-stream
   ansible:
     playbook: 'playbooks/smoker.yml'
     variables:
-      smoker_base_url: "CHANGEME" # For example: "https://centos7-katello-devel-stable.example.com"
+      smoker_base_url: "CHANGEME" # For example: "https://centos8-katello-devel-stable.example.com"
       pytest_project_alias: "foreman_smoker"
       pytest_run_tests: false
