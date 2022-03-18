@@ -1,0 +1,35 @@
+---
+- name: find puppet module
+  find:
+    paths: /usr/share/foreman-installer/modules
+    patterns: "{{ module.name }}"
+    file_type: any
+  register: foreman_module
+
+- name: find puppet module
+  find:
+    paths: /usr/share/katello-installer-base/modules
+    patterns: "{{ module.name }}"
+    file_type: any
+  register: katello_module
+
+- name: define module_dir for foreman
+  set_fact:
+    module_dir: /usr/share/foreman-installer/modules
+  when: foreman_module.matched > 0
+
+- name: define module_dir for katello
+  set_fact:
+    module_dir: /usr/share/katello-installer-base/modules
+  when: katello_module.matched > 0
+
+- name: Delete old module
+  file:
+    state: absent
+    path: "{{ module_dir }}/{{ module.name }}"
+
+- name: Create a symbolic link
+  file:
+    src: "{{ module.path }}"
+    dest: "{{ module_dir }}/{{ module.name }}"
+    state: link

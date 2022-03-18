@@ -9,7 +9,7 @@ This covers how to setup and configure a development environment using the Forkl
    * [Customizing the Development Environment](#customizing-the-development-environment)
    * [Reviewing Pull Requests](#reviewing-pull-requests)
  * [Use Koji Scratch Builds](#koji-scratch-builds)
- * [Test Puppet Module Pull Requests](#test-puppet-module)
+ * [Test Installer Puppet Module](#test-installer-puppet-module)
  * [Hammer Development](#hammer-development)
  * [Capsule Development](#capsule-development)
  * [Client Development](#client-development)
@@ -206,7 +206,7 @@ The Koji role and task ID variable can be added to download and configure a repo
     - katello
 ```
 
-## Test Puppet Module
+## Test Installer Puppet Module
 
 ### Pull Requests
 
@@ -248,6 +248,26 @@ ansible:
     foreman_installer_module_branches:
       - myfork/katello_devel/switch-to-scl
       - myfork/foreman/add-puma
+```
+
+### Local changes
+
+As an alternative you can use modules from local directories for testing out local changes before push.
+For the machine in `99-local.yaml`
+
+```yaml
+synced_folders:
+  - path: /home/myprojects/path/foreman-installer
+    mount_point: '/vagrant/foreman-installer'
+    options:
+      type: rsync
+ansible:
+  variables:
+    foreman_installer_module_locals:
+      - name: dhcp
+        path: '/vagrant/foreman-installer/puppet-dhcp/'
+      - name: foreman_proxy
+        path: '/vagrant/foreman-installer/puppet-foreman_proxy/'
 ```
 
 ## Hammer Development

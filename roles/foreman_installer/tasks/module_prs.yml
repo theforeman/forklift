@@ -38,3 +38,10 @@
     loop_var: module
   tags:
     - packages
+
+- include_tasks: module_local.yml
+  loop: "{{ foreman_installer_module_locals }}"
+  loop_control:
+    loop_var: module
+  tags:
+    - packages
