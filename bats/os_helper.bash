@@ -25,7 +25,7 @@ tSetOSVersion() {
     if tIsFedoraCompatible; then
       OS_VERSION=$(rpm -q --queryformat '%{VERSION}' fedora-release)
     elif tIsRedHatCompatible; then
-      _PKG=$(rpm -qa '(redhat|sl|centos|centos-linux|centos-stream|oraclelinux)-release(|-server|-workstation|-client|-computenode)')
+      _PKG=$(rpm -qa '(redhat|sl|centos|centos-linux|centos-stream|oraclelinux|almalinux|rocky)-release(|-server|-workstation|-client|-computenode)')
       OS_VERSION=$(rpm -q --queryformat '%{VERSION}' $_PKG | grep -o '^[0-9]*')
     elif tIsUbuntuCompatible; then
       tPackageExists lsb-release || tPackageInstall lsb-release
