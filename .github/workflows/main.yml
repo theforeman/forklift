@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
       - name: Install ansible-lint
-        run: pip install ansible-lint ansible
+        run: pip install 'ansible-lint<6' ansible
       - name: Run tests
         run: |
           ansible-lint playbooks/
