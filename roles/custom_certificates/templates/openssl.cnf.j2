@@ -25,7 +25,7 @@ nameopt     = default_ca
 certopt     = default_ca
 
 unique_subject  = no
-copy_extensions = none
+copy_extensions = copy
 
 [ policy_match ]
 countryName            = match
@@ -56,11 +56,16 @@ authorityKeyIdentifier  = keyid:always,issuer:always
 nsCertType              = sslCA
 keyUsage                = cRLSign, keyCertSign
 extendedKeyUsage        = serverAuth, clientAuth
- 
+subjectAltName          = @alt_names
+
 [ v3_req ]
 basicConstraints     = CA:FALSE
 subjectKeyIdentifier = hash
 extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = @alt_names
+
+[alt_names]
+DNS.1 = {{ ansible_fqdn }}
 
 [ ssl_server ]
 basicConstraints        = CA:FALSE
