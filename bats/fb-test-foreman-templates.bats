@@ -9,3 +9,7 @@ load os_helper
   export_dir=$(runuser -u foreman -- mktemp --directory --tmpdir=/usr/share/foreman/tmp/ template-export.XXXXXXXXXX)
   hammer export-templates --dirname / --repo ${export_dir}
 }
+
+@test "import templates from git" {
+  hammer import-templates --branch develop --repo https://github.com/theforeman/community-templates
+}
