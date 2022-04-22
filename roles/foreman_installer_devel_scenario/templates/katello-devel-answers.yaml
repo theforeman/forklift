@@ -35,5 +35,5 @@ foreman_proxy::plugin::dynflow: true
 foreman_proxy::plugin::monitoring: false
 foreman_proxy::plugin::omaha: false
 foreman_proxy::plugin::openscap: false
-foreman_proxy::plugin::remote_execution::ssh: true
+foreman_proxy::plugin::remote_execution::script: true
 foreman_proxy::plugin::salt: false
