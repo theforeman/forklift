@@ -31,8 +31,8 @@ server_box:
 
         - "--enable-foreman-cli-remote-execution"
         - "--enable-foreman-plugin-remote-execution"
-        - "--enable-foreman-proxy-plugin-remote-execution-ssh"
-        - "--foreman-proxy-plugin-remote-execution-ssh-install-key=true"
+        - "{{ '--enable-foreman-proxy-plugin-remote-execution-script' if (pipeline_version == 'nightly' or pipeline_version is version('4.5', '>=')) else '--enable-foreman-proxy-plugin-remote-execution-ssh' }}"
+        - "{{ '--foreman-proxy-plugin-remote-execution-script-install-key=true' if (pipeline_version == 'nightly' or pipeline_version is version('4.5', '>=')) else '--foreman-proxy-plugin-remote-execution-ssh-install-key=true' }}"
 
         - "--enable-foreman-cli-tasks"
         - "--enable-foreman-plugin-tasks"
@@ -64,7 +64,7 @@ proxy_box:
         - "--enable-foreman-proxy-plugin-ansible"
         - "--enable-foreman-proxy-plugin-discovery"
         - "--enable-foreman-proxy-plugin-openscap"
-        - "--enable-foreman-proxy-plugin-remote-execution-ssh"
+        - "{{ '--enable-foreman-proxy-plugin-remote-execution-script' if (pipeline_version == 'nightly' or pipeline_version is version('4.5', '>=')) else '--enable-foreman-proxy-plugin-remote-execution-ssh' }}"
         - "{{ '--foreman-proxy-content-enable-ostree true' if (pipeline_os != 'centos7' and (pipeline_version == 'nightly' or pipeline_version is version('4.3', '>='))) else '' }}"
 forklift_boxes:
   "{{ {forklift_server_name: server_box, forklift_proxy_name: proxy_box, forklift_smoker_name: smoker_box} }}"
