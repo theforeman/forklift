@@ -15,4 +15,4 @@ luna_provisioning_installer_internal_options:
   - "--enable-foreman-plugin-virt-who-configure"
   - "--enable-foreman-proxy-plugin-ansible"
   - "--enable-foreman-proxy-plugin-discovery"
-  - "--enable-foreman-proxy-plugin-remote-execution-ssh"
+  - "--enable-foreman-proxy-plugin-remote-execution-script"
