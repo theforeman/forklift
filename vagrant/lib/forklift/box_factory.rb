@@ -99,6 +99,7 @@ module Forklift
         'katello_repositories_version' => version['katello'],
         'katello_repositories_pulp_version' => version['pulp'],
         'pulp_repositories_version' => version['pulp'],
+        'pulpcore_repositories_version' => version['pulpcore'],
         'foreman_puppet_repositories_version' => version['puppet']
       )
 
