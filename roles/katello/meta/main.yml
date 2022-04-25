@@ -5,4 +5,4 @@ dependencies:
     foreman_installer_scenario: katello
     foreman_installer_disable_system_checks: true
     foreman_installer_additional_packages:
-      - "{{ 'foreman-installer-katello' if katello_repositories_version == 'nightly' or katello_repositories_version is version('4.0', '>=') else 'katello' }}"
+      - "foreman-installer-katello"
