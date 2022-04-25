@@ -10,6 +10,16 @@
   set_fact:
     foreman_installer_options_joined: "{{ foreman_installer_options | difference([] if foreman_installer_version is version('3.1', '>=') else ['--foreman-proxy-content-enable-ostree true']) | join(' ') }} {{ foreman_installer_options_internal_use_only | join(' ') }}"
 
+- name: 'Replace REX Script with REX SSH options for pre-3.3'
+  set_fact:
+    foreman_installer_options_joined: "{{ foreman_installer_options_joined | replace(item.new, item.old) }}"
+  when: foreman_installer_version is version('3.3', '<')
+  with_items:
+    - new: '--enable-foreman-proxy-plugin-remote-execution-script'
+      old: '--enable-foreman-proxy-plugin-remote-execution-ssh'
+    - new: '--foreman-proxy-plugin-remote-execution-script-install-key'
+      old: '--foreman-proxy-plugin-remote-execution-ssh-install-key'
+
 - name: 'Run installer'
   shell: >
       {{ foreman_installer_command }} {{ (foreman_installer_verbose|bool) | ternary("-v", "") }}
