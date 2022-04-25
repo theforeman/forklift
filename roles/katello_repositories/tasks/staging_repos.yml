@@ -43,32 +43,6 @@
     - katello_repositories_version == "nightly" or katello_repositories_version is version('4.4', '>=')
     - ansible_distribution_major_version == '8'
 
-- name: 'Add Pulp {{ katello_repositories_pulp_version }} Stable repository'
-  yum_repository:
-    name: pulp-repository
-    description: Pulp release repository
-    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/{{ katello_repositories_pulp_release }}/{{ katello_repositories_pulp_version }}/$releasever/$basearch"
-    gpgcheck: no
-    enabled: yes
-  when:
-    - katello_repositories_version != "nightly"
-    - katello_repositories_version is version('4.0', '<=')
-    - katello_repositories_pulp_version != "nightly"
-    - ansible_distribution_major_version == '7'
-
-- name: Add Pulp Nightly repository
-  yum_repository:
-    name: pulp-repository
-    description: Pulp nightly repository
-    baseurl: "https://repos.fedorapeople.org/repos/pulp/pulp/testing/automation/2-master/stage/$releasever/$basearch"
-    gpgcheck: no
-    enabled: yes
-  when:
-    - katello_repositories_version != "nightly"
-    - katello_repositories_version is version('4.0', '<=')
-    - katello_repositories_pulp_version == "nightly"
-    - ansible_distribution_major_version == '7'
-
 - name: 'Add Pulpcore repository'
   include_role:
     name: pulpcore_repositories
