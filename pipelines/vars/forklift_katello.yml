@@ -7,7 +7,7 @@ server_box:
       foreman_installer_disable_system_checks: true
       foreman_installer_scenario: katello
       foreman_installer_additional_packages:
-        - "{{ 'foreman-installer-katello' if pipeline_version == 'nightly' or pipeline_version is version('4.0', '>=') else 'katello' }}"
+        - "foreman-installer-katello"
       foreman_installer_options:
         - "--puppet-server-max-active-instances 1"
         - "--puppet-server-jvm-min-heap-size 1G"
@@ -26,7 +26,7 @@ proxy_box:
       foreman_installer_disable_system_checks: true
       foreman_installer_scenario: foreman-proxy-content
       foreman_installer_additional_packages:
-        - "{{ 'foreman-installer-katello' if pipeline_version == 'nightly' or pipeline_version is version('4.0', '>=') else 'foreman-proxy-content' }}"
+        - "foreman-installer-katello"
       foreman_installer_options:
         - "{{ '--foreman-proxy-content-enable-ostree true' if (pipeline_os != 'centos7' and (pipeline_version == 'nightly' or pipeline_version is version('4.3', '>='))) else '' }}"
 forklift_boxes:
