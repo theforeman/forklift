@@ -5,6 +5,7 @@
       - libvirt-devel
       - ruby-devel
       - gcc
+      - make
     state: present
 
 - name: 'install vagrant-libvirt'
