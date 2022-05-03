@@ -1,4 +1,14 @@
 ---
+- name: 'Setup Extra Common if Stream'
+  yum:
+    name: "centos-stream-repos"
+    state: latest
+  tags:
+    - packages
+  when: 
+    - ansible_distribution_major_version == '9'
+    - ansible_distribution == 'CentOS'
+
 - name: 'Setup Epel Repository'
   yum:
     name: "{{ epel_repositories_name }}"
