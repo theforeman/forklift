@@ -5,7 +5,13 @@
       - libvirt-devel
       - ruby-devel
       - gcc
+      - make
     state: present
+
+- name: 'perform EL8-specific vagrant-libvirt tasks'
+  include_tasks: vagrant_libvirt_el8.yml
+  when:
+    - ansible_distribution_major_version == "8"
 
 - name: 'install vagrant-libvirt'
   command: vagrant plugin install vagrant-libvirt

@@ -1,0 +1,4 @@
+---
+libvirt_python_deps:
+  - libvirt-python
+  - python-lxml

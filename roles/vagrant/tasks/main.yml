@@ -1,8 +1,12 @@
 ---
+- name: 'install hashicorp repo'
+  get_url:
+    url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+    dest: /etc/yum.repos.d/hashicorp.repo
+
 - name: 'install vagrant'
   yum:
-    name: https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}_x86_64.rpm
-    disable_gpg_check: True
+    name: vagrant-{{ vagrant_version }}
     state: present
 
 - include_tasks: 'vagrant_libvirt.yml'

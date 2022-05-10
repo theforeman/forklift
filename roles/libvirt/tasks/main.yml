@@ -1,4 +1,7 @@
 ---
+- name: 'Set OS version dependent variables'
+  include_vars: "el{{ ansible_distribution_major_version }}.yml"
+
 - name: 'install the virtualization hypervisor package group'
   yum:
     name: "@Virtualization Hypervisor"
@@ -11,9 +14,7 @@
 
 - name: 'install the libvirt-python support'
   yum:
-    name:
-      - libvirt-python
-      - python-lxml
+    name: "{{ libvirt_python_deps }}"
     state: present
 
 - name: 'disable libvirt authentication'
