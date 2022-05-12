@@ -25,7 +25,7 @@ def find_version(version_string)
   end
 
   version_file =  "#{__dir__}/../../vagrant/config/versions.yaml"
-  versions = YAML.load(File.read(version_file))
+  versions = YAML.load(File.read(version_file), permitted_classes: [Regexp])
 
   versions['installers'].each do |version|
     if version['katello'] == version_string

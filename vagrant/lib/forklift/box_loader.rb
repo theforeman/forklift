@@ -33,7 +33,7 @@ module Forklift
     end
 
     def versions
-      YAML.load_file("#{@root_dir}/config/versions.yaml")
+      YAML.load_file("#{@root_dir}/config/versions.yaml", permitted_classes: [Regexp])
     end
 
   end
