@@ -1,0 +1,7 @@
+---
+external_database_packages:
+  - postgresql-server
+  - python3-psycopg2
+  - postgresql-evr
+external_database_postgresql_conf_path: /var/lib/pgsql/data/postgresql.conf
+external_database_pg_hba_conf_path: /var/lib/pgsql/data/pg_hba.conf

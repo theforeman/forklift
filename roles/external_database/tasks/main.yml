@@ -1,0 +1,85 @@
+---
+- name: "Load OS variables"
+  include_vars: "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
+
+- name: 'Install PostgreSQL packages'
+  package:
+    name: "{{ external_database_packages }}"
+    state: installed
+
+- name: 'Init PostgreSQL database'
+  command: postgresql-setup initdb
+  args:
+    creates: "{{ external_database_postgresql_conf_path }}"
+
+- name: 'Deploy pg_hba.conf'
+  template:
+    dest: "{{ external_database_pg_hba_conf_path }}"
+    src: pg_hba.conf.j2
+    mode: 0600
+    owner: postgres
+    group: postgres
+
+- name: Set listen addresses to *
+  lineinfile:
+    dest: "{{ external_database_postgresql_conf_path }}"
+    regexp: "^listen_addresses"
+    line: "listen_addresses = '*'"
+    state: present
+    backup: yes
+
+- name: Set password_encryption
+  lineinfile:
+    dest: "{{ external_database_postgresql_conf_path }}"
+    regexp: "password_encryption ="
+    line: "password_encryption = {{ external_database_encryption }}"
+    state: present
+    backup: yes
+
+- name: 'Ensure PostgreSQL is running'
+  service:
+    name: postgresql
+    state: restarted
+    enabled: yes
+
+- name: 'Add database user'
+  become_user: postgres
+  postgresql_user:
+    state: present
+    name: "foreman"
+    password: "foreman"
+
+- name: 'Create Foreman database'
+  become_user: postgres
+  postgresql_db:
+    state: present
+    name: "foreman"
+    owner: "foreman"
+
+- name: 'Add candlepin database user'
+  become_user: postgres
+  postgresql_user:
+    state: present
+    name: "candlepin"
+    password: "candlepin"
+
+- name: 'Create Candlepin database'
+  become_user: postgres
+  postgresql_db:
+    state: present
+    name: "candlepin"
+    owner: "candlepin"
+
+- name: 'Add pulp database user'
+  become_user: postgres
+  postgresql_user:
+    state: present
+    name: "pulp"
+    password: "pulp"
+
+- name: 'Create Pulp database'
+  become_user: postgres
+  postgresql_db:
+    state: present
+    name: "pulp"
+    owner: "pulp"

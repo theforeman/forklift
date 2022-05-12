@@ -1,0 +1,8 @@
+---
+external_database_packages:
+  - rh-postgresql12-syspaths
+  - rh-postgresql12-postgresql-server
+  - python-psycopg2
+  - rh-postgresql12-postgresql-evr
+external_database_postgresql_conf_path: /var/opt/rh/rh-postgresql12/lib/pgsql/data/postgresql.conf
+external_database_pg_hba_conf_path: /var/opt/rh/rh-postgresql12/lib/pgsql/data/pg_hba.conf
