@@ -1,6 +1,10 @@
 # rubocop:disable Naming/FileName
 source 'https://rubygems.org'
 
+if RUBY_VERSION < '2.1'
+  gem 'psych', '~> 2.0'
+end
+
 group :test do
   gem 'deep_merge'
   gem 'json'
