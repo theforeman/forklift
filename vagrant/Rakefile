@@ -8,11 +8,15 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
+default_tasks = %i[test]
+
 begin
   require 'rubocop/rake_task'
   RuboCop::RakeTask.new
+  # insert 0, because Ruby 2.0 doesn't know Array.prepend
+  default_tasks.insert(0, 'rubocop')
 rescue LoadError
   puts 'Rubocop not loaded'
 end
 
-task :default => %i[rubocop test]
+task :default => default_tasks
