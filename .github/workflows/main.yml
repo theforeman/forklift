@@ -46,6 +46,7 @@ jobs:
     strategy:
       matrix:
         ruby:
+          - '2.0'
           - '2.6'
           - '2.7'
           - '3.0'
@@ -53,7 +54,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
       - name: Install
