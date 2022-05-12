@@ -33,7 +33,7 @@ module Forklift
     end
 
     def versions
-      YAML.load_file("#{@root_dir}/config/versions.yaml")
+      YAML.safe_load(File.read("#{@root_dir}/config/versions.yaml"))
     end
 
   end
