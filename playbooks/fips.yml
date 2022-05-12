@@ -1,6 +1,6 @@
 ---
 - hosts: all
   become: yes
-  gather_facts: no
+  gather_facts: yes
   roles:
     - fips
