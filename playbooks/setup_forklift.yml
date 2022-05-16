@@ -50,11 +50,20 @@
         chdir: "{{ forklift_dest }}"
       when: forklift_install_from_galaxy
 
-    - name: 'Install Forklift Pulp collection dependencies'
+    - name: 'Install Forklift Pulp collection dependencies for <3.17'
       command:
         cmd: ansible-galaxy collection install -r requirements-pulp.yml
         chdir: "{{ forklift_dest }}"
-      when: forklift_install_pulp_from_galaxy
+      when: forklift_install_pulp_from_galaxy and pipeline_version | int =< 3.17
+      retries: 3
+      register: result
+      until: result is succeeded
+
+    - name: 'Install Forklift Pulp collection dependencies for >3.18'
+      command:
+        cmd: ansible-galaxy collection install -r requirements-pulp-318.yml
+        chdir: "{{ forklift_dest }}"
+      when: forklift_install_pulp_from_galaxy and pipeline_version | int => 3.17
       retries: 3
       register: result
       until: result is succeeded
