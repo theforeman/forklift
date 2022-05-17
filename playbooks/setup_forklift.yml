@@ -54,7 +54,10 @@
       command:
         cmd: ansible-galaxy collection install -r requirements-pulp.yml
         chdir: "{{ forklift_dest }}"
-      when: forklift_install_pulp_from_galaxy and pipeline_version | int =< 3.17
+      when:
+        - forklift_install_pulp_from_galaxy
+        - pipeline_version is defined
+        - pipeline_version is version('3.17', '<=')
       retries: 3
       register: result
       until: result is succeeded
@@ -63,7 +66,10 @@
       command:
         cmd: ansible-galaxy collection install -r requirements-pulp-318.yml
         chdir: "{{ forklift_dest }}"
-      when: forklift_install_pulp_from_galaxy and pipeline_version | int => 3.17
+      when:
+        - forklift_install_pulp_from_galaxy
+        - pipeline_version is defined
+        - pipeline_version is version('3.18', '>=')
       retries: 3
       register: result
       until: result is succeeded
