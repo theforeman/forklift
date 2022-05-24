@@ -23,6 +23,7 @@ centos8-katello-devel:
       katello_repositories_environment: staging
       foreman_installer_options:
         - "--foreman-proxy-content-enable-ostree=true"
+        - "--katello-devel-modulestream-nodejs=12"
 
 
 centos7-luna-devel:
