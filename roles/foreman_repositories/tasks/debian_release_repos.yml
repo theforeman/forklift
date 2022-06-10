@@ -1,16 +1,4 @@
 ---
-- name: 'Install Foreman GPG key'
-  get_url:
-    url: https://deb.theforeman.org/foreman.asc
-    dest: /etc/apt/trusted.gpg.d/foreman.asc
-    mode: '0444'
-
 - name: 'Install Foreman {{ foreman_repositories_version }} repository'
-  apt_repository:
-    repo: deb http://deb.theforeman.org {{ ansible_distribution_release }} {{ foreman_repositories_version }}
-    state: present
-
-- name: 'Manage Foreman {{ foreman_repositories_version }} plugins repository'
-  apt_repository:
-    repo: deb http://deb.theforeman.org plugins {{ foreman_repositories_version }}
-    state: "{{ foreman_repositories_plugins | ternary('present', 'absent') }}"
+  include_role:
+    role: theforeman.operations.foreman_repositories
