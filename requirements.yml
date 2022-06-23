@@ -1,2 +1,3 @@
 collections:
   - theforeman.operations
+  - community.general
