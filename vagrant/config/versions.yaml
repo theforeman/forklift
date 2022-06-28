@@ -83,6 +83,5 @@ installers:
       - 'centos7'
       - 'centos7-fips'
       - 'centos8-stream'
-      - 'debian10'
       - 'debian11'
       - 'ubuntu2004'
