@@ -9,8 +9,8 @@ class TestBoxLoader < Minitest::Test
     loader = Forklift::BoxLoader.new(nil, locations)
     loader.load!
 
-    assert loader.boxes
-    assert loader.boxes['centos7-katello-nightly']
+    assert_instance_of Hash, loader.boxes
+    assert_includes loader.boxes, 'centos7-katello-nightly'
     assert_equal 'centos7-katello-nightly', loader.boxes['centos7-katello-nightly']['name']
     assert_equal 'centos/7', loader.boxes['centos7-katello-nightly']['box_name']
   end
@@ -22,8 +22,8 @@ class TestBoxLoader < Minitest::Test
     loader = Forklift::BoxLoader.new(nil, locations)
     loader.load!
 
-    assert loader.boxes
-    assert loader.boxes['rpm-packaging']
+    assert_instance_of Hash, loader.boxes
+    assert_includes loader.boxes, 'rpm-packaging'
     assert_equal 'rpm-packaging', loader.boxes['rpm-packaging']['name']
     assert_equal 'fedora/33-cloud-base', loader.boxes['rpm-packaging']['box_name']
   end
