@@ -35,3 +35,7 @@
     - name: Grow ext4 filesystem
       command: resize2fs {{ root_partition.stdout.split(' ')[0] }}
       when: '"ext4" in root_partition.stdout'
+
+    - name: Grow btrfs filesystem
+      command: btrfs filesystem resize max /
+      when: '"btrfs" in root_partition.stdout'
