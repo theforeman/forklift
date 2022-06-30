@@ -17,7 +17,7 @@
 - /usr/share/foreman-installer/parser_cache/katello.yaml
 :hiera_config: /usr/share/foreman-installer/config/foreman-hiera.yaml
 :facts:
-  tuning: default
+  tuning: development
 :colors: true
 :verbose: true
 :order:
