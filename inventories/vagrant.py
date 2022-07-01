@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env bash
+# this is a very crude hack and can be removed once we have no more python2 systems
+# that need to run this code
+"exec" "$(command -v python3 || command -v python)" "$0" "$@"
 # Adapted from Mark Mandel's implementation
 # https://github.com/ansible/ansible/blob/devel/plugins/inventory/vagrant.py
 import argparse
