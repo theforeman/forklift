@@ -12,7 +12,7 @@ try:
 except ImportError:
     from io import StringIO  # pyright: reportMissingImports=false
 
-import paramiko
+from collections import defaultdict
 
 
 try:
@@ -69,17 +69,28 @@ def get_ssh_configs(hosts):
     except subprocess.CalledProcessError:
         return None
 
-    config = paramiko.SSHConfig()
-    config.parse(StringIO(output))
+    config = defaultdict(dict)
+    host = None
+
+    for line in output.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        key, value = line.split(maxsplit=1)
+        if key == 'Host':
+            host = value
+        elif host:
+            config[host][key.lower()] = value
+
     return config
 
 
 def get_host_ssh_config(config, host):
-    ssh = config.lookup(host)
+    ssh = config.get(host)
     return {'ansible_host': ssh['hostname'],
             'ansible_port': ssh['port'],
             'ansible_user': ssh['user'],
-            'ansible_ssh_private_key_file': ssh['identityfile'][0]}
+            'ansible_ssh_private_key_file': ssh['identityfile']}
 
 
 def get_variables(hosts):
