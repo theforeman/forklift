@@ -79,7 +79,7 @@ def get_ssh_configs(hosts):
         line = line.strip()
         if not line:
             continue
-        key, value = line.split(maxsplit=1)
+        key, value = line.split(None, 1)
         if key == 'Host':
             host = value
         elif host:
