@@ -42,7 +42,11 @@ module Forklift
 
     def load_box_file(file)
       file = File.read(file)
-      YAML.safe_load(ERB.new(file).result, permitted_classes: [Regexp])
+      if Gem::Version.new(Psych::VERSION) < Gem::Version.new('4.0')
+        YAML.safe_load(ERB.new(file).result)
+      else
+        YAML.safe_load(ERB.new(file).result, permitted_classes: [Regexp])
+      end
     end
 
     def process_boxes!(boxes)
