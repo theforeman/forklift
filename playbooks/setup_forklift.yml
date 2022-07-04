@@ -31,6 +31,17 @@
           - rubygem-deep_merge
         state: 'present'
 
+    - name: 'install telemetry dependencies'
+      pip:
+        name:
+          - protobuf<3.21
+          - opentelemetry-api
+          - opentelemetry-sdk
+          - opentelemetry-exporter-otlp
+      when:
+        - forklift_telemetry|default(false)
+        - ansible_distribution_major_version != '7'
+
     - name: 'Clone Forklift'
       git:
         repo: "{{ forklift_url }}"
