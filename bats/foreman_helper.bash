@@ -88,3 +88,17 @@ tCheckPulpYumContent() {
   tFileExists ${TEST_RPM_FILE} && rpm -qp ${TEST_RPM_FILE}
   tFileExists ${TEST_RPM_FILE} && rm ${TEST_RPM_FILE}
 }
+
+tHasContentType() {
+  CONTENT_TYPE=$1
+
+  curl https://`hostname`:9090/v2/features --cert /etc/foreman/client_cert.pem --key /etc/foreman/client_key.pem | ruby -e "require 'json'; puts JSON.load(ARGF.read).fetch('pulpcore').fetch('capabilities').include?($CONTENT_TYPE)"
+}
+
+tSkipUnlessContentType() {
+  CONTENT_TYPE=$1
+
+  if ! tHasContentType $CONTENT_TYPE; then
+    skip "Content type ${CONTENT_TYPE} is not enabled"
+  fi
+}
