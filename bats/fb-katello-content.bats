@@ -77,6 +77,7 @@ setup() {
   fi
 
   tSkipIfOlderThan43
+  tSkipUnlessContentType 'ostree'
 
   hammer repository create --organization="${ORGANIZATION}" --url=https://fixtures.pulpproject.org/ostree/small/ \
     --product="${PRODUCT}" --content-type="ostree" --name "${OSTREE_REPOSITORY}" | grep -q "Repository created"
@@ -88,7 +89,8 @@ setup() {
   fi
 
   tSkipIfOlderThan43
-  
+  tSkipUnlessContentType 'ostree'
+
   hammer repository synchronize --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --name="${OSTREE_REPOSITORY}"
 }
@@ -115,9 +117,10 @@ setup() {
   fi
 
   tSkipIfOlderThan43
+  tSkipUnlessContentType 'ostree'
 
   wget --no-parent -r https://fixtures.pulpproject.org/ostree/small/
-  tDirectoryExists fixtures.pulpproject.org/ostree 
+  tDirectoryExists fixtures.pulpproject.org/ostree
   tar --exclude="index.html" -cvf "fixtures_small_repo.tar" -C fixtures.pulpproject.org/ostree "small"
   hammer repository upload-content --organization="${ORGANIZATION}" --product="${PRODUCT}" --name ${OSTREE_REPOSITORY} --content-type ostree_ref \
       --path fixtures_small_repo.tar --ostree-repository-name small
