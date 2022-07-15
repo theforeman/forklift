@@ -35,7 +35,7 @@
     chdir: /tmp/vagrant-libvirt-deps/krb5-1.18.2/src
 
 - name: 'build krb5'
-  command: make -j {{ ansible_processor_cores }}
+  command: make -j {{ ansible_processor_vcpus }}
   args:
     chdir: /tmp/vagrant-libvirt-deps/krb5-1.18.2/src
 
@@ -55,7 +55,7 @@
     chdir: /tmp/vagrant-libvirt-deps/libssh-0.9.4/build
 
 - name: 'build libssh'
-  command: make -j {{ ansible_processor_cores }}
+  command: make -j {{ ansible_processor_vcpus }}
   args:
     chdir: /tmp/vagrant-libvirt-deps/libssh-0.9.4/build
 
