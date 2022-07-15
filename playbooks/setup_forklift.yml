@@ -27,7 +27,7 @@
       package:
         name:
           - ansible
-          - git
+          - git-core
           - rubygem-deep_merge
         state: 'present'
 
