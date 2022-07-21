@@ -1,3 +1,8 @@
 ---
+- name: Install FIPS package
+  package:
+    name: crypto-policies-scripts
+    state: present
+
 - name: enable fips mode
   command: /usr/bin/fips-mode-setup --enable
