@@ -67,9 +67,9 @@ bundle exec foreman start
 
 When spinning up a Katello development environment locally, it can take a while to install and isn't always guaranteed to finish successfully. A stable Katello development environment was created to ensure an environment is always available to developers.
 
-The Katello development stable box is named `centos7-katello-devel-stable`. Please see the [documentation on stable boxes](./stable_boxes.md) for more information on how to use this box.
+The Katello development stable box is named `centos8-katello-devel-stable`. Please see the [documentation on stable boxes](./stable_boxes.md) for more information on how to use this box.
 
-After spinning up `centos7-katello-devel-stable`, it's a good idea to pull the latest git branches and update gems and npm packages after spinning up a stable box. If a stable box image hasn't been published in a while, these can be out-of-date.
+After spinning up `centos8-katello-devel-stable`, it's a good idea to pull the latest git branches and update gems and npm packages after spinning up a stable box. If a stable box image hasn't been published in a while, these can be out-of-date.
 
 At this moment, you will have to manually configure any personal customizations such as github remotes.
 
@@ -80,12 +80,12 @@ Our backend requires a rails server to be running. We also use a webpack server 
 The files that webpack handles are located in `webpack/` directory found in Foreman, Katello,
 and plugin root directories. If you are editing any files in `webpack/` and want to have your changes refresh automatically, you will need a webpack server running.
 
-Because we are using a webpack server in conjunction with a rails server, there are different ways of starting a server depending on your needs and preferences. The following are instructions for starting the server using a base `centos7-katello-devel` box as a starting point.
+Because we are using a webpack server in conjunction with a rails server, there are different ways of starting a server depending on your needs and preferences. The following are instructions for starting the server using a base `centos8-katello-devel` box as a starting point.
 
 #### Run a rails and webpack server together using `foreman start`
 - Run `bundle exec foreman start` in `~/foreman`
-- Navigate to `https://centos7-katello-devel.<hostname>.example.com/` where `<hostname>` is the shortname of your hypervisor (machine your VM is running on) and accept the self-signed certs.
-- Accept the self-signed certs on port 3808 at `https://centos7-katello-devel.<hostname>.example.com:3808`.
+- Navigate to `https://centos8-katello-devel.<hostname>.example.com/` where `<hostname>` is the shortname of your hypervisor (machine your VM is running on) and accept the self-signed certs.
+- Accept the self-signed certs on port 3808 at `https://centos8-katello-devel.<hostname>.example.com:3808`.
 - Everything should be set for you to run `bundle exec foreman start` to start your dev server as needed.
 
 NOTE: The `foreman` in `foreman start` is actually [this gem](https://github.com/ddollar/foreman) and not our `foreman`. It
@@ -108,12 +108,12 @@ in your boxes.yaml entry to configure this on box creation.
 
 #### Custom files from git repo
 
-A git repo's contents can be copied to the target user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. This can be done by specifying the `customize_home_git_repo` ansible variable. For example:
+A git repo's contents can be copied to the target user's home directory when spinning up a `centos8-katello-devel` or `centos8-katello-devel-stable` box. This can be done by specifying the `customize_home_git_repo` ansible variable. For example:
 
 ```
-centos7-katello-devel-stable:
+centos8-katello-devel-stable:
   box_name: katello/katello-devel
-  hostname: centos7-katello-devel-stable.example.com
+  hostname: centos8-katello-devel-stable.example.com
   ansible:
     playbook: 'playbooks/setup_user_devel_environment.yml'
     variables:
@@ -132,7 +132,7 @@ mygitrepo
 
 #### Custom local files
 
-You can have files automatically copied over to the target user's home directory when spinning up a `centos7-katello-devel` or `centos7-katello-devel-stable` box. Here are the steps to specify custom files to be copied over:
+You can have files automatically copied over to the target user's home directory when spinning up a `centos8-katello-devel` or `centos8-katello-devel-stable` box. Here are the steps to specify custom files to be copied over:
 
 1. Create the directory `user_devel_env_files/` in Forklift's root directory.
 2. Add any files you want to be copied over to your development box to `user_devel_env_files/`
@@ -322,7 +322,7 @@ katello-client:
     playbook: 'playbooks/katello_client.yml'
     group: 'client'
     variables:
-      katello_client_server: 'centos7-katello-devel'
+      katello_client_server: 'centos8-katello-devel'
       katello_client_organization: 'Default_Organization'
       katello_client_environment: 'Library'
       katello_client_username: 'admin'
