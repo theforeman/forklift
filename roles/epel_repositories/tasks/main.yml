@@ -5,7 +5,7 @@
     state: latest
   tags:
     - packages
-  when: 
+  when:
     - ansible_distribution_major_version == '9'
     - ansible_distribution == 'CentOS'
 
