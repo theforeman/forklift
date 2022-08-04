@@ -140,7 +140,7 @@ setup() {
   repo_id=$(hammer --csv --no-headers repository list --organization="${ORGANIZATION}" \
     | grep ${YUM_REPOSITORY} | cut -d, -f1)
   hammer content-view add-repository --organization="${ORGANIZATION}" \
-    --name="${CONTENT_VIEW}" --repository-id=$repo_id | grep -q "The repository has been associated"
+    --name="${CONTENT_VIEW}" --repository-id="$repo_id" | grep -q "The repository has been associated"
 }
 
 @test "publish content view" {
@@ -183,7 +183,7 @@ setup() {
   import_path="/var/lib/pulp/imports/bats-test-$export_history_id"
 
   mkdir -p $import_path
-  cp -r $export_path/* $import_path
+  cp -r "$export_path"/* $import_path
   chown -R pulp:pulp $import_path
 
   if [ -f "${export_path}/metadata.json" ]; then
@@ -193,7 +193,7 @@ setup() {
   fi
   # no grep here because hammer doesn't output any text on success
   hammer content-import version --organization="${IMPORT_ORG}"\
-    --metadata-file=$metadata_path --path=$import_path
+    --metadata-file="$metadata_path" --path="$import_path"
 }
 
 @test "compare contents of export and import" {
