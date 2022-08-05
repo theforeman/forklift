@@ -31,16 +31,6 @@
           - rubygem-deep_merge
         state: 'present'
 
-    - name: 'install telemetry system dependencies'
-      package:
-        name:
-          - python3-devel
-          - redhat-rpm-config
-        state: 'present'
-      when:
-        - forklift_telemetry|default(false)
-        - ansible_distribution_major_version != '7'
-
     - name: 'install telemetry dependencies'
       pip:
         name:
@@ -48,6 +38,7 @@
           - opentelemetry-api
           - opentelemetry-sdk
           - opentelemetry-exporter-otlp
+        executable: pip3.8
       when:
         - forklift_telemetry|default(false)
         - ansible_distribution_major_version != '7'
