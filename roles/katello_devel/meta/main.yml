@@ -11,6 +11,8 @@ dependencies:
   - role: postgresql_scl
     when: ansible_distribution_major_version == "7"
   - role: foreman_installer_devel_scenario
+    foreman_installer_devel_scenario_user: "{{ katello_devel_user | default(omit) }}"
+    foreman_installer_devel_scenario_group: "{{ katello_devel_group | default(omit) }}"
   - role: foreman_installer
     foreman_installer_scenario: katello-devel
     foreman_installer_additional_packages:

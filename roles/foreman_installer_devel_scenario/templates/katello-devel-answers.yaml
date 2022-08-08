@@ -1,11 +1,11 @@
 ---
 certs:
-  group: vagrant
+  group: {{ foreman_installer_devel_scenario_group }}
   deploy: true
   generate: true
 katello_devel:
-  deployment_dir: /home/vagrant
-  user: vagrant
+  deployment_dir: /home/{{ foreman_installer_devel_scenario_user }}
+  user: {{ foreman_installer_devel_scenario_user }}
 foreman_proxy_content:
   enable_katello_agent: true
   proxy_pulp_yum_to_pulpcore: true
