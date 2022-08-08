@@ -297,6 +297,8 @@ setup() {
 }
 
 @test "add subscription to activation key" {
+  tSkipIfNewerthan45
+
   sleep 10
   activation_key_id=$(hammer --csv --no-headers activation-key info --organization="${ORGANIZATION}" \
     --name="${ACTIVATION_KEY}" | cut -d, -f2)
