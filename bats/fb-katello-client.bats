@@ -47,7 +47,7 @@ load fixtures/content
   run subscription-manager register --force --org="${ORGANIZATION_LABEL}" --activationkey="${ACTIVATION_KEY}"
   echo "rc=${status}"
   echo "${output}"
-  subscription-manager list --consumed | grep "${PRODUCT}"
+  tSubscribedProductOrSCA "${PRODUCT}"
 }
 
 @test "start puppet again" {
