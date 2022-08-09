@@ -17,6 +17,7 @@
     forklift_install_from_galaxy: True
     forklift_install_pulp_from_galaxy: False
     forklift_config:
+      sync_type: disabled
       libvirt_options:
         volume_cache: unsafe
       boxes:
