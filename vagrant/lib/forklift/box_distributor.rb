@@ -252,7 +252,8 @@ module Forklift
     def configure_libvirt(machine, box, networks = [])
       machine.vm.provider :libvirt do |p, override|
         override.vm.box_url = box.fetch('libvirt') if box.fetch('libvirt', false)
-        override.vm.synced_folder '.', '/vagrant', type: @settings['sync_type'], rsync__args: ['--max-size=100m']
+        override.vm.synced_folder '.', '/vagrant', type: @settings['sync_type'], rsync__args: ['--max-size=100m'],
+                                                   disabled: @settings['sync_type'] == 'disabled'
 
         if box.fetch('bridged', false)
           override.vm.network :public_network, :dev => box.fetch('bridged'), :mode => 'bridge'
