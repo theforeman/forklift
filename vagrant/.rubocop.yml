@@ -6,6 +6,7 @@ AllCops:
   Exclude:
     - !ruby/regexp /katello-installer/
     - !ruby/regexp /.spec/
+    - 'vendor/**/*'
   TargetRubyVersion: 2.0
 
 Metrics/LineLength:

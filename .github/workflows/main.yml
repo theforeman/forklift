@@ -44,9 +44,6 @@ jobs:
 
   vagrant:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: vagrant
     strategy:
       matrix:
         ruby:
@@ -61,7 +58,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - name: Install
-        run: bundle install
+          bundler-cache: true
+          working-directory: vagrant
       - name: Run tests
         run: bundle exec rake
+        working-directory: vagrant
