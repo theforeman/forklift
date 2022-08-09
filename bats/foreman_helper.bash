@@ -109,3 +109,15 @@ tSkipUnlessContentType() {
     skip "Content type ${CONTENT_TYPE} is not enabled"
   fi
 }
+
+tSubscribedProductOrSCA() {
+  PRODUCT="$1"
+
+  run subscription-manager status
+  if [[ $output != *"Simple Content Access"* ]]; then
+    echo "SCA not enabled, looking for ${PRODUCT} subscription"
+    subscription-manager list --consumed | grep "${PRODUCT}"
+  else
+    echo "SCA enabled, assuming access to ${PRODUCT} is provided"
+  fi
+}

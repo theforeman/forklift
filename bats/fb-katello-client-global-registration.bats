@@ -39,7 +39,7 @@ load fixtures/content
 
   registration_command=$(echo "${registration_json}" | ruby -e "require 'json'; puts JSON.load(ARGF.read).fetch('registration_command')")
   eval $registration_command
-  subscription-manager list --consumed | grep "${PRODUCT}"
+  tSubscribedProductOrSCA "${PRODUCT}"
 }
 
 @test "check content host is registered" {
