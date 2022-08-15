@@ -198,6 +198,7 @@ module Forklift
           ansible_provisioner.verbose = ansible['verbose'] || false
           ansible_provisioner.galaxy_role_file = ansible['galaxy_role_file'] if ansible['galaxy_role_file']
           ansible_provisioner.inventory_path = ansible['inventory_path'] if ansible['inventory_path']
+          ansible_provisioner.config_file = ansible['config_file'] if ansible['config_file']
         end
       end
     end
