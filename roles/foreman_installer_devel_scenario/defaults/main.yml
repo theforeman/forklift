@@ -1,4 +1,3 @@
 ---
 foreman_installer_devel_scenario_modules: /usr/share/foreman-installer/modules
 foreman_installer_devel_scenario_user: vagrant
-foreman_installer_devel_scenario_group: vagrant

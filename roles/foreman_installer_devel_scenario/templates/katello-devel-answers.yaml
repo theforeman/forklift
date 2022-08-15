@@ -1,6 +1,6 @@
 ---
 certs:
-  group: {{ foreman_installer_devel_scenario_group }}
+  group: {{ foreman_installer_devel_scenario_group | default(foreman_installer_devel_scenario_user) }}
   deploy: true
   generate: true
 katello_devel:
