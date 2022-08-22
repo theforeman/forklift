@@ -169,7 +169,6 @@ module Forklift
       end
     end
 
-    # rubocop:disable Metrics/PerceivedComplexity
     def configure_ansible(machine, ansible, box_name)
       return unless ansible
 
@@ -196,13 +195,14 @@ module Forklift
           ansible_provisioner.extra_vars = ansible['variables']
           ansible_provisioner.groups = @ansible_groups
           ansible_provisioner.verbose = ansible['verbose'] || false
-          ansible_provisioner.galaxy_role_file = ansible['galaxy_role_file'] if ansible['galaxy_role_file']
-          ansible_provisioner.inventory_path = ansible['inventory_path'] if ansible['inventory_path']
-          ansible_provisioner.config_file = ansible['config_file'] if ansible['config_file']
+          %w[config_file galaxy_role_file inventory_path].each do |key|
+            if (value = ansible[key])
+              ansible_provisioner_send("#{key}=", value)
+            end
+          end
         end
       end
     end
-    # rubocop:enable Metrics/PerceivedComplexity
 
     def configure_shell(machine, box)
       return unless box.key?('shell') && !box['shell'].nil?
