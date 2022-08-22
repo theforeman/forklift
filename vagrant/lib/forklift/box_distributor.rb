@@ -7,11 +7,6 @@ module Forklift
 
     VAGRANTFILE_API_VERSION = '2'.freeze
 
-    if Gem.loaded_specs['vagrant']
-      SUPPORT_NAMED_PROVISIONERS = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.7')
-      SUPPORT_BOX_CHECK_UPDATE = Gem.loaded_specs['vagrant'].version >= Gem::Version.create('1.5')
-    end
-
     def initialize(boxes)
       @ansible_groups = {}
       @boxes = boxes
@@ -72,7 +67,7 @@ module Forklift
         machine.vm.box = box.fetch('box_name', nil)
         machine.vm.box_version = box.fetch('box_version', nil)
         config.ssh.forward_agent = box.fetch('ssh_forward_agent', nil) || @settings.fetch('ssh_forward_agent', false)
-        machine.vm.box_check_update = box.fetch('box_check_update', true) if SUPPORT_BOX_CHECK_UPDATE
+        machine.vm.box_check_update = box.fetch('box_check_update', true)
 
         machine.vm.box_url = box.fetch('box_url') if box.key?('box_url')
 
@@ -184,13 +179,7 @@ module Forklift
       return unless (playbooks = ansible['playbook'])
 
       [playbooks].flatten.each_with_index do |playbook, index|
-        if SUPPORT_NAMED_PROVISIONERS
-          args = ["main#{index}"]
-          kwargs = { type: 'ansible' }
-        else
-          args = [:ansible]
-        end
-        machine.vm.provision(*args, **kwargs) do |ansible_provisioner|
+        machine.vm.provision("main#{index}", type: 'ansible') do |ansible_provisioner|
           ansible_provisioner.playbook = playbook
           ansible_provisioner.extra_vars = ansible['variables']
           ansible_provisioner.groups = @ansible_groups
