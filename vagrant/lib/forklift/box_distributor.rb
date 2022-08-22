@@ -60,13 +60,23 @@ module Forklift
       end
     end
 
+    def fetch_from_box_or_settings(box, key)
+      box.fetch(key) { @settings.fetch(key, nil) }
+    end
+
     def define_vm(config, box = {})
       primary = box.fetch('primary', false)
       autostart = box.fetch('autostart', false)
       config.vm.define box.fetch('name'), primary: primary, autostart: autostart do |machine|
         machine.vm.box = box.fetch('box_name', nil)
         machine.vm.box_version = box.fetch('box_version', nil)
-        config.ssh.forward_agent = box.fetch('ssh_forward_agent', nil) || @settings.fetch('ssh_forward_agent', false)
+
+        %w[username forward_agent keys_only].each do |key|
+          unless (value = fetch_from_box_or_settings(box, "ssh_#{key}")).nil?
+            machine.ssh.send("#{key}=", value)
+          end
+        end
+
         machine.vm.box_check_update = box.fetch('box_check_update', true)
 
         machine.vm.box_url = box.fetch('box_url') if box.key?('box_url')
