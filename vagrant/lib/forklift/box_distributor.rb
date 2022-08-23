@@ -186,7 +186,7 @@ module Forklift
           ansible_provisioner.verbose = ansible['verbose'] || false
           %w[config_file galaxy_role_file inventory_path].each do |key|
             if (value = ansible[key])
-              ansible_provisioner_send("#{key}=", value)
+              ansible_provisioner.send("#{key}=", value)
             end
           end
         end
