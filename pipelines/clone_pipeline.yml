@@ -1,5 +1,5 @@
 ---
-- import_playbook: clone/01-boxes.yaml
-- import_playbook: clone/02-setup.yaml
-- import_playbook: clone/03-clone_server.yaml
-- import_playbook: clone/04-tests.yaml
+- import_playbook: clone/01-boxes.yml
+- import_playbook: clone/02-setup.yml
+- import_playbook: clone/03-clone_server.yml
+- import_playbook: clone/04-tests.yml
