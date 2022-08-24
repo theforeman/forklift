@@ -95,7 +95,7 @@ module Forklift
 
     def resize_disk(machine)
       machine.vm.provision('disk_resize', type: 'ansible') do |ansible_provisioner|
-        ansible_provisioner.playbook = 'playbooks/resize_disk.yaml'
+        ansible_provisioner.playbook = 'playbooks/resize_disk.yml'
       end
     end
 
