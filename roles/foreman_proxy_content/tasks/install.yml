@@ -14,14 +14,12 @@
   delegate_to: "{{ foreman_proxy_content_server }}"
   register: foreman_settings
 
-- name: 'Decode Foreman settings YAML'
-  set_fact:
-    foreman_settings_yaml: "{{ (foreman_settings['content'] | b64decode | from_yaml) }}"
-
 - name: 'Get OAuth consumer data from settings'
   set_fact:
     oauth_consumer_key: "{{ foreman_settings_yaml[':oauth_consumer_key'] }}"
     oauth_consumer_secret: "{{ foreman_settings_yaml[':oauth_consumer_secret'] }}"
+  vars:
+    foreman_settings_yaml: "{{ (foreman_settings['content'] | b64decode | from_yaml) }}"
 
 - include_tasks: certs_generate.yml
 
