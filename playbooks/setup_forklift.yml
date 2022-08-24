@@ -25,7 +25,7 @@
           - '^[^p]'
   tasks:
     - name: 'Install Forklift dependencies'
-      package:
+      ansible.builtin.package:
         name:
           - ansible
           - git-core
@@ -33,7 +33,7 @@
         state: 'present'
 
     - name: 'install telemetry dependencies'
-      pip:
+      ansible.builtin.pip:
         name:
           - protobuf<3.21
           - opentelemetry-api
@@ -45,24 +45,24 @@
         - ansible_distribution_major_version != '7'
 
     - name: 'Clone Forklift'
-      git:
+      ansible.builtin.git:
         repo: "{{ forklift_url }}"
         version: "{{ forklift_version }}"
         dest: "{{ forklift_dest }}"
 
     - name: 'Configure Forklift'
-      copy:
+      ansible.builtin.copy:
         content: "{{ forklift_config | to_nice_yaml }}"
         dest: "{{ forklift_dest }}/vagrant/settings.yaml"
 
     - name: 'Install Forklift collection dependencies'
-      command:
+      ansible.builtin.command:
         cmd: ansible-galaxy collection install -r requirements.yml
         chdir: "{{ forklift_dest }}"
       when: forklift_install_from_galaxy
 
     - name: 'Install Forklift Pulp collection dependencies for <3.17'
-      command:
+      ansible.builtin.command:
         cmd: ansible-galaxy collection install -r requirements-pulp.yml
         chdir: "{{ forklift_dest }}"
       when:
@@ -74,7 +74,7 @@
       until: result is succeeded
 
     - name: 'Install Forklift Pulp collection dependencies for >3.18'
-      command:
+      ansible.builtin.command:
         cmd: ansible-galaxy collection install -r requirements-pulp-318.yml
         chdir: "{{ forklift_dest }}"
       when:
@@ -86,7 +86,7 @@
       until: result is succeeded
 
     - name: 'Install Forklift pulp_installer role dependencies'
-      command:
+      ansible.builtin.command:
         cmd: ansible-galaxy role install -r playbooks/galaxy_collections/ansible_collections/pulp/pulp_installer/requirements.yml
         chdir: "{{ forklift_dest }}"
       when: forklift_install_pulp_from_galaxy

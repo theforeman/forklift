@@ -11,19 +11,19 @@
     - role: sos_report
   tasks:
     - name: "Find bats files"
-      find:
+      ansible.builtin.find:
         paths: "{{ bats_output_dir }}"
         patterns: "*.tap"
       register: bats_results
 
     - name: "Copy bats results"
-      fetch:
+      ansible.builtin.fetch:
         src: "{{ item.path }}"
         dest: "{{ remote_dir }}"
       with_items: "{{ bats_results.files }}"
 
     - name: "Find smoker files"
-      find:
+      ansible.builtin.find:
         paths: "{{ smoker_output_dir }}"
         patterns:
           - "junit.xml"
@@ -34,20 +34,20 @@
       register: smoker_results
 
     - name: "Copy smoker results"
-      fetch:
+      ansible.builtin.fetch:
         src: "{{ item.path }}"
         dest: "{{ remote_dir }}"
       with_items: "{{ smoker_results.files }}"
 
     - name: "Find backup files"
-      find:
+      ansible.builtin.find:
         paths: "{{ backup_output_dir }}"
         recurse: True
         hidden: True
       register: backup_results
 
     - name: "Copy backup results"
-      fetch:
+      ansible.builtin.fetch:
         src: "{{ item.path }}"
         dest: "{{ remote_dir }}"
       with_items: "{{ backup_results.files }}"

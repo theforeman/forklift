@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
     - name: Install dependencies for packaging tooling
-      yum:
+      ansible.builtin.yum:
         name: "{{ package_list }}"
         state: present
       vars:
@@ -26,19 +26,19 @@
       become: true
 
     - name: Install obal
-      pip:
+      ansible.builtin.pip:
         name: obal
         state: present
       become: true
 
     - name: Clone foreman-packaging
-      git:
+      ansible.builtin.git:
         repo: https://github.com/theforeman/foreman-packaging.git
         dest: /home/vagrant/foreman-packaging
         version: rpm/develop
 
     - name: Add vagrant user to mock group
-      user:
+      ansible.builtin.user:
         name: vagrant
         groups: mock
         append: true

@@ -14,21 +14,21 @@
     - epel_repositories
   tasks:
     - name: disable swap
-      command: swapoff -a
+      ansible.builtin.command: swapoff -a
 
     - name: deconfigure swap
-      mount:
+      ansible.posix.mount:
         src: /swapfile
         fstype: swap
         path: none
         state: absent
 
     - name: modprobe br_netfilter
-      modprobe:
+      community.general.modprobe:
         name: br_netfilter
 
     - name: configure bridge iptables
-      sysctl:
+      ansible.posix.sysctl:
         name: "{{ item }}"
         value: 1
         sysctl_file: /etc/sysctl.d/k8s.conf
@@ -37,29 +37,29 @@
         - net.bridge.bridge-nf-call-iptables
 
     - name: install needed network manager libs
-      yum:
+      ansible.builtin.yum:
         name:
         - NetworkManager-glib
         - NetworkManager
 
     - name: Configure bridge
-      nmcli:
+      community.general.nmcli:
         state: present
         type: bridge
         conn_name: foreman
 
     - name: install docker
-      yum:
+      ansible.builtin.yum:
         name: docker
 
     - name: enable docker
-      service:
+      ansible.builtin.service:
         name: docker
         enabled: true
         state: started
 
     - name: k8s repo
-      yum_repository:
+      ansible.builtin.yum_repository:
         name: kubernetes
         description: Kubernetes
         baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
@@ -70,7 +70,7 @@
         exclude: kube*
 
     - name: install kubelet kubeadm kubectl
-      yum:
+      ansible.builtin.yum:
         name:
           - kubelet-{{ kubernetes_version }}
           - kubeadm-{{ kubernetes_version }}
@@ -78,12 +78,12 @@
         disable_excludes: kubernetes
 
     - name: create /etc/systemd/system/kubelet.service.d/
-      file:
+      ansible.builtin.file:
         path: /etc/systemd/system/kubelet.service.d/
         state: directory
 
     - name: enable kubelet accounting
-      copy:
+      ansible.builtin.copy:
         dest: /etc/systemd/system/kubelet.service.d/11-cgroups.conf
         content: |
           [Service]
@@ -91,22 +91,22 @@
           MemoryAccounting=true
 
     - name: reload systemd
-      systemd:
+      ansible.builtin.systemd:
         daemon_reload: yes
 
     - name: enable kubelet
-      service:
+      ansible.builtin.service:
         name: kubelet
         enabled: true
         state: started
 
     - name: init cluster
-      command: kubeadm init --pod-network-cidr={{ pod_network }} --apiserver-advertise-address={{ ansible_eth0['ipv4']['address'] }}
+      ansible.builtin.command: kubeadm init --pod-network-cidr={{ pod_network }} --apiserver-advertise-address={{ ansible_eth0['ipv4']['address'] }}
       args:
         creates: /etc/kubernetes/admin.conf
 
     - name: untaint master
-      command: kubectl taint nodes --all node-role.kubernetes.io/master-
+      ansible.builtin.command: kubectl taint nodes --all node-role.kubernetes.io/master-
       register: untaint_master
       failed_when: false
       changed_when: untaint_master.rc == 0
@@ -114,49 +114,49 @@
         KUBECONFIG: /etc/kubernetes/admin.conf
 
     - name: deploy flannel
-      command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/{{ flannel_version }}/Documentation/kube-flannel.yml
+      ansible.builtin.command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/{{ flannel_version }}/Documentation/kube-flannel.yml
       args:
         creates: /etc/cni/net.d/10-flannel.conflist
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
     - name: deploy network namespace
-      command: kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/{{ network_operator }}/namespace.yaml
+      ansible.builtin.command: kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/{{ network_operator }}/namespace.yaml
       args:
         creates: /etc/cni/net.d/multus.d/multus.kubeconfig
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
     - name: deploy network crd
-      command: kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/{{ network_operator }}/network-addons-config.crd.yaml
+      ansible.builtin.command: kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/{{ network_operator }}/network-addons-config.crd.yaml
       args:
         creates: /etc/cni/net.d/multus.d/multus.kubeconfig
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
     - name: deploy network operator
-      command: kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/{{ network_operator }}/operator.yaml
+      ansible.builtin.command: kubectl apply -f https://github.com/kubevirt/cluster-network-addons-operator/releases/download/{{ network_operator }}/operator.yaml
       args:
         creates: /etc/cni/net.d/multus.d/multus.kubeconfig
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
     - name: deploy kubevirt operator
-      command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-operator.yaml
+      ansible.builtin.command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-operator.yaml
       args:
         creates: /var/lib/kubelet/device-plugins/kubevirt-tun.sock
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
     - name: deploy kubevirt cr
-      command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-cr.yaml
+      ansible.builtin.command: kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/kubevirt-cr.yaml
       args:
         creates: /var/lib/kubelet/device-plugins/kubevirt-tun.sock
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
     - name: check for NetworkAddonsConfig
-      command: kubectl get networkaddonsconfigs cluster
+      ansible.builtin.command: kubectl get networkaddonsconfigs cluster
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
       failed_when: false
@@ -164,7 +164,7 @@
       register: netaddonsconfig
 
     - name: prepare NetworkAddonsConfig file
-      copy:
+      ansible.builtin.copy:
         dest: /tmp/netaddonsconfig
         content: |
           apiVersion: networkaddonsoperator.network.kubevirt.io/v1alpha1
@@ -179,24 +179,24 @@
       when: netaddonsconfig.rc != 0
 
     - name: create NetworkAddonsConfig
-      command: kubectl create -f /tmp/netaddonsconfig
+      ansible.builtin.command: kubectl create -f /tmp/netaddonsconfig
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
       when: netaddonsconfig.rc != 0
 
     - name: install virtctl
-      get_url:
+      ansible.builtin.get_url:
         url: https://github.com/kubevirt/kubevirt/releases/download/{{ kubevirt_version }}/virtctl-{{ kubevirt_version }}-linux-amd64
         dest: /usr/bin/virtctl
         mode: u=rwx,g=rx,o=rx
 
     - name: wait for the network to be ready
-      command: kubectl wait networkaddonsconfig cluster --for condition=Ready --timeout=300s
+      ansible.builtin.command: kubectl wait networkaddonsconfig cluster --for condition=Ready --timeout=300s
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
 
     - name: check for bridge-foreman NetworkAttachmentDefinition
-      command: kubectl get net-attach-def bridge-foreman
+      ansible.builtin.command: kubectl get net-attach-def bridge-foreman
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
       failed_when: false
@@ -204,7 +204,7 @@
       register: bridge_foreman_net_attach
 
     - name: prepare bridge-foreman NetworkAttachmentDefinition file
-      copy:
+      ansible.builtin.copy:
         dest: /tmp/bridge-foreman-net-attach-def
         content: |
           apiVersion: "k8s.cni.cncf.io/v1"
@@ -221,13 +221,13 @@
       when: bridge_foreman_net_attach.rc != 0
 
     - name: create bridge-foreman NetworkAttachmentDefinition
-      command: kubectl create -f /tmp/bridge-foreman-net-attach-def
+      ansible.builtin.command: kubectl create -f /tmp/bridge-foreman-net-attach-def
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
       when: bridge_foreman_net_attach.rc != 0
 
     - name: check for foreman-account ServiceAccount
-      command: kubectl get sa foreman-account
+      ansible.builtin.command: kubectl get sa foreman-account
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
       failed_when: false
@@ -235,7 +235,7 @@
       register: foreman_service_sa
 
     - name: prepare foreman-account ServiceAccount file
-      copy:
+      ansible.builtin.copy:
         dest: /tmp/foreman-account-sa
         content: |
           apiVersion: v1
@@ -259,20 +259,20 @@
       when: foreman_service_sa.rc != 0
 
     - name: create foreman-account ServiceAccount
-      command: kubectl create -f /tmp/foreman-account-sa
+      ansible.builtin.command: kubectl create -f /tmp/foreman-account-sa
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
       when: foreman_service_sa.rc != 0
 
     - name: create /home/vagrant/.kube
-      file:
+      ansible.builtin.file:
         path: /home/vagrant/.kube
         state: directory
         owner: vagrant
         group: vagrant
 
     - name: deploy kube config
-      copy:
+      ansible.builtin.copy:
         src: /etc/kubernetes/admin.conf
         dest: /home/vagrant/.kube/config
         remote_src: yes
@@ -280,12 +280,12 @@
         group: vagrant
 
     - name: get foreman-account secret
-      shell: "set -o pipefail && kubectl get secrets $(kubectl get sa foreman-account -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 -d | xargs"
+      ansible.builtin.shell: "set -o pipefail && kubectl get secrets $(kubectl get sa foreman-account -o jsonpath='{.secrets[0].name}') -o jsonpath='{.data.token}' | base64 -d | xargs"
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
       changed_when: false
       register: foreman_account_secret
 
     - name: show foreman-account secret
-      debug:
+      ansible.builtin.debug:
         msg: "{{ foreman_account_secret.stdout }}"
