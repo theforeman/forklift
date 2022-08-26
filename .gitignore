@@ -39,3 +39,6 @@ packer/build.*
 .env
 .venv
 .python-version
+
+# Sphinx
+/_build

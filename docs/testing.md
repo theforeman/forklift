@@ -2,10 +2,7 @@
 
 This section covers test infrastructure and environments that can be spun up using Forklift.
 
- * [Bats Testing](#bats-testing)
- * [Running Robottelo Tests](#running-robottelo-tests)
-
-# Bats Testing
+## Bats Testing
 
 Included with forklift is a small live test suite.  The current tests are:
 
@@ -25,19 +22,23 @@ vagrant up centos7-katello-bats-ci
 
 If you are making changes to bats tests and want to test your updates, edit `centos7-katello-bats-ci` to include:
 
-    ansible:
-      ....
-      variables:
-        bats_forklift_dir: /vagrant
-        bats_update_forklift: "no"
+```yaml
+ansible:
+  # ....
+  variables:
+    bats_forklift_dir: /vagrant
+    bats_update_forklift: "no"
+```
 
 Or if you want to run bats from a different repository or branch, edit `centos7-katello-bats-ci` to include:
 
-    ansible:
-      ....
-      variables:
-        bats_forklift_repo: https://github.com/<YOUR_NAME>/forklift.git
-        bats_forklift_version: your-branch
+```yaml
+ansible:
+  # ...
+  variables:
+    bats_forklift_repo: https://github.com/<YOUR_NAME>/forklift.git
+    bats_forklift_version: your-branch
+```
 
 ### To run Bats on an existing VM for development
 
@@ -54,7 +55,7 @@ bats bats/fb-katello-content.bats
 _Note_: Bats tests are not idempotent, so you may have to do some cleanup or skip some tests when running bats multiple times.
 
 
-# Pipeline Testing
+## Pipeline Testing
 
 Under `pipelines` are a series of playbooks designed around testing scenarios for various version of the Foreman and Katello stack. To run one:
 
@@ -64,7 +65,7 @@ When you are finished with the test, you can tear down the associated infrastruc
 
     ansible-playbook pipelines/<pipeline>.yml -e forklift_state=destroy -e <vars required by pipeline>
 
-## Existing Pipelines
+### Existing Pipelines
 
 * `install_pipeline` - Installs a Server and a Proxy VMs and runs the `foreman_testing` role to verify the setup.
   Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian10)
@@ -80,7 +81,7 @@ When you are finished with the test, you can tear down the associated infrastruc
     ansible-playbook pipelines/install_pipeline.yml -e forklift_state=up -e pipeline_os=debian10 -e pipeline_type=foreman -e pipeline_version=nightly
     ansible-playbook pipelines/upgrade_pipeline.yml -e forklift_state=up -e pipeline_os=centos7 -e pipeline_type=katello -e pipeline_version=3.10
 
-## Creating Pipelines
+### Creating Pipelines
 
 If you wish to add a new version of an existing pipeline (e.g. a new Katello release), you only have to add the corresponding vars files to `pipelines/vars/`.
 
@@ -109,7 +110,7 @@ katello_version_intermediate: '3.10'
 katello_version_final: '{{ katello_version }}'
 ```
 
-# Running Robottelo Tests
+## Running Robottelo Tests
 
 Robottelo is a test suite for exercising Foreman and Katello. Forklift provides a role for Robottelo to set up and run tests against your machine. Configuration options of interest are `robottelo_test_endpoints` where you can pass a list of endpoints (api, cli or ui), and `robottelo_test_type`, which is one of:
 
