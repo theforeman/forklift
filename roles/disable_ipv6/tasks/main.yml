@@ -3,7 +3,7 @@
 # also, do this before running katello installer so we don't interfere with
 # pulp (see https://pulp.plan.io/issues/2586)
 - name: "Disable ipv6"
-  sysctl:
+  ansible.posix.sysctl:
     name: "{{ item }}"
     value: "1"
   with_items:
@@ -11,4 +11,4 @@
     - net.ipv6.conf.all.disable_ipv6
 
 - name: "Update hosts file"
-  shell: "sed -i 's/^[[:space:]]*::/#::/' /etc/hosts"
+  ansible.builtin.shell: "sed -i 's/^[[:space:]]*::/#::/' /etc/hosts"

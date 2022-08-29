@@ -1,6 +1,6 @@
 ---
 - name: Remove rh-ruby25 packages
-  package:
+  ansible.builtin.package:
     state: absent
     name: rh-ruby25*
   when:

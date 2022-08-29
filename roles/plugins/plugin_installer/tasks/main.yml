@@ -1,13 +1,13 @@
 ---
 - name: 'Test if katello is installed'
-  stat:
+  ansible.builtin.stat:
     path: /etc/foreman/plugins/katello.yaml
   register: katello_config
   tags:
     - installation
 
 - name: 'Install plugin'
-  shell: >
+  ansible.builtin.shell: >
     foreman-installer
     {% if katello_config.stat.exists %}
     --disable-system-checks

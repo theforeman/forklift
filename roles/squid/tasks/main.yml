@@ -1,11 +1,11 @@
 ---
 - name: Install squid
-  package:
+  ansible.builtin.package:
     name: squid
     state: present
 
 - name: "Start and enable squid"
-  service:
+  ansible.builtin.service:
     name: squid
     state: started
     enabled: yes

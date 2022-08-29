@@ -1,6 +1,6 @@
 ---
 - name: "Configure pam"
-  lineinfile:
+  ansible.builtin.lineinfile:
     state: present
     path: "{{ item }}"
     regexp: "^session\\s+optional\\s+pam_umask.so$"
@@ -11,7 +11,7 @@
     - /etc/pam.d/common-session-noninteractive
 
 - name: "Configure defaults"
-  lineinfile:
+  ansible.builtin.lineinfile:
     state: present
     path: "/etc/login.defs"
     regexp: "^UMASK"

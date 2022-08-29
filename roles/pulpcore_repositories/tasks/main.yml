@@ -1,6 +1,6 @@
 ---
 - name: "Add Pulpcore {{ pulpcore_repositories_version }} repository"
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: pulpcore-repository
     description: Pulpcore {{ pulpcore_repositories_version }}
     baseurl: "https://yum.theforeman.org/pulpcore/{{ pulpcore_repositories_version }}/el{{ ansible_distribution_major_version }}/x86_64/"
@@ -8,6 +8,6 @@
     enabled: yes
 
 - name: 'Set module_hotfixes=1'
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "/etc/yum.repos.d/pulpcore-repository.repo"
     line: module_hotfixes=1

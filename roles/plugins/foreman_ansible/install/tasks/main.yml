@@ -1,10 +1,10 @@
 - name: 'Install ansible'
-  yum:
+  ansible.builtin.yum:
     name: ansible
     state: present
 
 - name: 'Install ansible plugin'
-  include_role:
+  ansible.builtin.include_role:
     name: plugins/plugin_installer
   vars:
     plugin_installer_options: >

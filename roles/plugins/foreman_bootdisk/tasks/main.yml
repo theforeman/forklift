@@ -1,5 +1,5 @@
 - name: 'Install bootdisk plugin'
-  include_role:
+  ansible.builtin.include_role:
     name: plugins/plugin_installer
   vars:
     plugin_installer_options: >

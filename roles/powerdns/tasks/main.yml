@@ -1,6 +1,6 @@
 ---
 - name: "Add PowerDNS repository"
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: "powerdns-auth-40"
     description: "PowerDNS repository for PowerDNS Authoritative Server - version 4.0.X"
     baseurl: "http://repo.powerdns.com/centos/$basearch/$releasever/auth-40"
@@ -9,14 +9,14 @@
     enabled: yes
 
 - name: "Install PowerDNS"
-  package:
+  ansible.builtin.package:
     name:
       - "pdns"
       - "pdns-backend-mysql"
     state: "present"
 
 - name: "Configure PowerDNS"
-  template:
+  ansible.builtin.template:
     src: "pdns.conf.j2"
     dest: "/etc/pdns/pdns.conf"
     owner: "root"
@@ -25,19 +25,19 @@
   register: "pdns_configured"
 
 - name: "Enable PowerDNS"
-  service:
+  ansible.builtin.service:
     name: "pdns"
     state: "started"
     enabled: yes
 
 - name: "Restart PowerDNS"
-  service:
+  ansible.builtin.service:
     name: "pdns"
     state: "restarted"
   when: pdns_configured.changed
 
-- include_tasks: "schema.mysql.yml"
+- ansible.builtin.include_tasks: "schema.mysql.yml"
   when: powerdns_db_backend == "gmysql"
 
-- include_tasks: "zones.yml"
+- ansible.builtin.include_tasks: "zones.yml"
   when: powerdns_zones

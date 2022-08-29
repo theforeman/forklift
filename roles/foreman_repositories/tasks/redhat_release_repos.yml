@@ -1,6 +1,6 @@
 ---
 - name: 'Setup Foreman {{ foreman_repositories_version }} Repository'
-  include_role:
+  ansible.builtin.include_role:
     role: theforeman.operations.foreman_repositories
   tags:
     - packages

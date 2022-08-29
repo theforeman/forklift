@@ -1,11 +1,11 @@
 ---
 - name: 'Install browser'
   become: true
-  package:
+  ansible.builtin.package:
     name: '{{ smoker_browser_packages }}'
 
 - name: 'Install Smoker via pytest_project'
-  include_role:
+  ansible.builtin.include_role:
     name: pytest_project
     tasks_from: install
   vars:
@@ -14,16 +14,16 @@
     pytest_project_directory: "{{ smoker_directory }}"
 
 - name: "Show variables"
-  debug:
+  ansible.builtin.debug:
     var: smoker_variables
 
 - name: 'Write variables.json'
-  copy:
+  ansible.builtin.copy:
     dest: "{{ smoker_variables_path }}"
     content: "{{ smoker_variables|to_json }}"
 
 - name: 'Run Smoker via pytest_project'
-  include_role:
+  ansible.builtin.include_role:
     name: pytest_project
     tasks_from: run
   vars:

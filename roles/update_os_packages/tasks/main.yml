@@ -1,6 +1,6 @@
 ---
 - name: 'RedHat | Update packages'
-  yum:
+  ansible.builtin.yum:
     name: '*'
     update_cache: yes
     state: latest
@@ -9,7 +9,7 @@
   when: ansible_os_family == 'RedHat'
 
 - name: 'Debian | Update packages'
-  apt:
+  ansible.builtin.apt:
     upgrade: dist
     update_cache: yes
   tags:

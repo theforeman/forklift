@@ -1,20 +1,20 @@
 ---
 - name: 'Install locales'
-  package:
+  ansible.builtin.package:
     name: locales
     state: latest
 
 - name: 'Ensure en_US.UTF-8 locale is available'
-  locale_gen:
+  community.general.locale_gen:
     name: en_US.UTF-8
 
 - name: 'Ensure ENV locales are available'
-  locale_gen:
+  community.general.locale_gen:
     name: "{{ item }}"
   loop: "{{ query('env', 'LANG', 'LC_ADDRESS', 'LC_ALL', 'LC_COLLATE', 'LC_CTYPE', 'LC_IDENTIFICATION', 'LC_MEASUREMENT', 'LC_MESSAGES', 'LC_MONETARY', 'LC_NAME', 'LC_NUMERIC', 'LC_PAPER', 'LC_TELEPHONE', 'LC_TIME') | unique | select() | list }}"
 
 - name: configure /etc/default/locale
-  copy:
+  ansible.builtin.copy:
     dest: /etc/default/locale
     content: |
       LC_ALL="en_US.UTF-8"

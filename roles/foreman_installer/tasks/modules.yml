@@ -1,6 +1,6 @@
 ---
 - name: Enable ruby:2.7 module
-  dnf:
+  ansible.builtin.dnf:
     name: '@ruby:2.7'
     state: present
   when:

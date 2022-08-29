@@ -1,46 +1,46 @@
 ---
 - name: set namespace, module_name and ref facts
-  set_fact:
+  ansible.builtin.set_fact:
     namespace: "{{ module.split('/')[0] }}"
     module_name: "{{ module.split('/')[1] | replace('puppet-', '') | replace('puppetlabs-', '') }}"
     ref: "{{ module.split('/')[2] }}"
 
 - name: find puppet module
-  find:
+  ansible.builtin.find:
     paths: /usr/share/foreman-installer/modules
     patterns: "{{ module_name }}"
     file_type: directory
   register: foreman_module
 
 - name: find puppet module
-  find:
+  ansible.builtin.find:
     paths: /usr/share/katello-installer-base/modules
     patterns: "{{ module_name }}"
     file_type: directory
   register: katello_module
 
 - name: define module_dir for foreman
-  set_fact:
+  ansible.builtin.set_fact:
     module_dir: /usr/share/foreman-installer/modules
   when: foreman_module.matched > 0
 
 - name: define module_dir for katello
-  set_fact:
+  ansible.builtin.set_fact:
     module_dir: /usr/share/katello-installer-base/modules
   when: katello_module.matched > 0
 
 - name: Delete old module
-  file:
+  ansible.builtin.file:
     state: absent
     path: "{{ module_dir }}/{{ module_name }}"
 
 - name: Clone puppet module
-  git:
+  ansible.builtin.git:
     repo: https://github.com/{{ namespace }}/puppet-{{ module_name }}.git
     dest: "{{ module_dir }}/{{ module_name }}"
 
 - name: "fetch git PR"
-  shell: >
+  ansible.builtin.shell: >
       git fetch origin pull/{{ ref }}/head:pr &&
       git {{ foreman_installer_module_prs_strategy }} pr
   args:
@@ -48,7 +48,7 @@
   when: pr is defined and pr
 
 - name: "install module branches into installer directory"
-  shell: git checkout {{ ref }}
+  ansible.builtin.shell: git checkout {{ ref }}
   args:
     chdir: "{{ module_dir }}/{{ module_name }}"
   when: branch is defined and branch

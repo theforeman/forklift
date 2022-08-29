@@ -1,11 +1,11 @@
 ---
 - name: "Set up {{ katello_repositories_environment }} repositories"
-  include_tasks: "{{ katello_repositories_environment }}_repos.yml"
+  ansible.builtin.include_tasks: "{{ katello_repositories_environment }}_repos.yml"
 
 - name: enable powertools for libdb_cxx used by qpid-cpp-server-linearstore
-  command: dnf config-manager --set-enabled powertools
+  ansible.builtin.command: dnf config-manager --set-enabled powertools
   when: ansible_distribution_major_version == "8" and ansible_distribution != "RedHat"
 
 - name: enable codeready-builder for libdb_cxx used by qpid-cpp-server-linearstore
-  command: subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
+  ansible.builtin.command: subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
   when: ansible_distribution_major_version == "8" and ansible_distribution == "RedHat"

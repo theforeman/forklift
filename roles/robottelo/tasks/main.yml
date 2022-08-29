@@ -1,6 +1,6 @@
 ---
 - name: 'Install Robottelo via pytest_project'
-  include_role:
+  ansible.builtin.include_role:
     name: pytest_project
     tasks_from: install
   vars:
@@ -11,42 +11,42 @@
     pytest_project_virtualenv_command: "{{ robottelo_virtualenv_command }}"
     pytest_project_version: "{{ robottelo_version }}"
 
-- include_tasks: ssh.yml
+- ansible.builtin.include_tasks: ssh.yml
 
 - name: robottelo properties file
-  command: cp robottelo.properties.sample robottelo.properties
+  ansible.builtin.command: cp robottelo.properties.sample robottelo.properties
   args:
     chdir: "{{ robottelo_directory }}"
 
 - name: Set robottelo hostname
-  ini_file:
+  community.general.ini_file:
     path: "{{ robottelo_directory }}/robottelo.properties"
     section: server
     option: hostname
     value: "{{ robottelo_hostname }}"
 
 - name: Set robottelo SSH key
-  ini_file:
+  community.general.ini_file:
     path: "{{ robottelo_directory }}/robottelo.properties"
     section: server
     option: ssh_key
     value: "{{ robottelo_ssh_key }}"
 
 - name: Set robottelo SSH username
-  ini_file:
+  community.general.ini_file:
     path: "{{ robottelo_directory }}/robottelo.properties"
     section: server
     option: ssh_username
     value: "{{ robottelo_ssh_username }}"
 
 - name: Set robottelo logging
-  replace:
+  ansible.builtin.replace:
     dest: "{{ robottelo_directory }}/logging.conf"
     regexp: "^level=DEBUG"
     replace: "level=INFO"
 
 - name: 'Run Robottelo via pytest_project'
-  include_role:
+  ansible.builtin.include_role:
     name: pytest_project
     tasks_from: run
   vars:

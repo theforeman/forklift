@@ -1,7 +1,7 @@
 ---
 - name: Create the config file to get keytab
   become: yes
-  template:
+  ansible.builtin.template:
     src: net-keytab.conf.j2
     dest: /etc/net-keytab.conf
     owner: root
@@ -10,7 +10,7 @@
 
 - name: Create httpd conf dir to put keytab [Hack - remove once using gssproxy]
   become: yes
-  file:
+  ansible.builtin.file:
     path: /etc/httpd/conf
     state: directory
     mode: '0775'
@@ -20,7 +20,7 @@
   become: yes
   environment:
     KRB5_KTNAME: 'FILE:/etc/httpd/conf/http.keytab'
-  expect:
+  ansible.builtin.expect:
     command: "net ads keytab add HTTP -U {{ foreman_realm_directory_admin_name }} -d3 -s /etc/net-keytab.conf"
     responses:
       (?i)password: '{{ foreman_realm_directory_admin_password }}'
@@ -28,7 +28,7 @@
 
 - name: Change perms for keytab
   become: yes
-  file:
+  ansible.builtin.file:
     path: /etc/httpd/conf/http.keytab
     owner: root
     group: root
@@ -36,31 +36,31 @@
 
 - name: "[Irrelevant] add gssproxy config"
   become: yes
-  copy:
+  ansible.builtin.copy:
     src: apache-gssproxy.conf
     dest: /etc/gssproxy/80-http.conf
 
 - name: "[Irrelevant] start gssproxy service"
   become: yes
-  service:
+  ansible.builtin.service:
     name: gssproxy
     state: started
     enabled: yes
 
 - name: "[Irrelevant] enable GSS_PROXY for httpd"
   become: yes
-  copy:
+  ansible.builtin.copy:
     src: httpd-gssproxy.service
     dest: /etc/systemd/system/httpd.service
 
 - name: Create fake IPA conf dir
   become: yes
-  file:
+  ansible.builtin.file:
     path: /etc/ipa
     state: directory
 
 - name: Prepare fake IPA config used by Installer
   become: yes
-  template:
+  ansible.builtin.template:
     src: fake-ipa.conf.j2
     dest: /etc/ipa/default.conf

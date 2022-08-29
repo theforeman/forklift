@@ -1,4 +1,4 @@
 ---
 - name: 'Install Foreman {{ foreman_repositories_version }} repository'
-  include_role:
+  ansible.builtin.include_role:
     role: theforeman.operations.foreman_repositories

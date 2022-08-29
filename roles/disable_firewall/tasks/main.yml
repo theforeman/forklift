@@ -1,13 +1,13 @@
 ---
 - name: disable firewalld
-  service:
+  ansible.builtin.service:
     name: firewalld
     enabled: false
     state: stopped
   ignore_errors: true
 
 - name: disable iptables
-  service:
+  ansible.builtin.service:
     name: iptables
     enabled: false
     state: stopped

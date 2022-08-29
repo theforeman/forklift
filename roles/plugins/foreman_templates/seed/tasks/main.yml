@@ -1,5 +1,5 @@
 ---
 - name: 'Fetch community templates'
-  shell: >
+  ansible.builtin.shell: >
     foreman-rake templates:sync {{ foreman_templates_sync_params }}
   when: foreman_templates_sync

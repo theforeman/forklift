@@ -1,10 +1,10 @@
 - name: 'Install SCL repository'
-  yum:
+  ansible.builtin.yum:
     name: centos-release-scl-rh
     state: present
 
 - name: 'Install Ruby SCL'
-  yum:
+  ansible.builtin.yum:
     name:
       - "{{ ruby_scl_version }}"
       - "{{ ruby_scl_version }}-ruby-devel"
@@ -12,7 +12,7 @@
     state: present
 
 - name: Enable and configure SCL at login
-  blockinfile:
+  ansible.builtin.blockinfile:
     dest: /etc/profile.d/enable-{{ ruby_scl_version }}.sh
     create: yes
     block: |

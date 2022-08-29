@@ -1,10 +1,10 @@
 ---
 - name: 'Destroy boxes'
-  command: "vagrant destroy -f {{ forklift_boxes.keys()|join(' ') }}"
+  ansible.builtin.command: "vagrant destroy -f {{ forklift_boxes.keys()|join(' ') }}"
   args:
     chdir: "{{ forklift_directory }}"
 
 - name: 'Remove box file'
-  file:
+  ansible.builtin.file:
     path: "{{ forklift_directory }}/vagrant/boxes.d/80-tmp-{{ forklift_name }}.yaml"
     state: "absent"

@@ -1,17 +1,17 @@
 ---
 - name: 'Install SCL repository'
-  yum:
+  ansible.builtin.yum:
     name: centos-release-scl-rh
     state: present
 
 - name: 'Install PostgreSQL SCL'
-  yum:
+  ansible.builtin.yum:
     name:
       - "{{ postgresql_scl_version }}"
     state: present
 
 - name: Enable and configure SCL at login
-  blockinfile:
+  ansible.builtin.blockinfile:
     dest: /etc/profile.d/enable-{{ postgresql_scl_version }}.sh
     create: yes
     block: |

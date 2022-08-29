@@ -1,16 +1,16 @@
 - name: 'Install SCL repository'
-  yum:
+  ansible.builtin.yum:
     name: centos-release-scl-rh
     state: present
 
 - name: 'Install NodeJS SCL'
-  yum:
+  ansible.builtin.yum:
     name:
       - "{{ nodejs_scl_version }}-npm"
     state: present
 
 - name: Enable and configure SCL at login
-  blockinfile:
+  ansible.builtin.blockinfile:
     dest: /etc/profile.d/enable-{{ nodejs_scl_version }}.sh
     create: yes
     block: |

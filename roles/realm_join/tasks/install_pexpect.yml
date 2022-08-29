@@ -1,6 +1,6 @@
 - name: Ensure pexpect to answer password
   become: yes
-  package:
+  ansible.builtin.package:
     name: "{{ realm_pexpect_package }}"
     state: latest
   # on Fedora this will be True due to the major version. Not nice, but works.
@@ -8,7 +8,7 @@
 
 - name: Install pip to get supported pexpect version on RedHat < 8
   become: yes
-  package:
+  ansible.builtin.package:
     name:
       - epel-release
       - python-pip
@@ -19,7 +19,7 @@
 
 - name: Ensure pexpect to answer password from pip
   become: yes
-  pip:
+  ansible.builtin.pip:
     name: pexpect
   when:
     - ansible_os_family == "RedHat"

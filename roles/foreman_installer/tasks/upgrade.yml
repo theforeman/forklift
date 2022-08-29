@@ -1,29 +1,29 @@
 ---
 - name: 'Stop services'
-  command: foreman-maintain service stop
+  ansible.builtin.command: foreman-maintain service stop
   when: foreman_installer_scenario != 'foreman'
 
 - name: 'Update packages'
-  import_role:
+  ansible.builtin.import_role:
     name: update_os_packages
 
 - name: 'Upgrade postgresql'
-  import_role:
+  ansible.builtin.import_role:
     name: theforeman.operations.postgresql_upgrade
   when:
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version == '8'
 
-- include_tasks: installer_version.yml
+- ansible.builtin.include_tasks: installer_version.yml
 
 - name: 'Set internal installer options'
-  set_fact:
+  ansible.builtin.set_fact:
     foreman_installer_options_internal_use_only: "{{ [ '--upgrade', '--certs-update-all' ] + foreman_installer_options_internal_use_only }}"
   when:
     - foreman_installer_version is version('2.1', '<')
     - foreman_installer_scenario != 'foreman'
 
 - name: 'Run installer upgrade'
-  import_tasks: "install.yml"
+  ansible.builtin.import_tasks: "install.yml"
   vars:
     foreman_installer_disable_system_checks: "{{ foreman_installer_scenario != 'foreman' }}"

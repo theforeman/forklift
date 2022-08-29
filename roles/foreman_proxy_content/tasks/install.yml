@@ -1,34 +1,34 @@
 ---
 - name: 'Gather facts from {{ foreman_proxy_content_server }}'
-  setup:
+  ansible.builtin.setup:
   delegate_to: "{{ foreman_proxy_content_server }}"
   delegate_facts: true
 
 - name: 'Get Server Hostname'
-  set_fact:
+  ansible.builtin.set_fact:
     server_fqdn: "{{ hostvars[foreman_proxy_content_server].ansible_nodename }}"
 
 - name: 'Get Foreman settings'
-  slurp:
+  ansible.builtin.slurp:
     src: "{{ foreman_directory }}/settings.yaml"
   delegate_to: "{{ foreman_proxy_content_server }}"
   register: foreman_settings
 
 - name: 'Get OAuth consumer data from settings'
-  set_fact:
+  ansible.builtin.set_fact:
     oauth_consumer_key: "{{ foreman_settings_yaml[':oauth_consumer_key'] }}"
     oauth_consumer_secret: "{{ foreman_settings_yaml[':oauth_consumer_secret'] }}"
   vars:
     foreman_settings_yaml: "{{ (foreman_settings['content'] | b64decode | from_yaml) }}"
 
-- include_tasks: certs_generate.yml
+- ansible.builtin.include_tasks: certs_generate.yml
 
 - name: 'Change cert permissions'
-  file: path='/etc/pki/katello/private' mode=0775
+  ansible.builtin.file: path='/etc/pki/katello/private' mode=0775
   delegate_to: "{{ foreman_proxy_content_server }}"
   when: devel is defined and devel
 
 - name: 'Install Capsule Installer RPM'
-  yum:
+  ansible.builtin.yum:
     name: foreman-proxy-content
   when: not custom_install

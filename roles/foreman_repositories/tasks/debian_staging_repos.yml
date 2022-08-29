@@ -1,17 +1,17 @@
 ---
 - name: 'Install Foreman GPG key'
-  get_url:
+  ansible.builtin.get_url:
     url: https://stagingdeb.theforeman.org/foreman.asc
     dest: /etc/apt/trusted.gpg.d/foreman.asc
     mode: '0444'
 
 - name: 'Install Foreman {{ foreman_repositories_version }} repository'
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb http://stagingdeb.theforeman.org {{ ansible_distribution_release }} theforeman-{{ foreman_repositories_version }}"
     state: present
 
 - name: 'Setup Foreman {{ foreman_repositories_version }} plugins repository'
-  apt_repository:
+  ansible.builtin.apt_repository:
     # No plugins staging repository
     repo: "deb http://deb.theforeman.org plugins {{ foreman_repositories_version }}"
     state: "{{ foreman_repositories_plugins | ternary('present', 'absent') }}"

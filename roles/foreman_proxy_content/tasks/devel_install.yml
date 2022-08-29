@@ -1,15 +1,15 @@
 ---
 - name: 'Query Foreman server'
-  uri:
+  ansible.builtin.uri:
     url: http://localhost:3000/api/v2/ping
   delegate_to: "{{ foreman_proxy_content_server }}"
   ignore_errors: True
   register: foreman_get
 
 - name: 'Check for rails server'
-  fail: msg="No rails server detected running on {{ foreman_proxy_content_server }}"
+  ansible.builtin.fail: msg="No rails server detected running on {{ foreman_proxy_content_server }}"
   when: foreman_get.status != 200
 
 - name: 'Add group foreman'
-  group: name=foreman state=present
+  ansible.builtin.group: name=foreman state=present
   delegate_to: "{{ foreman_proxy_content_server }}"

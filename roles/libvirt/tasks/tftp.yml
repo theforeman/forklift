@@ -1,6 +1,6 @@
 ---
 - name: 'create the provisioning libvirt network'
-  virt_net:
+  community.libvirt.virt_net:
     command: define
     name: provision
     xml: '{{ lookup("template", "../templates/network.xml.j2") }}'
@@ -8,32 +8,32 @@
 # libvirt seems to have bug that it does not create the symlink even if the network was defined with auto provisioning
 # so we ensure the symlink exists and network autostarts after reboot
 - name: 'make provisioning network autostart on reboot'
-  file: state=link src=/etc/libvirt/qemu/networks/provision.xml path=/etc/libvirt/qemu/networks/autostart/provision.xml
+  ansible.builtin.file: state=link src=/etc/libvirt/qemu/networks/provision.xml path=/etc/libvirt/qemu/networks/autostart/provision.xml
 
 - name: 'create the provisioning storage'
-  virt_pool:
+  community.libvirt.virt_pool:
     command: define
     name: provision
     xml: '{{ lookup("template", "../templates/storage.xml.j2") }}'
 
 # Setup TFTP for libvirt
 - name: 'create /var/lib/tftpboot'
-  file: path=/var/lib/tftpboot state=directory mode=0755
+  ansible.builtin.file: path=/var/lib/tftpboot state=directory mode=0755
 
 - name: 'create /var/lib/tftpboot/boot'
-  file: path=/var/lib/tftpboot/boot state=directory mode=0755
+  ansible.builtin.file: path=/var/lib/tftpboot/boot state=directory mode=0755
 
 - name: 'create /var/lib/tftpboot/pxelinux.cfg'
-  file: path=/var/lib/tftpboot/pxelinux.cfg state=directory mode=0755
+  ansible.builtin.file: path=/var/lib/tftpboot/pxelinux.cfg state=directory mode=0755
 
 - name: 'install syslinux for tftp directory'
-  yum: name=syslinux state=present
+  ansible.builtin.yum: name=syslinux state=present
 
 - name: 'copy syslinux files to /var/lib/tftpboot'
-  shell: cp /usr/share/syslinux/{pxelinux.0,menu.c32,chain.c32} /var/lib/tftpboot
+  ansible.builtin.shell: cp /usr/share/syslinux/{pxelinux.0,menu.c32,chain.c32} /var/lib/tftpboot
 
 - name: 'chown /var/lib/tftpboot for foreman-proxy user'
-  file:
+  ansible.builtin.file:
     path: /var/lib/tftpboot
     state: directory
     owner: foreman-proxy
@@ -41,10 +41,10 @@
     recurse: true
 
 - name: 'setuid on /var/lib/tftpboot'
-  shell: set -o pipefail && find /var/lib/tftpboot/ -type d | xargs chmod g+s
+  ansible.builtin.shell: set -o pipefail && find /var/lib/tftpboot/ -type d | xargs chmod g+s
 
 - name: 'start the provision libvirt network'
-  virt_net: state=active name=provision autostart=yes
+  community.libvirt.virt_net: state=active name=provision autostart=yes
 
 - name: 'start the provision libvirt storage pool'
-  virt_pool: state=active name=provision autostart=yes
+  community.libvirt.virt_pool: state=active name=provision autostart=yes

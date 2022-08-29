@@ -1,6 +1,6 @@
 ---
 - name: 'Create hosts'
-  shell: >
+  ansible.builtin.shell: >
     set -o pipefail &&
     {{ foreman_seeder_hosts_hammer }} host create
     --hostgroup '{{ item.hostgroup }}'

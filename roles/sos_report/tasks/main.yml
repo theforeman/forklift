@@ -1,15 +1,15 @@
 ---
 - name: "Load OS variables"
-  include_vars: "{{ ansible_os_family }}.yml"
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
 
 - name: 'install sos'
-  package:
+  ansible.builtin.package:
     name: '{{ sos_package }}'
     state: present
 
 - name: 'Generate sosreport'
-  command: "sosreport --batch --tmp-dir={{ sosreport_output_dir }}"
+  ansible.builtin.command: "sosreport --batch --tmp-dir={{ sosreport_output_dir }}"
   ignore_errors: true
 
-- include_tasks: 'sosreport_fetch_results.yml'
+- ansible.builtin.include_tasks: 'sosreport_fetch_results.yml'
   when: sosreport_fetch

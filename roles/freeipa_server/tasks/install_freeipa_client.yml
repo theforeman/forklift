@@ -2,7 +2,7 @@
 - name: 'Add /etc/hosts record for FreeIPA'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/hosts
     regexp: ".*{{ ansible_nodename }}$"
     line: "{{ freeipa_server_ip }} {{ ansible_nodename }}"
@@ -11,21 +11,21 @@
 - name: 'Install FreeIPA client and admintools'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  yum:
+  ansible.builtin.yum:
     name: ipa-client,ipa-admintools
     state: latest
 
 - name: 'Register Foreman in FreeIPA'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  shell: ipa-client-install --domain {{ ansible_domain }} --server {{ ansible_nodename }} --mkhomedir --fixed-primary --realm={{ freeipa_server_realm }} --force-join -p {{ freeipa_server_kerberos_principal }}@{{ freeipa_server_realm }} -w {{ freeipa_server_realm_password }} -U
+  ansible.builtin.shell: ipa-client-install --domain {{ ansible_domain }} --server {{ ansible_nodename }} --mkhomedir --fixed-primary --realm={{ freeipa_server_realm }} --force-join -p {{ freeipa_server_kerberos_principal }}@{{ freeipa_server_realm }} -w {{ freeipa_server_realm_password }} -U
   args:
     creates: /etc/krb5.keytab
 
 - name: 'Run foreman-prepare-realm'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  shell: set -o pipefail && echo changeme | foreman-prepare-realm {{ freeipa_server_kerberos_principal }}@{{ freeipa_server_realm }} {{ katello_server }}
+  ansible.builtin.shell: set -o pipefail && echo changeme | foreman-prepare-realm {{ freeipa_server_kerberos_principal }}@{{ freeipa_server_realm }} {{ katello_server }}
   args:
     chdir: /root
     creates: /root/freeipa.keytab
@@ -33,29 +33,29 @@
 - name: 'Create HTTP principal'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  shell: set -o pipefail && echo changeme | kinit {{ freeipa_server_kerberos_principal }}
+  ansible.builtin.shell: set -o pipefail && echo changeme | kinit {{ freeipa_server_kerberos_principal }}
 
 - name: 'Add the host'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  shell: ipa host-show   {{ katello_server }}.{{ freeipa_server_domain }} || ipa host-add --ip-address {{ ansible_eth0.ipv4.address }} {{ katello_server }}.{{ freeipa_server_domain }}
+  ansible.builtin.shell: ipa host-show   {{ katello_server }}.{{ freeipa_server_domain }} || ipa host-add --ip-address {{ ansible_eth0.ipv4.address }} {{ katello_server }}.{{ freeipa_server_domain }}
 
 - name: 'Add the service'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  shell: ipa service-show HTTP/{{ katello_server }}.{{ freeipa_server_domain }} || ipa service-add HTTP/{{ katello_server }}.{{ freeipa_server_domain }} --force
+  ansible.builtin.shell: ipa service-show HTTP/{{ katello_server }}.{{ freeipa_server_domain }} || ipa service-add HTTP/{{ katello_server }}.{{ freeipa_server_domain }} --force
 
 - name: 'Get the keytab'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  shell: ipa-getkeytab -s {{ ansible_nodename }} -p HTTP/{{ katello_server }}.{{ freeipa_server_domain }}@{{ freeipa_server_realm }} -k /etc/httpd/conf/ipa.keytab
+  ansible.builtin.shell: ipa-getkeytab -s {{ ansible_nodename }} -p HTTP/{{ katello_server }}.{{ freeipa_server_domain }}@{{ freeipa_server_realm }} -k /etc/httpd/conf/ipa.keytab
   args:
     creates: /etc/httpd/conf/ipa.keytab
 
 - name: 'Copy the keytab'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  copy:
+  ansible.builtin.copy:
     src: /root/freeipa.keytab
     dest: /etc/foreman-proxy/freeipa.keytab
     remote_src: yes
@@ -65,4 +65,4 @@
 - name: 'Enable Realm with foreman-installer'
   become: true
   delegate_to: "{{ katello_server_origin }}"
-  shell: foreman-installer --foreman-proxy-realm=true --disable-system-checks
+  ansible.builtin.shell: foreman-installer --foreman-proxy-realm=true --disable-system-checks

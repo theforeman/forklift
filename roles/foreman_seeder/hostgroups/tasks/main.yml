@@ -1,7 +1,7 @@
 ---
 #testing both --name and --title for backward compatibility
 - name: 'Create operating systems'
-  shell: >
+  ansible.builtin.shell: >
     {% if 'minor' in item %}
     {% set title = item.name +' '+ item.major +'.'+ item.minor %}
     {% else %}
@@ -28,7 +28,7 @@
 
 # TODO: fix: Locations you cannot remove locations that are used by hosts or inherited.
 # - name: 'Add media to organizations'
-#   shell: >
+#   ansible.builtin.shell: >
 #     {{ foreman_seeder_hostgroups_hammer }} organization add-medium --name '{{ foreman_seeder_hostgroups_organization }}' --medium '{{ item.medium }}'
 #   with_items: '{{ foreman_seeder_operating_systems }}'
 #   when: foreman_seeder_hostgroups_use_taxonomies
@@ -36,7 +36,7 @@
 #     - seed
 #
 # - name: 'Add media to locations'
-#   shell: >
+#   ansible.builtin.shell: >
 #     {{ foreman_seeder_hostgroups_hammer }} location add-medium --name '{{ foreman_seeder_hostgroups_location }}' --medium '{{ item.medium }}'
 #   with_items: '{{ foreman_seeder_operating_systems }}'
 #   when: foreman_seeder_hostgroups_use_taxonomies
@@ -44,7 +44,7 @@
 #     - seed
 
 - name: 'Find kickstart templates'
-  shell: >
+  ansible.builtin.shell: >
     {{ foreman_seeder_hostgroups_hammer }} --output=json template list
     --search 'name ~ "Kickstart default"'
   register: kickstart_templates_json
@@ -52,13 +52,13 @@
     - seed
 
 - name: 'Set kickstart templates'
-  set_fact:
+  ansible.builtin.set_fact:
     kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
   tags:
     - seed
 
 - name: 'Find preseed templates'
-  shell: >
+  ansible.builtin.shell: >
     {{ foreman_seeder_hostgroups_hammer }} --output=json template list
     --search 'name ~ "Preseed default"'
   register: preseed_templates_json
@@ -66,13 +66,13 @@
     - seed
 
 - name: 'Set preseed templates'
-  set_fact:
+  ansible.builtin.set_fact:
     preseed_templates: "{{ preseed_templates_json.stdout|from_json }}"
   tags:
     - seed
 
 - name: 'Associate kickstart templates to operating systems'
-  shell: >
+  ansible.builtin.shell: >
     {% if 'minor' in item[0] %}
     {% set title = item[0].name +' '+ item[0].major +'.'+ item[0].minor %}
     {% else %}
@@ -90,7 +90,7 @@
     - seed
 
 - name: 'Associate preseed templates to operating systems'
-  shell: >
+  ansible.builtin.shell: >
     {% if 'minor' in item[0] %}
     {% set title = item[0].name +' '+ item[0].major +'.'+ item[0].minor %}
     {% else %}
@@ -108,7 +108,7 @@
     - seed
 
 - name: 'Find or create parent hostgroup'
-  shell: >
+  ansible.builtin.shell: >
     {{ foreman_seeder_hostgroups_hammer }} --output=silent hostgroup info --name "{{ foreman_seeder_hostgroups_parent_hostgroup }}" ||
     {{ foreman_seeder_hostgroups_hammer }} hostgroup create --name "{{ foreman_seeder_hostgroups_parent_hostgroup }}"
     {% if foreman_seeder_hostgroups_use_taxonomies %}
@@ -119,7 +119,7 @@
     - seed
 
 - name: 'Create hostgroups'
-  shell: >
+  ansible.builtin.shell: >
     {% if 'minor' in item %}
     {% set os_title = item.name +' '+ item.major +'.'+ item.minor %}
     {% else %}

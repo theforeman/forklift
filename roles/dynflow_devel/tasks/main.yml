@@ -1,2 +1,2 @@
 ---
-- include_tasks: dynflow_install.yml
+- ansible.builtin.include_tasks: dynflow_install.yml

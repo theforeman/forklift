@@ -1,9 +1,9 @@
 ---
-- include_tasks: devel_install.yml
+- ansible.builtin.include_tasks: devel_install.yml
   when: (foreman_proxy_content_upgrade == False and devel is defined and devel == True)
 
-- include_tasks: install.yml
+- ansible.builtin.include_tasks: install.yml
   when: foreman_proxy_content_upgrade == False
 
-- include_tasks: upgrade.yml
+- ansible.builtin.include_tasks: upgrade.yml
   when: foreman_proxy_content_upgrade == True

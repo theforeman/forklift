@@ -1,28 +1,28 @@
 ---
 - name: load epel_repositories
-  include_role:
+  ansible.builtin.include_role:
     role: epel_repositories
   when:
     - foreman_server_repositories_epel|bool
     - ansible_distribution_major_version == '7'
 
 - name: load puppet_repositories
-  include_role:
+  ansible.builtin.include_role:
     role: theforeman.operations.puppet_repositories
   when:
     - foreman_server_repositories_puppet|bool
 
 - name: load foreman_repositories
-  include_role:
+  ansible.builtin.include_role:
     role: foreman_repositories
   when: foreman_server_repositories_foreman|bool
 
 - name: load katello_repositories
-  include_role:
+  ansible.builtin.include_role:
     role: katello_repositories
   when: foreman_server_repositories_katello|bool
 
 - name: load foreman_client_repositories
-  include_role:
+  ansible.builtin.include_role:
     role: foreman_client_repositories
   when: foreman_server_repositories_foreman_client|bool

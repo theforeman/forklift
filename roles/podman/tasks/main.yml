@@ -1,23 +1,23 @@
 - name: 'Install podman'
   become: true
-  package:
+  ansible.builtin.package:
     name: 'podman'
 
 - name: Install shadow-utils
   become: true
-  package:
+  ansible.builtin.package:
     name: 'shadow-utils'
 
 - name: Set max user namespaces
   become: true
-  sysctl:
+  ansible.posix.sysctl:
     name: user.max_user_namespaces
     value: '100000'
 
 - name: Set subuid range for user
   become: true
-  command: usermod --add-subuids 10000-75535 {{ ansible_user }}
+  ansible.builtin.command: usermod --add-subuids 10000-75535 {{ ansible_user }}
 
 - name: Set subgid range for user
   become: true
-  command: usermod --add-subgids 10000-75535 {{ ansible_user }}
+  ansible.builtin.command: usermod --add-subgids 10000-75535 {{ ansible_user }}

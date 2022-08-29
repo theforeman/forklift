@@ -1,12 +1,12 @@
 ---
 - name: "Creating of {{ unprivileged_user_username }} user"
-  user:
+  ansible.builtin.user:
     name: "{{ unprivileged_user_username }}"
     comment: "John Vagrant"
   become: true
 
 - name: "Add {{ unprivileged_user_username }} to sudoers"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "/etc/sudoers.d/{{ unprivileged_user_username }}"
     state: present
     regexp: '^{{ unprivileged_user_username }}'
@@ -16,7 +16,7 @@
   become: true
 
 - name: "Create {{ unprivileged_user_username }} .ssh"
-  file:
+  ansible.builtin.file:
     path: "/home/{{ unprivileged_user_username }}/.ssh"
     owner: "{{ unprivileged_user_username }}"
     group: root
@@ -25,7 +25,7 @@
   become: true
 
 - name: "Ensure public key is in authorized_keys"
-  lineinfile:
+  ansible.builtin.lineinfile:
     line:  "{{ lookup('file', unprivileged_user_import_ssh_pub_key) }}"
     path:  "/home/{{ unprivileged_user_username }}/.ssh/authorized_keys"
     create: yes
@@ -36,19 +36,19 @@
   become: true
 
 - name: "Check /home/{{ unprivileged_user_username }}/.ssh/authorized_keys"
-  stat:
+  ansible.builtin.stat:
     path: /home/{{ unprivileged_user_username }}/.ssh/authorized_keys
   register: authorized_keys_file
   become: true
 
 - block:
     - name: "Check /root/.ssh/authorized_keys"
-      stat:
+      ansible.builtin.stat:
         path: /root/.ssh/authorized_keys
       register: root_authorized_keys_file
 
     - name: "Copy /root/.ssh/authorized_keys"
-      copy:
+      ansible.builtin.copy:
         remote_src: true
         src:  /root/.ssh/authorized_keys
         owner: "{{ unprivileged_user_username }}"

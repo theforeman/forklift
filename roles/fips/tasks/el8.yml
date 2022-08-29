@@ -1,8 +1,8 @@
 ---
 - name: Install FIPS package
-  package:
+  ansible.builtin.package:
     name: crypto-policies-scripts
     state: present
 
 - name: enable fips mode
-  command: /usr/bin/fips-mode-setup --enable
+  ansible.builtin.command: /usr/bin/fips-mode-setup --enable

@@ -1,6 +1,6 @@
 ---
 - name: 'Set up qpid Copr repository'
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: qpid
     description: Copr repo for qpid owned by @qpid
     baseurl: https://download.copr.fedorainfracloud.org/results/@qpid/qpid/epel-{{ ansible_distribution_major_version }}-$basearch/
