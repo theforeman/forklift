@@ -88,7 +88,7 @@
   args:
     creates: "{{ custom_certificates_ca_directory_certs }}/{{ custom_certificates_server }}.crt"
 
-- ansible.builtin.include: issue.yml
+- ansible.builtin.include_tasks: issue.yml
   when: custom_certificates_hostnames is defined
   with_items: "{{ custom_certificates_hostnames }}"
   loop_control:
