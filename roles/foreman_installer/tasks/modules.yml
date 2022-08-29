@@ -5,7 +5,6 @@
     state: present
   when:
     - foreman_repositories_version is defined
-    - foreman_repositories_version == "nightly" or foreman_repositories_version is version('2.5', '>=')
-    # Foreman 3.2+ *shouldn't* need this, but enable the foreman:el8 module instead
-    # However, not all of our infra is prepared to do this yet
-    #- foreman_repositories_version is version('3.1', '<=')
+    - foreman_repositories_version != "nightly"
+    - foreman_repositories_version is version('2.5', '>=')
+    - foreman_repositories_version is version('3.1', '<=')

@@ -1,3 +1,5 @@
 collections:
-  - theforeman.operations
+  - name: theforeman.operations
+    version: '>=1.2.3'
+
   - community.general
