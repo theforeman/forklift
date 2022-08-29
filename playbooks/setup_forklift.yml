@@ -32,7 +32,7 @@
           - rubygem-deep_merge
         state: 'present'
 
-    - name: 'install telemetry dependencies'
+    - name: 'Install telemetry dependencies'
       ansible.builtin.pip:
         name:
           - protobuf<3.21
