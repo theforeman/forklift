@@ -36,8 +36,10 @@
     state: "restarted"
   when: pdns_configured.changed
 
-- ansible.builtin.include_tasks: "schema.mysql.yml"
+- name: "Include schema.mysql.yml"
+  ansible.builtin.include_tasks: "schema.mysql.yml"
   when: powerdns_db_backend == "gmysql"
 
-- ansible.builtin.include_tasks: "zones.yml"
+- name: "Include zones.yml"
+  ansible.builtin.include_tasks: "zones.yml"
   when: powerdns_zones

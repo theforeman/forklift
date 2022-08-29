@@ -1,3 +1,4 @@
 ---
-- ansible.builtin.include_tasks: download.yml
+- name: Include download.yml
+  ansible.builtin.include_tasks: download.yml
   when: koji_task_ids != [] or koji_build_ids != []

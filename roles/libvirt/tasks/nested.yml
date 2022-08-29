@@ -1,15 +1,15 @@
-- name: 'check if Intel or AMD processor'
+- name: 'Check if Intel or AMD processor'
   ansible.builtin.shell: "grep -q Intel /proc/cpuinfo && echo -n 'intel' || echo -n 'amd'"
   ignore_errors: true
   register: cpu_type
 
-- name: 'rmmod kvm'
+- name: 'Rmmod kvm'
   ansible.builtin.command: "modprobe -r kvm_{{ cpu_type.stdout }}"
 
-- name: 'enable nested virtualization'
+- name: 'Enable nested virtualization'
   ansible.builtin.copy:
     dest: /etc/modprobe.d/kvm.conf
     content: "options kvm_{{ cpu_type.stdout }} nested=1"
 
-- name: 'insmod kvm with nested'
+- name: 'Insmod kvm with nested'
   ansible.builtin.command: "modprobe kvm_{{ cpu_type.stdout }} nested=1"

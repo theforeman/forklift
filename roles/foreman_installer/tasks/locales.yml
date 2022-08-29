@@ -13,7 +13,7 @@
     name: "{{ item }}"
   loop: "{{ query('env', 'LANG', 'LC_ADDRESS', 'LC_ALL', 'LC_COLLATE', 'LC_CTYPE', 'LC_IDENTIFICATION', 'LC_MEASUREMENT', 'LC_MESSAGES', 'LC_MONETARY', 'LC_NAME', 'LC_NUMERIC', 'LC_PAPER', 'LC_TELEPHONE', 'LC_TIME') | unique | select() | list }}"
 
-- name: configure /etc/default/locale
+- name: Configure /etc/default/locale
   ansible.builtin.copy:
     dest: /etc/default/locale
     content: |

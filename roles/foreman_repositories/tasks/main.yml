@@ -1,5 +1,6 @@
 ---
-- ansible.builtin.include_tasks: "{{ ansible_os_family|lower }}_{{ foreman_repositories_environment }}_repos.yml"
+- name: Include OS + environment specific tasks
+  ansible.builtin.include_tasks: "{{ ansible_os_family|lower }}_{{ foreman_repositories_environment }}_repos.yml"
 
 - name: 'Install centos-release-scl-rh'
   ansible.builtin.yum:

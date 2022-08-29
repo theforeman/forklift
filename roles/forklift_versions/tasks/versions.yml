@@ -1,5 +1,5 @@
 ---
-- name: get forklift versions
+- name: Get forklift versions
   forklift_versions:
     file: "{{ forklift_versions_file }}"
     scenario: "{{ scenario }}"
@@ -9,6 +9,6 @@
   delegate_to: localhost
   become: no
 
-- name: set individual component vars
+- name: Set individual component vars
   ansible.builtin.set_fact: "{{ item.key }}={{ item.value }}"
   with_items: "{{ forklift_versions.versions | dict2items }}"

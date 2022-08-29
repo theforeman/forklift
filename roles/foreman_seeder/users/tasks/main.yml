@@ -1,10 +1,10 @@
 ---
-- name: 'prepare hammer taxonomy options'
+- name: 'Prepare hammer taxonomy options'
   ansible.builtin.set_fact:
     foreman_seeder_users_hammer_taxonomy_params: "--organizations '{{ foreman_seeder_users_organization }}' --locations '{{ foreman_seeder_users_location }}'"
   when: foreman_seeder_users_use_taxonomies
 
-- name: 'prepare blank hammer taxonomy options'
+- name: 'Prepare blank hammer taxonomy options'
   ansible.builtin.set_fact:
     foreman_seeder_users_hammer_taxonomy_params: ""
   when: not foreman_seeder_users_use_taxonomies

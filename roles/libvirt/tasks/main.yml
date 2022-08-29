@@ -2,31 +2,33 @@
 - name: 'Set OS version dependent variables'
   ansible.builtin.include_vars: "el{{ ansible_distribution_major_version }}.yml"
 
-- name: 'install the virtualization hypervisor package group'
+- name: 'Install the virtualization hypervisor package group'
   ansible.builtin.yum:
     name: "@Virtualization Hypervisor"
     state: present
 
-- name: 'install the virtualization tools package group'
+- name: 'Install the virtualization tools package group'
   ansible.builtin.yum:
     name: "@Virtualization Tools"
     state: present
 
-- name: 'install the libvirt-python support'
+- name: 'Install the libvirt-python support'
   ansible.builtin.yum:
     name: "{{ libvirt_python_deps }}"
     state: present
 
-- name: 'disable libvirt authentication'
+- name: 'Disable libvirt authentication'
   ansible.builtin.lineinfile:
     dest: /etc/libvirt/libvirtd.conf
     line: 'auth_unix_rw = "none"'
 
-- ansible.builtin.include_tasks: 'nested.yml'
+- name: Include nested.yml
+  ansible.builtin.include_tasks: 'nested.yml'
   when: libvirt_nested
 
-- name: 'restart libvirt'
+- name: 'Restart libvirt'
   ansible.builtin.service: name=libvirtd state=restarted
 
-- ansible.builtin.include_tasks: 'tftp.yml'
+- name: Include tftp.yml
+  ansible.builtin.include_tasks: 'tftp.yml'
   when: libvirt_tftp

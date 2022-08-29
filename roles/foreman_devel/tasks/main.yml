@@ -1,13 +1,16 @@
 ---
-- ansible.builtin.include_tasks: check_forks_of_repos.yml
+- name: Include check_forks_of_repos.yml
+  ansible.builtin.include_tasks: check_forks_of_repos.yml
   when: katello_devel_github_username is defined and foreman_installer_options_internal_use_only is defined
 
-- ansible.builtin.include_tasks: rhel.yml
+- name: Include rhel.yml
+  ansible.builtin.include_tasks: rhel.yml
   when: ansible_distribution == "RedHat"
 
-- ansible.builtin.include_tasks: github_push_ssh.yml
+- name: Include github_push_ssh.yml
+  ansible.builtin.include_tasks: github_push_ssh.yml
   when: foreman_devel_github_push_ssh
 
-- name: setup reviewing script
+- name: Setup reviewing script
   ansible.builtin.include_role:
     name: reviewer

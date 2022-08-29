@@ -1,3 +1,6 @@
 ---
-- ansible.builtin.include_tasks: install_freeipa_server.yml
-- ansible.builtin.include_tasks: install_freeipa_client.yml
+- name: Include install_freeipa_server.yml
+  ansible.builtin.include_tasks: install_freeipa_server.yml
+
+- name: Include install_freeipa_client.yml
+  ansible.builtin.include_tasks: install_freeipa_client.yml

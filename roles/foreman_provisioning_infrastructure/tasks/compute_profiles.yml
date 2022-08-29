@@ -1,17 +1,17 @@
 ---
-- name: 'find compute profile'
+- name: 'Find compute profile'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} compute-profile info --name "libvirt-profile"
   register: foreman_provisioning_compute_profile
   ignore_errors: True
 
-- name: 'create compute profile'
+- name: 'Create compute profile'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} compute-profile create
     --name "libvirt-profile"
   when: "'Error' in foreman_provisioning_compute_profile.stderr"
 
-- name: 'create compute attributes'
+- name: 'Create compute attributes'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} compute-profile values create
     --compute-profile libvirt-profile

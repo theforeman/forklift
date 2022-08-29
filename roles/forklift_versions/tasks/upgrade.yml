@@ -1,5 +1,5 @@
 ---
-- name: get forklift upgrade versions
+- name: Get forklift upgrade versions
   forklift_versions:
     file: "{{ forklift_versions_file }}"
     scenario: "{{ scenario }}"
@@ -11,7 +11,7 @@
   delegate_to: localhost
   become: no
 
-- name: set individual upgrade vars
+- name: Set individual upgrade vars
   ansible.builtin.set_fact:
     forklift_upgrade_version_start: "{{ forklift_upgrade_versions.versions[0] }}"
     forklift_upgrade_version_intermediate: "{{ forklift_upgrade_versions.versions[1] }}"

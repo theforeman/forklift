@@ -1,5 +1,5 @@
 ---
-- name: make grub not care that it can't be installed
+- name: "Make grub not care that it can't be installed"
   ansible.builtin.debconf:
     name: grub-pc
     question: grub-pc/install_devices_empty

@@ -21,7 +21,8 @@
   vars:
     foreman_settings_yaml: "{{ (foreman_settings['content'] | b64decode | from_yaml) }}"
 
-- ansible.builtin.include_tasks: certs_generate.yml
+- name: Include certs_generate.yml
+  ansible.builtin.include_tasks: certs_generate.yml
 
 - name: 'Change cert permissions'
   ansible.builtin.file: path='/etc/pki/katello/private' mode=0775

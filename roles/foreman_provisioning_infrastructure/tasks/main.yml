@@ -1,24 +1,24 @@
 ---
 # Make sure admin does not default to any taxonomy
-- name: 'disable default context for admin'
+- name: 'Disable default context for admin'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} user update --login admin --default-organization-id 0 --default-location-id 0
 
 # Get the smart proxy ID of the local katello:
-- name: 'get smart proxy id'
+- name: 'Get smart proxy id'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} --output json proxy info --name {{ foreman_provisioning_proxy_name }}
   register: foreman_provisioning_smart_proxy_json
 
-- name: 'set smart proxy id'
+- name: 'Set smart proxy id'
   ansible.builtin.set_fact:
     foreman_provisioning_smart_proxy: "{{ foreman_provisioning_smart_proxy_json.stdout|from_json }}"
 
-- name: 'refresh features'
+- name: 'Refresh features'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} proxy refresh-features --id {{ foreman_provisioning_smart_proxy.Id }}
 
-- name: 'prepare hammer taxonomy options'
+- name: 'Prepare hammer taxonomy options'
   ansible.builtin.set_fact:
     foreman_provisioning_hammer_taxonomy_params: "--organizations '{{ foreman_provisioning_organization }}' --locations '{{ foreman_provisioning_location }}'"
 
@@ -27,13 +27,13 @@
     {{ foreman_provisioning_hammer }} proxy update --id {{ foreman_provisioning_smart_proxy.Id }} {{ foreman_provisioning_hammer_taxonomy_params }}
 
 # Compute Resource
-- name: 'find compute resource'
+- name: 'Find compute resource'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} compute-resource info --name "libvirt"
   register: foreman_provisioning_compute_resource
   ignore_errors: True
 
-- name: 'create compute resource'
+- name: 'Create compute resource'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} compute-resource create
     --name "libvirt"
@@ -49,17 +49,18 @@
   register: foreman_provisioning_compute_profile_cmd
   ignore_errors: True
 
-- ansible.builtin.include_tasks: compute_profiles.yml
+- name: 'Include compute_profiles.yml'
+  ansible.builtin.include_tasks: compute_profiles.yml
   when: "'Error' not in foreman_provisioning_compute_profile_cmd.stderr"
 
 # Domain
-- name: 'find domain'
+- name: 'Find domain'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} domain info --name "{{ foreman_provisioning_domain }}"
   register: foreman_provisioning_domain_task
   ignore_errors: True
 
-- name: 'create domain'
+- name: 'Create domain'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} domain create
     --name {{ foreman_provisioning_domain }}
@@ -67,7 +68,7 @@
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: foreman_provisioning_domain_task.stderr.find('not found') != -1
 
-- name: 'update domain'
+- name: 'Update domain'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} domain update
     --name {{ foreman_provisioning_domain }}
@@ -76,13 +77,13 @@
   when: "'Error' not in foreman_provisioning_domain_task.stderr"
 
 # Subnet
-- name: 'find subnet'
+- name: 'Find subnet'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} subnet info --name "{{ foreman_provisioning_network }}/24"
   register: foreman_provisioning_subnet
   ignore_errors: True
 
-- name: 'create subnet'
+- name: 'Create subnet'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} subnet create
     --name "{{ foreman_provisioning_network }}/24"
@@ -101,26 +102,26 @@
   when: foreman_provisioning_subnet.stderr.find('not found') != -1
 
 # Puppet
-- name: 'find environment'
+- name: 'Find environment'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} environment info --name "production"
   register: foreman_provisioning_environment
   ignore_errors: True
 
-- name: 'create environment'
+- name: 'Create environment'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} environment create
     --name production
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: foreman_provisioning_environment.stderr.find('not found') != -1
 
-- name: 'update environment'  # it may have been automatically created by puppet if katello reports first
+- name: 'Update environment'  # it may have been automatically created by puppet if katello reports first
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} environment update
     --name production
     {{ foreman_provisioning_hammer_taxonomy_params }}
 
 # query local nameservers http://projects.theforeman.org/issues/13419
-- name: 'query local nameservers'
+- name: 'Query local nameservers'
   ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} settings set --name query_local_nameservers --value true

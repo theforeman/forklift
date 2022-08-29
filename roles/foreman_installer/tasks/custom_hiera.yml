@@ -1,5 +1,5 @@
 ---
-- name: deploy custom-hiera.yaml
+- name: Deploy custom-hiera.yaml
   ansible.builtin.blockinfile:
     dest: /etc/foreman-installer/custom-hiera.yaml
     block: "{{ foreman_installer_custom_hiera }}"

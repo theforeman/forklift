@@ -14,14 +14,15 @@
   tags:
     - packages
 
-- name: "install git"
+- name: "Install git"
   ansible.builtin.package:
     name: 'git'
     state: 'present'
   tags:
     - packages
 
-- ansible.builtin.include_tasks: module_pr.yml
+- name: Include module_pr.yml for specified pull request
+  ansible.builtin.include_tasks: module_pr.yml
   vars:
     pr: true
   loop: "{{ foreman_installer_module_prs }}"
@@ -30,7 +31,8 @@
   tags:
     - packages
 
-- ansible.builtin.include_tasks: module_pr.yml
+- name: Include module_pr.yml for specified branch
+  ansible.builtin.include_tasks: module_pr.yml
   vars:
     branch: true
   loop: "{{ foreman_installer_module_branches }}"

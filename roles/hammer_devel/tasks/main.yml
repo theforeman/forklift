@@ -1,3 +1,6 @@
 ---
-- ansible.builtin.include_tasks: hammer_install.yml
-- ansible.builtin.include_tasks: hammer_config.yml
+- name: Include hammer_install.yml
+  ansible.builtin.include_tasks: hammer_install.yml
+
+- name: Include hammer_config.yml
+  ansible.builtin.include_tasks: hammer_config.yml

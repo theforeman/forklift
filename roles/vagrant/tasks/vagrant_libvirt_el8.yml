@@ -4,7 +4,7 @@
 # one shipped by EL8, so we need to build a few libs against it
 # before we can build the libvirt gem
 
-- name: 'install EL8-specific vagrant-libvirt requirements'
+- name: 'Install EL8-specific vagrant-libvirt requirements'
   ansible.builtin.package:
     name:
       - cmake
@@ -15,12 +15,12 @@
       - byacc
     state: present
 
-- name: 'create directory for vagrant library builds'
+- name: 'Create directory for vagrant library builds'
   ansible.builtin.file:
     path: /tmp/vagrant-libvirt-deps
     state: directory
 
-- name: 'download krb5 and libssh'
+- name: 'Download krb5 and libssh'
   ansible.builtin.unarchive:
     src: "{{ item }}"
     dest: /tmp/vagrant-libvirt-deps
@@ -29,37 +29,37 @@
     - https://www.libssh.org/files/0.9/libssh-0.9.4.tar.xz
     - https://kerberos.org/dist/krb5/1.18/krb5-1.18.2.tar.gz
 
-- name: 'configure krb5'
+- name: 'Configure krb5'
   ansible.builtin.command: ./configure
   args:
     chdir: /tmp/vagrant-libvirt-deps/krb5-1.18.2/src
 
-- name: 'build krb5'
+- name: 'Build krb5'
   ansible.builtin.command: make -j {{ ansible_processor_vcpus }}
   args:
     chdir: /tmp/vagrant-libvirt-deps/krb5-1.18.2/src
 
-- name: 'install krb5crypto libs'
+- name: 'Install krb5crypto libs'
   ansible.builtin.shell: cp lib/libk5crypto.so* /opt/vagrant/embedded/lib64/
   args:
     chdir: /tmp/vagrant-libvirt-deps/krb5-1.18.2/src
 
-- name: 'create libssh build directory'
+- name: 'Create libssh build directory'
   ansible.builtin.file:
     path: /tmp/vagrant-libvirt-deps/libssh-0.9.4/build
     state: directory
 
-- name: 'configure libssh'
+- name: 'Configure libssh'
   ansible.builtin.command: cmake .. -DOPENSSL_ROOT_DIR=/opt/vagrant/embedded/
   args:
     chdir: /tmp/vagrant-libvirt-deps/libssh-0.9.4/build
 
-- name: 'build libssh'
+- name: 'Build libssh'
   ansible.builtin.command: make -j {{ ansible_processor_vcpus }}
   args:
     chdir: /tmp/vagrant-libvirt-deps/libssh-0.9.4/build
 
-- name: 'install libssh libs'
+- name: 'Install libssh libs'
   ansible.builtin.shell: cp lib/libssh.so* /opt/vagrant/embedded/lib64/
   args:
     chdir: /tmp/vagrant-libvirt-deps/libssh-0.9.4/build

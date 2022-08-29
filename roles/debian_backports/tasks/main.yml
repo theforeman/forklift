@@ -1,8 +1,8 @@
 ---
-- name: add distribution-specific variables
+- name: Add distribution-specific variables
   ansible.builtin.include_vars: "{{ ansible_distribution }}.yml"
 
-- name: add backports repository
+- name: Add backports repository
   ansible.builtin.apt_repository:
     repo: 'deb {{ debian_backports_uri }} {{ debian_backports_components }}'
     state: present

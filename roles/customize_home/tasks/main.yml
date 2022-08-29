@@ -16,7 +16,8 @@
     path: "{{ ansible_env.HOME }}/.gitkeep/"
     state: absent
 
-- ansible.builtin.include_tasks: clone_specified_repo.yml
+- name: Include clone_specified_repo.yml
+  ansible.builtin.include_tasks: clone_specified_repo.yml
   when: customize_home_git_repo is defined
 
 - name: Check custom bootstrap script exists
@@ -24,5 +25,6 @@
     path: "{{ ansible_env.HOME }}/{{ customize_home_bootstrap_script }}"
   register: bootstrap_script_path
 
-- ansible.builtin.include_tasks: boostrap_script.yml
+- name: Include bootstrap_script.yml
+  ansible.builtin.include_tasks: boostrap_script.yml
   when: bootstrap_script_path.stat.exists

@@ -15,5 +15,6 @@
     chdir: "{{ pytest_project_directory }}"
   when: pytest_run_tests
 
-- ansible.builtin.include_tasks: local_env.yml
+- name: 'Include local_env.yml'
+  ansible.builtin.include_tasks: local_env.yml
   when: not pytest_run_tests

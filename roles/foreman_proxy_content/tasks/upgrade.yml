@@ -1,5 +1,6 @@
 ---
-- ansible.builtin.include_tasks: certs_generate.yml
+- name: Include certs_generate.yml
+  ansible.builtin.include_tasks: certs_generate.yml
 
 - name: 'Run installer upgrade'
   ansible.builtin.include_role:

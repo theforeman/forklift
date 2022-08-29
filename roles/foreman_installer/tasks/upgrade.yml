@@ -14,7 +14,8 @@
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version == '8'
 
-- ansible.builtin.include_tasks: installer_version.yml
+- name: Include installer_version.yml
+  ansible.builtin.include_tasks: installer_version.yml
 
 - name: 'Set internal installer options'
   ansible.builtin.set_fact:

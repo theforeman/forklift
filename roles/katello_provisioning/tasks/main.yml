@@ -1,6 +1,6 @@
 ---
 # Product
-- name: 'find product'
+- name: 'Find product'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} product info
     --name "CentOS"
@@ -8,7 +8,7 @@
   register: katello_provisioning_product
   ignore_errors: True
 
-- name: 'create centos product'
+- name: 'Create centos product'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} product create
     --name "CentOS"
@@ -16,7 +16,7 @@
   when: katello_provisioning_product.stderr.find('not found') != -1
 
 # CentOS
-- name: 'find centos repo'
+- name: 'Find centos repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository info
     --name "CentOS 7"
@@ -25,7 +25,7 @@
   register: katello_provisioning_repo
   ignore_errors: True
 
-- name: 'create centos repo'
+- name: 'Create centos repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository create
     --product="CentOS"
@@ -36,7 +36,7 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_repo.stderr.find('not found') != -1
 
-- name: 'sync the centos repo'
+- name: 'Sync the centos repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository synchronize
     --name "CentOS 7"
@@ -45,7 +45,7 @@
   when: katello_provisioning_sync_repos
 
 # Foreman Client
-- name: 'find client repo'
+- name: 'Find client repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository info
     --name "Foreman Client"
@@ -54,7 +54,7 @@
   register: foreman_client_repo
   ignore_errors: True
 
-- name: 'create client repo'
+- name: 'Create client repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository create
     --product="CentOS"
@@ -65,7 +65,7 @@
     --organization "{{ katello_provisioning_organization }}"
   when: foreman_client_repo.stderr.find('not found') != -1
 
-- name: 'sync the client repo'
+- name: 'Sync the client repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository synchronize
     --name "Foreman Client"
@@ -74,7 +74,7 @@
   when: katello_provisioning_sync_repos
 
 # Puppet 5
-- name: 'find puppet5 repo'
+- name: 'Find puppet5 repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository info
     --name "Puppet 5"
@@ -83,7 +83,7 @@
   register: katello_puppet_repo
   ignore_errors: True
 
-- name: 'create puppet5 repo'
+- name: 'Create puppet5 repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository create
     --product="CentOS"
@@ -94,7 +94,7 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_puppet_repo.stderr.find('not found') != -1
 
-- name: 'sync the puppet5 repo'
+- name: 'Sync the puppet5 repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository synchronize
     --name "Puppet 5"
@@ -103,7 +103,7 @@
   when: katello_provisioning_sync_repos
 
 # EPEL
-- name: 'find epel repo'
+- name: 'Find epel repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository info
     --name "EPEL 7"
@@ -112,7 +112,7 @@
   register: katello_epel_repo
   ignore_errors: True
 
-- name: 'create epel repo'
+- name: 'Create epel repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository create
     --product="CentOS"
@@ -123,7 +123,7 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_epel_repo.stderr.find('not found') != -1
 
-- name: 'sync the epel repo'
+- name: 'Sync the epel repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository synchronize
     --name "EPEL 7"
@@ -131,7 +131,7 @@
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_sync_repos
 
-- name: 'find foreman plugins repo'
+- name: 'Find foreman plugins repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository info
     --name "Foreman Plugins"
@@ -140,7 +140,7 @@
   register: katello_foreman_plugins_repo
   ignore_errors: True
 
-- name: 'create foreman plugins repo'
+- name: 'Create foreman plugins repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository create
     --product="CentOS"
@@ -151,7 +151,7 @@
     --organization "{{ katello_provisioning_organization }}"
   when: "'not found' in katello_foreman_plugins_repo.stderr"
 
-- name: 'sync foreman plugins repo'
+- name: 'Sync foreman plugins repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} repository synchronize
     --name "Foreman Plugins"
@@ -160,7 +160,7 @@
   when: katello_provisioning_sync_repos
 
 # Activation key
-- name: 'find activation key'
+- name: 'Find activation key'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} activation-key info
     --name "CentOS 7"
@@ -168,7 +168,7 @@
   register: katello_provisioning_activation_key
   ignore_errors: True
 
-- name: 'create activation key'
+- name: 'Create activation key'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} activation-key create
     --organization "{{ katello_provisioning_organization }}"
@@ -193,76 +193,77 @@
   with_items: "{{ subscriptions_json.stdout | from_json }}"
 
 # Associate templates
-- name: 'find CentOS 7'
+- name: 'Find CentOS 7'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} --output json os info --title "CentOS 7"
   register: katello_provisioning_centos7_json
   ignore_errors: True
 
-- name: 'get CentOS 7 info'
+- name: 'Get CentOS 7 info'
   ansible.builtin.set_fact:
     katello_provisioning_centos7: "{{ katello_provisioning_centos7_json.stdout|from_json }}"
   when: katello_provisioning_centos7_json is success
 
-- block:
+- name: 'Create CentOS 7 os when not found'
+  block:
     - name: 'Create CentOS_Linux 7'
       ansible.builtin.shell: >
         {{ katello_provisioning_hammer }} os create
         --name CentOS_Linux --major 7 --architectures x86_64 --family 'Redhat'
 
-    - name: 'find newly created CentOS_Linux 7'
+    - name: 'Find newly created CentOS_Linux 7'
       ansible.builtin.shell: >
         {{ katello_provisioning_hammer }} --output json os info --name "CentOS_Linux 7" ||
         {{ katello_provisioning_hammer }} --output json os info --title "CentOS_Linux 7"
       register: katello_provisioning_centos7_json_new
 
-    - name: 'get new CentOS 7 info'
+    - name: 'Get new CentOS 7 info'
       ansible.builtin.set_fact:
         katello_provisioning_centos7: "{{ katello_provisioning_centos7_json_new.stdout|from_json }}"
   when: "'not found' in katello_provisioning_centos7_json.stderr"
 
-- name: 'update partition table for CentOS 7'
+- name: 'Update partition table for CentOS 7'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} os update --id {{ katello_provisioning_centos7.Id }} --partition-tables 'Kickstart default'
   register: katello_provisioning_centos7_json
 
-- name: 'find kickstart templates'
+- name: 'Find kickstart templates'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} --output=json template list
     --search 'name ~ "Kickstart default"'
   register: kickstart_templates_json
 
-- name: 'set kickstart templates'
+- name: 'Set kickstart templates'
   ansible.builtin.set_fact:
     kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
 
-- name: 'find katello kickstart templates'
+- name: 'Find katello kickstart templates'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} --output=json template list
     --search 'name ~ "Katello Kickstart default"'
   register: katello_kickstart_templates_json
 
-- name: 'set kickstart templates'
+- name: 'Set kickstart templates'
   ansible.builtin.set_fact:
     katello_kickstart_templates: "{{ katello_kickstart_templates_json.stdout|from_json }}"
 
-- name: 'associate kickstart templates to CentOS 7'
+- name: 'Associate kickstart templates to CentOS 7'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS 7'
   with_items: "{{ kickstart_templates }}"
 
-- name: 'set default templates for CentOS 7'
+- name: 'Set default templates for CentOS 7'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --provisioning-template-id {{ item.Id }}
   with_items: "{{ kickstart_templates }}"
 
-- name: 'overwrite default templates with katello specific ones for CentOS 7'
+- name: 'Overwrite default templates with katello specific ones for CentOS 7'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --provisioning-template-id {{ item.Id }}
   with_items: "{{ katello_kickstart_templates }}"
 
 # Host group
-- name: 'find centos kickstart repo'
+- name: 'Find centos kickstart repo'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} --output=json repository info
     --name "CentOS 7"
@@ -270,17 +271,17 @@
     --organization "{{ katello_provisioning_organization }}"
   register: katello_provisioning_repo
 
-- name: 'set find centos kickstart repo'
+- name: 'Set find centos kickstart repo'
   ansible.builtin.set_fact:
     katello_provisioning_repo_json: "{{ katello_provisioning_repo.stdout|from_json }}"
 
-- name: 'find hostgroup Katello CentOS 7'
+- name: 'Find hostgroup Katello CentOS 7'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} hostgroup info --name 'Katello CentOS 7'
   register: katello_provisioning_hostgroup_katello_centos
   ignore_errors: True
 
-- name: 'create Katello CentOS 7 host group'
+- name: 'Create Katello CentOS 7 host group'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} hostgroup create
     --name "Katello CentOS 7"
@@ -295,14 +296,14 @@
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: katello_provisioning_hostgroup_katello_centos.stderr.find('not found') != -1
 
-- name: 'add activation key to Katello CentOS 7 host group'
+- name: 'Add activation key to Katello CentOS 7 host group'
   ansible.builtin.shell: >
       {{ katello_provisioning_hammer }} hostgroup set-parameter
       --hostgroup "Katello CentOS 7"
       --name kt_activation_keys
       --value "CentOS 7"
 
-- name: 'set enable-puppet5 parameter'
+- name: 'Set enable-puppet5 parameter'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} hostgroup set-parameter
     --hostgroup "Katello CentOS 7"
@@ -310,7 +311,7 @@
     --value true
 
 # Lifecycle environments
-- name: 'find lifecycle-environment Development'
+- name: 'Find lifecycle-environment Development'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} lifecycle-environment info
     --name Development
@@ -318,14 +319,14 @@
   register: katello_provisioning_lce_development
   ignore_errors: True
 
-- name: 'create lifecycle-environment Development'
+- name: 'Create lifecycle-environment Development'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} lifecycle-environment create
     --name Development --prior Library
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_lce_development.stderr.find('not found') != -1
 
-- name: 'find lifecycle-environment Production'
+- name: 'Find lifecycle-environment Production'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} lifecycle-environment info
     --name Development
@@ -333,7 +334,7 @@
   register: katello_provisioning_lce_production
   ignore_errors: True
 
-- name: 'create lifecycle-environment Production'
+- name: 'Create lifecycle-environment Production'
   ansible.builtin.shell: >
     {{ katello_provisioning_hammer }} lifecycle-environment create
     --name Production --prior Development

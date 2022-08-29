@@ -34,20 +34,20 @@
     group: root
     mode: '0644'
 
-- name: "[Irrelevant] add gssproxy config"
+- name: "Add gssproxy config [irrelevant]"
   become: yes
   ansible.builtin.copy:
     src: apache-gssproxy.conf
     dest: /etc/gssproxy/80-http.conf
 
-- name: "[Irrelevant] start gssproxy service"
+- name: "Start gssproxy service [irrelevant]"
   become: yes
   ansible.builtin.service:
     name: gssproxy
     state: started
     enabled: yes
 
-- name: "[Irrelevant] enable GSS_PROXY for httpd"
+- name: "Enable GSS_PROXY for httpd [irrelevant]"
   become: yes
   ansible.builtin.copy:
     src: httpd-gssproxy.service

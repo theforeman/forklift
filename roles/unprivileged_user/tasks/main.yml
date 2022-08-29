@@ -41,7 +41,8 @@
   register: authorized_keys_file
   become: true
 
-- block:
+- name: "Copy root authorized_keys to unprivileged user"
+  block:
     - name: "Check /root/.ssh/authorized_keys"
       ansible.builtin.stat:
         path: /root/.ssh/authorized_keys

@@ -11,9 +11,10 @@
     pytest_project_virtualenv_command: "{{ robottelo_virtualenv_command }}"
     pytest_project_version: "{{ robottelo_version }}"
 
-- ansible.builtin.include_tasks: ssh.yml
+- name: Include ssh.yml
+  ansible.builtin.include_tasks: ssh.yml
 
-- name: robottelo properties file
+- name: Robottelo properties file
   ansible.builtin.command: cp robottelo.properties.sample robottelo.properties
   args:
     chdir: "{{ robottelo_directory }}"

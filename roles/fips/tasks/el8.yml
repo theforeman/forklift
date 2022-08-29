@@ -4,5 +4,5 @@
     name: crypto-policies-scripts
     state: present
 
-- name: enable fips mode
+- name: Enable fips mode
   ansible.builtin.command: /usr/bin/fips-mode-setup --enable

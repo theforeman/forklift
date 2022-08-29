@@ -1,5 +1,6 @@
 ---
-- ansible.builtin.include_tasks: installer_version.yml
+- name: Include installer_version.yml
+  ansible.builtin.include_tasks: installer_version.yml
 
 - name: 'Check if foreman_installer_options is a string'
   ansible.builtin.fail:

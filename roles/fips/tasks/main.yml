@@ -1,8 +1,9 @@
 ---
-- ansible.builtin.include_tasks: 'el{{ ansible_distribution_major_version }}.yml'
+- name: Include tasks specific to OS major version
+  ansible.builtin.include_tasks: 'el{{ ansible_distribution_major_version }}.yml'
   when: not ansible_fips
 
-- name: reboot vm
+- name: Reboot vm
   ansible.builtin.reboot:
   when: not ansible_fips
 
