@@ -12,7 +12,7 @@
 
 - name: 'Set smart proxy id'
   ansible.builtin.set_fact:
-    foreman_provisioning_smart_proxy: "{{ foreman_provisioning_smart_proxy_json.stdout|from_json }}"
+    foreman_provisioning_smart_proxy: "{{ foreman_provisioning_smart_proxy_json.stdout | from_json }}"
 
 - name: 'Refresh features'
   ansible.builtin.shell: >

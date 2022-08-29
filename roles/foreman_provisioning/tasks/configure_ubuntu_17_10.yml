@@ -13,7 +13,7 @@
 
 - name: 'Get Ubuntu 17.10 info'
   ansible.builtin.set_fact:
-    foreman_provisioning_ubuntu1710: "{{ foreman_provisioning_ubuntu1710_json.stdout|from_json }}"
+    foreman_provisioning_ubuntu1710: "{{ foreman_provisioning_ubuntu1710_json.stdout | from_json }}"
 
 - name: 'Find preseed templates'
   ansible.builtin.shell: >
@@ -23,7 +23,7 @@
 
 - name: 'Set preseed templates'
   ansible.builtin.set_fact:
-    preseed_templates: "{{ preseed_templates_json.stdout|from_json }}"
+    preseed_templates: "{{ preseed_templates_json.stdout | from_json }}"
 
 - name: 'Associate preseed templates to Ubuntu 17.10'
   ansible.builtin.shell: >

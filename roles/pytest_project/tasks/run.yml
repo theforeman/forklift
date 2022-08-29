@@ -6,7 +6,7 @@
 - name: 'Limit to markers'
   ansible.builtin.set_fact:
     pytest_project_command: "{{ pytest_project_command }} -m '{{ pytest_project_markers }}'"
-  when: pytest_project_markers|bool
+  when: pytest_project_markers | bool
 
 - name: 'Run tests'
   ansible.builtin.command: "{{ pytest_project_command }}"

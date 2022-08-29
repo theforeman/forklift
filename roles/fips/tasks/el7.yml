@@ -14,7 +14,7 @@
 - name: 'Generate boot=UUID=XXXX kernel command'
   ansible.builtin.set_fact:
     boot_cmd: "boot=UUID={{ boot_mount[0]['uuid'] }}"
-  when: boot_mount|length > 0
+  when: boot_mount | length > 0
 
 - name: 'Edit kernel command-line to include the fips=1 and boot=UUID=XXXX argument'
   ansible.builtin.shell: 'grubby --update-kernel=DEFAULT --args="fips=1 {{ boot_cmd | default() }}"'

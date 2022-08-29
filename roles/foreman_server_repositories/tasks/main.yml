@@ -10,19 +10,19 @@
   ansible.builtin.include_role:
     role: theforeman.operations.puppet_repositories
   when:
-    - foreman_server_repositories_puppet|bool
+    - foreman_server_repositories_puppet | bool
 
 - name: Load foreman_repositories
   ansible.builtin.include_role:
     role: foreman_repositories
-  when: foreman_server_repositories_foreman|bool
+  when: foreman_server_repositories_foreman | bool
 
 - name: Load katello_repositories
   ansible.builtin.include_role:
     role: katello_repositories
-  when: foreman_server_repositories_katello|bool
+  when: foreman_server_repositories_katello | bool
 
 - name: Load foreman_client_repositories
   ansible.builtin.include_role:
     role: foreman_client_repositories
-  when: foreman_server_repositories_foreman_client|bool
+  when: foreman_server_repositories_foreman_client | bool

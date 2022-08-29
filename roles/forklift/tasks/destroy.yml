@@ -1,6 +1,6 @@
 ---
 - name: 'Destroy boxes'
-  ansible.builtin.command: "vagrant destroy -f {{ forklift_boxes.keys()|join(' ') }}"
+  ansible.builtin.command: "vagrant destroy -f {{ forklift_boxes.keys() | join(' ') }}"
   args:
     chdir: "{{ forklift_directory }}"
 

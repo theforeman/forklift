@@ -19,7 +19,7 @@
 
 - name: 'Set internal installer options'
   ansible.builtin.set_fact:
-    foreman_installer_options_internal_use_only: "{{ [ '--upgrade', '--certs-update-all' ] + foreman_installer_options_internal_use_only }}"
+    foreman_installer_options_internal_use_only: "{{ ['--upgrade', '--certs-update-all'] + foreman_installer_options_internal_use_only }}"
   when:
     - foreman_installer_version is version('2.1', '<')
     - foreman_installer_scenario != 'foreman'

@@ -3,9 +3,9 @@
 - name: 'Create operating systems'
   ansible.builtin.shell: >
     {% if 'minor' in item %}
-    {% set title = item.name +' '+ item.major +'.'+ item.minor %}
+    {% set title = item.name + ' ' + item.major + '.' + item.minor %}
     {% else %}
-    {% set title = item.name +' '+ item.major %}
+    {% set title = item.name + ' ' + item.major %}
     {% endif %}
     {{ foreman_seeder_hostgroups_hammer }} --output=silent os info --name "{{ title }}" ||
     {{ foreman_seeder_hostgroups_hammer }} --output=silent os info --title "{{ title }}" ||
@@ -53,7 +53,7 @@
 
 - name: 'Set kickstart templates'
   ansible.builtin.set_fact:
-    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+    kickstart_templates: "{{ kickstart_templates_json.stdout | from_json }}"
   tags:
     - seed
 
@@ -67,16 +67,16 @@
 
 - name: 'Set preseed templates'
   ansible.builtin.set_fact:
-    preseed_templates: "{{ preseed_templates_json.stdout|from_json }}"
+    preseed_templates: "{{ preseed_templates_json.stdout | from_json }}"
   tags:
     - seed
 
 - name: 'Associate kickstart templates to operating systems'
   ansible.builtin.shell: >
     {% if 'minor' in item[0] %}
-    {% set title = item[0].name +' '+ item[0].major +'.'+ item[0].minor %}
+    {% set title = item[0].name + ' ' + item[0].major + '.' + item[0].minor %}
     {% else %}
-    {% set title = item[0].name +' '+ item[0].major %}
+    {% set title = item[0].name + ' ' + item[0].major %}
     {% endif %}
     {% if item[0].family == 'Redhat' %}
         {{ foreman_seeder_hostgroups_hammer }} template add-operatingsystem --id {{ item[1].Id }} --operatingsystem '{{ title }}'
@@ -92,9 +92,9 @@
 - name: 'Associate preseed templates to operating systems'
   ansible.builtin.shell: >
     {% if 'minor' in item[0] %}
-    {% set title = item[0].name +' '+ item[0].major +'.'+ item[0].minor %}
+    {% set title = item[0].name + ' ' + item[0].major + '.' + item[0].minor %}
     {% else %}
-    {% set title = item[0].name +' '+ item[0].major %}
+    {% set title = item[0].name + ' ' + item[0].major %}
     {% endif %}
     {% if item[0].family == 'Debian' %}
         {{ foreman_seeder_hostgroups_hammer }} template add-operatingsystem --id {{ item[1].Id }} --operatingsystem '{{ title }}'
@@ -121,11 +121,11 @@
 - name: 'Create hostgroups'
   ansible.builtin.shell: >
     {% if 'minor' in item %}
-    {% set os_title = item.name +' '+ item.major +'.'+ item.minor %}
+    {% set os_title = item.name + ' ' + item.major + '.' + item.minor %}
     {% else %}
-    {% set os_title = item.name +' '+ item.major %}
+    {% set os_title = item.name + ' ' + item.major %}
     {% endif %}
-    {% set name = 'Forklift '+ os_title %}
+    {% set name = 'Forklift ' + os_title %}
     {{ foreman_seeder_hostgroups_hammer }} --output=silent hostgroup info --name "{{ name }}" ||
     {{ foreman_seeder_hostgroups_hammer }} hostgroup create
     --name '{{ name }}'

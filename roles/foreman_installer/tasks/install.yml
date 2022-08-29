@@ -23,10 +23,10 @@
 
 - name: 'Run installer'
   ansible.builtin.shell: >
-      {{ foreman_installer_command }} {{ (foreman_installer_verbose|bool) | ternary("-v", "") }}
-      {{ (foreman_installer_no_colors|bool) | ternary("--no-colors", "") }}
-      {{ (foreman_installer_version is version('3.4', '<') and foreman_installer_disable_system_checks|bool) | ternary("--disable-system-checks", "") }}
-      {{ (foreman_installer_version is version('3.4', '>=') and foreman_installer_disable_system_checks|bool and foreman_installer_scenario in ['katello']) | ternary("--tuning development", "") }}
+      {{ foreman_installer_command }} {{ (foreman_installer_verbose | bool) | ternary("-v", "") }}
+      {{ (foreman_installer_no_colors | bool) | ternary("--no-colors", "") }}
+      {{ (foreman_installer_version is version('3.4', '<') and foreman_installer_disable_system_checks | bool) | ternary("--disable-system-checks", "") }}
+      {{ (foreman_installer_version is version('3.4', '>=') and foreman_installer_disable_system_checks | bool and foreman_installer_scenario in ['katello']) | ternary("--tuning development", "") }}
       {{ foreman_installer_scenario_flag }} {{ foreman_installer_scenario }}
       {{ foreman_installer_options_joined }}
   when: not foreman_installer_skip_installer

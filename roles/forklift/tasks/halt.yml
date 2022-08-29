@@ -1,5 +1,5 @@
 ---
 - name: 'Halt boxes'
-  ansible.builtin.command: "vagrant halt {{ forklift_boxes.keys()|join(' ') }}"
+  ansible.builtin.command: "vagrant halt {{ forklift_boxes.keys() | join(' ') }}"
   args:
     chdir: "{{ forklift_directory }}"

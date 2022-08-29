@@ -201,7 +201,7 @@
 
 - name: 'Get CentOS 7 info'
   ansible.builtin.set_fact:
-    katello_provisioning_centos7: "{{ katello_provisioning_centos7_json.stdout|from_json }}"
+    katello_provisioning_centos7: "{{ katello_provisioning_centos7_json.stdout | from_json }}"
   when: katello_provisioning_centos7_json is success
 
 - name: 'Create CentOS 7 os when not found'
@@ -219,7 +219,7 @@
 
     - name: 'Get new CentOS 7 info'
       ansible.builtin.set_fact:
-        katello_provisioning_centos7: "{{ katello_provisioning_centos7_json_new.stdout|from_json }}"
+        katello_provisioning_centos7: "{{ katello_provisioning_centos7_json_new.stdout | from_json }}"
   when: "'not found' in katello_provisioning_centos7_json.stderr"
 
 - name: 'Update partition table for CentOS 7'
@@ -235,7 +235,7 @@
 
 - name: 'Set kickstart templates'
   ansible.builtin.set_fact:
-    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+    kickstart_templates: "{{ kickstart_templates_json.stdout | from_json }}"
 
 - name: 'Find katello kickstart templates'
   ansible.builtin.shell: >
@@ -245,7 +245,7 @@
 
 - name: 'Set kickstart templates'
   ansible.builtin.set_fact:
-    katello_kickstart_templates: "{{ katello_kickstart_templates_json.stdout|from_json }}"
+    katello_kickstart_templates: "{{ katello_kickstart_templates_json.stdout | from_json }}"
 
 - name: 'Associate kickstart templates to CentOS 7'
   ansible.builtin.shell: >
@@ -273,7 +273,7 @@
 
 - name: 'Set find centos kickstart repo'
   ansible.builtin.set_fact:
-    katello_provisioning_repo_json: "{{ katello_provisioning_repo.stdout|from_json }}"
+    katello_provisioning_repo_json: "{{ katello_provisioning_repo.stdout | from_json }}"
 
 - name: 'Find hostgroup Katello CentOS 7'
   ansible.builtin.shell: >

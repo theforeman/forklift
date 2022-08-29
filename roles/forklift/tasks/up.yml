@@ -7,6 +7,6 @@
 # using --no-parallel here to avoid problems with libvirt storage volumes
 # see https://github.com/vagrant-libvirt/vagrant-libvirt/issues/850
 - name: 'Bring up boxes'
-  ansible.builtin.command: "vagrant up --no-parallel {{ forklift_boxes.keys()|join(' ') }}"
+  ansible.builtin.command: "vagrant up --no-parallel {{ forklift_boxes.keys() | join(' ') }}"
   args:
     chdir: "{{ forklift_directory }}"

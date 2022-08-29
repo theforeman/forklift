@@ -13,7 +13,7 @@
 
 - name: 'Get CentOS 9.3 info'
   ansible.builtin.set_fact:
-    foreman_provisioning_debian93: "{{ foreman_provisioning_debian93_json.stdout|from_json }}"
+    foreman_provisioning_debian93: "{{ foreman_provisioning_debian93_json.stdout | from_json }}"
 
 - name: 'Find preseed templates'
   ansible.builtin.shell: >
@@ -23,7 +23,7 @@
 
 - name: 'Set preseed templates'
   ansible.builtin.set_fact:
-    preseed_templates: "{{ preseed_templates_json.stdout|from_json }}"
+    preseed_templates: "{{ preseed_templates_json.stdout | from_json }}"
 
 - name: 'Associate preseed templates to Debian 9.3'
   ansible.builtin.shell: >

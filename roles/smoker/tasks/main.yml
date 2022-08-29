@@ -20,7 +20,7 @@
 - name: 'Write variables.json'
   ansible.builtin.copy:
     dest: "{{ smoker_variables_path }}"
-    content: "{{ smoker_variables|to_json }}"
+    content: "{{ smoker_variables | to_json }}"
 
 - name: 'Run Smoker via pytest_project'
   ansible.builtin.include_role:

@@ -13,7 +13,7 @@
 
 - name: 'Get Fedora 27 info'
   ansible.builtin.set_fact:
-    foreman_provisioning_fedora27: "{{ foreman_provisioning_fedora27_json.stdout|from_json }}"
+    foreman_provisioning_fedora27: "{{ foreman_provisioning_fedora27_json.stdout | from_json }}"
 
 - name: 'Find kickstart templates'
   ansible.builtin.shell: >
@@ -23,7 +23,7 @@
 
 - name: 'Set kickstart templates'
   ansible.builtin.set_fact:
-    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+    kickstart_templates: "{{ kickstart_templates_json.stdout | from_json }}"
 
 - name: 'Associate kickstart templates to Fedora 27'
   ansible.builtin.shell: >
