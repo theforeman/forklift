@@ -1,17 +1,29 @@
 ---
-- name: "Creating of {{ unprivileged_user_username }} user"
-  ansible.builtin.user:
-    name: "{{ unprivileged_user_username }}"
-    comment: "John Vagrant"
+- name: "Set group name"
+  ansible.builtin.set_fact:
+    unprivileged_user_groupname: "{{ unprivileged_user_primary_group | default(unprivileged_user_username) }}"
+
+- name: "Create groups"
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ unprivileged_user_additional_groups + [unprivileged_user_groupname] }}"
   become: true
 
-- name: "Add {{ unprivileged_user_username }} to sudoers"
+- name: "Create the {{ unprivileged_user_username }} user"
+  ansible.builtin.user:
+    name: "{{ unprivileged_user_username }}"
+    groups: "{{ unprivileged_user_additional_groups + [unprivileged_user_groupname] }}"
+    append: yes
+  become: true
+
+- name: "Grant passwordless sudo via {{ unprivileged_user_groupname }} group"
   ansible.builtin.lineinfile:
-    dest: "/etc/sudoers.d/{{ unprivileged_user_username }}"
+    dest: "/etc/sudoers.d/{{ unprivileged_user_groupname }}"
     state: present
-    regexp: '^{{ unprivileged_user_username }}'
-    line: '{{ unprivileged_user_username }} ALL=(ALL) NOPASSWD: ALL'
-    validate: 'visudo -cf %s'
+    regexp: '^%{{ unprivileged_user_groupname }}'
+    line: '%{{ unprivileged_user_groupname }} ALL=(ALL) NOPASSWD: ALL'
+    validate: '/usr/sbin/visudo -cf %s'
     create: yes
   become: true
 

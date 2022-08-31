@@ -1,2 +1,3 @@
 ---
 unprivileged_user_username: vagrant
+unprivileged_user_additional_groups: []
