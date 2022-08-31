@@ -18,13 +18,10 @@
   become: true
 
 - name: "Grant passwordless sudo via {{ unprivileged_user_groupname }} group"
-  ansible.builtin.lineinfile:
-    dest: "/etc/sudoers.d/{{ unprivileged_user_groupname }}"
-    state: present
-    regexp: '^%{{ unprivileged_user_groupname }}'
-    line: '%{{ unprivileged_user_groupname }} ALL=(ALL) NOPASSWD: ALL'
-    validate: '/usr/sbin/visudo -cf %s'
-    create: yes
+  community.general.sudoers:
+    name: "{{ unprivileged_user_groupname }}"
+    group: "{{ unprivileged_user_groupname }}"
+    commands: ALL
   become: true
 
 - name: "Add public key to authorized_keys from Host Machine"
