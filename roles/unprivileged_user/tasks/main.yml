@@ -27,24 +27,20 @@
     create: yes
   become: true
 
-- name: "Create {{ unprivileged_user_username }} .ssh"
-  ansible.builtin.file:
-    path: "/home/{{ unprivileged_user_username }}/.ssh"
-    owner: "{{ unprivileged_user_username }}"
-    group: root
-    state: directory
-    mode: 0700
+- name: "Add public key to authorized_keys from Host Machine"
+  ansible.posix.authorized_key:
+    user: "{{ unprivileged_user_username }}"
+    state: present
+    key: "{{ lookup('file', unprivileged_user_import_ssh_pub_key) }}"
+  when: unprivileged_user_import_ssh_pub_key | default(False)
   become: true
 
-- name: "Ensure public key is in authorized_keys"
-  ansible.builtin.lineinfile:
-    line:  "{{ lookup('file', unprivileged_user_import_ssh_pub_key) }}"
-    path:  "/home/{{ unprivileged_user_username }}/.ssh/authorized_keys"
-    create: yes
-    mode: 0600
-    owner: "{{ unprivileged_user_username }}"
+- name: "Add public key to authorized_keys via GitHub"
+  ansible.posix.authorized_key:
+    user: "{{ unprivileged_user_username }}"
     state: present
-  when: unprivileged_user_import_ssh_pub_key | default(False)
+    key: "https://github.com/{{ unprivileged_user_import_ssh_pub_key_github }}.keys"
+  when: unprivileged_user_import_ssh_pub_key_github | default(False)
   become: true
 
 - name: "Check /home/{{ unprivileged_user_username }}/.ssh/authorized_keys"
@@ -53,7 +49,7 @@
   register: authorized_keys_file
   become: true
 
-- name: "Copy root authorized_keys to unprivileged user"
+- name: "Inherit authorized_keys from root user if none imported for {{ unprivileged_user_username }}"
   block:
     - name: "Check /root/.ssh/authorized_keys"
       ansible.builtin.stat:
