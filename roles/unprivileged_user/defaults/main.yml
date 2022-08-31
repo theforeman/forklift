@@ -1,3 +1,6 @@
 ---
 unprivileged_user_username: vagrant
 unprivileged_user_additional_groups: []
+unprivileged_user_kerberos_install: False
+unprivileged_user_kerberos_copy_config: False
+unprivileged_user_kerberos_copy_ccache: False
