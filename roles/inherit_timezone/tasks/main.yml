@@ -1,0 +1,9 @@
+---
+- name: "Obtain Timezone from host machine"
+  ansible.builtin.command: timedatectl show --property=Timezone --value
+  delegate_to: localhost
+  register: localhost_timezone
+
+- name: "Set Timezone on guest machine"
+  community.general.timezone:
+    name: "{{ localhost_timezone.stdout }}"
