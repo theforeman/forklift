@@ -1,12 +1,38 @@
 ---
-- name: 'Write box file'
-  copy:
-    dest: "{{ forklift_directory }}/vagrant/boxes.d/80-tmp-{{ forklift_name }}.yaml"
-    content: "{{ forklift_boxes | to_yaml }}"
+# The locking is required if we want to call up in parallel:
+# https://github.com/hashicorp/vagrant/issues/12880
+- name: Wait until the lock file is removed
+  ansible.builtin.wait_for:
+    path: "{{ forklift_vagrant_lock }}"
+    delay: "{{ 120 | random(seed=forklift_name, step=10) }}"
+    state: absent
+  when:
+    - forklift_vagrant_lock is defined
 
-# using --no-parallel here to avoid problems with libvirt storage volumes
-# see https://github.com/vagrant-libvirt/vagrant-libvirt/issues/850
-- name: 'Bring up boxes'
-  command: "vagrant up --no-parallel {{ forklift_boxes.keys()|join(' ') }}"
-  args:
-    chdir: "{{ forklift_directory }}"
+- name: Setup boxes
+  block:
+    - name: Create lock file
+      ansible.builtin.file:
+        path: "{{ forklift_vagrant_lock }}"
+        state: touch
+      when:
+        - forklift_vagrant_lock is defined
+
+    - name: 'Write box file'
+      copy:
+        dest: "{{ forklift_directory }}/vagrant/boxes.d/80-tmp-{{ forklift_name }}.yaml"
+        content: "{{ forklift_boxes | to_yaml }}"
+
+    # using --no-parallel here to avoid problems with libvirt storage volumes
+    # see https://github.com/vagrant-libvirt/vagrant-libvirt/issues/850
+    - name: 'Bring up boxes'
+      command: "vagrant up --no-parallel {{ forklift_boxes.keys()|join(' ') }}"
+      args:
+        chdir: "{{ forklift_directory }}"
+  always:
+    - name: Remove lock file
+      ansible.builtin.file:
+        path: "{{ forklift_vagrant_lock }}"
+        state: absent
+      when:
+        - forklift_vagrant_lock is defined
