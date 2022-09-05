@@ -1,6 +1,6 @@
 ---
 - name: 'Setup Extra Common if Stream'
-  yum:
+  ansible.builtin.yum:
     name: "centos-stream-repos"
     state: latest
   tags:
@@ -10,7 +10,7 @@
     - ansible_distribution == 'CentOS'
 
 - name: 'Setup Epel Repository'
-  yum:
+  ansible.builtin.yum:
     name: "{{ epel_repositories_name }}"
     disable_gpg_check: True
     state: "{{ epel_repositories_state }}"

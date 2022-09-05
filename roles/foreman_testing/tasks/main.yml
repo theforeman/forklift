@@ -1,15 +1,15 @@
 ---
 - name: "Run bats tests"
-  include_role:
+  ansible.builtin.include_role:
     name: "bats"
   when: foreman_testing_bats
 
 - name: "Run hammer tests"
-  include_role:
+  ansible.builtin.include_role:
     name: "hammer_tests"
   when: foreman_testing_hammer_tests
 
 - name: "Run robottelo tests"
-  include_role:
+  ansible.builtin.include_role:
     name: "robottelo"
   when: foreman_testing_robottelo_tests

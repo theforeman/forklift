@@ -1,29 +1,29 @@
 ---
 - name: 'Install openssl'
-  yum:
+  ansible.builtin.yum:
     name: openssl
     state: present
 
 - name: 'Create certs directory'
-  file:
+  ansible.builtin.file:
     path: "{{ custom_certificates_ca_directory_certs }}"
     state: directory
     mode: 0755
 
 - name: 'Create keys directory'
-  file:
+  ansible.builtin.file:
     path: "{{ custom_certificates_ca_directory_keys }}"
     state: directory
     mode: 0755
 
 - name: 'Create requests directory'
-  file:
+  ansible.builtin.file:
     path: "{{ custom_certificates_ca_directory_requests }}"
     state: directory
     mode: 0755
 
 - name: 'Deploy configuration file'
-  template:
+  ansible.builtin.template:
     src: openssl.cnf.j2
     dest: "{{ custom_certificates_ca_directory }}/openssl.cnf"
     owner: root
@@ -31,7 +31,7 @@
     mode: 0644
 
 - name: 'Create index file'
-  file:
+  ansible.builtin.file:
     path: "{{ custom_certificates_ca_directory }}/index.txt"
     state: touch
     owner: root
@@ -39,7 +39,7 @@
     mode: 0644
 
 - name: 'Ensure serial starting number'
-  template:
+  ansible.builtin.template:
     src: serial.j2
     dest: "{{ custom_certificates_ca_directory }}/serial"
     force: no
@@ -48,7 +48,7 @@
     mode: 0644
 
 - name: 'Creating CA certificate and key'
-  command: >
+  ansible.builtin.command: >
     openssl req -new
       -x509
       -nodes
@@ -60,14 +60,14 @@
     creates: "{{ custom_certificates_ca_directory_certs }}/custom_ca.crt"
 
 - name: 'Create server key'
-  command: >
+  ansible.builtin.command: >
     openssl genrsa
       -out "{{ custom_certificates_ca_directory_keys }}/{{ custom_certificates_server }}.key"
   args:
     creates: "{{ custom_certificates_ca_directory_keys }}/{{ custom_certificates_server }}.key"
 
 - name: 'Create server signing request'
-  command: >
+  ansible.builtin.command: >
     openssl req
       -new
       -config "{{ custom_certificates_ca_directory }}/openssl.cnf"
@@ -77,7 +77,7 @@
     creates: "{{ custom_certificates_ca_directory_requests }}/{{ custom_certificates_server }}.csr"
 
 - name: 'Create server certificate'
-  command: >
+  ansible.builtin.command: >
     openssl ca
       -create_serial
       -batch
@@ -88,7 +88,8 @@
   args:
     creates: "{{ custom_certificates_ca_directory_certs }}/{{ custom_certificates_server }}.crt"
 
-- include: issue.yml
+- name: 'include issue.yml'
+  ansible.builtin.include_tasks: issue.yml
   when: custom_certificates_hostnames is defined
   with_items: "{{ custom_certificates_hostnames }}"
   loop_control:

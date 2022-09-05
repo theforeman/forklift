@@ -1,42 +1,42 @@
 ---
-- name: check if swap file exists
-  stat:
+- name: Check if swap file exists
+  ansible.builtin.stat:
     path: "{{ swapfile_path }}"
     get_checksum: False
     get_md5: False
   register: swapfile_check
 
-- name: create swap file {{ swapfile_path }}
-  command: dd if=/dev/zero of={{ swapfile_path }} count={{ swapfile_size }} bs=1MiB
+- name: Create swap file {{ swapfile_path }}
+  ansible.builtin.command: dd if=/dev/zero of={{ swapfile_path }} count={{ swapfile_size }} bs=1MiB
   when: not swapfile_check.stat.exists
 
-- name: set permissions on swap file
-  file:
+- name: Set permissions on swap file
+  ansible.builtin.file:
     path: "{{ swapfile_path }}"
     mode: 0600
 
-- name: mkswap {{ swapfile_path }}
-  command: mkswap {{ swapfile_path }}
+- name: Run mkswap {{ swapfile_path }}
+  ansible.builtin.command: mkswap {{ swapfile_path }}
   when: not swapfile_check.stat.exists
 
-- name: create swap entry in fstab
-  mount:
+- name: Create swap entry in fstab
+  ansible.posix.mount:
     name: none
     src: "{{ swapfile_path }}"
     fstype: swap
     state: present
 
-- name: get active swap
-  shell: "swapon --summary | grep '^{{ swapfile_path }}'"
+- name: Get active swap
+  ansible.builtin.shell: "swapon --summary | grep '^{{ swapfile_path }}'"
   register: swapfile_active
   ignore_errors: True
 
-- name: "activate {{ swapfile_path }}"
-  command: "swapon {{ swapfile_path }}"
+- name: "Activate {{ swapfile_path }}"
+  ansible.builtin.command: "swapon {{ swapfile_path }}"
   when: swapfile_active is failed
 
-- name: set vm.swappiness to 60
-  sysctl:
+- name: Set vm.swappiness to 60
+  ansible.posix.sysctl:
     name: vm.swappiness
     value: 60
     state: present

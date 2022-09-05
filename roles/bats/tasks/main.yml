@@ -1,49 +1,50 @@
 ---
 - name: "Load OS variables"
-  include_vars: "{{ ansible_os_family }}.yml"
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
 
-- name: "install required packages"
-  package:
+- name: "Install required packages"
+  ansible.builtin.package:
     name: "{{ bats_packages }}"
     state: present
 
 - name: "Install bats from package"
-  package:
+  ansible.builtin.package:
     name: "bats"
     state: present
   ignore_errors: yes
 
 - name: "Get /usr/bin/bats stat"
-  stat:
+  ansible.builtin.stat:
     path: "/usr/bin/bats"
   register: bats_bin
 
 - name: "Clone bats"
-  git:
+  ansible.builtin.git:
     repo: "https://github.com/sstephenson/bats.git"
     dest: "{{ bats_git_dir }}"
   when: not bats_bin.stat.exists
 
 - name: "Install bats"
-  shell: "{{ bats_git_dir }}/install.sh /usr"
+  ansible.builtin.shell: "{{ bats_git_dir }}/install.sh /usr"
   args:
     creates: "/usr/bin/bats"
 
 - name: "Clone forklift"
-  git:
+  ansible.builtin.git:
     repo: "{{ bats_forklift_repo }}"
     dest: "{{ bats_forklift_dir }}"
     update: "{{ bats_update_forklift }}"
     version: "{{ bats_forklift_version }}"
 
 - name: "Bats output directory"
-  file:
+  ansible.builtin.file:
     state: "directory"
     path: "{{ bats_output_dir }}"
 
-- block:
+- name: "Run tests"
+  block:
     - name: "Run bats"
-      shell: "bats --tap {{ item }} > {{ bats_output_dir }}/{{ item }}.tap"
+      ansible.builtin.shell: "bats --tap {{ item }} > {{ bats_output_dir }}/{{ item }}.tap"
       args:
         chdir: "{{ bats_forklift_dir }}/bats"
       with_items:
@@ -56,7 +57,7 @@
       environment: "{{ bats_environment }}"
 
     - name: "Read results"
-      shell: "cat {{ bats_output_dir }}/{{ item }}.tap"
+      ansible.builtin.shell: "cat {{ bats_output_dir }}/{{ item }}.tap"
       register: "test_results"
       with_items:
         - "{{ bats_setup | select() | list }}"
@@ -65,14 +66,15 @@
         - "{{ bats_teardown | select() | list }}"
 
     - name: "Output test results"
-      debug:
+      ansible.builtin.debug:
         msg: "{{ test_results.results | join('\n', attribute='stdout') }}"
 
-    - include_tasks: 'bats_fetch_results.yml'
+    - name: "Include bats_fetch_results.yml"
+      ansible.builtin.include_tasks: 'bats_fetch_results.yml'
       when: bats_fetch_results
 
     - name: "Fail if tests didn't pass"
-      fail:
+      ansible.builtin.fail:
         msg: "Test failed, please see {{ bats_output_dir }}/ for more information"
       when: item.rc != 0
       with_items: "{{ test_output.results }}"

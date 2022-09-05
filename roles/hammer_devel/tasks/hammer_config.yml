@@ -1,82 +1,82 @@
 ---
 - name: 'Add hammer config directory'
-  file: path=~/.hammer state=directory
+  ansible.builtin.file: path=~/.hammer state=directory
 
 - name: 'Add hammer module config directory'
-  file: path=~/.hammer/cli.modules.d state=directory
+  ansible.builtin.file: path=~/.hammer/cli.modules.d state=directory
 
 - name: 'Configure hammer'
-  command: cp ~/hammer-cli/config/cli_config.template.yml ~/.hammer/cli_config.yml
+  ansible.builtin.command: cp ~/hammer-cli/config/cli_config.template.yml ~/.hammer/cli_config.yml
   args:
     creates: ~/.hammer/cli_config.yml
 
 - name: 'Configure hammer-cli-foreman'
-  command: cp ~/hammer-cli-foreman/config/foreman.yml ~/.hammer/cli.modules.d/
+  ansible.builtin.command: cp ~/hammer-cli-foreman/config/foreman.yml ~/.hammer/cli.modules.d/
   args:
     creates: ~/.hammer/cli.modules.d/foreman.yml
 
 - name: 'Update hammer-cli-foreman host'
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: ~/.hammer/cli.modules.d/foreman.yml
     line: '  :host: {{ hammer_devel_host }}'
     regexp: 'host'
 
 - name: 'Update hammer-cli-foreman username'
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: ~/.hammer/cli.modules.d/foreman.yml
     line: '  :username: {{ hammer_devel_username }}'
     regexp: 'username'
 
 - name: 'Update hammer-cli-foreman password'
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: ~/.hammer/cli.modules.d/foreman.yml
     line: '  :password: {{ hammer_devel_password }}'
     regexp: 'password'
 
 - name: 'Enable hammer-cli-foreman-admin'
-  command: cp ~/hammer-cli-foreman-admin/config/foreman_admin.yml ~/.hammer/cli.modules.d/
+  ansible.builtin.command: cp ~/hammer-cli-foreman-admin/config/foreman_admin.yml ~/.hammer/cli.modules.d/
   args:
     creates: ~/.hammer/cli.modules.d/foreman_admin.yml
   when: ('theforeman/hammer-cli-foreman-admin' in hammer_devel_repositories)
 
 - name: 'Configure hammer-cli-foreman-admin logging core'
-  command: cp ~/hammer-cli-foreman-admin/config/cli.modules.d/foreman_admin_logging_core.yml ~/.hammer/cli.modules.d/
+  ansible.builtin.command: cp ~/hammer-cli-foreman-admin/config/cli.modules.d/foreman_admin_logging_core.yml ~/.hammer/cli.modules.d/
   args:
     creates: ~/.hammer/cli.modules.d/foreman_admin_logging_core.yml
   when: ('theforeman/hammer-cli-foreman-admin' in hammer_devel_repositories)
 
 - name: 'Configure hammer-cli-foreman-admin logging for katello'
-  command: cp ~/hammer-cli-foreman-admin/config/cli.modules.d/foreman_admin_logging_katello.yml ~/.hammer/cli.modules.d/
+  ansible.builtin.command: cp ~/hammer-cli-foreman-admin/config/cli.modules.d/foreman_admin_logging_katello.yml ~/.hammer/cli.modules.d/
   args:
     creates: ~/.hammer/cli.modules.d/foreman_admin_logging_katello.yml
   when: ('theforeman/hammer-cli-foreman-admin' in hammer_devel_repositories)
 
 - name: 'Configure hammer-cli-katello'
-  command: cp ~/hammer-cli-katello/config/katello.yml ~/.hammer/cli.modules.d/
+  ansible.builtin.command: cp ~/hammer-cli-katello/config/katello.yml ~/.hammer/cli.modules.d/
   args:
     creates: ~/.hammer/cli.modules.d/katello.yml
   when: ('katello/hammer-cli-katello' in hammer_devel_repositories)
 
 - name: 'Configure hammer-cli-csv'
-  command: cp ~/hammer-cli-csv/config/csv.yml ~/.hammer/cli.modules.d/
+  ansible.builtin.command: cp ~/hammer-cli-csv/config/csv.yml ~/.hammer/cli.modules.d/
   args:
     creates: ~/.hammer/cli.modules.d/csv.yml
   when: ('katello/hammer-cli-csv' in hammer_devel_repositories)
 
 - name: 'Configure hammer_cli_foreman_remote_execution'
-  command: cp ~/hammer_cli_foreman_remote_execution/config/foreman_remote_execution.yml ~/.hammer/cli.modules.d/
+  ansible.builtin.command: cp ~/hammer_cli_foreman_remote_execution/config/foreman_remote_execution.yml ~/.hammer/cli.modules.d/
   args:
     creates: ~/.hammer/cli.modules.d/foreman_remote_execution.yml
   when: ('theforeman/hammer_cli_foreman_remote_execution' in hammer_devel_repositories)
 
 - name: 'Configure hammer_cli_virt_who_configure'
-  command: cp ~/hammer-cli-foreman-virt-who-configure/config/foreman_virt_who_configure.yml ~/.hammer/cli.modules.d/
+  ansible.builtin.command: cp ~/hammer-cli-foreman-virt-who-configure/config/foreman_virt_who_configure.yml ~/.hammer/cli.modules.d/
   args:
     creates: ~/.hammer/cli.modules.d/foreman_virt_who_configure.yml
   when: ('theforeman/hammer-cli-foreman-virt-who-configure' in hammer_devel_repositories)
 
 - name: 'Alias hammer'
-  lineinfile: dest=~/.bash_profile line="alias hammer='BUNDLE_GEMFILE=~/hammer-cli-foreman/Gemfile bundle exec hammer'"
+  ansible.builtin.lineinfile: dest=~/.bash_profile line="alias hammer='BUNDLE_GEMFILE=~/hammer-cli-foreman/Gemfile bundle exec hammer'"
 
 - name: 'Alias rake'
-  lineinfile: dest=~/.bash_profile line="alias rake='bundle exec rake'"
+  ansible.builtin.lineinfile: dest=~/.bash_profile line="alias rake='bundle exec rake'"

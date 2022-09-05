@@ -1,23 +1,23 @@
 - name: "Install git"
-  package:
+  ansible.builtin.package:
     name: 'git'
     state: 'present'
 
 - name: Install reviewer tool from git
-  git:
+  ansible.builtin.git:
     repo: "{{ reviewer_install_repo }}"
     dest: "{{ reviewer_install_dir }}/reviewer"
   become: true
   become_user: "{{ reviewer_user }}"
 
 - name: Install symlink for reviewing
-  file:
+  ansible.builtin.file:
     src: "{{ reviewer_install_dir }}/reviewer/rpr"
     dest: /usr/bin/rpr
     state: link
 
 - name: Install symlink for cancelling review
-  file:
+  ansible.builtin.file:
     src: "{{ reviewer_install_dir }}/reviewer/rpr"
     dest: /usr/bin/rrpr
     state: link

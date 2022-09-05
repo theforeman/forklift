@@ -1,40 +1,40 @@
-- name: 'set CentOS medium name'
-  set_fact:
+- name: 'Set CentOS medium name'
+  ansible.builtin.set_fact:
     centos_medium_name: "{{ 'CentOS 7 mirror' if foreman_provisioning_foreman_version == 'nightly' or (foreman_provisioning_foreman_version is version_compare('2.1', '>=')) else 'CentOS mirror' }}"
 
-- name: 'create CentOS 7'
-  shell: >
+- name: 'Create CentOS 7'
+  ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} os info --title "CentOS 7" ||
     {{ foreman_provisioning_hammer }} os create
     --name CentOS --major 7 --architectures x86_64 --family 'Redhat' --media '{{ centos_medium_name }}' --partition-tables 'Kickstart default'
 
-- name: 'find CentOS 7'
-  shell: >
+- name: 'Find CentOS 7'
+  ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} --output json os info --name "CentOS 7" ||
     {{ foreman_provisioning_hammer }} --output json os info --title "CentOS 7"
   register: foreman_provisioning_centos73_json
   ignore_errors: True
 
-- name: 'get CentOS 7 info'
-  set_fact:
-    foreman_provisioning_centos73: "{{ foreman_provisioning_centos73_json.stdout|from_json }}"
+- name: 'Get CentOS 7 info'
+  ansible.builtin.set_fact:
+    foreman_provisioning_centos73: "{{ foreman_provisioning_centos73_json.stdout | from_json }}"
 
-- name: 'find kickstart templates'
-  shell: >
+- name: 'Find kickstart templates'
+  ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} --output=json template list
     --search 'name ~ "Kickstart default"'
   register: kickstart_templates_json
 
-- name: 'set kickstart templates'
-  set_fact:
-    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+- name: 'Set kickstart templates'
+  ansible.builtin.set_fact:
+    kickstart_templates: "{{ kickstart_templates_json.stdout | from_json }}"
 
-- name: 'associate kickstart templates to CentOS 7'
-  shell: >
+- name: 'Associate kickstart templates to CentOS 7'
+  ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS 7'
   with_items: "{{ kickstart_templates }}"
 
-- name: 'set default templates for CentOS 7'
-  shell: >
+- name: 'Set default templates for CentOS 7'
+  ansible.builtin.shell: >
     {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_centos73.Id }} --provisioning-template-id {{ item.Id }}
   with_items: "{{ kickstart_templates }}"

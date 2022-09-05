@@ -1,13 +1,13 @@
 ---
 - name: 'Find sosreport file'
-  find:
+  ansible.builtin.find:
     paths: "{{ sosreport_output_dir }}"
     patterns: "sosreport*"
     recurse: no
   register: sosreport_files
 
 - name: 'Fetch sosreport'
-  fetch:
+  ansible.builtin.fetch:
     src: "{{ item.path }}"
     dest: "{{ sosreport_local_dir }}"
   with_items: "{{ sosreport_files.files }}"

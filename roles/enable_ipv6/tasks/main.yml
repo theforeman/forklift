@@ -1,6 +1,6 @@
 ---
 - name: "Enable ipv6"
-  sysctl:
+  ansible.posix.sysctl:
     name: "{{ item }}"
     value: "0"
   with_items:

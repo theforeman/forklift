@@ -1,33 +1,33 @@
 ---
-- name: manage puppet package
-  package:
+- name: Manage puppet package
+  ansible.builtin.package:
     name: "{{ puppet_agent_package_name }}"
     state: "{{ puppet_agent_package_state }}"
   when: puppet_agent_package_manage
 
-- name: ensure puppet group
-  group:
+- name: Ensure puppet group
+  ansible.builtin.group:
     name: "{{ puppet_agent_group_name }}"
     state: "{{ puppet_agent_group_state }}"
   when: puppet_agent_group_manage
 
-- name: puppet ssl bootstrap
+- name: Puppet ssl bootstrap
   when: puppet_agent_bootstrap_manage
   block:
     # This makes sure 'sudo puppet' works which is needed for bootstrapping
-    - name: setup sudo secure_path
-      copy:
+    - name: Setup sudo secure_path
+      ansible.builtin.copy:
         content: "Defaults secure_path = \"/sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin\"\n"
         dest: /etc/sudoers.d/puppet
 
-    - name: construct puppet ssl bootstrap command
-      set_fact:
+    - name: Construct puppet ssl bootstrap command
+      ansible.builtin.set_fact:
         puppet_agent_bootstrap_command: "puppet ssl bootstrap --waitforcert {{ puppet_agent_bootstrap_waitforcert }}"
 
-    - name: add server option
-      set_fact:
+    - name: Add server option
+      ansible.builtin.set_fact:
         puppet_agent_bootstrap_command: "{{ puppet_agent_bootstrap_command }} --server {{ puppet_agent_bootstrap_server }}"
       when: puppet_agent_bootstrap_server is defined
 
-    - name: run puppet ssl boostrap command
-      command: "{{ puppet_agent_bootstrap_command }}"
+    - name: Run puppet ssl boostrap command
+      ansible.builtin.command: "{{ puppet_agent_bootstrap_command }}"

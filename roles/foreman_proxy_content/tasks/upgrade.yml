@@ -1,8 +1,9 @@
 ---
-- include_tasks: certs_generate.yml
+- name: Include certs_generate.yml
+  ansible.builtin.include_tasks: certs_generate.yml
 
 - name: 'Run installer upgrade'
-  include_role:
+  ansible.builtin.include_role:
     name: foreman_installer
   vars:
     foreman_installer_upgrade: true

@@ -4,8 +4,8 @@
 # one shipped by EL8, so we need to build a few libs against it
 # before we can build the libvirt gem
 
-- name: 'install EL8-specific vagrant-libvirt requirements'
-  package:
+- name: 'Install EL8-specific vagrant-libvirt requirements'
+  ansible.builtin.package:
     name:
       - cmake
       - zlib-devel
@@ -15,13 +15,13 @@
       - byacc
     state: present
 
-- name: 'create directory for vagrant library builds'
-  file:
+- name: 'Create directory for vagrant library builds'
+  ansible.builtin.file:
     path: /tmp/vagrant-libvirt-deps
     state: directory
 
-- name: 'download krb5 and libssh'
-  unarchive:
+- name: 'Download krb5 and libssh'
+  ansible.builtin.unarchive:
     src: "{{ item }}"
     dest: /tmp/vagrant-libvirt-deps
     remote_src: yes
@@ -29,37 +29,37 @@
     - https://www.libssh.org/files/0.9/libssh-0.9.4.tar.xz
     - https://kerberos.org/dist/krb5/1.18/krb5-1.18.2.tar.gz
 
-- name: 'configure krb5'
-  command: ./configure
+- name: 'Configure krb5'
+  ansible.builtin.command: ./configure
   args:
     chdir: /tmp/vagrant-libvirt-deps/krb5-1.18.2/src
 
-- name: 'build krb5'
-  command: make -j {{ ansible_processor_vcpus }}
+- name: 'Build krb5'
+  ansible.builtin.command: make -j {{ ansible_processor_vcpus }}
   args:
     chdir: /tmp/vagrant-libvirt-deps/krb5-1.18.2/src
 
-- name: 'install krb5crypto libs'
-  shell: cp lib/libk5crypto.so* /opt/vagrant/embedded/lib64/
+- name: 'Install krb5crypto libs'
+  ansible.builtin.shell: cp lib/libk5crypto.so* /opt/vagrant/embedded/lib64/
   args:
     chdir: /tmp/vagrant-libvirt-deps/krb5-1.18.2/src
 
-- name: 'create libssh build directory'
-  file:
+- name: 'Create libssh build directory'
+  ansible.builtin.file:
     path: /tmp/vagrant-libvirt-deps/libssh-0.9.4/build
     state: directory
 
-- name: 'configure libssh'
-  command: cmake .. -DOPENSSL_ROOT_DIR=/opt/vagrant/embedded/
+- name: 'Configure libssh'
+  ansible.builtin.command: cmake .. -DOPENSSL_ROOT_DIR=/opt/vagrant/embedded/
   args:
     chdir: /tmp/vagrant-libvirt-deps/libssh-0.9.4/build
 
-- name: 'build libssh'
-  command: make -j {{ ansible_processor_vcpus }}
+- name: 'Build libssh'
+  ansible.builtin.command: make -j {{ ansible_processor_vcpus }}
   args:
     chdir: /tmp/vagrant-libvirt-deps/libssh-0.9.4/build
 
-- name: 'install libssh libs'
-  shell: cp lib/libssh.so* /opt/vagrant/embedded/lib64/
+- name: 'Install libssh libs'
+  ansible.builtin.shell: cp lib/libssh.so* /opt/vagrant/embedded/lib64/
   args:
     chdir: /tmp/vagrant-libvirt-deps/libssh-0.9.4/build

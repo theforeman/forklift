@@ -1,18 +1,18 @@
 ---
-- name: 'prepare hammer taxonomy options'
-  set_fact:
+- name: 'Prepare hammer taxonomy options'
+  ansible.builtin.set_fact:
     foreman_seeder_users_hammer_taxonomy_params: "--organizations '{{ foreman_seeder_users_organization }}' --locations '{{ foreman_seeder_users_location }}'"
   when: foreman_seeder_users_use_taxonomies
 
-- name: 'prepare blank hammer taxonomy options'
-  set_fact:
+- name: 'Prepare blank hammer taxonomy options'
+  ansible.builtin.set_fact:
     foreman_seeder_users_hammer_taxonomy_params: ""
   when: not foreman_seeder_users_use_taxonomies
 
 
 # john with manager and viewer role
 - name: 'Find user john'
-  shell: >
+  ansible.builtin.shell: >
     {{ foreman_seeder_users_hammer }} user info --login "john"
   register: foreman_seeder_users_john
   ignore_errors: True
@@ -20,7 +20,7 @@
     - seed
 
 - name: 'Create user john'
-  shell: >
+  ansible.builtin.shell: >
     {{ foreman_seeder_users_hammer }} user create
     --login john
     --admin false
@@ -35,20 +35,20 @@
     - seed
 
 - name: 'Assign user john to group Manager'
-  shell: "{{ foreman_seeder_users_hammer }} user add-role --login john --role Manager"
+  ansible.builtin.shell: "{{ foreman_seeder_users_hammer }} user add-role --login john --role Manager"
   when: foreman_seeder_users_john.stderr.find('not found') != -1
   tags:
     - seed
 
 - name: 'Assign user john to group Manager'
-  shell: "{{ foreman_seeder_users_hammer }} user add-role --login john --role Viewer"
+  ansible.builtin.shell: "{{ foreman_seeder_users_hammer }} user add-role --login john --role Viewer"
   when: foreman_seeder_users_john.stderr.find('not found') != -1
   tags:
     - seed
 
 # jane with viewer role
 - name: 'Find user jane'
-  shell: >
+  ansible.builtin.shell: >
     {{ foreman_seeder_users_hammer }} user info --login "jane"
   register: foreman_seeder_users_jane
   ignore_errors: True
@@ -56,7 +56,7 @@
     - seed
 
 - name: 'Create user jane'
-  shell: >
+  ansible.builtin.shell: >
     {{ foreman_seeder_users_hammer }} user create
     --login jane
     --admin false
@@ -71,14 +71,14 @@
     - seed
 
 - name: 'Assign user jane to group Manager'
-  shell: "{{ foreman_seeder_users_hammer }} user add-role --login jane --role Viewer"
+  ansible.builtin.shell: "{{ foreman_seeder_users_hammer }} user add-role --login jane --role Viewer"
   when: foreman_seeder_users_jane.stderr.find('not found') != -1
   tags:
     - seed
 
 # jack with no roles
 - name: 'Create user jack'
-  shell: >
+  ansible.builtin.shell: >
     {{ foreman_seeder_users_hammer }} --output=silent user info --login "jack" ||
     {{ foreman_seeder_users_hammer }} user create
     --login jack

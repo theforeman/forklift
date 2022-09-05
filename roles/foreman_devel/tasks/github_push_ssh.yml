@@ -1,11 +1,11 @@
 ---
-- name: "install git"
-  package:
+- name: "Install git"
+  ansible.builtin.package:
     name: 'git'
     state: 'present'
 
 - name: 'Always push to github over ssh'
-  git_config:
+  community.general.git_config:
     name: 'url."git@github.com:".pushInsteadOf'
     value: 'https://github.com/'
     scope: system

@@ -1,12 +1,13 @@
 ---
-- include_tasks: 'el{{ ansible_distribution_major_version }}.yml'
+- name: Include tasks specific to OS major version
+  ansible.builtin.include_tasks: 'el{{ ansible_distribution_major_version }}.yml'
   when: not ansible_fips
 
-- name: reboot vm
-  reboot:
+- name: Reboot vm
+  ansible.builtin.reboot:
   when: not ansible_fips
 
 - name: 'Verify FIPS enabled - If failed means the machine is not FIPS enabled'
   # not using `ansible_fips` here, as that has not been refreshed yet
-  command: grep -q 1 /proc/sys/crypto/fips_enabled
+  ansible.builtin.command: grep -q 1 /proc/sys/crypto/fips_enabled
   changed_when: false

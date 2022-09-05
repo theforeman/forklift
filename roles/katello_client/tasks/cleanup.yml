@@ -1,24 +1,24 @@
 ---
 - name: 'Remove possibly faulty RHSM facts'
-  file:
+  ansible.builtin.file:
     name: /etc/rhsm/facts/katello.facts
     state: absent
 
 - name: 'Install subscription-manager'
-  yum:
+  ansible.builtin.yum:
     name: "subscription-manager"
     state: "present"
 
 - name: 'Try to unregister from any old upstream'
-  redhat_subscription:
+  community.general.redhat_subscription:
     state: "absent"
   ignore_errors: True
 
 - name: 'Clean old registrations'
-  command: subscription-manager clean
+  ansible.builtin.command: subscription-manager clean
 
 - name: 'Remove old katello-ca-consumer RPM'
-  yum:
+  ansible.builtin.yum:
     name: katello-ca-consumer-*
     state: absent
   ignore_errors: True

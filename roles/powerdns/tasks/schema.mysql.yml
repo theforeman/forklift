@@ -1,6 +1,6 @@
 ---
 - name: Check if DB tables exist
-  command: >
+  ansible.builtin.command: >
            mysql
            -u {{ powerdns_db_user }}
            --password={{ powerdns_db_pass }}
@@ -9,7 +9,7 @@
   register: "powerdns_tables"
 
 - name: "Import DB schema"
-  shell: >
+  ansible.builtin.shell: >
          set -o pipefail &&
          cat /usr/share/doc/pdns-backend-mysql-*/schema.mysql.sql |
          mysql

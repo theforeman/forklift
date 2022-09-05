@@ -1,5 +1,5 @@
 - name: 'Install openscap plugin'
-  include_role:
+  ansible.builtin.include_role:
     name: plugins/plugin_installer
   vars:
     plugin_installer_options: >
@@ -9,6 +9,6 @@
       {{ foreman_openscap_installer_options }}
 
 - name: 'Install foreman openscap puppet module'
-  yum:
+  ansible.builtin.yum:
     name: 'puppet-foreman_scap_client'
     state: 'present'

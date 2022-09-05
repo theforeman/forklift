@@ -1,5 +1,5 @@
 - name: Make boostrap file executable
-  file:
+  ansible.builtin.file:
     dest: "{{ ansible_env.HOME }}/{{ customize_home_bootstrap_script }}"
     state: touch
     follow: false
@@ -8,5 +8,5 @@
 
 # The script is already on the machine, so using 'command' instead of 'script'. 'script' copies the script from the Ansible controller
 - name: Run custom bootstrap script
-  command: "{{ ansible_env.HOME }}/{{ customize_home_bootstrap_script }}"
+  ansible.builtin.command: "{{ ansible_env.HOME }}/{{ customize_home_bootstrap_script }}"
   when: bootstrap_script_path.stat.exists

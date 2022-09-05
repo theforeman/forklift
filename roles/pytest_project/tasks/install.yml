@@ -1,12 +1,12 @@
 ---
 - name: Install packages
   become: true
-  package:
+  ansible.builtin.package:
     name: "{{ pytest_project_packages }}"
     state: present
 
 - name: Clone project
-  git:
+  ansible.builtin.git:
     repo: "{{ pytest_project_url }}"
     dest: "{{ pytest_project_directory }}"
     version: "{{ pytest_project_version }}"
@@ -14,7 +14,7 @@
     force: yes
 
 - name: Install requirements
-  pip:
+  ansible.builtin.pip:
     requirements: "{{ pytest_project_directory }}/{{ pytest_project_requirements }}"
     virtualenv: "{{ pytest_project_virtualenv_path }}"
     virtualenv_command: "{{ pytest_project_virtualenv_command }}"

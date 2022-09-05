@@ -3,39 +3,39 @@
   become: true
   tasks:
     - name: Find root partition
-      shell: set -o pipefail && df --output=source,fstype / | tail -n 1
+      ansible.builtin.shell: set -o pipefail && df --output=source,fstype / | tail -n 1
       register: root_partition
 
     - name: Install cloud-utils-growpart package
-      package:
+      ansible.builtin.package:
         name: cloud-utils-growpart
       when: ansible_os_family == 'RedHat'
 
     - name: Install cloud-guest-utils package
-      package:
+      ansible.builtin.package:
         name: cloud-guest-utils
       when: ansible_os_family == 'Debian'
 
     - name: Install e2fsprogs package
-      package:
+      ansible.builtin.package:
         name: e2fsprogs
       when: '"ext4" in root_partition.stdout'
 
     - name: Extend partition
-      command: growpart /dev/vda {{ root_partition.stdout.split(' ')[0].replace('/dev/vda', '') }}
+      ansible.builtin.command: growpart /dev/vda {{ root_partition.stdout.split(' ')[0].replace('/dev/vda', '') }}
       register: growpart_output
       failed_when:
         - growpart_output.rc != 0
         - '"NOCHANGE" not in growpart_output.stdout'
 
     - name: Grow XFS filesystem
-      command: xfs_growfs -d /
+      ansible.builtin.command: xfs_growfs -d /
       when: '"xfs" in root_partition.stdout'
 
     - name: Grow ext4 filesystem
-      command: resize2fs {{ root_partition.stdout.split(' ')[0] }}
+      ansible.builtin.command: resize2fs {{ root_partition.stdout.split(' ')[0] }}
       when: '"ext4" in root_partition.stdout'
 
     - name: Grow btrfs filesystem
-      command: btrfs filesystem resize max /
+      ansible.builtin.command: btrfs filesystem resize max /
       when: '"btrfs" in root_partition.stdout'

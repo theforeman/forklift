@@ -1,16 +1,18 @@
 ---
-- name: 'install hashicorp repo'
-  get_url:
+- name: 'Install hashicorp repo'
+  ansible.builtin.get_url:
     url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
     dest: /etc/yum.repos.d/hashicorp.repo
 
-- name: 'install vagrant'
-  yum:
+- name: 'Install vagrant'
+  ansible.builtin.yum:
     name: vagrant-{{ vagrant_version }}
     state: present
 
-- include_tasks: 'vagrant_libvirt.yml'
+- name: 'Include vagrant_libvirt.yml'
+  ansible.builtin.include_tasks: 'vagrant_libvirt.yml'
   when: vagrant_libvirt
 
-- include_tasks: 'vagrant_scp.yml'
+- name: 'Include vagrant_scp.yml'
+  ansible.builtin.include_tasks: 'vagrant_scp.yml'
   when: vagrant_scp

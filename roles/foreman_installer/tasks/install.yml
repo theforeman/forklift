@@ -1,17 +1,18 @@
 ---
-- include_tasks: installer_version.yml
+- name: Include installer_version.yml
+  ansible.builtin.include_tasks: installer_version.yml
 
 - name: 'Check if foreman_installer_options is a string'
-  fail:
+  ansible.builtin.fail:
     msg: 'foreman_installer_options must be an array'
   when: foreman_installer_options is string
 
 - name: 'Join options'
-  set_fact:
+  ansible.builtin.set_fact:
     foreman_installer_options_joined: "{{ foreman_installer_options | difference([] if foreman_installer_version is version('3.1', '>=') else ['--foreman-proxy-content-enable-ostree true']) | join(' ') }} {{ foreman_installer_options_internal_use_only | join(' ') }}"
 
 - name: 'Replace REX Script with REX SSH options for pre-3.3'
-  set_fact:
+  ansible.builtin.set_fact:
     foreman_installer_options_joined: "{{ foreman_installer_options_joined | replace(item.new, item.old) }}"
   when: foreman_installer_version is version('3.3', '<')
   with_items:
@@ -21,11 +22,11 @@
       old: '--foreman-proxy-plugin-remote-execution-ssh-install-key'
 
 - name: 'Run installer'
-  shell: >
-      {{ foreman_installer_command }} {{ (foreman_installer_verbose|bool) | ternary("-v", "") }}
-      {{ (foreman_installer_no_colors|bool) | ternary("--no-colors", "") }}
-      {{ (foreman_installer_version is version('3.4', '<') and foreman_installer_disable_system_checks|bool) | ternary("--disable-system-checks", "") }}
-      {{ (foreman_installer_version is version('3.4', '>=') and foreman_installer_disable_system_checks|bool and foreman_installer_scenario in ['katello']) | ternary("--tuning development", "") }}
+  ansible.builtin.shell: >
+      {{ foreman_installer_command }} {{ (foreman_installer_verbose | bool) | ternary("-v", "") }}
+      {{ (foreman_installer_no_colors | bool) | ternary("--no-colors", "") }}
+      {{ (foreman_installer_version is version('3.4', '<') and foreman_installer_disable_system_checks | bool) | ternary("--disable-system-checks", "") }}
+      {{ (foreman_installer_version is version('3.4', '>=') and foreman_installer_disable_system_checks | bool and foreman_installer_scenario in ['katello']) | ternary("--tuning development", "") }}
       {{ foreman_installer_scenario_flag }} {{ foreman_installer_scenario }}
       {{ foreman_installer_options_joined }}
   when: not foreman_installer_skip_installer

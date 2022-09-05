@@ -1,17 +1,17 @@
 ---
 - name: 'Import puppet classes'
-  command: >
+  ansible.builtin.command: >
     {{ foreman_openscap_hammer }} proxy import-classes --name {{ foreman_openscap_proxy_name }}
   when: foreman_openscap_proxy_name is defined
 
 - name: 'Import default scap content'
-  command: >
+  ansible.builtin.command: >
     foreman-rake foreman_openscap:bulk_upload:default
   when: foreman_openscap_proxy_name is defined
 
 # TODO: disabled until cli is fixed
 # - name: 'Create example policy'
-#   shell: >
+#   ansible.builtin.shell: >
 #     {{ foreman_openscap_hammer }} policy create --name 'Example policy'
 #      --period weekly --weekday monday
 #      --scap-content 'Red Hat centos6 default content'

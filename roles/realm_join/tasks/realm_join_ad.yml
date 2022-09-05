@@ -1,7 +1,7 @@
 ---
 - name: Ensure realm packages
   become: yes
-  package:
+  ansible.builtin.package:
     name:
       - sssd
       - adcli
@@ -15,13 +15,13 @@
     state: present
 
 - name: Find user - to find out if server is already joined
-  command: id '{{ foreman_realm_directory_admin_name | quote }}@{{ foreman_realm_domain | quote }}'
+  ansible.builtin.command: id '{{ foreman_realm_directory_admin_name | quote }}@{{ foreman_realm_domain | quote }}'
   register: realm_connected
   ignore_errors: True
 
 - name: Join the realm
   become: yes
-  expect:
+  ansible.builtin.expect:
     command: '/usr/sbin/realm join -v {{ foreman_realm }}'
     responses:
       (?i)password: '{{ foreman_realm_directory_admin_password }}'

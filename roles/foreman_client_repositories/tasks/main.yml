@@ -1,10 +1,11 @@
 ---
-- include_tasks: "{{ foreman_client_repositories_environment }}_repo.yml"
+- name: Include repositories_environment specific tasks
+  ansible.builtin.include_tasks: "{{ foreman_client_repositories_environment }}_repo.yml"
   when:
     - ansible_os_family == 'RedHat'
 
 - name: 'Clean yum'
-  command: 'yum clean all'
+  ansible.builtin.command: 'yum clean all'
   args:
     warn: false
   tags:

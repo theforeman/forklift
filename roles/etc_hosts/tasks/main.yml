@@ -1,6 +1,6 @@
 ---
 - name: "Build hosts file"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/hosts
     regexp: ".*{{ item.replace('.', '-') }}$"
     line: "{{ hostvars[item].ansible_host }} {{ item.replace('.', '-') }}.{{ etc_hosts_domain }} {{ item.replace('.', '-') }}"

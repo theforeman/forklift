@@ -1,6 +1,8 @@
 ---
-- include_tasks: versions.yml
+- name: Include versions.yml
+  ansible.builtin.include_tasks: versions.yml
   when: not upgrade
 
-- include_tasks: upgrade.yml
+- name: Include upgrade.yml
+  ansible.builtin.include_tasks: upgrade.yml
   when: upgrade

@@ -1,6 +1,6 @@
 ---
 - name: 'Creating signing request'
-  command: >
+  ansible.builtin.command: >
     openssl req -new
       -newkey rsa:2048
       -nodes
@@ -11,7 +11,7 @@
     creates: "{{ custom_certificates_ca_directory_requests }}/{{ custom_certificates_hostname }}.csr"
 
 - name: 'Sign signing request'
-  command: >
+  ansible.builtin.command: >
       openssl ca
         -config "{{ custom_certificates_ca_directory }}/openssl.cnf"
         -batch

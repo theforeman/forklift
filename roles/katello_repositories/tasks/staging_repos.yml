@@ -1,11 +1,11 @@
 ---
 - name: 'Remove katello-repos'
-  yum:
+  ansible.builtin.yum:
     name: katello-repos
     state: absent
 
 - name: 'Katello {{ katello_repositories_version }} Koji repository'
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: katello-koji
     description: "Katello {{ katello_repositories_version }} Koji Repository"
     baseurl: "http://koji.katello.org/releases/yum/katello-{{ katello_repositories_version }}/katello/el{{ ansible_distribution_major_version }}/x86_64/"
@@ -13,7 +13,7 @@
     gpgcheck: no
 
 - name: 'Candlepin Koji repository'
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: candlepin-koji
     description: "Candlepin {{ katello_repositories_version }} Koji Repository"
     baseurl: "http://koji.katello.org/releases/yum/katello-{{ katello_repositories_version }}/candlepin/el{{ ansible_distribution_major_version }}/x86_64/"
@@ -21,7 +21,7 @@
     gpgcheck: no
 
 - name: 'Set module_hotfixes=1'
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "/etc/yum.repos.d/{{ item }}.repo"
     line: module_hotfixes=1
   loop:
@@ -32,7 +32,7 @@
     - katello_repositories_version is version('4.2', '<=')
 
 - name: 'Enable katello:el8 module'
-  command: dnf module enable -y katello:el8
+  ansible.builtin.command: dnf module enable -y katello:el8
   # can't use the `dnf` module for modules without a default stream
   # https://github.com/ansible/ansible/issues/56504
   # https://github.com/ansible/ansible/issues/64852
@@ -44,5 +44,5 @@
     - ansible_distribution_major_version == '8'
 
 - name: 'Add Pulpcore repository'
-  include_role:
+  ansible.builtin.include_role:
     name: pulpcore_repositories

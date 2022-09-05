@@ -1,19 +1,20 @@
 ---
 - name: 'Build command'
-  set_fact:
+  ansible.builtin.set_fact:
     pytest_project_command: "{{ pytest_project_virtualenv_path }}/bin/pytest --junit-xml={{ pytest_project_junit_output }} {{ pytest_project_command_args }}"
 
 - name: 'Limit to markers'
-  set_fact:
+  ansible.builtin.set_fact:
     pytest_project_command: "{{ pytest_project_command }} -m '{{ pytest_project_markers }}'"
-  when: pytest_project_markers|bool
+  when: pytest_project_markers | bool
 
 - name: 'Run tests'
-  command: "{{ pytest_project_command }}"
+  ansible.builtin.command: "{{ pytest_project_command }}"
   ignore_errors: "{{ pytest_project_ignore_errors }}"
   args:
     chdir: "{{ pytest_project_directory }}"
   when: pytest_run_tests
 
-- include_tasks: local_env.yml
+- name: 'Include local_env.yml'
+  ansible.builtin.include_tasks: local_env.yml
   when: not pytest_run_tests

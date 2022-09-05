@@ -1,9 +1,9 @@
 - name: 'Install Haveged (faster population of PRNG)'
-  package:
+  ansible.builtin.package:
     name: haveged
     state: present
 
 - name: 'Start Haveged'
-  service:
+  ansible.builtin.service:
     name: haveged
     state: started

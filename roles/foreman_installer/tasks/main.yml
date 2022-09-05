@@ -1,17 +1,23 @@
 ---
-- include_tasks: packages.yml
+- name: Include packages.yml
+  ansible.builtin.include_tasks: packages.yml
 
-- include_tasks: locales.yml
+- name: Include locales.yml
+  ansible.builtin.include_tasks: locales.yml
   when: ansible_os_family == 'Debian'
 
-- include_tasks: module_prs.yml
+- name: Include module_prs.yml
+  ansible.builtin.include_tasks: module_prs.yml
   when: (foreman_installer_module_prs|length > 0) or (foreman_installer_module_branches|length > 0)
 
-- include_tasks: custom_hiera.yml
+- name: Include custom_hiera.yml
+  ansible.builtin.include_tasks: custom_hiera.yml
   when: foreman_installer_custom_hiera
 
-- include_tasks: install.yml
-  when: foreman_installer_upgrade == False
+- name: Include install.yml
+  ansible.builtin.include_tasks: install.yml
+  when: not foreman_installer_upgrade
 
-- include_tasks: upgrade.yml
-  when: foreman_installer_upgrade == True
+- name: Include upgrade.yml
+  ansible.builtin.include_tasks: upgrade.yml
+  when: foreman_installer_upgrade

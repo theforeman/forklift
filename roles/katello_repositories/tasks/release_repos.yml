@@ -1,6 +1,6 @@
 ---
 - name: 'Setup Katello {{ katello_repositories_version }} Repository'
-  include_role:
+  ansible.builtin.include_role:
     role: theforeman.operations.foreman_repositories
   vars:
     foreman_repositories_katello_version: "{{ katello_repositories_version }}"

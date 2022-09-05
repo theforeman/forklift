@@ -1,22 +1,22 @@
 ---
 - name: "Check the registration"
-  shell: "subscription-manager identity > /dev/null"
+  ansible.builtin.shell: "subscription-manager identity > /dev/null"
   register: sresult
   become: true
   ignore_errors: True
 
 - name: "Stop installation; the system is not registered"
-  fail:
+  ansible.builtin.fail:
     msg: "Please register the system via subscription-manager before continuing"
   when: "sresult.rc != 0"
 
 - name: "Disable all repos"
-  rhsm_repository:
+  community.general.rhsm_repository:
     name: "*"
     state: "disabled"
 
 - name: "Enable only RHEL7 base + optional + extras repos"
-  rhsm_repository:
+  community.general.rhsm_repository:
     name: "{{ item }}"
     state: "present"
   become: true

@@ -1,11 +1,11 @@
 ---
 - name: "Determine if AIO Puppet is used"
-  stat:
+  ansible.builtin.stat:
     path: /opt/puppetlabs/puppet/bin/gem
   register: puppetlabs_gem
 
 - name: "Install gems to rebuild the kafo module cache"
-  gem:
+  community.general.gem:
     name: "{{ item }}"
     executable: /opt/puppetlabs/puppet/bin/gem
   with_items:
@@ -14,14 +14,15 @@
   tags:
     - packages
 
-- name: "install git"
-  package:
+- name: "Install git"
+  ansible.builtin.package:
     name: 'git'
     state: 'present'
   tags:
     - packages
 
-- include_tasks: module_pr.yml
+- name: Include module_pr.yml for specified pull request
+  ansible.builtin.include_tasks: module_pr.yml
   vars:
     pr: true
   loop: "{{ foreman_installer_module_prs }}"
@@ -30,7 +31,8 @@
   tags:
     - packages
 
-- include_tasks: module_pr.yml
+- name: Include module_pr.yml for specified branch
+  ansible.builtin.include_tasks: module_pr.yml
   vars:
     branch: true
   loop: "{{ foreman_installer_module_branches }}"

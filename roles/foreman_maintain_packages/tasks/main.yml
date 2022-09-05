@@ -1,7 +1,7 @@
 ---
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
 - name: 'Allow Packages to be Installed'
-  command: "foreman-maintain packages unlock -y" 
+  ansible.builtin.command: "foreman-maintain packages unlock -y"
   when: "'rubygem-foreman_maintain' in ansible_facts.packages"
