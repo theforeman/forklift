@@ -23,6 +23,7 @@
       boxes:
         exclude:
           - '^[^p]'
+      domain: example.com
   tasks:
     - name: 'Install Forklift dependencies'
       package:
