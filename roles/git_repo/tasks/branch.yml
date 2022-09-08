@@ -1,0 +1,5 @@
+---
+- name: "Create local repository branch tracking specified remote branch"
+  ansible.builtin.command:
+    cmd: "git branch -f {{ branch }} {{ remote.name }}/{{ branch }}"
+    chdir: "{{ git_repo_repository.dir }}/{{ git_repo_repository.name }}"

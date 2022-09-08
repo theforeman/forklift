@@ -1,0 +1,32 @@
+---
+- name: "Configure git repository"
+  ansible.builtin.include_tasks: "{{ 'clone.yml' if ansible_loop.first else 'remote.yml' }}"
+  loop: "{{ git_repo_repository.remotes }}"
+  loop_control:
+    loop_var: remote
+    extended: yes
+    label: "{{ remote.name }}"
+
+- name: "Local bundle config"
+  when: git_repo_repository.install_gems is defined and git_repo_repository.install_gems
+  block:
+    - name: "Create .bundle/gems"
+      ansible.builtin.file:
+        path: "{{ git_repo_repository.dir }}/{{ git_repo_repository.name }}/.bundle/gems"
+        state: directory
+    - name: "Configure bundler to use .bundle/gems"
+      ansible.builtin.command:
+        cmd: "bundle config --local path .bundle/gems"
+        chdir: "{{ git_repo_repository.dir }}/{{ git_repo_repository.name }}"
+    - name: "Install Gems"
+      community.general.bundler:
+        state: present
+        chdir: "{{ git_repo_repository.dir }}/{{ git_repo_repository.name }}"
+
+- name: "Create venv and install python packages"
+  ansible.builtin.pip:
+    name: "{{ git_repo_repository.python_packages }}"
+    virtualenv: "{{ git_repo_repository.dir }}/{{ git_repo_repository.name }}/env"
+    virtualenv_command: "python3 -m venv"
+    virtualenv_site_packages: yes
+  when: (git_repo_repository.python_packages is defined) and (git_repo_repository.python_packages | length >= 1)

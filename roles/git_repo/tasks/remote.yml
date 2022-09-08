@@ -1,0 +1,26 @@
+---
+- name: "Configure additional remote for repository"
+  block:
+    - name: "Configure remote url"
+      community.general.git_config:
+        scope: local
+        repo: "{{ git_repo_repository.dir }}/{{ git_repo_repository.name }}"
+        name: "remote.{{ remote.name }}.url"
+        value: "{{ remote.url }}"
+    - name: "Configure remote fetch"
+      community.general.git_config:
+        scope: local
+        repo: "{{ git_repo_repository.dir }}/{{ git_repo_repository.name }}"
+        name: "remote.{{ remote.name }}.fetch"
+        value: '+refs/heads/*:refs/remotes/{{ remote.name }}/*'
+    - name: "Fetch remote"
+      ansible.builtin.command:
+        cmd: "git fetch {{ remote.name }}"
+        chdir: "{{ git_repo_repository.dir }}/{{ git_repo_repository.name }}"
+
+- name: "Configure branches for additional remote"
+  ansible.builtin.include_tasks: branch.yml
+  when: remote.branches is defined
+  loop: "{{ remote.branches }}"
+  loop_control:
+    loop_var: branch
