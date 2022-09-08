@@ -1,0 +1,15 @@
+---
+- name: "Clone repository"
+  ansible.builtin.git:
+    repo: "{{ remote.url }}"
+    remote: "{{ remote.name }}"
+    version: "{{ (remote.branches[0]) if (remote.branches is defined) else 'HEAD' }}"
+    dest: "{{ git_repo_repository.dir }}/{{ git_repo_repository.name }}"
+    accept_newhostkey: yes
+
+- name: "Configure additional branches for initial remote"
+  ansible.builtin.include_tasks: branch.yml
+  when: (remote.branches is defined) and (remote.branches | length > 1)
+  loop: "{{ remote.branches[1:] }}"
+  loop_control:
+    loop_var: branch
