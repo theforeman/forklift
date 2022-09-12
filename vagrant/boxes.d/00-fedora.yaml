@@ -10,3 +10,11 @@ boxes:
   fedora34:
     box_name: 'fedora/34-cloud-base'
     pty: true
+
+  fedora35:
+    box_name: 'fedora/35-cloud-base'
+    pty: true
+
+  fedora36:
+    box_name: 'fedora/36-cloud-base'
+    pty: true
