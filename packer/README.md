@@ -1,4 +1,4 @@
-## Packer
+# Packer
 
 This directory contains [packer](https://www.packer.io/) templates to create images from provisioned VMs
 
@@ -36,7 +36,7 @@ vagrant box remove centos7-katello-devel-stable
 sudo virsh vol-delete --pool default centos7-katello-devel-stable_vagrant_box_image_0.img
 ```
 
-### Creating version specific Katello devel boxes
+## Creating version specific Katello devel boxes
 
 Versioned Katello devel boxes allow easier patch development on old versions of Katello.  This could be used for creating a fix or updating a vcr cassette for an older release.
 
@@ -53,12 +53,12 @@ and run this comand (replacing 3.18 with the correct version):
 ```
 
 To test the newly created box:
-1.  add the printed box definition to vagrant/boxes.d/99-local.yaml 
+1.  add the printed box definition to vagrant/boxes.d/99-local.yaml
 2.  run printed 'vagrant box add' command
 3.  vagrant up centos7-katello-3.18-stable
 4.  Verify that 'rpm -q katello-repos' is correct and the foreman and katello git repos are on the correct branches
 
-### Uploading a versioned box to Vagrant Cloud
+## Uploading a versioned box to Vagrant Cloud
 
 The version of Vagrant shipped with Fedora does not support Vagrant Cloud uploads (due to a library licensing issue):
 
@@ -86,7 +86,7 @@ Empty reply from server
 
 7. Since auto-releasing is somewhat broken, login to the webui (https://app.vagrantup.com/katello/boxes/katello-devel/) and release the version manually
 
-### Using a version specific box
+## Using a version specific box
 
 Within your local vagrant boxes file, add:
 ```
@@ -101,6 +101,6 @@ changing 3.18.0 to the version you desire. Then:
 vagrant up centos7-katello-3.18-stable
 ```
 
-### Vagrant cloud usage
+## Vagrant cloud usage
 
 The centos7-katello-devel-stable box is [published to Vagrant cloud](https://app.vagrantup.com/katello/boxes/katello-devel) on a nightly basis to ensure an image with the latest changes is available. This box is only published if the Katello install is successful.

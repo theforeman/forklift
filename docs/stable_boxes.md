@@ -4,17 +4,17 @@ This section discusses the usage and creation of stable environments.
 
 * [What is a stable box?](#what-is-a-stable-box)
 * [How to use](#how-to-use)
-* [How are stable boxes created?](how-are-stable-boxes-created)
+* [How are stable boxes created?](#how-are-stable-box-images-created)
 
 ## What is a stable box?
 
-A stable box is a box that uses a published vagrant image of a successfully installed environment. These boxes usually have names that end with `-stable`, for example `centos8-katello-devel-stable`. 
+A stable box is a box that uses a published vagrant image of a successfully installed environment. These boxes usually have names that end with `-stable`, for example `centos8-katello-devel-stable`.
 
 The boxes are guaranteed to spin up successfully because the installation steps do not happen locally. The boxes are created to make sure an environment is always available even if recent changes are preventing a box from spinning up.
 
 ## How to use
 
-#### First spin up
+### First spin up
 To first time you spin up a stable box, you can perform the usual steps:
 
 1. Copy `vagrant/boxes.d/99-local.yaml.example` to `vagrant/boxes.d/99-local.yaml`. If you already have a `99-local.yaml`, you can copy the entries in `99-local.yaml.example` to your `99-local.yaml`.
@@ -22,7 +22,7 @@ To first time you spin up a stable box, you can perform the usual steps:
 
 The latest stable box image will be downloaded from Vagrant cloud and used for the environment.
 
-#### Subsequent spin ups
+### Subsequent spin ups
 
 The difference between a stable box and the other boxes is when you want to spin up the box again, you will need to update the underlying box image. The stable box image includes the full installation (for example, a Katello development environment) and is not just the OS image. You can do this with `vagrant box update box-name`
 
@@ -34,14 +34,14 @@ For example with `centos8-katello-devel-stable`:
 3. `vagrant up centos8-katello-devel-stable`
 
 
-#### Managing multiple boxes
-It is recommended that you destroy your stable box and create a new one because the stable box typically uses a fixed hostname. 
+### Managing multiple boxes
+It is recommended that you destroy your stable box and create a new one because the stable box typically uses a fixed hostname.
 
-If you would like to create multiple environments by using multiple box entries using the same image, you will need a way to manage having multiple machines with the same hostname. For example, you can keep your `/etc/hosts` file on your hypervisor always pointed to the box you want to use. The previous box's entry in `~/.ssh/known_hosts` will have to be removed as well. 
+If you would like to create multiple environments by using multiple box entries using the same image, you will need a way to manage having multiple machines with the same hostname. For example, you can keep your `/etc/hosts` file on your hypervisor always pointed to the box you want to use. The previous box's entry in `~/.ssh/known_hosts` will have to be removed as well.
 
 You don't have to worry about this if you only keep one environment per box image.
 
-#### Cleanup
+### Cleanup
 
 Vagrant will keep around old box images on your system. You may want to clean up old box images to free up disk space. For example:
 ```
@@ -61,19 +61,19 @@ With libvirt, you will have to remove the corresponding volumes with virsh since
 Vol katello-VAGRANTSLASH-katello-devel_vagrant_box_image_2019.1018.1354.img deleted
 ```
 
-#### Some things to keep in mind
+### Some things to keep in mind
 
 At this time any personalizations, such as github remotes, are not configured on the box itself.
 
 ## How are stable box images created?
 
-#### The workflow
+### The workflow
 
-Box images are created with Vagrant's [Packer tool](https://packer.io). To view development documentation, see [the packer directory's README](../packer/README.md).
+Box images are created with Vagrant's [Packer tool](https://packer.io). To view development documentation, see [the packer directory's README](packer.md).
 
 Packer will create an image by bootstrapping an operating system from a kickstart file and then run the ansible playbook specified in the Packer template. A cron job (or other automated job) will use Packer to create this box on a set schedule. If the box succeeds in its installation, it is published to Vagrant cloud. This ensures that only successfully installed boxes are used for the stable image.
 
-#### Example publishing workflow
+### Example publishing workflow
 
 For example, here is the workflow for `centos8-katello-devel-stable`:
 
@@ -86,7 +86,7 @@ Then locally:
 1. A forklift user uses the box definition with `katello/katello-devel` as the base image, most likely the copied `centos8-katello-devel-stable` box definition.
 2. On `vagrant up centos8-katello-devel-stable`, the most recent box image is downloaded from Vagrant clould and the box is created.
 
-#### Key differences
+### Key differences
 
 The end result of both the stable box and its traditional counterpart should be the same.
 
@@ -95,5 +95,5 @@ Any differences between the two could come from:
 - The stable boxes use a fixed hostname since the Foreman/Katello installation is not happening on a user's system and therefore the hostname is not customized to the user's hypervisor.
 - A stable box includes the most recent changes at the time of its publishing, a change could be introduced after it was published (a foreman-installer change, for example). The traditional box would have this change and the stable box would not until it is re-published.
   - We try to publish stable box images frequently for this reason.
-  
+
 A good way to think about a stable box is it's the same as if you spun up its traditional counterpart at the exact time the stable box image was published to Vagrant cloud.

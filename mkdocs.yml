@@ -1,0 +1,13 @@
+site_name: Forklift
+
+nav:
+  - Environments:
+    - Development: development.md
+    - Stable development boxes: stable_boxes.md
+    - Testing: testing.md
+    - Production: production.md
+    - Provisioning: provision.md
+  - Vagrant: vagrant.md
+  - Troubleshooting: troubleshooting.md
+  - As a library: library.md
+  - Plugins: plugins.md
