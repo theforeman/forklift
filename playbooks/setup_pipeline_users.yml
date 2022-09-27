@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Fetch default SSH key
+      slurp:
+        src: /root/.ssh/authorized_keys
+      register: authorized_keys
+
+    - name: Create users
+      user:
+        name: "{{ item }}"
+        groups:
+          - wheel
+      loop: "{{ pipeline_users }}"
+
+    - name: Set authorized keys
+      authorized_key:
+        user: "{{ item }}"
+        state: present
+        key: "{{ authorized_keys['content'] | b64decode }}"
+      loop: "{{ pipeline_users }}"
+
+    - name: Allow password-less sudo
+      copy:
+        dest: /etc/sudoers.d/wheel
+        content: "%wheel ALL=(ALL) NOPASSWD: ALL"
+        owner: root
+        group: root
+        mode: '0600'
