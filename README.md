@@ -296,5 +296,5 @@ collections:
 Then run `ansible-galaxy` install:
 
 ```
-ansible-galaxy collection install -r requirements.yml --force
+ansible-galaxy collection install -r requirements.yml --force-with-deps
 ```
