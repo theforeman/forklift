@@ -1,15 +1,23 @@
 ---
-- name: 'install hashicorp repo'
+- name: 'install pvalena/rubygems copr'
   get_url:
-    url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-    dest: /etc/yum.repos.d/hashicorp.repo
+    url: https://copr.fedorainfracloud.org/coprs/pvalena/rubygems/repo/epel-{{ ansible_distribution_major_version }}/pvalena-rubygems-epel-{{ ansible_distribution_major_version }}.repo
+    dest: /etc/yum.repos.d/pvalena-rubygems.repo
+
+- name: 'install pvalena/vagrant copr'
+  get_url:
+    url: https://copr.fedorainfracloud.org/coprs/pvalena/vagrant/repo/epel-{{ ansible_distribution_major_version }}/pvalena-vagrant-epel-{{ ansible_distribution_major_version }}.repo
+    dest: /etc/yum.repos.d/pvalena-vagrant.repo
 
 - name: 'install vagrant'
-  yum:
-    name: vagrant-{{ vagrant_version }}
+  package:
+    name: vagrant
     state: present
 
-- include_tasks: 'vagrant_libvirt.yml'
+- name: 'install vagrant-libvirt'
+  package:
+    name: vagrant-libvirt
+    state: present
   when: vagrant_libvirt
 
 - include_tasks: 'vagrant_scp.yml'
