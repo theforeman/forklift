@@ -9,7 +9,6 @@
     - role: epel_repositories
 
 - hosts: all
-  become: true
   vars:
     forklift_url: "https://github.com/theforeman/forklift"
     forklift_dest: "{{ ansible_env.HOME }}/forklift"
@@ -26,6 +25,7 @@
       domain: example.com
   tasks:
     - name: 'Install Forklift dependencies'
+      become: true
       package:
         name:
           - ansible
@@ -34,6 +34,7 @@
         state: 'present'
 
     - name: 'install telemetry dependencies'
+      become: true
       pip:
         name:
           - protobuf<3.21
