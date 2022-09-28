@@ -19,6 +19,7 @@
       sync_type: disabled
       libvirt_options:
         volume_cache: unsafe
+        graphics_type: none
       boxes:
         exclude:
           - '^[^p]'
