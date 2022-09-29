@@ -6,7 +6,7 @@ bats_forklift_dir: "/root/forklift"
 bats_forklift_repo: "https://github.com/theforeman/forklift.git"
 bats_forklift_version: HEAD
 bats_output_dir: "/root/bats_results"
-bats_remote_dir: "/tmp/debug-{{ pipeline_type | default('foreman') }}-{{ pipeline_version | default('nightly') }}-{{ pipeline_os | default('el7') }}"
+bats_remote_dir: "/tmp/debug-{{ pipeline_type | default('foreman') }}-{{ pipeline_version | default('nightly') }}-{{ pipeline_os | default('el7') }}-{{ pipeline_action | default('install') }}"
 bats_update_forklift: "yes"
 bats_run: true
 bats_setup: []
