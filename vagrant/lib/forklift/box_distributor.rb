@@ -271,6 +271,8 @@ module Forklift
         add_disks(box, p)
 
         merged_options(box, 'libvirt_options').each do |opt, val|
+          # Debian 11 fails to boot without graphics
+          next if opt == 'graphics_type' && box['box_name'] == 'debian/bullseye64'
           p.instance_variable_set("@#{opt}", val)
         end
       end
