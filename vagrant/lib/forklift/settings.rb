@@ -7,7 +7,15 @@ module Forklift
 
     def initialize
       settings_file = File.join(__dir__, '..', '..', 'settings.yaml')
-      @settings = File.exist?(settings_file) ? YAML.safe_load(File.read(settings_file)) : {}
+      @settings = if File.exist?(settings_file)
+                    if Gem::Version.new(Psych::VERSION) < Gem::Version.new('4.0')
+                      YAML.safe_load(File.read(settings_file), [:Symbol])
+                    else
+                      YAML.safe_load(File.read(settings_file), permitted_classes: [:Symbol])
+                    end
+                  else
+                    {}
+                  end
     end
 
   end
