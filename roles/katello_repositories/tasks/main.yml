@@ -9,3 +9,11 @@
 - name: enable codeready-builder for libdb_cxx used by qpid-cpp-server-linearstore
   command: subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
   when: ansible_distribution_major_version == "8" and ansible_distribution == "RedHat"
+
+- name: 'Clean yum'
+  command: 'yum clean all'
+  args:
+    warn: false
+  tags:
+    - packages
+  when: ansible_os_family == 'RedHat'
