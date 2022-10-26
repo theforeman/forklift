@@ -6,6 +6,7 @@
     foreman_proxy_content_server: "{{ groups[foreman_proxy_content_server_group][0] }}"
     foreman_server_repositories_katello: true
     katello_repositories_version: nightly
+    foreman_repositories_version: nightly
   roles:
     - foreman_server_repositories
     - etc_hosts
