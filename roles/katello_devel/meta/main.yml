@@ -4,6 +4,8 @@ dependencies:
   - role: foreman_server_repositories
     foreman_server_repositories_katello: true
     foreman_server_repositories_foreman_client: true
+#   puppet 6 is still the default for theforeman.operations.puppet_repositories as of release 1.2.3
+    foreman_puppet_repositories_version: 7
   - role: ruby_scl
     when: ansible_distribution_major_version == "7"
   - role: nodejs_scl
