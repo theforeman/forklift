@@ -23,9 +23,7 @@ foreman_proxy:
   puppet: false
   puppetca: false
 puppet: false
-foreman_proxy::plugin::abrt: false
 foreman_proxy::plugin::ansible: false
-foreman_proxy::plugin::chef: false
 foreman_proxy::plugin::dhcp::infoblox: false
 foreman_proxy::plugin::dhcp::remote_isc: false
 foreman_proxy::plugin::discovery: false
