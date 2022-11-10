@@ -295,7 +295,7 @@ module Forklift
         end
 
         networks.each do |network|
-          override.vm.network network['type'], network['options']
+          override.vm.network network['type'], **network['options']
         end
 
         merged_options(box, 'virtualbox_options').each do |opt, val|
