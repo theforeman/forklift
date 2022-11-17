@@ -14,7 +14,7 @@
     - name: download backup files
       get_url:
         dest: "{{ backup_dir }}/{{ item }}"
-        url: "{{ clone_source_url }}/{{ pipeline_version }}-{{ clone_type }}/{{ item }}"
+        url: "{{ clone_source_url }}/{{ item }}"
       loop: "{{ backup_files[clone_type] }}"
     - name: install satellite-clone
       package:
@@ -25,9 +25,9 @@
         state: present
     - name: clone satellite-clone
       git:
-        repo: https://github.com/RedHatSatellite/satellite-clone
+        repo: "{{ clone_repo }}"
         dest: /root/satellite-clone
-        version: master
+        version: "{{ clone_version }}"
     - name: write satellite-clone-vars.yml
       copy:
         dest: /root/satellite-clone/satellite-clone-vars.yml
@@ -44,4 +44,4 @@
       args:
         chdir: /root/satellite-clone/
       environment:
-        SATELLITE_CLONE_FORCE_VERSION: "6.10"
+        SATELLITE_CLONE_FORCE_VERSION: "{{ clone_satellite_version }}"
