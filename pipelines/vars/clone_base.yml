@@ -2,7 +2,11 @@ forklift_name: "pipe-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }
 forklift_server_name: "pipe-{{ pipeline_type }}-server-{{ pipeline_version }}-{{ pipeline_os }}"
 
 clone_type: offline
-clone_source_url: https://downloads.theforeman.org/test-fixtures/backup/katello/
+clone_base_url: https://downloads.theforeman.org/test-fixtures/backup/katello/
+clone_source_url: "{{ clone_base_url }}/{{ pipeline_version }}-{{ clone_type }}"
+clone_repo: https://github.com/RedHatSatellite/satellite-clone
+clone_version: master
+clone_satellite_version: "6.10"
 backup_dir: /backup
 backup_files:
   offline:
