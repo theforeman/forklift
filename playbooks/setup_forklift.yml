@@ -45,7 +45,7 @@
           - opentelemetry-api
           - opentelemetry-sdk
           - opentelemetry-exporter-otlp
-        executable: pip3.8
+        executable: pip3.9
       when:
         - forklift_telemetry|default(false)
         - ansible_distribution_major_version != '7'
