@@ -141,3 +141,14 @@ tForemanMaintainInstall() {
 tScenario() {
   basename $(readlink -f /etc/foreman-installer/scenarios.d/last_scenario.yaml) .yaml
 }
+
+tWaitForTask() {
+  local TASK_LABEL=$1
+  local next_wait_time=0
+  while hammer --no-headers task list --search="label=${TASK_LABEL} state=running" | grep "${TASK_LABEL}"; do
+    if [[ $next_wait_time -eq 12 ]]; then
+      break
+    fi
+    sleep $(( next_wait_time++ ))
+  done
+}
