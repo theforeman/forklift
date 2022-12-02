@@ -1,11 +1,6 @@
 ---
-certs:
-  group: {{ foreman_installer_devel_scenario_group | default(foreman_installer_devel_scenario_user) }}
-  deploy: true
-  generate: true
-katello_devel:
-  deployment_dir: /home/{{ foreman_installer_devel_scenario_user }}
-  user: {{ foreman_installer_devel_scenario_user }}
+certs: true
+katello_devel: true
 foreman_proxy_content:
   enable_katello_agent: true
   proxy_pulp_yum_to_pulpcore: true
