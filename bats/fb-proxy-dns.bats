@@ -71,8 +71,6 @@ tFlushCache() {
 }
 
 setup() {
-  tSetOSVersion
-
 	tCommandExists curl || tPackageInstall curl
 	tCommandExists dig || tPackageInstall bind-utils || tPackageInstall dnsutils
 
