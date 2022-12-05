@@ -194,27 +194,6 @@ tDirectoryExists() {
   [[ -d "$1" ]]
 }
 
-tRHSubscribeAttach() {
-  if tIsRHEL; then
-    tSetOSVersion
-    [[ -z "$RHSM_USER" || -z "$RHSM_PASS" || -z "$RHSM_POOL" ]] && skip "No subscription-manager credentials and pool id"
-    tPackageExists subscription-manager || tPackageInstall subscription-manager
-    echo $RHSM_USER $RHSM_PASS $RHSM_POOL
-    subscription-manager register --username=$RHSM_USER --password=$RHSM_PASS
-    subscription-manager attach --pool=$RHSM_POOL
-    subscription-manager repos --enable rhel-server-rhscl-$OS_VERSION-rpms --enable rhel-$OS_VERSION-server-optional-rpms
-  else
-    skip "Not required"
-  fi
-}
-
-tRHEnableEPEL() {
-  tIsRHEL || skip "Not required"
-  tSetOSVersion
-  tPackageExists epel-release || \
-    rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-${OS_VERSION}.noarch.rpm
-}
-
 tNonZeroFile() {
   [[ -s "$1" ]]
 }
