@@ -8,7 +8,6 @@ load foreman_helper
 load fixtures/content
 
 setup() {
-  tSetOSVersion
   HOSTNAME=$(hostname -f)
 }
 

@@ -196,6 +196,7 @@ tDirectoryExists() {
 
 tRHSubscribeAttach() {
   if tIsRHEL; then
+    tSetOSVersion
     [[ -z "$RHSM_USER" || -z "$RHSM_PASS" || -z "$RHSM_POOL" ]] && skip "No subscription-manager credentials and pool id"
     tPackageExists subscription-manager || tPackageInstall subscription-manager
     echo $RHSM_USER $RHSM_PASS $RHSM_POOL
