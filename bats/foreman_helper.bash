@@ -121,3 +121,10 @@ tSubscribedProductOrSCA() {
     echo "SCA enabled, assuming access to ${PRODUCT} is provided"
   fi
 }
+
+tForemanMaintainAvailable() {
+  FOREMAN_VERSION=$(tForemanVersion)
+  if [[ $FOREMAN_VERSION == 2.* || $FOREMAN_VERSION == 3.[0123] ]]; then
+    tIsRHEL || skip 'foreman_maintain is not available on non-RHEL before 3.4'
+  fi
+}
