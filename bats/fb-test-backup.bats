@@ -9,12 +9,17 @@ load foreman_helper
 BACKUP_DIR=/var/tmp/foreman-backup
 
 @test "prepare system" {
-  tIsRHEL || skip 'foreman_maintain is not available on non-RHEL'
+  tForemanMaintainAvailable
 
   # this is implemented as a "test", as the bats in EPEL doesn't support
   # "setup_file" yet, and "setup" is executed before *each* test
 
-  tPackageExists rubygem-foreman_maintain || tPackageInstall rubygem-foreman_maintain
+  if tIsRHEL; then
+    PACKAGE=rubygem-foreman_maintain
+  elif tIsDebian; then
+    PACKAGE=ruby-foreman-maintain
+  fi
+  tPackageExists $PACKAGE || tPackageInstall $PACKAGE
 
   # make sure we start clean
   rm -rf $BACKUP_DIR
@@ -25,13 +30,13 @@ BACKUP_DIR=/var/tmp/foreman-backup
 }
 
 @test "perform backup" {
-  tIsRHEL || skip 'foreman_maintain is not available on non-RHEL'
+  tForemanMaintainAvailable
 
   foreman-maintain backup offline --assumeyes --preserve-directory ${BACKUP_DIR}
 }
 
 @test "check backup contests for Foreman" {
-  tIsRHEL || skip 'foreman_maintain is not available on non-RHEL'
+  tForemanMaintainAvailable
 
   tFileExists ${BACKUP_DIR}/config_files.tar.gz
   tFileExists ${BACKUP_DIR}/metadata.yml
@@ -39,7 +44,7 @@ BACKUP_DIR=/var/tmp/foreman-backup
 }
 
 @test "check backup contents for Katello" {
-  tIsRHEL || skip 'foreman_maintain is not available on non-RHEL'
+  tForemanMaintainAvailable
 
   if ! tPackageExists foreman-installer-katello; then
     skip "Katello specific test"
