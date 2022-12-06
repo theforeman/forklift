@@ -2,6 +2,7 @@
 # vim: ft=sh:sw=2:et
 
 set -o pipefail
+load os_helper
 
 @test "change hostname" {
   if tPackageExists satellite; then
