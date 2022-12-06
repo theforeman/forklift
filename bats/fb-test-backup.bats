@@ -16,7 +16,7 @@ BACKUP_DIR=/var/tmp/foreman-backup
 
   if tIsRHEL; then
     PACKAGE=rubygem-foreman_maintain
-  elif tIsDebian; then
+  elif tIsDebianCompatible; then
     PACKAGE=ruby-foreman-maintain
   fi
   tPackageExists $PACKAGE || tPackageInstall $PACKAGE
