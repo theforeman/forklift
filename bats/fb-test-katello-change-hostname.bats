@@ -11,5 +11,5 @@ set -o pipefail
   fi
   NEW_HOSTNAME="${scenario}-$$.example.com"
   ${scenario}-change-hostname --username admin --password changeme --assumeyes ${NEW_HOSTNAME}
-  [ "$(hostname -f) = "${NEW_HOSTNAME}" ]
+  [ "$(hostname -f)" = "${NEW_HOSTNAME}" ]
 }
