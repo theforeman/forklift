@@ -16,6 +16,7 @@ server_box:
       bats_tests_additional:
         - fb-katello-proxy.bats
         - "{{ 'fb-katello-client-global-registration.bats' if pipeline_version == 'nightly' or pipeline_version is version('4.1', '>=') else '' }}"
+        - "{{ 'fb-test-katello-change-hostname.bats' if pipeline_action == 'install' else ''}}"
       pipeline_remove_pulp2: true
 proxy_box:
   box: "{{ pipeline_os }}"

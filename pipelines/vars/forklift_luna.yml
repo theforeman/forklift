@@ -49,6 +49,7 @@ server_box:
         - "fb-test-foreman-ansible.bats"
         - "fb-test-foreman-templates.bats"
         - "fb-katello-proxy.bats"
+        - "{{ 'fb-test-katello-change-hostname.bats' if pipeline_action == 'install' else ''}}"
       pipeline_remove_pulp2: true
 proxy_box:
   box: "{{ pipeline_os }}"

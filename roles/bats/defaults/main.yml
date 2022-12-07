@@ -18,7 +18,6 @@ bats_tests:
   - "fb-katello-client.bats"
   - "fb-test-puppet.bats"
   - "fb-test-backup.bats"
-  - "fb-test-katello-change-hostname.bats"
 bats_tests_additional: []
 bats_teardown:
   - "fb-destroy-organization.bats"
