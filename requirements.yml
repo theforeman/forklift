@@ -3,3 +3,4 @@ collections:
     version: '>=1.2.3'
 
   - community.general
+  - ansible.posix
