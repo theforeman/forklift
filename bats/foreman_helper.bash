@@ -128,3 +128,12 @@ tForemanMaintainAvailable() {
     tIsEL || skip 'foreman_maintain is not available on non-EL before 3.4'
   fi
 }
+
+tForemanMaintainInstall() {
+  if tIsEL; then
+    PACKAGE=rubygem-foreman_maintain
+  elif tIsDebianCompatible; then
+    PACKAGE=ruby-foreman-maintain
+  fi
+  tPackageExists $PACKAGE || tPackageInstall $PACKAGE
+}
