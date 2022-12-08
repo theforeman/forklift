@@ -15,7 +15,6 @@ server_box:
         - "{{ '--foreman-proxy-content-enable-ostree true' if (pipeline_os != 'centos7' and (pipeline_version == 'nightly' or pipeline_version is version('4.3', '>='))) else '' }}"
       bats_tests_additional:
         - fb-katello-proxy.bats
-        - "{{ 'fb-katello-client-global-registration.bats' if pipeline_version == 'nightly' or pipeline_version is version('4.1', '>=') else '' }}"
         - "{{ 'fb-test-katello-change-hostname.bats' if pipeline_action == 'install' else ''}}"
       pipeline_remove_pulp2: true
 proxy_box:
