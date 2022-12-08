@@ -31,6 +31,7 @@ boxes:
   centos8-stream:
     box_name: 'centos/stream8'
     disk_size: 40
+    libvirt: https://cloud.centos.org/centos/8-stream/x86_64/images/CentOS-Stream-Vagrant-8-20220913.0.x86_64.vagrant-libvirt.box
     pty: true
     scenarios:
       - foreman
@@ -39,4 +40,4 @@ boxes:
   centos9-stream:
     box_name: 'centos/stream9'
     disk_size: 40
-    libvirt: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20220509.0.x86_64.vagrant-libvirt.box
+    libvirt: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20221206.0.x86_64.vagrant-libvirt.box
