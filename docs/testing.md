@@ -7,11 +7,22 @@ This section covers test infrastructure and environments that can be spun up usi
 Included with forklift is a small live test suite.  The current tests are:
 
   * fb-test-foreman.bats - Runs a few simple tests for Foreman
-  * fb-test-katello.bats - Runs a few simple tests for Katello
-  * fb-content-katello.bats - Runs tests against content features
-  * fb-proxy.bats - Runs tests against content proxy features
+  * fb-katello-client.bats - Runs client-related Katello content tests
+  * fb-katello-client-global-registration.bats - Runs tests for the Global Registration feature
+  * fb-katello-content.bats  - Runs tests against content features
+  * fb-katello-content-restore.bats - Runs non-destructive content tests after a backup restore
+  * fb-katello-proxy.bats - Runs tests against content proxy features
+  * fb-test-katello-change-hostname.bats - Runs tests for the katello-change-hostname script
+  * fb-test-foreman-ansible.bats - Runs tests for Foreman Ansible plugin
+  * fb-test-foreman-rex.bats - Runs tests for Foreman Remote Execution plugin
+  * fb-test-foreman-templates.bats - Runs tests for Foreman Templates plugin
+  * fb-test-puppet.bats - Runs tests for Foreman Puppet plugin
+  * fb-test-backup.bats - Runs tests for Foreman Maintain Backup feature
+  * fb-proxy-dns.bats - Runs DNS related proxy tests
+  * fb-verify-packages.bats - Ensures no wrong package sets are installed
+  * fb-verify-selinux.bats - Ensures no SELinux errors happen
+  * fb-virt-whom.bats - Run virt-whom candlepin tests
   * fb-destroy-organization.bats - Cleans up after the content tests
-  * fb-finish.bats - Collects logs pertinent to the bats run
 
 ### To run the same setup run by CI system
 
