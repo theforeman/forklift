@@ -21,6 +21,6 @@
       - "--enable-foreman-proxy-plugin-ansible"
       - "--enable-foreman-proxy-plugin-discovery"
       - "--enable-foreman-proxy-plugin-openscap"
-      - "--enable-foreman-proxy-plugin-remote-execution-ssh"
+      - "--enable-foreman-proxy-plugin-remote-execution-script"
   roles:
     - role: katello
