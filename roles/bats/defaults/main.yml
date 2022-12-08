@@ -16,6 +16,7 @@ bats_tests:
   - "fb-test-katello.bats"
   - "fb-katello-content.bats"
   - "fb-katello-client.bats"
+  - "fb-katello-client-global-registration.bats"
   - "fb-test-puppet.bats"
   - "fb-test-backup.bats"
 bats_tests_additional: []
