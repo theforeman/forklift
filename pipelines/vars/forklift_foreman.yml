@@ -13,6 +13,7 @@ server_box:
         - "fb-test-foreman.bats"
         - "fb-test-puppet.bats"
         - "fb-test-backup.bats"
+        - "fb-verify-selinux.bats"
       bats_teardown: []
 forklift_boxes:
   "{{ {forklift_server_name: server_box, forklift_smoker_name: smoker_box} }}"
