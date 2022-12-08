@@ -12,6 +12,14 @@ load foreman_helper
   ! grep -v -H -x "$FOREMAN_EXPECTED_VERSION" /usr/share/foreman*/VERSION
 }
 
+@test "check service status" {
+  tForemanMaintainAvailable
+
+  tForemanMaintainInstall
+
+  foreman-maintain service status
+}
+
 @test "check web app is up" {
   [ `curl -sk "https://localhost$URL_PREFIX/status" | ruby -e "require 'json'; puts JSON.load(ARGF.read)['status']"` == 'ok' ]
 }
