@@ -181,6 +181,11 @@ setup() {
   # /var/lib/pulp/exports/Test_Organization/Test_CV/1.0/2020-12-11T16-04-08-00-00
   import_path="/var/lib/pulp/imports/bats-test-$export_history_id"
 
+  # assert latest_export, export_path and export_history_id aren't empty
+  [ -n "${latest_export}" ]
+  [ -n "${export_path}" ]
+  [ -n "${export_history_id}" ]
+
   mkdir -p $import_path
   cp -r "$export_path"/* $import_path
   chown -R pulp:pulp $import_path
