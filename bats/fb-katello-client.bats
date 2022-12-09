@@ -26,10 +26,6 @@ load fixtures/content
 }
 
 @test "register subscription manager with username and password" {
-  if [ -e "/etc/rhsm/ca/candlepin-local.pem" ]; then
-    rpm -e `rpm -qf /etc/rhsm/ca/candlepin-local.pem`
-  fi
-
   cleanSubscriptionManager
 
   run yum erase -y 'katello-ca-consumer-*'
