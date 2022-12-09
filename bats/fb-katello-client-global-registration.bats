@@ -8,10 +8,6 @@ load foreman_helper
 load fixtures/content
 
 @test "remove subscription manager" {
-  if [ -e "/etc/rhsm/ca/candlepin-local.pem" ]; then
-    rpm -e `rpm -qf /etc/rhsm/ca/candlepin-local.pem`
-  fi
-
   cleanSubscriptionManager
   tPackageRemove subscription-manager
 }
