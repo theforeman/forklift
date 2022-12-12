@@ -57,6 +57,10 @@ tIsEL() {
   fi
 }
 
+tIsRHEL() {
+  tIsEL "$1" && grep -q 'Red Hat Enterprise Linux' /etc/redhat-release
+}
+
 tIsDebian() {
   tIsDebianCompatible && ! tIsUbuntuCompatible
 }
