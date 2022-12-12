@@ -35,7 +35,13 @@ load fixtures/content
   organization_info=$(hammer --output json organization info --name "${ORGANIZATION}")
   organization_id=$(echo $organization_info | ruby -e "require 'json'; puts JSON.load(ARGF.read)['Id']")
 
-  curl_command="curl https://admin:changeme@$HOSTNAME/api/registration_commands -X POST -H 'Content-Type: application/json' -d '{\"activation_key\":\"${ACTIVATION_KEY}\",\"organization_id\":\"${organization_id}\"}'"
+  if tIsRHEL; then
+    ignore_subman_errors=true
+  else
+    ignore_subman_errors=false
+  fi
+
+  curl_command="curl https://admin:changeme@$HOSTNAME/api/registration_commands -X POST -H 'Content-Type: application/json' -d '{\"activation_key\":\"${ACTIVATION_KEY}\",\"organization_id\":\"${organization_id}\",\"ignore_subman_errors\":\"${ignore_subman_errors}\"}'"
   registration_json=$(eval $curl_command)
   echo "${registration_json}"
 
