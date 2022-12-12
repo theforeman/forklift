@@ -8,7 +8,13 @@ load foreman_helper
 load fixtures/content
 
 @test "remove subscription manager" {
+  # be nice and perform the clean in any case
   cleanSubscriptionManager
+
+  # only remove on non-RHEL as otherwise we can't reinstall it
+  if tIsRHEL; then
+    skip "don't remove subscription-manager on RHEL"
+  fi
   tPackageRemove subscription-manager
 }
 
