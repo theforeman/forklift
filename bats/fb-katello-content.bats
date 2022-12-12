@@ -71,7 +71,7 @@ setup() {
 }
 
 @test "create an ostree repository" {
-  if tIsRHEL 7; then
+  if tIsEL 7; then
     skip "OSTree content is not applicable on EL 7 systems"
   fi
 
@@ -83,7 +83,7 @@ setup() {
 }
 
 @test "sync ostree repository" {
-  if tIsRHEL 7; then
+  if tIsEL 7; then
     skip "OSTree content is not applicable on EL 7 systems"
   fi
 
@@ -111,7 +111,7 @@ setup() {
 }
 
 @test "upload ostree_ref" {
-  if tIsRHEL 7; then
+  if tIsEL 7; then
     skip "OSTree content is not applicable on EL 7 systems"
   fi
 

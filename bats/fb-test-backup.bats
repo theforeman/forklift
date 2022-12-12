@@ -14,7 +14,7 @@ BACKUP_DIR=/var/tmp/foreman-backup
   # this is implemented as a "test", as the bats in EPEL doesn't support
   # "setup_file" yet, and "setup" is executed before *each* test
 
-  if tIsRHEL; then
+  if tIsEL; then
     PACKAGE=rubygem-foreman_maintain
   elif tIsDebianCompatible; then
     PACKAGE=ruby-foreman-maintain

@@ -48,7 +48,7 @@ tIsFedora() {
   fi
 }
 
-tIsRHEL() {
+tIsEL() {
   if [ -z "$1" ]; then
     tIsRedHatCompatible && ! tIsFedoraCompatible
   else
