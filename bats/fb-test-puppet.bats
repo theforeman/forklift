@@ -50,6 +50,11 @@ fi
 }
 
 @test "wake up puppet agent" {
+  local next_wait_time=0
+  until [ ! -f /opt/puppetlabs/puppet/cache/state/agent_catalog_run.lock -o $next_wait_time -eq 12 ]; do
+    sleep $(( next_wait_time++ ))
+  done
+
   puppet agent -t -v
 }
 
