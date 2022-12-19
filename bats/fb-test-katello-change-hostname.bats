@@ -3,13 +3,10 @@
 
 set -o pipefail
 load os_helper
+load foreman_helper
 
 @test "change hostname" {
-  if tPackageExists satellite; then
-    scenario=satellite
-  else
-    scenario=katello
-  fi
+  scenario=$(tScenario)
   NEW_HOSTNAME="${scenario}-$$.example.com"
   ${scenario}-change-hostname --username admin --password changeme --assumeyes ${NEW_HOSTNAME}
   [ "$(hostname -f)" = "${NEW_HOSTNAME}" ]

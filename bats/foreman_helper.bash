@@ -137,3 +137,7 @@ tForemanMaintainInstall() {
   fi
   tPackageExists $PACKAGE || tPackageInstall $PACKAGE
 }
+
+tScenario() {
+  basename $(readlink -f /etc/foreman-installer/scenarios.d/last_scenario.yaml) .yaml
+}
