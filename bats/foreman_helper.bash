@@ -145,7 +145,7 @@ tScenario() {
 tWaitForTask() {
   local TASK_LABEL=$1
   local next_wait_time=0
-  while hammer --no-headers task list --search="label=${TASK_LABEL} state=running" | grep "${TASK_LABEL}"; do
+  while [[ $(hammer --no-headers task list --search="label=${TASK_LABEL} state != stopped" | wc -l) -ne 0 ]]; do
     if [[ $next_wait_time -eq 12 ]]; then
       break
     fi
