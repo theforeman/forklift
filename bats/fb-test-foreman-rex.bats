@@ -19,11 +19,11 @@ load foreman_helper
   # Force execution of the test in an own Organization
   # This ensures any *other* proxy with the REX capability is not used,
   # as that can lead to wrong results.
-  OLD_ORGS=$(hammer --output csv --no-headers --show-ids proxy info --name $SMART_PROXY_NAME --fields Organizations)
+  OLD_ORGS=$(hammer --output csv --no-headers --show-ids proxy info --name "${SMART_PROXY_NAME}" --fields Organizations)
   REX_ORG="Remote Execution Org $$"
   hammer organization create --name "${REX_ORG}"
-  hammer host update --name $SMART_PROXY_NAME --new-organization "${REX_ORG}"
-  hammer proxy update --name $SMART_PROXY_NAME --organizations "${OLD_ORGS},${REX_ORG}"
+  hammer host update --name "${SMART_PROXY_NAME}" --new-organization "${REX_ORG}"
+  hammer proxy update --name "${SMART_PROXY_NAME}" --organizations "${OLD_ORGS},${REX_ORG}"
 
   hammer job-invocation create --job-template "${job_template}" --inputs 'command=uptime' --search-query "name = $SMART_PROXY_NAME"
 }

@@ -10,7 +10,7 @@ setup() {
 }
 
 @test "run 'uptime' via Ansible" {
-  hammer job-invocation create --job-template 'Run Command - Ansible Default' --inputs 'command=uptime' --search-query "name = $HOSTNAME"
+  hammer job-invocation create --job-template 'Run Command - Ansible Default' --inputs 'command=uptime' --search-query "name = ${HOSTNAME}"
 }
 
 @test "import a role" {
@@ -30,12 +30,12 @@ setup() {
 
 @test "run a role" {
   # assign the role to our system and run it
-  hammer host ansible-roles assign --name $HOSTNAME --ansible-roles "${ROLE_NAME}" | grep 'Ansible roles were assigned to the host'
-  hammer host ansible-roles play --name $HOSTNAME | grep 'Ansible roles are being played.'
+  hammer host ansible-roles assign --name "${HOSTNAME}" --ansible-roles "${ROLE_NAME}" | grep 'Ansible roles were assigned to the host'
+  hammer host ansible-roles play --name "${HOSTNAME}" | grep 'Ansible roles are being played.'
 
   # wait for the run to actually succeed
   tWaitForTask Actions::RemoteExecution::RunHostsJob
 
   # check if the callback reported things back to Foreman
-  hammer --output csv --no-headers config-report list --search "host=$HOSTNAME origin=Ansible" | grep "$HOSTNAME.*Ansible"
+  hammer --output csv --no-headers config-report list --search "host=${HOSTNAME} origin=Ansible" | grep "${HOSTNAME}.*Ansible"
 }

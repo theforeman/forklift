@@ -21,7 +21,7 @@ load foreman_helper
 }
 
 @test "check web app is up" {
-  [ `curl -sk "https://localhost$URL_PREFIX/status" | ruby -e "require 'json'; puts JSON.load(ARGF.read)['status']"` == 'ok' ]
+  [ $(curl -sk "https://localhost$URL_PREFIX/status" | ruby -e "require 'json'; puts JSON.load(ARGF.read)['status']") = "ok" ]
 }
 
 @test "check hammer ping" {
@@ -42,5 +42,5 @@ load foreman_helper
 }
 
 @test "check smart proxy is registered" {
-  hammer proxy info --name=$(hostname -f)
+  hammer proxy info --name="$(hostname -f)"
 }

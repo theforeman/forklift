@@ -24,7 +24,7 @@ load fixtures/content
 }
 
 @test "delete host if present" {
-  hammer host delete --name=$HOSTNAME || echo "Could not delete host"
+  hammer host delete --name="${HOSTNAME}" || echo "Could not delete host"
 }
 
 @test "register with global registration with activation key" {
@@ -33,7 +33,7 @@ load fixtures/content
   echo "${output}"
 
   organization_info=$(hammer --output json organization info --name "${ORGANIZATION}")
-  organization_id=$(echo $organization_info | ruby -e "require 'json'; puts JSON.load(ARGF.read)['Id']")
+  organization_id=$(echo "${organization_info}" | ruby -e "require 'json'; puts JSON.load(ARGF.read)['Id']")
 
   if tIsRHEL; then
     ignore_subman_errors=true
@@ -41,17 +41,17 @@ load fixtures/content
     ignore_subman_errors=false
   fi
 
-  curl_command="curl https://admin:changeme@$HOSTNAME/api/registration_commands -X POST -H 'Content-Type: application/json' -d '{\"activation_key\":\"${ACTIVATION_KEY}\",\"organization_id\":\"${organization_id}\",\"ignore_subman_errors\":\"${ignore_subman_errors}\"}'"
-  registration_json=$(eval $curl_command)
+  curl_command="curl https://admin:changeme@${HOSTNAME}/api/registration_commands -X POST -H 'Content-Type: application/json' -d '{\"activation_key\":\"${ACTIVATION_KEY}\",\"organization_id\":\"${organization_id}\",\"ignore_subman_errors\":\"${ignore_subman_errors}\"}'"
+  registration_json=$(eval "${curl_command}")
   echo "${registration_json}"
 
   registration_command=$(echo "${registration_json}" | ruby -e "require 'json'; puts JSON.load(ARGF.read).fetch('registration_command')")
-  eval $registration_command
+  eval "${registration_command}"
   tSubscribedProductOrSCA "${PRODUCT}"
 }
 
 @test "check content host is registered" {
-  hammer host info --name $HOSTNAME
+  hammer host info --name "${HOSTNAME}"
 }
 
 @test "enable content view repo" {
@@ -65,10 +65,10 @@ load fixtures/content
 
 @test "check available errata" {
   local next_wait_time=0
-  until hammer host errata list --host $HOSTNAME | grep 'RHEA-2012:0055'; do
+  until hammer host errata list --host "${HOSTNAME}" | grep 'RHEA-2012:0055'; do
     if [ $next_wait_time -eq 14 ]; then
       # make one last try, also makes the error nice
-      hammer host errata list --host $HOSTNAME | grep 'RHEA-2012:0055'
+      hammer host errata list --host "${HOSTNAME}" | grep 'RHEA-2012:0055'
     fi
     sleep $(( next_wait_time++ ))
   done
@@ -76,8 +76,8 @@ load fixtures/content
 
 @test "try fetching container content" {
   tPackageExists podman || tPackageInstall podman
-  podman login $HOSTNAME -u admin -p changeme
-  CONTAINER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`
+  podman login "${HOSTNAME}" -u admin -p changeme
+  CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
   podman pull "${HOSTNAME}/${CONTAINER_PULL_LABEL}"
 }
 
