@@ -7,22 +7,10 @@
     name: "{{ bats_packages }}"
     state: present
 
-- name: "Install bats from package"
-  package:
-    name: "bats"
-    state: present
-  ignore_errors: yes
-
-- name: "Get /usr/bin/bats stat"
-  stat:
-    path: "/usr/bin/bats"
-  register: bats_bin
-
 - name: "Clone bats"
   git:
-    repo: "https://github.com/sstephenson/bats.git"
+    repo: "https://github.com/bats-core/bats-core"
     dest: "{{ bats_git_dir }}"
-  when: not bats_bin.stat.exists
 
 - name: "Install bats"
   shell: "{{ bats_git_dir }}/install.sh /usr"
