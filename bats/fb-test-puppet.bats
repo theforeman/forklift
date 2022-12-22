@@ -21,7 +21,7 @@ fi
 }
 
 @test "check smart proxy is registered" {
-  hammer proxy info --name=$(hostname -f)
+  hammer proxy info --name="$(hostname -f)"
 }
 
 @test "assert puppet version" {
@@ -59,7 +59,7 @@ fi
 }
 
 @test "check host is registered" {
-  hammer host info --name $(hostname -f) | egrep "Last report:.*[[:alnum:]]+"
+  hammer host info --name "$(hostname -f)" | grep -E "Last report:.*[[:alnum:]]+"
 }
 
 # ENC / Puppet class apply tests
@@ -76,9 +76,9 @@ fi
 }
 
 @test "import motd puppet class" {
-  hammer proxy import-classes --name $(hostname -f)
+  hammer proxy import-classes --name "$(hostname -f)"
   count=$(hammer --csv puppet-class list --search 'name = motd' | wc -l)
-  [ $count -gt 1 ]
+  [ "${count}" -gt 1 ]
 }
 
 @test "Assign puppet-environment to default taxonomies" {
@@ -87,7 +87,7 @@ fi
 
 @test "assign puppet class to host" {
   id=$(hammer --csv puppet-class list --search 'name = motd' | tail -n1 | cut -d, -f1)
-  hammer host update --puppet-class-ids $id --name $(hostname -f)
+  hammer host update --puppet-class-ids "${id}" --name "$(hostname -f)"
 }
 
 @test "apply class with puppet agent" {

@@ -22,7 +22,7 @@ load fixtures/content
 }
 
 @test "delete host if present" {
-  hammer host delete --name=$HOSTNAME || echo "Could not delete host"
+  hammer host delete --name="${HOSTNAME}" || echo "Could not delete host"
 }
 
 @test "register subscription manager with username and password" {
@@ -52,7 +52,7 @@ load fixtures/content
 }
 
 @test "check content host is registered" {
-  hammer host info --name $HOSTNAME
+  hammer host info --name "${HOSTNAME}"
 }
 
 @test "enable content view repo" {
@@ -70,10 +70,10 @@ load fixtures/content
 
 @test "check available errata" {
   local next_wait_time=0
-  until hammer host errata list --host $HOSTNAME | grep 'RHEA-2012:0055'; do
+  until hammer host errata list --host "${HOSTNAME}" | grep 'RHEA-2012:0055'; do
     if [ $next_wait_time -eq 14 ]; then
       # make one last try, also makes the error nice
-      hammer host errata list --host $HOSTNAME | grep 'RHEA-2012:0055'
+      hammer host errata list --host "${HOSTNAME}" | grep 'RHEA-2012:0055'
     fi
     sleep $(( next_wait_time++ ))
   done
@@ -81,8 +81,8 @@ load fixtures/content
 
 @test "try fetching container content" {
   tPackageExists podman || tPackageInstall podman
-  podman login $HOSTNAME -u admin -p changeme
-  CONTAINER_PULL_LABEL=`echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]'`
+  podman login "${HOSTNAME}" -u admin -p changeme
+  CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
   podman pull "${HOSTNAME}/${CONTAINER_PULL_LABEL}"
 }
 
@@ -96,18 +96,18 @@ load fixtures/content
 
 @test "install package remotely (katello-agent)" {
   run yum -y remove gorilla
-  timeout 300 hammer host package install --host $HOSTNAME --packages gorilla
+  timeout 300 hammer host package install --host "${HOSTNAME}" --packages gorilla
   tPackageExists gorilla
 }
 
 @test "install errata remotely (katello-agent)" {
-  timeout 300 hammer host errata apply --errata-ids 'RHEA-2012:0055' --host $HOSTNAME
+  timeout 300 hammer host errata apply --errata-ids 'RHEA-2012:0055' --host "${HOSTNAME}"
   tPackageExists walrus-5.21
 }
 
 # it seems walrus lingers around making subsequent runs fail, so lets test package removal!
 @test "package remove (katello-agent)" {
-  timeout 300 hammer host package remove --host $HOSTNAME --packages walrus
+  timeout 300 hammer host package remove --host "${HOSTNAME}" --packages walrus
 }
 
 @test "clean up subscription-manager and gofer after content tests" {
