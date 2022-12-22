@@ -19,13 +19,13 @@ setup() {
   echo "- command: uptime" > "/etc/ansible/roles/${ROLE_NAME}/tasks/main.yml"
 
   # check if smart_proxy_ansible finds it and can import it
-  hammer ansible roles fetch --proxy-id 1 | grep "${ROLE_NAME}"
+  hammer ansible roles fetch --proxy-id 1
   hammer ansible roles sync --proxy-id 1 --role-names "${ROLE_NAME}"
 
   # sync creates a task, so let's wait for it to complete
   tWaitForTask SyncRolesAndVariables
 
-  hammer ansible roles list | grep "${ROLE_NAME}"
+  hammer --output csv --no-headers ansible roles list --search="name=${ROLE_NAME}" | grep "${ROLE_NAME}"
 }
 
 @test "run a role" {
