@@ -44,7 +44,7 @@ tSkipIfOlderThan43() {
 
 tSkipIfNewerThan45() {
   KATELLO_VERSION=$(tKatelloVersion)
-  if [[ $KATELLO_VERSION != 4.[0-4]* ]]; then
+  if [[ $KATELLO_VERSION != 4.[0-5]* ]]; then
     skip "Skip if Katello is newer than 4.5"
   fi
 }
