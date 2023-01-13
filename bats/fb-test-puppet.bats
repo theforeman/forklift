@@ -17,7 +17,7 @@ fi
   fi
 
   SCENARIO=$(tScenario)
-  grep -q 'foreman::plugin::puppet: false' || skip "Puppet plugin already enabled"
+  grep -q 'foreman::plugin::puppet: false' "/etc/foreman-installer/scenarios.d/${SCENARIO}-answers.yaml" || skip "Puppet plugin already enabled"
 
   foreman-installer --enable-foreman-plugin-puppet --enable-foreman-cli-puppet --foreman-proxy-puppet true --foreman-proxy-puppetca true --foreman-proxy-content-puppet true --enable-puppet --puppet-server true --puppet-server-foreman-ssl-ca /etc/pki/katello/puppet/puppet_client_ca.crt --puppet-server-foreman-ssl-cert /etc/pki/katello/puppet/puppet_client.crt --puppet-server-foreman-ssl-key /etc/pki/katello/puppet/puppet_client.key
   # Force hammer to reload the apidoc cache - https://projects.theforeman.org/issues/28283
