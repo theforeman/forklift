@@ -12,8 +12,6 @@
 
 - name: 'Clean yum'
   command: 'yum clean all'
-  args:
-    warn: false
   tags:
     - packages
   when: ansible_os_family == 'RedHat'

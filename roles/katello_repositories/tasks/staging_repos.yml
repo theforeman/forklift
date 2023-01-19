@@ -37,7 +37,6 @@
   # https://github.com/ansible/ansible/issues/56504
   # https://github.com/ansible/ansible/issues/64852
   args:
-    warn: False
     creates: /etc/dnf/modules.d/katello.module
   when:
     - katello_repositories_version == "nightly" or katello_repositories_version is version('4.4', '>=')
