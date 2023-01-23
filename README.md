@@ -7,26 +7,37 @@ Forklift provides tools to create Foreman/Katello environments for development, 
  * [Using Forklift](#using-forklift)
    - [Requirements](#requirements)
    - [Quickstart](#quickstart)
+   - [Foreman Nightly Box](#foreman-nightly-box)
+   - [Katello Nightly Box](#katello-nightly-box)
+   - [Additional Documentation](#additional-documentation)
+   - [Development Environment](#development-environment)
+   - [Using Playbooks and Roles Without Vagrant](#using-playbooks-and-roles-without-vagrant)
+   - [Credentials](#credentials)
    - [Poor man's DNS a.k.a /etc/hosts](#poor-mans-dns-aka-etchosts)
    - [Adding Custom Boxes](#adding-custom-boxes)
+   - [Using SSHFS to share folders](#using-sshfs-to-share-folders)
+   - [Using NFS to share folders](#using-nfs-to-share-folders)
    - [Customize Deployment Settings](#customize-deployment-settings)
+   - [Customize Available Boxes](#customize-available-boxes)
    - [Post Install Playbooks](#post-install-playbooks)
    - [Using Local Ansible Collection](#using-local-ansible-collection)
- * [Production Environments](docs/production.md)
- * [Development Environments](docs/development.md)
- * [Stable Boxes](docs/stable_boxes.md)
- * [Testing Environments](docs/testing.md)
- * [Provisioning environment](docs/provision.md)
- * [Plugins](docs/plugins.md)
- * [Using Forklift as a Library](docs/library.md)
- * [Troubleshooting](docs/troubleshooting.md)
+ * [Production Environments](https://theforeman.github.io/forklift/production/)
+ * [Development Environments](https://theforeman.github.io/forklift/development/)
+ * [Stable Boxes](https://theforeman.github.io/forklift/stable_boxes/)
+ * [Testing Environments](https://theforeman.github.io/forklift/testing/)
+ * [Provisioning environment](https://theforeman.github.io/forklift/provision/)
+ * [Plugins](https://theforeman.github.io/forklift/plugins/)
+ * [Using Forklift as a Library](https://theforeman.github.io/forklift/library/)
+ * [Troubleshooting](https://theforeman.github.io/forklift/troubleshooting/)
+ * [Vagrant](https://theforeman.github.io/forklift/vagrant/)
+ * [Packer](https://theforeman.github.io/forklift/packer/)
 
 ## Using Forklift
 
 ### Requirements
 
 * Vagrant - 2.2+ - Both the VirtualBox and Libvirt providers are tested
-* Ansible - 2.9+
+* Ansible - 2.12+
 * [Vagrant Libvirt provider plugin](https://github.com/vagrant-libvirt/vagrant-libvirt) (if using Libvirt)
 * Virtualization enabled in BIOS
 
@@ -34,26 +45,88 @@ See [Installing Vagrant](docs/vagrant.md) for installation instructions.
 
 ### Quickstart
 
-This will walk through the simplest path of spinning up a production test environment of a bleeding edge nightly installation assuming Vagrant and Libvirt are installed and configured.
+The quickstart guide covers the basic steps to install Forklift so that you can quickly spin up a production test environment of the latest bleeding edge nightly Foreman or Katello build.
 
-```
+It assumes you have already Vagrant and libvirt installed, as well as the vagrant-libvirt and vagrant-hostmanager plugins. You also need Ansible, although if you don't have it or aren't sure if your version is compatible, you can simply create and activate a Python virtual environment and then `pip install ansible-galaxy`
+
+Start by cloning the Forklift repository:
+
+```sh
 git clone https://github.com/theforeman/forklift.git
 cd forklift
+```
+
+Then install the Ansible collections which are needed by Forklift:
+
+```sh
 ansible-galaxy collection install -r requirements.yml
-vagrant up centos7-foreman-nightly
 ```
 
-The same can be quickly done for a development environment where GITHUB_NICK is your GitHub username:
+When this is complete, simply follow the next section of this README to try out the latest nightly Foreman build using Forklift.
 
-```
-git clone https://github.com/theforeman/forklift.git
-cd forklift
-cp vagrant/boxes.d/99-local.yaml.example vagrant/boxes.d/99-local.yaml
-sed -i.bak "s/<REPLACE ME>/GITHUB_NICK/g" vagrant/boxes.d/99-local.yaml
-vagrant up centos7-katello-devel
+### Foreman Nightly Box
+
+Spin up your box and start using the latest nightly build of Foreman:
+
+```sh
+vagrant up centos8-foreman-nightly
 ```
 
-In case using vagrant is not desired, ansible playbooks and roles from this repo can be used separately. This is useful if an existing host should be used for the installation, e.g. a beaker machine. In order to deploy the devel environment on host test.example.com, the following needs to be done:
+Access the CLI by first connecting to the box via SSH:
+
+```sh
+vagrant ssh centos8-foreman-nightly
+```
+
+To access the WebUI, it's helpful to have the vagrant-hostmanager plugin installed, so that your Workstation will automatically be able to resolve the hostname of the box to its IP address.
+
+Then you can simply open your browser and navigate to `https://centos8-foreman-nightly.<HOSTNAME>.example.com` where `<HOSTNAME>` is replaced by the shortname of your workstation. The first time you do this you will need to accept the self-signed certicate.
+
+By default, `forklift` deploys Foreman with `admin`/`changeme` as username and password.
+
+### Katello Nightly Box
+
+Katello nightly boxes are available as well; simply change `centos8-foreman-nightly` to `centos8-katello-nightly` and the steps are otherwise exactly the same as above.
+
+### Additional Documentation
+
+The remainder of this README contains helpful notes on additional topics that are likely to be of interest to users. For the most thorough and complete guides however, please refer to the [docs page](https://theforeman.github.io/forklift).
+
+### Katello Development Environment
+
+If you want a Katello development environment, substitute your GitHub username for `GITHUB_NICK` and run:
+
+```sh
+cp vagrant/boxes.d/99-local.yaml{.example,}
+sed -i "s/<REPLACE ME>/GITHUB_NICK/g" vagrant/boxes.d/99-local.yaml
+```
+
+Bring up the Katello Development Box:
+
+```sh
+vagrant up centos8-katello-devel
+```
+
+Once the box is running, you can access the shell via SSH and modify the source code in the `~/foreman` and `~/katello` directories. Then start the application to preview your changes:
+
+```sh
+cd ~/foreman
+bundle exec foreman start
+```
+
+Before you can access the WebUI, you must first accept the self-signed certificate on port 3808 by visiting `https://centos8-katello-devel.<HOSTNAME>.example.com:3808` in your browser.
+
+Then, navigate to `https://centos8-katello-devel.<HOSTNAME>.example.com/` to access the WebUI and preview your changes.
+
+As above, `<HOSTNAME>` refers to the shortname of your hypervisor.
+
+There is a much more detailed guide to the development environments in the [full documentation](https://theforeman.github.io/forklift/development/).
+
+See the developer documentation within the Foreman and Katello repositories for instructions on running the test suites, submitting pull requests, etc.
+
+### Using Playbooks and Roles without Vagrant
+
+In case using Vagrant is not desired, ansible playbooks and roles from this repo can be used separately. This is useful if an existing host should be used for the installation, e.g. a beaker machine. In order to deploy the devel environment on host test.example.com, the following needs to be done:
 
 on test.example.com machine, where the dev env should be deployed
 ```sh
@@ -71,8 +144,6 @@ In an example above, ansible was instructed to use specific private key (overrid
 
 Other playbooks from playbooks/ directory can be used similarly, though some might need more variables and investigating their parameters is recommended first.
 
-More thorough guides can be found in the [docs folder](https://github.com/theforeman/forklift/tree/master/docs).
-
 ### Credentials
 
 By default `forklift` deploys Foreman with `admin`/`changeme` as username and password, please change this on production installs (either after the install, or by setting `foreman_installer_admin_password` during the initial deployment).
@@ -84,7 +155,7 @@ resolution working with vagrant is using
 [vagrant-hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager). Forklift supports
 this plugin by default. The only thing one needs to do is install the vagrant-hostmanager plugin:
 
-```
+```sh
 vagrant plugin install vagrant-hostmanager
 ```
 
@@ -103,11 +174,11 @@ hostmanager_ip_resolver_device: 'eth1'
 
 ### Adding Custom Boxes
 
-Sometimes you want to spin up the same box type (e.g. centos7-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file in vagrant/boxes.d/. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
+Sometimes you want to spin up the same box type (e.g. centos8-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file in vagrant/boxes.d/. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
 
-```
+```yaml
 my-nightly-koji:
-  box: centos7
+  box: centos8
   ansible:
     playbook: playbooks/katello.yml
     variables:
@@ -142,7 +213,7 @@ Options:
 
 Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
 
-```
+```yaml
 rhel7:
   box_name: rhel7
   shell: 'echo TEST'
@@ -152,9 +223,9 @@ rhel7:
 
 Example with custom networking, static IP on custom libvirt network:
 
-```
+```yaml
 static:
-  box: centos7
+  box: centos8
   hostname: mystatic.box.com
   networks:
     - type: 'private_network'
@@ -166,9 +237,9 @@ static:
 
 Example with custom libvirt management network:
 
-```
+```yaml
 static:
-  box: centos7
+  box: centos8
   hostname: mystatic.box.com
   libvirt_options:
     management_network_address: 172.23.99.0/24
@@ -179,23 +250,23 @@ You will need to install vagrant openstack provider. For more information click 
 Do not forget to set openstack API credentials.
 To use openstack provider as default look [here](https://www.vagrantup.com/docs/providers/default.html).
 
-```
-openstack-centos7:
-  image_name: 'Centos7'
+```yaml
+openstack-centos8:
+  image_name: 'Centos8'
   username: 'centos'  #root by default
   hostname: 'john-doe'
   openstack_flavor: 'm1.medium'
   sync_type: 'disabled'
 ```
 
-#### Using SSHFS to share folders
+### Using SSHFS to share folders
 
 You will need to install [vagrant-sshfs](https://github.com/dustymabe/vagrant-sshfs) plugin. Make sure your host actually has sshfs installed.
 Example with sshfs mounting folder from guest to host:
 
-```
+```yaml
 with-sshfs:
-  box: centos7
+  box: centos8
   sshfs:
     host_path: '/some/host/path'
     guest_path: '/some/guest/path'
@@ -206,9 +277,9 @@ If you want to mount in the opposite direction, just change `reverse` to `False`
 
 Additonal options may be specified with using `options`.
 
-```
+```yaml
 with-sshfs-options:
-  box: centos7
+  box: centos8
   sshfs:
     host_path: '/some/host/path'
     guest_path: '/some/guest/path'
@@ -217,9 +288,9 @@ with-sshfs-options:
 
 Example with an additional disk (libvirt volume) presented as /dev/vdb in the vm:
 
-```
+```yaml
 static:
-  box: centos7
+  box: centos8
   hostname: mystatic.box.com
   add_disks:
     - size: 100GiB
@@ -227,15 +298,15 @@ static:
       type: qcow2
 ```
 
-#### Using NFS to share folders
+### Using NFS to share folders
 
 An alternative to SSHFS is to share the folders with NFS.  It is slightly more work than SSHFS.  See the [Fedora developer documentation](https://developer.fedoraproject.org/tools/vagrant/vagrant-nfs.html) for information about how to configure an NFS server for Vagrant.
 
 Then create your box:
 
-```
+```yaml
 with-nfs:
-  box: centos7
+  box: centos8
   nfs:
     host_path: '/some/host/path'
     guest_path: '/some/guest/path'
@@ -255,11 +326,11 @@ Some settings can be customized for the entirety of the deployment by copying `v
  * domain: domain for your hosts, you can override this per-box by configuring your box with a domain directly
  * libvirt_options, virtualbox_options, openstack_options, google_options: custom options for the various providers
 
-#### Customize Available Boxes
+### Customize Available Boxes
 
 The list of available boxes can be customized by setting an exclude list in `vagrant/settings.yaml`. This allows faster `vagrant status` calls as well as reducing the the scope of boxes a user sees to tailor to their use cases. To specify boxes to exclude add the following to `vagrant/settings.yaml`, for example, to remove fips, fedora and any Foreman 1.2X boxes from view:
 
-```
+```yaml
 boxes:
   exclude:
     - "katello" # exclude any box containing "katello"
@@ -274,9 +345,9 @@ Boxes can be further customized by declaring Ansible playbooks to be run during 
 
 Ansible roles may also be installed directly using the [`ansible-galaxy` command](http://docs.ansible.com/ansible/galaxy.html#the-ansible-galaxy-command-line-tool). These roles will be installed at `playbooks/galaxy_roles` and will be ignored by git. You may also specify roles in a `requirements.yml`, which you can use to install all desired roles with `ansible-galaxy install -r requirements.yml`
 
-```
+```yaml
 ansible:
-  box: centos7-katello-nightly
+  box: centos8-katello-nightly
   ansible:
     playbook:
       - 'user_playbooks/vim.yml'
@@ -287,7 +358,7 @@ ansible:
 
 If needing to use a local copy of an Ansible collection used by Forklift, such as developing updates to theforeman.operations collection, you can temporarily update the `requirements.yml` to point at your local checkout:
 
-```
+```yaml
 collections:
   - name: git+file:///home/user/path/to/repo/.git
     type: git
@@ -295,6 +366,6 @@ collections:
 
 Then run `ansible-galaxy` install:
 
-```
+```sh
 ansible-galaxy collection install -r requirements.yml --force-with-deps
 ```
