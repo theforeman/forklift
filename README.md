@@ -26,7 +26,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
 ### Requirements
 
 * Vagrant - 2.2+ - Both the VirtualBox and Libvirt providers are tested
-* Ansible - 2.9+
+* Ansible - 2.12+
 * [Vagrant Libvirt provider plugin](https://github.com/vagrant-libvirt/vagrant-libvirt) (if using Libvirt)
 * Virtualization enabled in BIOS
 
@@ -40,7 +40,7 @@ This will walk through the simplest path of spinning up a production test enviro
 git clone https://github.com/theforeman/forklift.git
 cd forklift
 ansible-galaxy collection install -r requirements.yml
-vagrant up centos7-foreman-nightly
+vagrant up centos8-foreman-nightly
 ```
 
 The same can be quickly done for a development environment where GITHUB_NICK is your GitHub username:
@@ -50,7 +50,7 @@ git clone https://github.com/theforeman/forklift.git
 cd forklift
 cp vagrant/boxes.d/99-local.yaml.example vagrant/boxes.d/99-local.yaml
 sed -i.bak "s/<REPLACE ME>/GITHUB_NICK/g" vagrant/boxes.d/99-local.yaml
-vagrant up centos7-katello-devel
+vagrant up centos8-katello-devel
 ```
 
 In case using vagrant is not desired, ansible playbooks and roles from this repo can be used separately. This is useful if an existing host should be used for the installation, e.g. a beaker machine. In order to deploy the devel environment on host test.example.com, the following needs to be done:
@@ -103,11 +103,11 @@ hostmanager_ip_resolver_device: 'eth1'
 
 ### Adding Custom Boxes
 
-Sometimes you want to spin up the same box type (e.g. centos7-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file in vagrant/boxes.d/. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
+Sometimes you want to spin up the same box type (e.g. centos8-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file in vagrant/boxes.d/. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
 
 ```
 my-nightly-koji:
-  box: centos7
+  box: centos8
   ansible:
     playbook: playbooks/katello.yml
     variables:
@@ -154,7 +154,7 @@ Example with custom networking, static IP on custom libvirt network:
 
 ```
 static:
-  box: centos7
+  box: centos8
   hostname: mystatic.box.com
   networks:
     - type: 'private_network'
@@ -168,7 +168,7 @@ Example with custom libvirt management network:
 
 ```
 static:
-  box: centos7
+  box: centos8
   hostname: mystatic.box.com
   libvirt_options:
     management_network_address: 172.23.99.0/24
@@ -180,8 +180,8 @@ Do not forget to set openstack API credentials.
 To use openstack provider as default look [here](https://www.vagrantup.com/docs/providers/default.html).
 
 ```
-openstack-centos7:
-  image_name: 'Centos7'
+openstack-centos8:
+  image_name: 'Centos8'
   username: 'centos'  #root by default
   hostname: 'john-doe'
   openstack_flavor: 'm1.medium'
@@ -195,7 +195,7 @@ Example with sshfs mounting folder from guest to host:
 
 ```
 with-sshfs:
-  box: centos7
+  box: centos8
   sshfs:
     host_path: '/some/host/path'
     guest_path: '/some/guest/path'
@@ -208,7 +208,7 @@ Additonal options may be specified with using `options`.
 
 ```
 with-sshfs-options:
-  box: centos7
+  box: centos8
   sshfs:
     host_path: '/some/host/path'
     guest_path: '/some/guest/path'
@@ -219,7 +219,7 @@ Example with an additional disk (libvirt volume) presented as /dev/vdb in the vm
 
 ```
 static:
-  box: centos7
+  box: centos8
   hostname: mystatic.box.com
   add_disks:
     - size: 100GiB
@@ -235,7 +235,7 @@ Then create your box:
 
 ```
 with-nfs:
-  box: centos7
+  box: centos8
   nfs:
     host_path: '/some/host/path'
     guest_path: '/some/guest/path'
@@ -276,7 +276,7 @@ Ansible roles may also be installed directly using the [`ansible-galaxy` command
 
 ```
 ansible:
-  box: centos7-katello-nightly
+  box: centos8-katello-nightly
   ansible:
     playbook:
       - 'user_playbooks/vim.yml'
