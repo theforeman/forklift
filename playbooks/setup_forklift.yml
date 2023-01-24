@@ -81,7 +81,7 @@
 
     - name: 'Install Forklift Pulp collection dependencies for >3.18'
       command:
-        cmd: ansible-galaxy collection install -r requirements-pulp-318.yml
+        cmd: ansible-galaxy collection install -r requirements-pulp-322.yml
         chdir: "{{ forklift_dest }}"
       when:
         - forklift_install_pulp_from_galaxy
