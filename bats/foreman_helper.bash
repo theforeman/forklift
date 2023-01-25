@@ -99,7 +99,7 @@ tCheckPulpYumContent() {
 tHasContentType() {
   CONTENT_TYPE=$1
 
-  curl https://`hostname`:9090/v2/features --cert /etc/foreman/client_cert.pem --key /etc/foreman/client_key.pem | ruby -e "require 'json'; puts JSON.load(ARGF.read).fetch('pulpcore').fetch('capabilities').include?($CONTENT_TYPE)"
+  curl "https://$(hostname):9090/v2/features" --cert /etc/foreman/client_cert.pem --key /etc/foreman/client_key.pem | ruby -e "require 'json'; puts JSON.load(ARGF.read).fetch('pulpcore').fetch('capabilities').include?('${CONTENT_TYPE}')"
 }
 
 tSkipUnlessContentType() {
