@@ -71,11 +71,6 @@ setup() {
 }
 
 @test "create an ostree repository" {
-  if tIsEL 7; then
-    skip "OSTree content is not applicable on EL 7 systems"
-  fi
-
-  tSkipIfOlderThan43
   tSkipUnlessContentType 'ostree'
 
   hammer repository create --organization="${ORGANIZATION}" --url=https://fixtures.pulpproject.org/ostree/small/ \
@@ -83,11 +78,6 @@ setup() {
 }
 
 @test "sync ostree repository" {
-  if tIsEL 7; then
-    skip "OSTree content is not applicable on EL 7 systems"
-  fi
-
-  tSkipIfOlderThan43
   tSkipUnlessContentType 'ostree'
 
   hammer repository synchronize --organization="${ORGANIZATION}" \
@@ -95,11 +85,6 @@ setup() {
 }
 
 @test "upload ostree_ref" {
-  if tIsEL 7; then
-    skip "OSTree content is not applicable on EL 7 systems"
-  fi
-
-  tSkipIfOlderThan43
   tSkipUnlessContentType 'ostree'
 
   wget --no-parent -r https://fixtures.pulpproject.org/ostree/small/
