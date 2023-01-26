@@ -42,13 +42,6 @@ tSkipIfNewerThan45() {
   fi
 }
 
-tSkipIfPulp3Only() {
-  KATELLO_VERSION=$(tKatelloVersion)
-  if [[ $KATELLO_VERSION == 4.* ]]; then
-    skip "${1} is not available in scenarios with only Pulp 3"
-  fi
-}
-
 tIsPulp2() {
   tPackageExists pulp-server
 }
