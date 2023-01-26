@@ -94,22 +94,6 @@ setup() {
     --product="${PRODUCT}" --name="${OSTREE_REPOSITORY}"
 }
 
-@test "create puppet repository" {
-  tSkipIfPulp3Only "Puppet content"
-
-  hammer repository create --organization="${ORGANIZATION}" \
-    --product="${PRODUCT}" --content-type="puppet" --name "${PUPPET_REPOSITORY}" | grep -q "Repository created"
-}
-
-@test "upload puppet module" {
-  tSkipIfPulp3Only "Puppet content"
-
-  curl -o /tmp/stbenjam-dummy-0.2.0.tar.gz https://forgeapi.puppetlabs.com/v3/files/stbenjam-dummy-0.2.0.tar.gz
-  tFileExists /tmp/stbenjam-dummy-0.2.0.tar.gz && hammer repository upload-content \
-    --organization="${ORGANIZATION}" --product="${PRODUCT}" --name="${PUPPET_REPOSITORY}" \
-    --path="/tmp/stbenjam-dummy-0.2.0.tar.gz" | grep -q "Successfully uploaded"
-}
-
 @test "upload ostree_ref" {
   if tIsEL 7; then
     skip "OSTree content is not applicable on EL 7 systems"
@@ -293,16 +277,6 @@ setup() {
     | grep "${PRODUCT}" | cut -d, -f1)
   hammer activation-key add-subscription --id=$activation_key_id \
     --subscription-id=$subscription_id | grep -q "Subscription added to activation key"
-}
-
-@test "add puppet module to content view" {
-  tSkipIfPulp3Only "Puppet content"
-
-  repo_id=$(hammer --csv --no-headers repository list --organization="${ORGANIZATION}" \
-    | grep Puppet | cut -d, -f1)
-  module_id=$(hammer --csv --no-headers puppet-module list --repository-id=$repo_id | grep dummy | cut -d, -f1)
-  hammer content-view puppet-module add --organization="${ORGANIZATION}" \
-    --content-view="${CONTENT_VIEW}" --id=$module_id | grep -q "Puppet module added to content view"
 }
 
 @test "promote first content view again" {
