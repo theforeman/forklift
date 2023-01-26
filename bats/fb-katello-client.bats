@@ -8,10 +8,6 @@ load foreman_helper
 load fixtures/content
 
 @test "enable katello-agent" {
-  KATELLO_VERSION=$(tKatelloVersion)
-  if [[ $KATELLO_VERSION != 4.[1-9]* ]]; then
-    skip "Enabling katello-agent explicitly is only available with Katello 4.1+"
-  fi
   foreman-installer --foreman-proxy-content-enable-katello-agent true
   foreman-maintain packages unlock -y
 }
