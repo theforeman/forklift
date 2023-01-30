@@ -27,4 +27,3 @@
         - "--no-enable-puppet"
         - "--foreman-proxy-puppet false"
         - "--foreman-proxy-puppetca false"
-        - "--foreman-proxy-content-puppet false"
