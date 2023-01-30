@@ -8,21 +8,42 @@ server_box:
         - "--puppet-server-max-active-instances 1"
         - "--puppet-server-jvm-min-heap-size 1G"
         - "--puppet-server-jvm-max-heap-size 1G"
+
+        - "--enable-foreman-compute-ec2"
+        - "--enable-foreman-compute-libvirt"
+        - "--enable-foreman-compute-openstack"
+        - "--enable-foreman-compute-ovirt"
+        - "--enable-foreman-compute-vmware"
+
         - "--enable-foreman-cli-ansible"
-        - "--enable-foreman-cli-discovery"
-        - "--enable-foreman-cli-remote-execution"
-        - "--enable-foreman-cli-tasks"
-        - "--enable-foreman-cli-templates"
         - "--enable-foreman-plugin-ansible"
-        - "--enable-foreman-plugin-bootdisk"
-        - "--enable-foreman-plugin-discovery"
-        - "--enable-foreman-plugin-hooks"
-        - "--enable-foreman-plugin-remote-execution"
-        - "--enable-foreman-plugin-templates"
         - "--enable-foreman-proxy-plugin-ansible"
+
+        - "--enable-foreman-plugin-azure"
+        - "--enable-foreman-cli-azure"
+
+        - "--enable-foreman-plugin-bootdisk"
+
+        - "--enable-foreman-cli-discovery"
+        - "--enable-foreman-plugin-discovery"
         - "--enable-foreman-proxy-plugin-discovery"
+
+        - "--enable-foreman-cli-google"
+        - "--enable-foreman-plugin-google"
+
+        - "--enable-foreman-plugin-hooks"
+
+        - "--enable-foreman-cli-remote-execution"
+        - "--enable-foreman-plugin-remote-execution"
         - "--enable-foreman-proxy-plugin-remote-execution-script"
         - "--foreman-proxy-plugin-remote-execution-script-install-key=true"
+
+        - "--enable-foreman-cli-tasks"
+        - "--enable-foreman-plugin-tasks"
+
+        - "--enable-foreman-cli-templates"
+        - "--enable-foreman-plugin-templates"
+
         - "{{ '--enable-foreman-cli-openscap' if pipeline_os.startswith('centos') else '' }}"
         - "{{ '--enable-foreman-plugin-openscap' if pipeline_os.startswith('centos') else '' }}"
         - "{{ '--enable-foreman-proxy-plugin-openscap' if pipeline_os.startswith('centos') else '' }}"
