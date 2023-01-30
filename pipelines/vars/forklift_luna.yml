@@ -17,6 +17,9 @@ server_box:
         - "--enable-foreman-plugin-ansible"
         - "--enable-foreman-proxy-plugin-ansible"
 
+        - "--enable-foreman-plugin-azure"
+        - "--enable-foreman-cli-azure"
+
         - "--enable-foreman-plugin-bootdisk"
 
         - "--enable-foreman-cli-discovery"
