@@ -13,6 +13,12 @@ server_box:
         - "--puppet-server-jvm-min-heap-size 1G"
         - "--puppet-server-jvm-max-heap-size 1G"
 
+        - "--enable-foreman-compute-ec2"
+        - "--enable-foreman-compute-libvirt"
+        - "--enable-foreman-compute-openstack"
+        - "--enable-foreman-compute-ovirt"
+        - "--enable-foreman-compute-vmware"
+
         - "--enable-foreman-cli-ansible"
         - "--enable-foreman-plugin-ansible"
         - "--enable-foreman-proxy-plugin-ansible"
