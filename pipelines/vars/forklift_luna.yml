@@ -26,6 +26,9 @@ server_box:
         - "--enable-foreman-plugin-discovery"
         - "--enable-foreman-proxy-plugin-discovery"
 
+        - "--enable-foreman-cli-google"
+        - "--enable-foreman-plugin-google"
+
         - "--enable-foreman-plugin-hooks"
 
         - "--enable-foreman-cli-openscap"

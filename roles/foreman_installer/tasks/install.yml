@@ -20,6 +20,16 @@
     - new: '--foreman-proxy-plugin-remote-execution-script-install-key'
       old: '--foreman-proxy-plugin-remote-execution-ssh-install-key'
 
+- name: 'Replace foreman_google with foreman-gce options for pre-3.5'
+  set_fact:
+    foreman_installer_options_joined: "{{ foreman_installer_options_joined | replace(item.new, item.old) }}"
+  when: foreman_installer_version is version('3.5', '<')
+  with_items:
+    - new: '--enable-foreman-cli-google'
+      old: ''
+    - new: '--enable-foreman-plugin-google'
+      old: '--enable-foreman-compute-gce'
+
 - name: 'Run installer'
   shell: >
       {{ foreman_installer_command }} {{ (foreman_installer_verbose|bool) | ternary("-v", "") }}
