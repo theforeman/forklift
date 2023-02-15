@@ -9,6 +9,11 @@
     url: https://copr.fedorainfracloud.org/coprs/pvalena/vagrant/repo/epel-{{ ansible_distribution_major_version }}/pvalena-vagrant-epel-{{ ansible_distribution_major_version }}.repo
     dest: /etc/yum.repos.d/pvalena-vagrant.repo
 
+- name: 'install rubygem-unf from Foreman repos'
+  dnf:
+    name: http://koji.katello.org/kojifiles/packages/rubygem-unf/0.1.4/1.el8/noarch/rubygem-unf-0.1.4-1.el8.noarch.rpm
+    state: present
+
 - name: 'install vagrant'
   package:
     name: vagrant
