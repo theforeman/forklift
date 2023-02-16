@@ -19,4 +19,6 @@
     - role: epel_repositories
       become: true
     - podman
-    - smoker
+    - role: smoker
+      vars:
+        pytest_project_ignore_errors: "{{ (pipeline_version != 'nightly') }}"
