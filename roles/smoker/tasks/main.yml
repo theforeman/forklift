@@ -30,4 +30,3 @@
     pytest_project_directory: "{{ smoker_directory }}"
     pytest_project_markers: "{{ smoker_markers }}"
     pytest_project_command_args: "{{ smoker_command_args }}"
-    pytest_project_ignore_errors: yes
