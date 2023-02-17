@@ -1,9 +1,10 @@
 {
   "variables": {
-    "packer_hostname": "centos7-katello-devel-stable",
+    "packer_hostname": "centos8-katello-devel-stable",
     "password": "vagrant",
     "user": "vagrant",
-    "ansible_variables": "{}"
+    "ansible_variables": "{}",
+     "iso_name": "CentOS-Stream-8-x86_64-20201203-boot.iso"
   },
   "builders": [
     {
@@ -15,8 +16,8 @@
       "format": "qcow2",
       "headless": true,
       "http_directory": "http",
-      "iso_checksum": "sha256:07b94e6b1a0b0260b94c83d6bb76b26bf7a310dc78d7a9c7432809fb9bc6194a",
-      "iso_url": "http://packages.oit.ncsu.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
+      "iso_checksum": "sha256:b4bb35e2c074b4b9710419a9baa4283ce4a02f27d5b81bb8a714b576e5c2df7a",
+      "iso_url": "http://distro.ibiblio.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso",
       "name": "{{ user `packer_hostname` }}.example.com",
       "qemuargs": [
         [
@@ -64,4 +65,3 @@
     }
   ]
 }
-

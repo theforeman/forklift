@@ -2,20 +2,19 @@
     "variables": {
         "user": "vagrant",
         "password": "vagrant",
-        "packer_hostname": "centos7-katello-nightly-stable.example.com"
+        "packer_hostname": "centos8-katello-nightly-stable.example.com"
    },
 
     "builders":
     [
         {
-            "name": "centos7-katello-nightly-stable",
+            "name": "centos8-katello-nightly-stable",
             "type": "qemu",
             "format": "qcow2",
             "accelerator": "kvm",
             "headless": true,
-            "iso_url": "http://packages.oit.ncsu.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2003.iso",
-            "iso_checksum_type": "sha256",
-            "iso_checksum": "659691c28a0e672558b003d223f83938f254b39875ee7559d1a4a14c79173193",
+            "iso_checksum": "sha256:7d819a7b2b27b47cfc8aea612fb865aee21d053ea1a9a1bd0ee18a92f09200fd",
+            "iso_url": "http://distro.ibiblio.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso",
             "ssh_username": "{{user `user`}}",
             "ssh_password": "{{user `password`}}",
             "ssh_wait_timeout": "20m",
@@ -27,7 +26,7 @@
                 [ "-smp", "4" ]
             ],
             "boot_command": [
-              "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+              "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks8.cfg<enter><wait>"
             ]
         }
     ],
@@ -54,7 +53,7 @@
         {
             "type": "vagrant",
             "keep_input_artifact": false,
-            "output": "centos7-katello-nightly-stable.box"
+            "output": "centos8-katello-nightly-stable.box"
         }
     ]
 }
