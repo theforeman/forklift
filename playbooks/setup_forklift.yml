@@ -65,6 +65,9 @@
       command:
         cmd: ansible-galaxy collection install -r requirements.yml
         chdir: "{{ forklift_dest }}"
+      register: collection_install
+      until: collection_install is not failed
+      retries: 3
       when: forklift_install_from_galaxy
 
     - name: 'Install Forklift Pulp collection dependencies for <3.17'
