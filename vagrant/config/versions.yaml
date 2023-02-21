@@ -96,7 +96,7 @@ installers:
 
   - foreman: 'nightly'
     katello: 'nightly'
-    pulpcore: '3.21'
+    pulpcore: '3.22'
     puppet: 7
     boxes:
       - 'almalinux8'
