@@ -6,7 +6,10 @@ load os_helper
 load foreman_helper
 
 setup() {
-  export ROLE_NAME=theforeman.batstest
+  HOSTNAME="$(hostname -f)"
+  export HOSTNAME
+  ROLE_NAME=theforeman.batstest
+  export ROLE_NAME
 }
 
 @test "run 'uptime' via Ansible" {
