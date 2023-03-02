@@ -206,6 +206,19 @@ The Koji role and task ID variable can be added to download and configure a repo
     - katello
 ```
 
+## Packit PR Builds
+
+Forklift supports using Packit PR builds for testing purposes. To use those one needs to define the `packit_prs` variable to the list of PRs (in the form of `<org>/<repo>/<pr>` or as full PR links):
+
+In `99-local.yaml`:
+```yaml
+ansible:
+  variables:
+    packit_prs:
+      - "theforeman/foreman_maintain/690"
+      - "https://github.com/theforeman/foreman_maintain/pull/690"
+```
+
 ## Test Puppet Module
 
 ### Pull Requests

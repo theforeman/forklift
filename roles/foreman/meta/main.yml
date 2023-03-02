@@ -4,5 +4,6 @@ dependencies:
   - role: selinux
   - role: etc_hosts
   - role: koji
+  - role: packit
   - role: foreman_server_repositories
   - role: foreman_installer
