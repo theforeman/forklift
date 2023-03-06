@@ -9,6 +9,7 @@ This covers how to setup and configure a development environment using the Forkl
    * [Customizing the Development Environment](#customizing-the-development-environment)
    * [Reviewing Pull Requests](#reviewing-pull-requests)
  * [Use Koji Scratch Builds](#koji-scratch-builds)
+ * [Packit PR Builds](#packit-pr-builds)
  * [Test Puppet Module Pull Requests](#test-puppet-module)
  * [Hammer Development](#hammer-development)
  * [Capsule Development](#capsule-development)
