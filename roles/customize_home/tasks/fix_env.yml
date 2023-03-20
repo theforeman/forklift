@@ -1,0 +1,11 @@
+- name: Check that the .env exists
+  stat:
+    path: /home/vagrant/foreman/.env
+  register: stat_result
+
+- name: Ensure .env file contains current hostname
+  ansible.builtin.replace:
+    path: /home/vagrant/foreman/.env
+    regexp: '(.*)--public [a-zA-Z0-9-\.]*(.*)'
+    replace: '\1--public {{ ansible_fqdn }}\2'
+  when: stat_result
