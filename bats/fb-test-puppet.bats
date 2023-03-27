@@ -115,3 +115,14 @@ fi
   REPORT_ID=$(hammer --output csv --no-headers config-report list --fields "Id" --search "host=${HOSTNAME} origin=Puppet")
   hammer config-report info --id "${REPORT_ID%%[[:space:]]*}" | grep "Resource: Puppet"
 }
+
+@test "disable puppet" {
+  KATELLO_VERSION=$(tKatelloVersion)
+  if [[ $KATELLO_VERSION != 4.[3-9]* ]]; then
+    skip "Disabling Puppet explicitly is only supported with Katello 4.2 or older"
+  fi
+
+  if tForemanMaintainCommandAvailable 'plugin purge-puppet'; then
+    foreman-maintain plugin purge-puppet
+  fi
+}
