@@ -16,7 +16,7 @@
         dest: "{{ backup_dir }}/{{ item }}"
         url: "{{ clone_source_url }}/{{ item }}"
       loop: "{{ backup_files[clone_type] }}"
-    - name: install satellite-clone
+    - name: install satellite-clone dependencies
       package:
         name:
           - ansible-core
@@ -26,11 +26,20 @@
     - name: clone satellite-clone
       git:
         repo: "{{ clone_repo }}"
-        dest: /root/satellite-clone
+        dest: "{{ clone_repo_dest }}"
         version: "{{ clone_version }}"
+    - name: create /usr/sbin/satellite-clone
+      ansible.builtin.file:
+        src: "{{ clone_repo_dest }}/bin/satellite-clone"
+        dest: /usr/sbin/satellite-clone
+        state: link
+    - name: create /var/log/satellite-clone
+      ansible.builtin.file:
+        path: /var/log/satellite-clone
+        state: directory
     - name: write satellite-clone-vars.yml
       copy:
-        dest: /root/satellite-clone/satellite-clone-vars.yml
+        dest: "{{ clone_repo_dest }}/satellite-clone-vars.yml"
         content: |
           enable_repos: false
           backup_dir: "{{ backup_dir }}"
@@ -41,8 +50,6 @@
     - name: call clone
       # to silly me tomorrow: yes, this needs to be shell, not command
       # why? sat-clone uses "$PWD" and that's not updated to the chdir below if you use command
-      shell: ansible-playbook satellite-clone-playbook.yml
-      args:
-        chdir: /root/satellite-clone/
+      shell: satellite-clone --assume-yes
       environment:
         SATELLITE_CLONE_FORCE_VERSION: "{{ clone_satellite_version }}"
