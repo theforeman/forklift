@@ -24,3 +24,12 @@ backup_files:
     - config_files.tar.gz
     - metadata.yml
     - pgsql_data.tar.gz
+  online:
+    - .config.snar
+    - .pulp.snar
+    - config_files.tar.gz
+    - metadata.yml
+    - pulp_data.tar
+    - candlepin.dump
+    - foreman.dump
+    - pulpcore.dump
