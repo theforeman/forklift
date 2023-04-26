@@ -6,6 +6,11 @@ set -o pipefail
 load os_helper
 load foreman_helper
 
+setup() {
+  HOSTNAME="$(hostname -f)"
+  export HOSTNAME
+}
+
 if [[ -e /etc/profile.d/puppet-agent.sh ]] ; then
   . /etc/profile.d/puppet-agent.sh
 fi
@@ -92,7 +97,7 @@ fi
   [ "${count}" -gt 1 ]
 }
 
-@test "Assign puppet-environment to default taxonomies" {
+@test "assign puppet-environment to default taxonomies" {
   hammer puppet-environment update --name=production --locations "Default Location" --organizations "Default Organization"
 }
 
@@ -104,4 +109,9 @@ fi
 @test "apply class with puppet agent" {
   puppet agent -v -o --no-daemonize
   grep -i "property of the Foreman project" /etc/motd
+}
+
+@test "ensure there is a report for Puppet" {
+  REPORT_ID=$(hammer --output csv --no-headers config-report list --fields "Id" --search "host=${HOSTNAME} origin=Puppet")
+  hammer config-report info --id "${REPORT_ID%%[[:space:]]*}" | grep "Resource: Puppet"
 }
