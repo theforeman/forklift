@@ -31,7 +31,7 @@
 
 - block:
     - name: "Run bats"
-      shell: "bats --tap {{ item }} > {{ bats_output_dir }}/{{ item }}.tap"
+      shell: "bats --trace --tap {{ item }} > {{ bats_output_dir }}/{{ item }}.tap"
       args:
         chdir: "{{ bats_forklift_dir }}/bats"
       with_items:
