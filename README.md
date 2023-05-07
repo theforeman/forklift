@@ -131,12 +131,12 @@ In case using Vagrant is not desired, ansible playbooks and roles from this repo
 on test.example.com machine, where the dev env should be deployed
 ```sh
 useradd vagrant
-echo "vagrant	ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers`
+echo "vagrant	ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers.d/vagrant
 ```
 
 in forklift checkout
 ```sh
-echo "[devel]\ntest.example.com" > inventories/local_inventory
+echo -e "[devel]\ntest.example.com" > inventories/local_inventory
 ansible-playbook --private-key=~/.ssh/id_rsa --user root --inventory inventories/local_inventory --extra-vars katello_devel_github_username=katello playbooks/devel.yml
 ```
 
