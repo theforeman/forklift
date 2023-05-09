@@ -1,6 +1,8 @@
 ---
 bats_fetch_results: true
-bats_environment: {}
+bats_test_name_prefix: ''
+bats_environment:
+  BATS_TEST_NAME_PREFIX: "{{ bats_test_name_prefix }}"
 bats_git_dir: "/root/bats"
 bats_forklift_dir: "/root/forklift"
 bats_forklift_repo: "https://github.com/theforeman/forklift.git"
