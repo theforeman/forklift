@@ -8,6 +8,7 @@
     - ../vars/repos_staging.yml
   vars:
     bats_output_dir: "/root/bats_results_proxy_n-1_upgrade"
+    bats_test_name_prefix: "{{ pipeline_os }} n-1 upgrade: "
   environment:
     FOREMAN_EXPECTED_VERSION: "{{ foreman_expected_version | default('') }}"
     ORG_SUFFIX: "_proxy_n-1_upgrade"

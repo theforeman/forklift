@@ -6,3 +6,4 @@ forklift_smoker_name: "pipe-{{ pipeline_type }}-smoker-{{ pipeline_version }}-{{
 smoker_box:
   box: centos8-stream
   memory: 2048
+bats_test_name_prefix: "{{ pipeline_os }} {{ pipeline_action }}: "

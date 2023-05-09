@@ -7,3 +7,4 @@ forklift_boxes: "{{ {forklift_server_name: server_box, forklift_smoker_name: smo
 smoker_box:
   box: centos8-stream
   memory: 2048
+bats_test_name_prefix: "{{ pipeline_os }} {{ pipeline_action }}: "
