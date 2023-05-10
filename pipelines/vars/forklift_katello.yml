@@ -1,6 +1,6 @@
 server_box:
   box: "{{ pipeline_os }}"
-  memory: 8192
+  memory: 10240
   ansible:
     variables:
       foreman_server_repositories_katello: true
