@@ -40,4 +40,4 @@ boxes:
   centos9-stream:
     box_name: 'centos/stream9'
     disk_size: 40
-    libvirt: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230410.0.x86_64.vagrant-libvirt.box
+    libvirt: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230516.0.x86_64.vagrant-libvirt.box
