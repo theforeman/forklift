@@ -1,20 +1,8 @@
 boxes:
-  fedora32:
-    box_name: 'fedora/32-cloud-base'
+  fedora37:
+    box_name: 'fedora/37-cloud-base'
     pty: true
 
-  fedora33:
-    box_name: 'fedora/33-cloud-base'
-    pty: true
-
-  fedora34:
-    box_name: 'fedora/34-cloud-base'
-    pty: true
-
-  fedora35:
-    box_name: 'fedora/35-cloud-base'
-    pty: true
-
-  fedora36:
-    box_name: 'fedora/36-cloud-base'
+  fedora38:
+    box_name: 'fedora/38-cloud-base'
     pty: true
