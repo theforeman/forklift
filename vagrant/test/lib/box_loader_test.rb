@@ -25,7 +25,7 @@ class TestBoxLoader < Minitest::Test
     assert_instance_of Hash, loader.boxes
     assert_includes loader.boxes, 'rpm-packaging'
     assert_equal 'rpm-packaging', loader.boxes['rpm-packaging']['name']
-    assert_equal 'fedora/36-cloud-base', loader.boxes['rpm-packaging']['box_name']
+    assert_equal 'fedora/38-cloud-base', loader.boxes['rpm-packaging']['box_name']
   end
 
   private

@@ -1,6 +1,6 @@
 ---
 rpm-packaging:
-  box: fedora36
+  box: fedora38
   ansible:
     playbook: 'playbooks/rpm_packaging.yml'
     variables:
