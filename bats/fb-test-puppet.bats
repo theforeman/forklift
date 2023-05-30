@@ -17,7 +17,7 @@ fi
 
 @test "enable puppet feature" {
   KATELLO_VERSION=$(tKatelloVersion)
-  if [[ $KATELLO_VERSION != 4.[3-9]* ]]; then
+  if ! tIsVersionNewer "${KATELLO_VERSION}" 4.3; then
     skip "Enabling Puppet explicitly is only needed with Katello 4.3+"
   fi
 
@@ -27,7 +27,7 @@ fi
   # Foreman 3.1 made Puppet optional for Katello (https://projects.theforeman.org/issues/33337)
   # Foreman 3.6 made a bunch of parameters no longer needed (https://projects.theforeman.org/issues/35985)
   FOREMAN_VERSION=$(tForemanVersion)
-  if [[ $FOREMAN_VERSION == 3.[1-5] ]]; then
+  if ! tIsVersionNewer "${FOREMAN_VERSION}" 3.6; then
     cert_options=(--foreman-proxy-content-puppet true --puppet-server-foreman-ssl-ca /etc/pki/katello/puppet/puppet_client_ca.crt --puppet-server-foreman-ssl-cert /etc/pki/katello/puppet/puppet_client.crt --puppet-server-foreman-ssl-key /etc/pki/katello/puppet/puppet_client.key)
   fi
 
