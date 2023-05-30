@@ -8,7 +8,7 @@ load foreman_helper
 
 @test "run 'uptime' via Remote Execution" {
   FOREMAN_VERSION=$(tForemanVersion)
-  if [[ $FOREMAN_VERSION == 2.* || $FOREMAN_VERSION == 3.[012] ]]; then
+  if ! tIsVersionNewer "${FOREMAN_VERSION}" 3.3; then
     job_template='Run Command - SSH Default'
   else
     job_template='Run Command - Script Default'

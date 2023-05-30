@@ -28,16 +28,22 @@ tKatelloVersion() {
   ) | cut -d. -f1-2
 }
 
+tIsVersionNewer() {
+  GIVEN_VERSION="$1"
+  WANTED_VERSION="$2"
+  [[ $(printf "%s\n%s" "${GIVEN_VERSION}" "${WANTED_VERSION}" | sort --version-sort | tail -n 1) == "${GIVEN_VERSION}" ]]
+}
+
 tSkipIfOlderThan43() {
   KATELLO_VERSION=$(tKatelloVersion)
-  if [[ $KATELLO_VERSION == [0-3].* || $KATELLO_VERSION == 4.[0-2]* ]]; then
+  if ! tIsVersionNewer "${KATELLO_VERSION}" 4.3; then
     skip "Restricting these tests to Katello 4.3+"
   fi
 }
 
 tSkipIfNewerThan45() {
   KATELLO_VERSION=$(tKatelloVersion)
-  if [[ $KATELLO_VERSION != 4.[0-5]* ]]; then
+  if tIsVersionNewer "${KATELLO_VERSION}" 4.6; then
     skip "Skip if Katello is newer than 4.5"
   fi
 }
@@ -111,7 +117,7 @@ tSubscribedProductOrSCA() {
 
 tForemanMaintainAvailable() {
   FOREMAN_VERSION=$(tForemanVersion)
-  if [[ $FOREMAN_VERSION == 2.* || $FOREMAN_VERSION == 3.[0123] ]]; then
+  if ! tIsVersionNewer "${FOREMAN_VERSION}" 3.4; then
     tIsEL || skip 'foreman_maintain is not available on non-EL before 3.4'
   fi
 }
