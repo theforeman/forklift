@@ -16,7 +16,6 @@ server_box:
       bats_tests_additional:
         - fb-katello-proxy.bats
         - "{{ 'fb-test-katello-change-hostname.bats' if pipeline_action == 'install' else ''}}"
-      pipeline_remove_pulp2: true
 proxy_box:
   box: "{{ pipeline_os }}"
   memory: 3072
