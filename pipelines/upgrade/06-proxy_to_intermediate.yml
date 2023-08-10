@@ -23,6 +23,3 @@
     - foreman_server_repositories
     - role: foreman_proxy_content
       when: forklift_upgrade_version_start != forklift_upgrade_version_intermediate
-    - role: cleanup_rh_ruby25
-      when:
-        - forklift_upgrade_version_intermediate == "2.5" or forklift_upgrade_version_intermediate == "4.1"
