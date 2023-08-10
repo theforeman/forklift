@@ -1,6 +1,0 @@
----
-- name: Run remove Pulp 2
-  shell: yes | foreman-maintain content remove-pulp2 # noqa risky-shell-pipe
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version == "7"

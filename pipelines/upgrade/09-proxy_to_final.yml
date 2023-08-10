@@ -22,11 +22,6 @@
       scenario_version: "{{ forklift_upgrade_version_final }}"
     - foreman_server_repositories
     - foreman_proxy_content
-    - role: remove_pulp2
-      when:
-        - forklift_upgrade_version_final == "4.0"
-        - pipeline_remove_pulp2 is defined
-        - pipeline_remove_pulp2
     - role: cleanup_rh_ruby25
       when:
         - forklift_upgrade_version_final == "nightly" or forklift_upgrade_version_final == "2.5" or forklift_upgrade_version_final == "4.1"
