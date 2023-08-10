@@ -84,12 +84,8 @@ def main():
                         'foreman_client_repositories_version': version['foreman'],
                         'katello_repositories_version': version['katello'],
                         'foreman_puppet_repositories_version': version['puppet'],
+                        'pulpcore_repositories_version': version['pulpcore'],
                         }
-                if 'pulp' in version:
-                    forklift_vars['katello_repositories_pulp_version'] = version['pulp']
-                    forklift_vars['pulp_repositories_version'] = version['pulp']
-                if 'pulpcore' in version:
-                    forklift_vars['pulpcore_repositories_version'] = version['pulpcore']
                 ret = forklift_vars
                 break
     else:

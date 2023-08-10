@@ -11,7 +11,6 @@ def ansible_variable_json(version_hash)
       'katello_repositories_version': version_hash['katello'],
       'foreman_repositories_version': version_hash['foreman'],
       'pulpcore_repositories_version': version_hash['pulpcore'],
-      'pulp_repositories_version': version_hash['pulp'],
       'foreman_installer_options': ["--katello-devel-katello-scm-revision=#{katello_branch}", "--katello-devel-foreman-scm-revision=#{foreman_branch}"]
 
   }

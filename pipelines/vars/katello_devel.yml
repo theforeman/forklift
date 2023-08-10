@@ -5,6 +5,5 @@ forklift_boxes:
     memory: 8192
     variables:
       katello_repositories_version: nightly
-      katello_repositories_pulp_version: nightly
       foreman_repositories_version: nightly
       foreman_client_repositories_version: nightly

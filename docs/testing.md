@@ -109,7 +109,6 @@ forklift_boxes:
     box: centos7
     memory: 3072
 katello_repositories_version: '3.11'
-katello_repositories_pulp_version: '2.19'
 foreman_repositories_version: '1.21'
 foreman_client_repositories_version: "{{ foreman_repositories_version }}"
 ```

@@ -101,8 +101,6 @@ module Forklift
         'foreman_repositories_version' => version['foreman'],
         'foreman_client_repositories_version' => version['foreman'],
         'katello_repositories_version' => version['katello'],
-        'katello_repositories_pulp_version' => version['pulp'],
-        'pulp_repositories_version' => version['pulp'],
         'pulpcore_repositories_version' => version['pulpcore'],
         'foreman_puppet_repositories_version' => version['puppet']
       )
