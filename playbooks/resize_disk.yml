@@ -22,7 +22,7 @@
       when: '"ext4" in root_partition.stdout'
 
     - name: Extend partition
-      command: growpart /dev/vda {{ root_partition.stdout.split(' ')[0].replace('/dev/vda', '') }}
+      command: growpart {{ root_partition.stdout | regex_replace('^(/dev/[sv]da)(\d+) .+$', '\1 \2') }}
       register: growpart_output
       failed_when:
         - growpart_output.rc != 0
