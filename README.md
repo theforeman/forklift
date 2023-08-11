@@ -69,24 +69,24 @@ When this is complete, simply follow the next section of this README to try out 
 Spin up your box and start using the latest nightly build of Foreman:
 
 ```sh
-vagrant up centos8-foreman-nightly
+vagrant up centos8-stream-foreman-nightly
 ```
 
 Access the CLI by first connecting to the box via SSH:
 
 ```sh
-vagrant ssh centos8-foreman-nightly
+vagrant ssh centos8-stream-foreman-nightly
 ```
 
 To access the WebUI, it's helpful to have the vagrant-hostmanager plugin installed, so that your Workstation will automatically be able to resolve the hostname of the box to its IP address.
 
-Then you can simply open your browser and navigate to `https://centos8-foreman-nightly.<HOSTNAME>.example.com` where `<HOSTNAME>` is replaced by the shortname of your workstation. The first time you do this you will need to accept the self-signed certicate.
+Then you can simply open your browser and navigate to `https://centos8-stream-foreman-nightly.<HOSTNAME>.example.com` where `<HOSTNAME>` is replaced by the shortname of your workstation. The first time you do this you will need to accept the self-signed certicate.
 
 By default, `forklift` deploys Foreman with `admin`/`changeme` as username and password.
 
 ### Katello Nightly Box
 
-Katello nightly boxes are available as well; simply change `centos8-foreman-nightly` to `centos8-katello-nightly` and the steps are otherwise exactly the same as above.
+Katello nightly boxes are available as well; simply change `centos8-stream-foreman-nightly` to `centos8-stream-katello-nightly` and the steps are otherwise exactly the same as above.
 
 ### Additional Documentation
 
@@ -174,11 +174,11 @@ hostmanager_ip_resolver_device: 'eth1'
 
 ### Adding Custom Boxes
 
-Sometimes you want to spin up the same box type (e.g. centos8-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file in vagrant/boxes.d/. For example, to create a custom box on CentOS 7 with nightly and run the installers reset command:
+Sometimes you want to spin up the same box type (e.g. centos8-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file in vagrant/boxes.d/. For example, to create a custom box on CentOS 8 Stream with nightly and run the installers reset command:
 
 ```yaml
 my-nightly-koji:
-  box: centos8
+  box: centos8-stream
   ansible:
     playbook: playbooks/katello.yml
     variables:
@@ -347,7 +347,7 @@ Ansible roles may also be installed directly using the [`ansible-galaxy` command
 
 ```yaml
 ansible:
-  box: centos8-katello-nightly
+  box: centos8-stream-katello-nightly
   ansible:
     playbook:
       - 'user_playbooks/vim.yml'
