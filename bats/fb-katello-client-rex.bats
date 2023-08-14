@@ -7,8 +7,8 @@ load os_helper
 load foreman_helper
 load fixtures/content
 
-@test "enable katello-agent" {
-  foreman-installer --foreman-proxy-content-enable-katello-agent true
+@test "enable remote execution" {
+  foreman-installer --enable-foreman-plugin-remote-execution --enable-foreman-proxy-plugin-remote-execution-script --foreman-proxy-plugin-remote-execution-script-install-key=true
   foreman-maintain packages unlock -y
 }
 
@@ -55,13 +55,10 @@ load fixtures/content
   subscription-manager repos --enable="${ORGANIZATION_LABEL}_${PRODUCT_LABEL}_${YUM_REPOSITORY_LABEL}" | grep -q "is enabled for this system"
 }
 
-@test "install katello-host-tools" {
-  tPackageInstall katello-host-tools && tPackageExists katello-host-tools
-}
-
-@test "install package locally" {
-  run yum -y remove walrus
-  tPackageInstall walrus-0.71 && tPackageExists walrus-0.71
+@test "install package remotely" {
+  run yum -y remove walrus-0.71
+  timeout 300 hammer job-invocation create --feature katello_package_install --inputs 'package=walrus-0.71' --search-query "name = ${HOSTNAME}"
+  tPackageExists walrus-0.71
 }
 
 @test "check available errata" {
@@ -75,38 +72,15 @@ load fixtures/content
   done
 }
 
-@test "try fetching container content" {
-  tPackageExists podman || tPackageInstall podman
-  podman login "${HOSTNAME}" -u admin -p changeme
-  CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
-  podman pull "${HOSTNAME}/${CONTAINER_PULL_LABEL}"
-}
-
-@test "install katello-agent" {
-  tPackageInstall katello-agent && tPackageExists katello-agent
-}
-
-@test "30 sec of sleep for groggy gofers" {
-  sleep 30
-}
-
-@test "install package remotely (katello-agent)" {
-  run yum -y remove gorilla
-  timeout 300 hammer host package install --host "${HOSTNAME}" --packages gorilla
-  tPackageExists gorilla
-}
-
-@test "install errata remotely (katello-agent)" {
-  timeout 300 hammer host errata apply --errata-ids 'RHEA-2012:0055' --host "${HOSTNAME}"
+@test "install errata remotely" {
+  timeout 300 hammer job-invocation create --feature katello_errata_install --inputs 'errata=RHEA-2012:0055' --search-query "name = ${HOSTNAME}"
   tPackageExists walrus-5.21
 }
 
-# it seems walrus lingers around making subsequent runs fail, so lets test package removal!
-@test "package remove (katello-agent)" {
-  timeout 300 hammer host package remove --host "${HOSTNAME}" --packages walrus
+@test "remove package remotely" {
+  timeout 300 hammer job-invocation create --feature katello_package_remove --inputs 'package=walrus' --search-query "name = ${HOSTNAME}"
 }
 
-@test "clean up subscription-manager and gofer after content tests" {
+@test "clean up subscription-manager after content tests" {
   cleanSubscriptionManager
-  tPackageRemove gofer
 }
