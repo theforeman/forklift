@@ -34,6 +34,11 @@ tIsVersionNewer() {
   [[ $(printf "%s\n%s" "${GIVEN_VERSION}" "${WANTED_VERSION}" | sort --version-sort | tail -n 1) == "${GIVEN_VERSION}" ]]
 }
 
+tIsKatelloAgentRemoved() {
+  KATELLO_VERSION=$(tKatelloVersion)
+  tIsVersionNewer "${KATELLO_VERSION}" 4.10
+}
+
 tSkipIfOlderThan43() {
   KATELLO_VERSION=$(tKatelloVersion)
   if ! tIsVersionNewer "${KATELLO_VERSION}" 4.3; then
