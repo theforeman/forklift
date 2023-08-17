@@ -1,38 +1,43 @@
 ---
-- name: "Creating of {{ unprivileged_user_username }} user"
-  user:
+- name: "Set group name"
+  ansible.builtin.set_fact:
+    unprivileged_user_groupname: "{{ unprivileged_user_primary_group | default(unprivileged_user_username) }}"
+
+- name: "Create groups"
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ unprivileged_user_additional_groups + [unprivileged_user_groupname] }}"
+  become: true
+
+- name: "Create the {{ unprivileged_user_username }} user"
+  ansible.builtin.user:
     name: "{{ unprivileged_user_username }}"
-    comment: "John Vagrant"
+    groups: "{{ unprivileged_user_additional_groups + [unprivileged_user_groupname] }}"
+    append: yes
   become: true
 
-- name: "Add {{ unprivileged_user_username }} to sudoers"
-  lineinfile:
-    dest: "/etc/sudoers.d/{{ unprivileged_user_username }}"
+- name: "Grant passwordless sudo via {{ unprivileged_user_groupname }} group"
+  community.general.sudoers:
+    name: "{{ unprivileged_user_groupname }}"
+    group: "{{ unprivileged_user_groupname }}"
+    commands: ALL
+  become: true
+
+- name: "Add public key to authorized_keys from Host Machine"
+  ansible.posix.authorized_key:
+    user: "{{ unprivileged_user_username }}"
     state: present
-    regexp: '^{{ unprivileged_user_username }}'
-    line: '{{ unprivileged_user_username }} ALL=(ALL) NOPASSWD: ALL'
-    validate: 'visudo -cf %s'
-    create: yes
-  become: true
-
-- name: "Create {{ unprivileged_user_username }} .ssh"
-  file:
-    path: "/home/{{ unprivileged_user_username }}/.ssh"
-    owner: "{{ unprivileged_user_username }}"
-    group: root
-    state: directory
-    mode: 0700
-  become: true
-
-- name: "Ensure public key is in authorized_keys"
-  lineinfile:
-    line:  "{{ lookup('file', unprivileged_user_import_ssh_pub_key) }}"
-    path:  "/home/{{ unprivileged_user_username }}/.ssh/authorized_keys"
-    create: yes
-    mode: 0600
-    owner: "{{ unprivileged_user_username }}"
-    state: present
+    key: "{{ lookup('file', unprivileged_user_import_ssh_pub_key) }}"
   when: unprivileged_user_import_ssh_pub_key | default(False)
+  become: true
+
+- name: "Add public key to authorized_keys via GitHub"
+  ansible.posix.authorized_key:
+    user: "{{ unprivileged_user_username }}"
+    state: present
+    key: "https://github.com/{{ unprivileged_user_import_ssh_pub_key_github }}.keys"
+  when: unprivileged_user_import_ssh_pub_key_github | default(False)
   become: true
 
 - name: "Check /home/{{ unprivileged_user_username }}/.ssh/authorized_keys"
@@ -41,7 +46,8 @@
   register: authorized_keys_file
   become: true
 
-- block:
+- name: "Inherit authorized_keys from root user if none imported for {{ unprivileged_user_username }}"
+  block:
     - name: "Check /root/.ssh/authorized_keys"
       stat:
         path: /root/.ssh/authorized_keys
