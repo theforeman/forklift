@@ -1,2 +1,4 @@
-forklift_versions_file: "{{ lookup('env', 'PWD') }}/vagrant/config/versions.yaml"
+---
+forklift_directory: "{{ playbook_dir | dirname }}"
+forklift_versions_file: "{{ forklift_directory }}/vagrant/config/versions.yaml"
 upgrade: False
