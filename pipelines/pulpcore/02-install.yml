@@ -27,6 +27,13 @@
     - ../vars/forklift_{{ pipeline_type }}.yml
   environment:
     DJANGO_SETTINGS_MODULE: pulpcore.app.settings
+  pre_tasks:
+    - when: pulpcore_staging_source != 'stagingyum'
+      set_fact:
+        pulp_pkg_repo: "http://koji.katello.org/releases/yum/pulpcore-{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
+    - when: pulpcore_staging_source == 'stagingyum'
+      set_fact:
+        pulp_pkg_repo: "https://stagingyum.theforeman.org/pulpcore/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
   roles:
     - epel_repositories
     - pulp.pulp_installer.pulp_all_services

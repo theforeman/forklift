@@ -6,39 +6,8 @@
   tags:
     - packages
 
-- name: 'Foreman {{ foreman_repositories_version }} Koji repository'
-  yum_repository:
-    name: foreman-koji
-    description: "Foreman {{ foreman_repositories_version }} Koji Repository"
-    baseurl: "http://koji.katello.org/releases/yum/foreman-{{ foreman_repositories_version }}/el{{ ansible_distribution_major_version }}/x86_64/"
-    priority: "1"
-    gpgcheck: no
-  tags:
-    - packages
-
-- name: 'Foreman {{ foreman_repositories_version }} Plugins Koji repository'
-  yum_repository:
-    name: foreman-plugins-koji
-    state: "{{ foreman_repositories_plugins | ternary('present', 'absent') }}"
-    description: "Foreman Plugins {{ foreman_repositories_version }} Koji Repository"
-    baseurl: "http://koji.katello.org/releases/yum/foreman-plugins-{{ foreman_repositories_version }}/el{{ ansible_distribution_major_version }}/x86_64/"
-    priority: "1"
-    gpgcheck: no
-  tags:
-    - packages
-
-- name: 'Set module_hotfixes=1'
-  lineinfile:
-    path: "/etc/yum.repos.d/{{ item }}.repo"
-    line: module_hotfixes=1
-  loop:
-    - foreman-koji
-    - foreman-plugins-koji
-  tags:
-    - packages
-  when:
-    - foreman_repositories_version != 'nightly'
-    - foreman_repositories_version is version('3.1', '<=')
+- ansible.builtin.include_tasks:
+    file: _{{ foreman_repositories_staging_source }}_staging_repos.yml
 
 - name: 'Enable foreman:el8 module'
   command: dnf module enable -y foreman:el8

@@ -6,7 +6,6 @@ forklift_boxes:
   "{{ {forklift_server_name: server_box} }}"
 
 pulp_install_source: packages
-pulp_pkg_repo: "http://koji.katello.org/releases/yum/pulpcore-{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
 pulp_pkg_repo_gpgcheck: False
 pulp_settings:
   secret_key: "unsafe_default"
