@@ -1,0 +1,17 @@
+---
+- name: Set module hotfixes on AppStream
+  ansible.builtin.lineinfile:
+    path: /etc/yum.repos.d/CentOS-Stream-AppStream.repo
+    line: module_hotfixes=1
+    insertbefore: EOF
+
+- name: Update just tomcat
+  ansible.builtin.package:
+    name: tomcat
+    state: latest
+
+- name: Remove module hotfixes
+  ansible.builtin.lineinfile:
+    path: /etc/yum.repos.d/CentOS-Stream-AppStream.repo
+    line: module_hotfixes=1
+    state: absent
