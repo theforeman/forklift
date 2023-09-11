@@ -20,7 +20,7 @@
       scenario_os: "{{ pipeline_os }}"
       scenario_version: "{{ forklift_upgrade_version_intermediate }}"
     - role: update_tomcat
-      when: (pipeline_type == 'katello' || pipeline_type == 'luna') && pipeline_os == 'centos8-stream'
+      when: (pipeline_type == 'katello' or pipeline_type == 'luna') and pipeline_os == 'centos8-stream'
     - foreman_server_repositories
     - role: foreman_installer
       foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
