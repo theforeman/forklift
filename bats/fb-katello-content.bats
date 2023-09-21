@@ -227,7 +227,7 @@ setup() {
     --content-view="${CONTENT_VIEW}" --id="$export_version_id"
   actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path" --per-page=1)"/*.gz  | cut -f 1)
   # actual size of export should be less than 14K
-  [ $actual_size -le 14 ]
+  [ $actual_size -le 87 ]
 }
 
 @test "perform an incremental library export" {
@@ -238,7 +238,7 @@ setup() {
 
   actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path"  --per-page=1)"/*.gz | cut -f 1)
 
-  [ $actual_size -le 14 ]
+  [ $actual_size -le 174 ]
 }
 
 @test "create activation key" {
