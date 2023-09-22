@@ -1,8 +1,9 @@
 ---
 - name: 'RedHat | Update packages'
-  yum:
+  dnf:
     name: '*'
     update_cache: yes
+    nobest: true # REQUIRED TO WORKAROUND TOMCAT ISSUE -- https://community.theforeman.org/t/katello-nightly-rpm-pipeline-1766-failed/35171
     state: latest
   tags:
     - packages
