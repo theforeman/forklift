@@ -1,0 +1,8 @@
+forklift_name: "pipe-candlepin-{{ pipeline_version }}-{{ pipeline_os }}"
+
+server_box:
+  box: "{{ pipeline_os }}"
+  memory: 4680
+
+forklift_boxes:
+  "{{ {forklift_name: server_box} }}"

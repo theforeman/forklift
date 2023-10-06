@@ -1,0 +1,11 @@
+---
+- name: Setup git repo
+  become: True
+  hosts:
+   - "{{ forklift_name }}"
+  vars_files:
+    - ../vars/forklift_candlepin.yml
+  vars:
+    beaker_puppet_module: "puppet-candlepin"
+  roles:
+    - beaker

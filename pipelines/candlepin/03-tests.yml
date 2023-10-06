@@ -1,0 +1,17 @@
+---
+- name: run tests
+  become: True
+  hosts:
+   - "{{ forklift_name }}"
+  vars_files:
+    - ../vars/forklift_candlepin.yml
+  tasks:
+    - name: Run acceptance tests
+      ansible.builtin.include_role:
+        name: beaker
+        tasks_from: test
+      vars:
+        beaker_puppet_module: "puppet-candlepin"
+        beaker_os: "{{ pipeline_os.replace('-stream', '') }}"
+        beaker_environment:
+          BEAKER_FACTER_CANDLEPIN_BASEURL: "https://stagingyum.theforeman.org/candlepin/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/x86_64"
