@@ -1,0 +1,50 @@
+---
+- name: Install podman-docker
+  package:
+    name: podman-docker
+    state: installed
+
+- name: Start podman
+  service:
+    name: podman
+    state: started
+
+- name: Install git
+  package:
+    name: git
+    state: installed
+
+- name: Enable ruby 2.7 module
+  command: dnf module enable -y ruby:2.7
+  when: ansible_distribution_major_version == "8"
+
+- name: enable powertools
+  command: dnf config-manager --set-enabled powertools
+  when: ansible_distribution_major_version == "8"
+
+- name: enable CRB
+  command: dnf config-manager --set-enabled crb
+  when: ansible_distribution_major_version == "9"
+
+- name: Install Ruby
+  package:
+    state: installed
+    name:
+      - ruby
+      - ruby-devel
+      - rubygem-bundler
+      - gcc-c++
+      - make
+      - redhat-rpm-config
+      - libyaml-devel
+
+- name: Clone puppet module
+  ansible.builtin.git:
+    repo: "https://github.com/theforeman/{{ beaker_puppet_module }}.git"
+    dest: "{{ beaker_puppet_module_path }}"
+    version: "{{ beaker_puppet_module_version | default(omit) }}"
+
+- name: Bundle install
+  command: bundle install
+  args:
+    chdir: "{{ beaker_puppet_module_path }}"

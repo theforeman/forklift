@@ -1,0 +1,7 @@
+beaker_base_environment:
+  BEAKER_HYPERVISOR: "docker"
+  BEAKER_provision: "yes"
+  BEAKER_setfile: "{{ beaker_os }}-64{hostname={{ beaker_os }}-64.example.com}"
+  BEAKER_destroy: "no"
+beaker_environment: {}
+beaker_puppet_module_path: "/src/{{ beaker_puppet_module }}"

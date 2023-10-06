@@ -1,0 +1,3 @@
+- import_playbook: candlepin/01-boxes.yml
+- import_playbook: candlepin/02-install.yml
+- import_playbook: candlepin/03-tests.yml

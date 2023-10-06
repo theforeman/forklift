@@ -1,0 +1,5 @@
+- name: Run acceptance tests
+  command: bundle exec rake beaker
+  args:
+    chdir: "{{ beaker_puppet_module_path }}"
+  environment: "{{ beaker_base_environment | ansible.builtin.combine(beaker_environment) }}"
