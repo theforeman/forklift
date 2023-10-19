@@ -1,0 +1,11 @@
+---
+- name: Install fapolicyd
+  package:
+    name: fapolicyd
+    state: installed
+
+- name: Start fapolicyd
+  service:
+    name: fapolicyd
+    state: started
+    enabled: true
