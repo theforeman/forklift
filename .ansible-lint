@@ -5,7 +5,6 @@ skip_list:
   - git-latest  # Git checkouts must contain explicit version
   - meta-no-info  # meta/main.yml should contain relevant info
   - no-changed-when  # Commands should not change things if nothing needs doing
-  - no-handler  # Tasks that run when changed should likely be handlers
   - package-latest  # Package installs should not use latest
   - jinja[spacing]
   - role-name[path]

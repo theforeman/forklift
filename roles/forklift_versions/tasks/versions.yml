@@ -10,5 +10,5 @@
   become: no
 
 - name: set individual component vars
-  set_fact: "{{ item.key }}={{ item.value }}"
+  set_fact: "{{ item.key }}={{ item.value }}"  # noqa: no-free-form
   with_items: "{{ forklift_versions.versions | dict2items }}"

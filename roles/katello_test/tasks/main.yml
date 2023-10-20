@@ -21,6 +21,7 @@
     executable: /bin/bash
     chdir: "{{ katello_test_foreman_development_dir }}"
   become_user: "{{ katello_test_user }}"
+  become: true
 
 - name: 'Prepare katello test database'
   ansible.builtin.shell: |
@@ -29,6 +30,7 @@
     executable: /bin/bash
     chdir: "{{ katello_test_foreman_development_dir }}"
   become_user: "{{ katello_test_user }}"
+  become: true
 
 - name: 'Run katello tests'
   ansible.builtin.shell: |
@@ -37,3 +39,4 @@
     executable: /bin/bash
     chdir: "{{ katello_test_foreman_development_dir }}"
   become_user: "{{ katello_test_user }}"
+  become: true

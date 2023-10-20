@@ -48,7 +48,11 @@
 
 - name: 'Install gem native dependencies'
   become: true
-  yum: name=gcc-c++ state=present
+  yum:
+    name: gcc-c++
+    state: present
 
 - name: 'Install gems'
-  bundler: chdir=~/hammer-cli-foreman state=present
+  bundler:
+    chdir: '~/hammer-cli-foreman'
+    state: present

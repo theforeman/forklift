@@ -88,7 +88,7 @@
   args:
     creates: "{{ custom_certificates_ca_directory_certs }}/{{ custom_certificates_server }}.crt"
 
-- include: issue.yml
+- include_tasks: issue.yml
   when: custom_certificates_hostnames is defined
   with_items: "{{ custom_certificates_hostnames }}"
   loop_control:

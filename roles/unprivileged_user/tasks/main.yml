@@ -41,7 +41,11 @@
   register: authorized_keys_file
   become: true
 
-- block:
+- when:
+    - not authorized_keys_file.stat.exists
+    - unprivileged_user_import_ssh_pub_key | default(True)
+  become: true
+  block:
     - name: "Check /root/.ssh/authorized_keys"
       stat:
         path: /root/.ssh/authorized_keys
@@ -55,8 +59,3 @@
         mode: 0600
         dest: "/home/{{ unprivileged_user_username }}/.ssh/authorized_keys"
       when: root_authorized_keys_file.stat.exists
-
-  when:
-    - not authorized_keys_file.stat.exists
-    - unprivileged_user_import_ssh_pub_key | default(True)
-  become: true

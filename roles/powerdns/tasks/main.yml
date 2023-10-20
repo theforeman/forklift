@@ -22,7 +22,8 @@
     owner: "root"
     group: "root"
     mode: "{{ powerdns_conf_mode }}"
-  register: "pdns_configured"
+  notify:
+    - "Restart PowerDNS"
 
 - name: "Enable PowerDNS"
   service:
@@ -30,11 +31,8 @@
     state: "started"
     enabled: yes
 
-- name: "Restart PowerDNS"
-  service:
-    name: "pdns"
-    state: "restarted"
-  when: pdns_configured.changed
+- name: Flush handlers
+  meta: flush_handlers
 
 - include_tasks: "schema.mysql.yml"
   when: powerdns_db_backend == "gmysql"

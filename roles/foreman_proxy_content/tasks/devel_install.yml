@@ -7,9 +7,12 @@
   register: foreman_get
 
 - name: 'Check for rails server'
-  fail: msg="No rails server detected running on {{ foreman_proxy_content_server }}"
+  fail:
+    msg: "No rails server detected running on {{ foreman_proxy_content_server }}"
   when: foreman_get.status != 200
 
 - name: 'Add group foreman'
-  group: name=foreman state=present
+  group:
+    name: foreman
+    state: present
   delegate_to: "{{ foreman_proxy_content_server }}"

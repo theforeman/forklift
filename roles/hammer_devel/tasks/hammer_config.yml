@@ -1,9 +1,13 @@
 ---
 - name: 'Add hammer config directory'
-  file: path=~/.hammer state=directory
+  file:
+    path: '~/.hammer'
+    state: directory
 
 - name: 'Add hammer module config directory'
-  file: path=~/.hammer/cli.modules.d state=directory
+  file:
+    path: '~/.hammer/cli.modules.d'
+    state: directory
 
 - name: 'Configure hammer'
   command: cp ~/hammer-cli/config/cli_config.template.yml ~/.hammer/cli_config.yml
@@ -76,7 +80,11 @@
   when: ('theforeman/hammer-cli-foreman-virt-who-configure' in hammer_devel_repositories)
 
 - name: 'Alias hammer'
-  lineinfile: dest=~/.bash_profile line="alias hammer='BUNDLE_GEMFILE=~/hammer-cli-foreman/Gemfile bundle exec hammer'"
+  lineinfile:
+    dest: '~/.bash_profile'
+    line: "alias hammer='BUNDLE_GEMFILE=~/hammer-cli-foreman/Gemfile bundle exec hammer'"
 
 - name: 'Alias rake'
-  lineinfile: dest=~/.bash_profile line="alias rake='bundle exec rake'"
+  lineinfile:
+    dest: '~/.bash_profile'
+    line: "alias rake='bundle exec rake'"
