@@ -11,7 +11,7 @@
   when: foreman_installer_custom_hiera
 
 - include_tasks: install.yml
-  when: foreman_installer_upgrade == False
+  when: not foreman_installer_upgrade
 
 - include_tasks: upgrade.yml
-  when: foreman_installer_upgrade == True
+  when: foreman_installer_upgrade

@@ -29,7 +29,12 @@
     state: present
 
 - name: 'Install bundler'
-  gem: name=bundler state=present
+  gem:
+    name: bundler
+    state: present
 
 - name: 'Install gems'
-  bundler: chdir=~/dynflow state=present executable=~/bin/bundle
+  bundler:
+    chdir: '~/dynflow'
+    state: present
+    executable: '~/bin/bundle'

@@ -24,7 +24,9 @@
 - include_tasks: certs_generate.yml
 
 - name: 'Change cert permissions'
-  file: path='/etc/pki/katello/private' mode=0775
+  file:
+    path: '/etc/pki/katello/private'
+    mode: 0775
   delegate_to: "{{ foreman_proxy_content_server }}"
   when: devel is defined and devel
 

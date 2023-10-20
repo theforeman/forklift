@@ -1,4 +1,6 @@
 ---
 - name: 'Install git'
   become: true
-  yum: name=git-core state=present
+  yum:
+    name: git-core
+    state: present

@@ -204,7 +204,8 @@
     katello_provisioning_centos7: "{{ katello_provisioning_centos7_json.stdout|from_json }}"
   when: katello_provisioning_centos7_json is success
 
-- block:
+- when: "'not found' in katello_provisioning_centos7_json.stderr"
+  block:
     - name: 'Create CentOS_Linux 7'
       shell: >
         {{ katello_provisioning_hammer }} os create
@@ -219,7 +220,6 @@
     - name: 'get new CentOS 7 info'
       set_fact:
         katello_provisioning_centos7: "{{ katello_provisioning_centos7_json_new.stdout|from_json }}"
-  when: "'not found' in katello_provisioning_centos7_json.stderr"
 
 - name: 'update partition table for CentOS 7'
   shell: >

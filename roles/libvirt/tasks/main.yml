@@ -26,7 +26,9 @@
   when: libvirt_nested
 
 - name: 'restart libvirt'
-  service: name=libvirtd state=restarted
+  service:
+    name: libvirtd
+    state: restarted
 
 - include_tasks: 'tftp.yml'
   when: libvirt_tftp

@@ -49,7 +49,7 @@
   register: foreman_provisioning_compute_profile_cmd
   ignore_errors: True
 
-- include: compute_profiles.yml
+- include_tasks: compute_profiles.yml
   when: "'Error' not in foreman_provisioning_compute_profile_cmd.stderr"
 
 # Domain
