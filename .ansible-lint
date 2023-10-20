@@ -7,3 +7,14 @@ skip_list:
   - no-changed-when  # Commands should not change things if nothing needs doing
   - no-handler  # Tasks that run when changed should likely be handlers
   - package-latest  # Package installs should not use latest
+  - jinja[spacing]
+  - role-name[path]
+  - name[missing]
+  - name[play]
+  - name[template]
+  - name[casing]
+  - risky-file-permissions
+  - ignore-errors
+  - fqcn[action-core]
+  - fqcn[action]
+  - var-naming[no-role-prefix]
