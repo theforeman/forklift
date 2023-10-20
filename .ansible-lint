@@ -17,3 +17,14 @@ skip_list:
   - fqcn[action-core]
   - fqcn[action]
   - var-naming[no-role-prefix]
+
+# Define required Ansible's variables to satisfy syntax check
+extra_vars:
+  pipeline_type: foreman
+  pipeline_version: nightly
+  pipeline_os: centos8-stream
+
+# Mock roles in order to pass ansible-playbook --syntax-check
+mock_roles:
+  - pulp.pulp_installer.pulp_all_services
+  - pulp.pulp_installer.pulp_health_check
