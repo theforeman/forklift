@@ -2,10 +2,8 @@
 skip_list:
   - command-instead-of-module  # Using command rather than module
   - command-instead-of-shell  # Use shell only when shell functionality is required
-  - experimental  # all rules tagged as experimental
   - git-latest  # Git checkouts must contain explicit version
   - meta-no-info  # meta/main.yml should contain relevant info
   - no-changed-when  # Commands should not change things if nothing needs doing
   - no-handler  # Tasks that run when changed should likely be handlers
   - package-latest  # Package installs should not use latest
-  - experimental
