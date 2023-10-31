@@ -19,8 +19,8 @@ pulp_install_plugins_base:
   pulp-rpm: {}
 pulp_install_plugins_314:
   pulp-python: {}
-pulp_install_plugins: "{{ pulp_install_plugins_base | combine(pulp_install_plugins_314 if pipeline_version is version('3.14', '>=') else {}) }}"
+pulp_install_plugins: "{{ pulp_install_plugins_base | combine(pulp_install_plugins_314 if pipeline_version == 'nightly' or pipeline_version is version('3.14', '>=') else {}) }}"
 pulp_default_admin_password: password
 pulp_pkg_name_prefix_py36: "python3-"
 pulp_pkg_name_prefix_py38: "{{ 'tfm-pulpcore-python3-' if pipeline_os == 'centos7' else 'python38-' }}"
-pulp_pkg_name_prefix: "{{ pulp_pkg_name_prefix_py38 if pipeline_version is version('3.15', '>=') else pulp_pkg_name_prefix_py36 }}"
+pulp_pkg_name_prefix: "{{ pulp_pkg_name_prefix_py38 if pipeline_version == 'nightly' or pipeline_version is version('3.15', '>=') else pulp_pkg_name_prefix_py36 }}"

@@ -87,7 +87,7 @@
       when:
         - forklift_install_pulp_from_galaxy
         - pipeline_version is defined
-        - pipeline_version is version('3.17', '<=')
+        - pipeline_version != 'nightly' and pipeline_version is version('3.17', '<=')
       retries: 3
       register: result
       until: result is succeeded
@@ -99,7 +99,7 @@
       when:
         - forklift_install_pulp_from_galaxy
         - pipeline_version is defined
-        - pipeline_version is version('3.18', '>=')
+        - pipeline_version == 'nightly' or pipeline_version is version('3.18', '>=')
       retries: 3
       register: result
       until: result is succeeded

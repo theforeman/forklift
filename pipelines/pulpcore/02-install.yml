@@ -14,7 +14,7 @@
       state: present
     when:
      - pipeline_version is defined
-     - pipeline_version is version('3.28', '>=')
+     - pipeline_version == 'nightly' or pipeline_version is version('3.28', '>=')
      - pipeline_os is defined
      - pipeline_os is search("centos8-stream")
 
