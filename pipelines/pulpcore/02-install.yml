@@ -28,10 +28,10 @@
   environment:
     DJANGO_SETTINGS_MODULE: pulpcore.app.settings
   pre_tasks:
-    - when: pulpcore_staging_source != 'stagingyum'
+    - when: pulpcore_staging_source != 'nightly'
       set_fact:
         pulp_pkg_repo: "http://koji.katello.org/releases/yum/pulpcore-{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
-    - when: pulpcore_staging_source == 'stagingyum'
+    - when: pipeline_version == 'nightly'
       set_fact:
         pulp_pkg_repo: "https://stagingyum.theforeman.org/pulpcore/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
   roles:
