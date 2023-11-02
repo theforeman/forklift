@@ -1,10 +1,4 @@
 boxes:
-  centos7-bats:
-    box: centos7
-    ansible:
-      playbook: 'playbooks/bats_pipeline_nightly.yml'
-      group: 'bats'
-
   centos7-freeipa-server:
     box: centos7
     memory: 2048
