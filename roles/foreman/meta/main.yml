@@ -2,6 +2,8 @@
 dependencies:
   - role: umask
   - role: selinux
+  - role: fapolicyd
+    when: foreman_fapolicyd | default(false)
   - role: etc_hosts
   - role: koji
   - role: packit
