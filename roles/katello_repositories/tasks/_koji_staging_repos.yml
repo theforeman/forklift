@@ -4,7 +4,6 @@
     name: katello-koji
     description: "Katello {{ katello_repositories_version }} Koji Repository"
     baseurl: "http://koji.katello.org/releases/yum/katello-{{ katello_repositories_version }}/katello/el{{ ansible_distribution_major_version }}/x86_64/"
-    priority: '1'
     gpgcheck: no
 
 - name: 'Candlepin Koji repository'
@@ -12,5 +11,4 @@
     name: candlepin-koji
     description: "Candlepin {{ katello_repositories_version }} Koji Repository"
     baseurl: "http://koji.katello.org/releases/yum/katello-{{ katello_repositories_version }}/candlepin/el{{ ansible_distribution_major_version }}/x86_64/"
-    priority: '1'
     gpgcheck: no
