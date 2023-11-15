@@ -1,9 +1,11 @@
+forklift_name: "pipe-pulp-{{ pipeline_version }}-{{ pipeline_os }}"
+
 server_box:
   box: "{{ pipeline_server_os | default(pipeline_os) }}"
   memory: 4680
 
 forklift_boxes:
-  "{{ {forklift_server_name: server_box} }}"
+  "{{ {forklift_name: server_box} }}"
 
 pulp_install_source: packages
 pulp_pkg_repo_gpgcheck: False

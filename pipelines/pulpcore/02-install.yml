@@ -1,22 +1,15 @@
 ---
-- name: Enable Postgresql 12 module if necessary
+- name: Setup git repo
   become: True
   hosts:
-   - "{{ forklift_server_name }}"
+   - "{{ forklift_name }}"
   vars_files:
-    - ../vars/install_base.yml
-    - ../vars/forklift_{{ pipeline_type }}.yml
-
+    - ../vars/forklift_pulpcore.yml
   tasks:
-  - name: Enable postgresql 12 module
-    ansible.builtin.dnf:
-      name: '@postgresql:12'
-      state: present
-    when:
-     - pipeline_version is defined
-     - pipeline_version == 'nightly' or pipeline_version is version('3.28', '>=')
-     - pipeline_os is defined
-     - pipeline_os is search("centos8-stream")
+    - name: Install podman-docker
+      package:
+        name: podman-docker
+        state: installed
 
 - name: install pulpcore
   hosts:
