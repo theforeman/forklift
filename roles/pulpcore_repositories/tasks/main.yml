@@ -16,4 +16,13 @@
     creates: /etc/dnf/modules.d/pulpcore.module
   when:
     - pulpcore_repositories_version is version('3.16', '>=')
+    - pulpcore_repositories_version is version('3.39', '<')
+    - ansible_distribution_major_version == '8'
+
+- name: 'Disable pulpcore:el8 module'
+  file:
+    path: /etc/dnf/modules.d/pulpcore.module
+    state: absent
+  when:
+    - pulpcore_repositories_version is version('3.39', '>=')
     - ansible_distribution_major_version == '8'
