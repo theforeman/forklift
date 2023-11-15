@@ -34,7 +34,7 @@
     - when: pipeline_version == 'nightly'
       set_fact:
         pulp_pkg_repo: "https://stagingyum.theforeman.org/pulpcore/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
-        pulp_pkg_name_prefix: "python-3.11"
+        pulp_pkg_name_prefix: "python3.11-"
   roles:
     - epel_repositories
     - pulp.pulp_installer.pulp_all_services
