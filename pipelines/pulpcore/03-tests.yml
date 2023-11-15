@@ -1,10 +1,18 @@
 ---
 - name: run tests
-  hosts:
-    - "{{ forklift_server_name }}"
   become: True
+  hosts:
+   - "{{ forklift_name }}"
   vars_files:
-    - ../vars/install_base.yml
-    - ../vars/forklift_{{ pipeline_type }}.yml
-  roles:
-    - pulp.pulp_installer.pulp_health_check
+    - ../vars/forklift_pulpcore.yml
+  tasks:
+    - name: Run acceptance tests
+      command: bundle exec rake beaker
+      args:
+        chdir: /src/puppet-pulpcore
+      environment:
+        BEAKER_HYPERVISOR: "docker"
+        BEAKER_provision: "yes"
+        BEAKER_setfile: "centos8-64{hostname=centos8-64.example.com}"
+        BEAKER_destroy: "no"
+        BEAKER_FACTER_PULPCORE_VERSION: "{{ pipeline_version }}"
