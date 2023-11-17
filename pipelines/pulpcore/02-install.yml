@@ -28,10 +28,10 @@
   environment:
     DJANGO_SETTINGS_MODULE: pulpcore.app.settings
   pre_tasks:
-    - when: pipeline_version != 'nightly'
+    - when: pipeline_version != 'nightly' and pipeline_version is version('3.28', '<=' )
       set_fact:
         pulp_pkg_repo: "http://koji.katello.org/releases/yum/pulpcore-{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
-    - when: pipeline_version == 'nightly'
+    - when: pipeline_version == 'nightly' or pipeline_version is version('3.39', '>=')
       set_fact:
         pulp_pkg_repo: "https://stagingyum.theforeman.org/pulpcore/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
         pulp_pkg_name_prefix: "python3.11-"
