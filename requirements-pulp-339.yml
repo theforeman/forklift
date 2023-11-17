@@ -1,0 +1,3 @@
+collections:
+  - name: https://github.com/pcreech/pulp_installer
+    type: git
