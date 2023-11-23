@@ -150,3 +150,11 @@ tWaitForTask() {
     sleep $(( next_wait_time++ ))
   done
 }
+
+tForemanMaintainCommandAvailable() {
+  if tForemanMaintainAvailable ; then
+    if ! foreman-maintain "$1" --help ; then
+      skip "foreman-maintain $1 is not available"
+    fi
+  fi
+}
