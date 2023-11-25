@@ -1,8 +1,18 @@
 ---
+- name: 'Install epel-release'
+  yum:
+    name: 'epel-release'
+    state: 'present'
+
 - name: 'Install koji package'
   yum:
     name: 'koji'
     state: 'present'
+
+- name: 'Remove epel-release'
+  yum:
+    name: 'epel-release'
+    state: 'absent'
 
 - name: 'Make repo directory'
   file:
