@@ -192,8 +192,6 @@ setup() {
 }
 
 @test "create org for library import" {
-  tSkipIfPulp339
-
   hammer organization create --name="${LIBRARY_IMPORT_ORG}"
 }
 
