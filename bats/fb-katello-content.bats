@@ -126,7 +126,7 @@ setup() {
     --content-view="${CONTENT_VIEW}" --version="1.0"
   export_version_id=$(hammer --output csv --no-headers content-view version show --version="1.0" --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}" \
     --fields=id)
-  actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path")"/*.gz | cut -f 1)
+  actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path")"/*.tar* | cut -f 1)
 
  [ $actual_size -ge 40 ]
 }
@@ -178,7 +178,7 @@ setup() {
   hammer content-export complete library --organization="${ORGANIZATION}"
   export_version_id=$(hammer --output csv --no-headers content-view version list --content-view="${LIBRARY}" --organization="${ORGANIZATION}" \
     --fields=id --per-page=1 --order="version DESC")
-  actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path")"/*.gz | cut -f 1)
+  actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path")"/*.tar* | cut -f 1)
 
   [ $actual_size -ge 40 ]
 }
@@ -225,7 +225,7 @@ setup() {
 
   hammer content-export incremental version --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW}" --id="$export_version_id"
-  actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path" --per-page=1)"/*.gz  | cut -f 1)
+  actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path" --per-page=1)"/*.tar*  | cut -f 1)
   # actual size of export should be less than 14K
   [ $actual_size -le 87 ]
 }
@@ -236,7 +236,7 @@ setup() {
   export_version_id=$(hammer --output csv --no-headers content-view version list --content-view="${LIBRARY}" --organization="${ORGANIZATION}" \
     --fields=id --per-page=1 --order="version DESC")
 
-  actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path"  --per-page=1)"/*.gz | cut -f 1)
+  actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path"  --per-page=1)"/*.tar* | cut -f 1)
 
   [ $actual_size -le 174 ]
 }
