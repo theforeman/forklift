@@ -227,8 +227,6 @@ setup() {
 
 
 @test "publish content view again" {
-  tSkipIfPulp339
-
   hammer content-view publish --organization="${ORGANIZATION}" \
     --name="${CONTENT_VIEW}"
 }
