@@ -2,5 +2,5 @@ katello_repositories_environment: staging
 katello_repositories_pulp_release: stable
 foreman_repositories_environment: staging
 foreman_client_repositories_environment: staging
-foreman_repositories_staging_source: "{{ 'stagingyum' if pipeline_version == 'nightly' else 'koji' }}"
-katello_repositories_staging_source: "{{ 'stagingyum' if pipeline_version == 'nightly' else 'koji' }}"
+foreman_repositories_staging_source: "{{ 'stagingyum' if (pipeline_version == 'nightly' or pipeline_version is version('3.9', '>=')) else 'koji' }}"
+katello_repositories_staging_source: "{{ 'stagingyum' if (pipeline_version == 'nightly' or pipeline_version is version('4.11', '>=')) else 'koji' }}"
