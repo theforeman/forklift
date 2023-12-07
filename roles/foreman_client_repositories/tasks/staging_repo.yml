@@ -8,3 +8,5 @@
 
 - ansible.builtin.include_tasks:
     file: _{{ foreman_client_repositories_staging_source }}_staging_repo.yml
+  when:
+    - foreman_client_repositories_version is version('3.9', '>=') 
