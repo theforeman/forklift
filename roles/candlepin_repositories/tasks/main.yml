@@ -1,0 +1,16 @@
+---
+- name: "Add Candlepin {{ candlepin_repositories_version }} repository"
+  yum_repository:
+    name: candlepin-repository
+    description: Candlepin {{ candlepin_repositories_version }}
+    baseurl: "https://yum.theforeman.org/candlepin/{{ candlepin_repositories_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
+    gpgcheck: no
+    enabled: yes
+
+- name: 'Enable pki-core module'
+  command: dnf module enable -y pki-core
+  # can't use the `dnf` module for modules without a default stream
+  # https://github.com/ansible/ansible/issues/56504
+  # https://github.com/ansible/ansible/issues/64852
+  args:
+    creates: /etc/dnf/modules.d/pki-core.module
