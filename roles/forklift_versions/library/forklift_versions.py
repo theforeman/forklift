@@ -86,6 +86,8 @@ def main():
                         'foreman_puppet_repositories_version': version['puppet'],
                         'pulpcore_repositories_version': version['pulpcore'],
                         }
+                if 'candlepin' in version:
+                    forklift_vars['candlepin_repositories_version'] = version['candlepin']
                 ret = forklift_vars
                 break
     else:

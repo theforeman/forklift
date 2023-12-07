@@ -65,6 +65,7 @@ installers:
 
   - foreman: '3.9'
     katello: '4.11'
+    candlepin: '4.3'
     pulpcore: '3.39'
     puppet: 7
     boxes:
@@ -75,6 +76,7 @@ installers:
 
   - foreman: 'nightly'
     katello: 'nightly'
+    candlepin: '4.3'
     pulpcore: '3.39'
     puppet: 7
     boxes:

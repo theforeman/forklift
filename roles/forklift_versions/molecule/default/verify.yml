@@ -22,6 +22,7 @@
           - foreman_repositories_version == '3.6'
           - katello_repositories_version == '4.8'
           - pulpcore_repositories_version == '3.22'
+          - candlepin_repositories_version is not defined
 
     - name: "Include forklift_versions for 4.4 installs"
       include_role:
@@ -50,6 +51,7 @@
           - foreman_repositories_version is defined
           - katello_repositories_version is defined
           - pulpcore_repositories_version is defined
+          - candlepin_repositories_version is defined
 
     - name: "Include forklift_versions for upgrades"
       include_role:

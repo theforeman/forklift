@@ -21,3 +21,9 @@
 - name: 'Add Pulpcore repository'
   include_role:
     name: pulpcore_repositories
+
+- name: 'Add Candlepin repository'
+  include_role:
+    name: candlepin_repositories
+  when:
+    - candlepin_repositories_version is defined
