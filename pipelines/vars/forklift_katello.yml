@@ -1,5 +1,5 @@
 server_box:
-  box: "{{ pipeline_os }}"
+  box: "{{ pipeline_server_os | default(pipeline_os) }}"
   memory: 10240
   ansible:
     variables:
@@ -17,7 +17,7 @@ server_box:
         - fb-katello-proxy.bats
         - "{{ 'fb-test-katello-change-hostname.bats' if pipeline_action == 'install' else ''}}"
 proxy_box:
-  box: "{{ pipeline_os }}"
+  box: "{{ pipeline_proxy_os | default(pipeline_os) }}"
   memory: 3072
   ansible:
     variables:
