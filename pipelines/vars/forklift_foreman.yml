@@ -1,5 +1,5 @@
 server_box:
-  box: "{{ pipeline_os }}"
+  box: "{{ pipeline_server_os | default(pipeline_os) }}"
   memory: 4680
   ansible:
     variables:
