@@ -20,5 +20,3 @@
       become: true
     - podman
     - role: smoker
-      vars:
-        pytest_project_ignore_errors: "{{ (pipeline_version != 'nightly') }}"
