@@ -35,7 +35,7 @@ server_box:
         - "--enable-foreman-cli-google"
         - "--enable-foreman-plugin-google"
 
-        - "--enable-foreman-plugin-hooks"
+        - "--enable-foreman-plugin-leapp"
 
         - "--enable-foreman-cli-openscap"
         - "--enable-foreman-plugin-openscap"
@@ -46,6 +46,9 @@ server_box:
         - "--enable-foreman-proxy-plugin-remote-execution-script"
         - "--foreman-proxy-plugin-remote-execution-script-install-key=true"
 
+        - "--enable-foreman-cli-rh-cloud"
+        - "--enable-foreman-plugin-rh-cloud"
+
         - "--enable-foreman-cli-tasks"
         - "--enable-foreman-plugin-tasks"
 
@@ -54,6 +57,9 @@ server_box:
 
         - "--enable-foreman-cli-virt-who-configure"
         - "--enable-foreman-plugin-virt-who-configure"
+
+        - "--enable-foreman-cli-webhooks"
+        - "--enable-foreman-plugin-webhooks"
 
         - "{{ '--foreman-proxy-content-enable-ostree true' if (pipeline_os != 'centos7' and (pipeline_version == 'nightly' or pipeline_version is version('4.3', '>='))) else '' }}"
       bats_tests_additional:
