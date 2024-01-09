@@ -10,6 +10,7 @@ boxes:
     scenarios:
       - foreman
   debian12:
+    memory: 2000
     box_name:   'debian/bookworm64'
     pty:        true
     scenarios:

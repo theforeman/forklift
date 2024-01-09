@@ -1,5 +1,5 @@
 ---
-memory: 4608
+memory: 12000
 cpus: 2
 scale_memory: 1
 scale_cpus: 1
@@ -24,3 +24,4 @@ google_json_key_location: "/path/to/your/private-key.json"
 boxes:
   exclude:
     - fips
+    - "^centos8-stream"
