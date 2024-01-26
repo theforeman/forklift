@@ -7,3 +7,9 @@
     vtype: boolean
   when:
     - ansible_os_family == 'Debian'
+
+# workaround for https://github.com/lavabit/robox/issues/294
+- name: clean up old Ubuntu initrds
+  shell: rm -f /boot/*-generic.img
+  when:
+    - ansible_os_family == 'Debian'
