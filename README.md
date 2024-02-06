@@ -131,7 +131,24 @@ In case using Vagrant is not desired, ansible playbooks and roles from this repo
 on test.example.com machine, where the dev env should be deployed
 ```sh
 useradd vagrant
+echo vagrant:redhat | chpasswd
 echo "vagrant	ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers.d/vagrant
+```
+
+Here we can see the initial configuration, when creating the python virtual environment and preparing the setup (MACOS Users or Regular Linux with no ansible)
+```sh
+git clone https://github.com/theforeman/forklift.git
+cd forklift
+/usr/local/bin/python3-intel64 -m venv ~/.venv/forklift
+source ~/.venv/forklift/bin/activate
+pip install --upgrade pip
+pip install ansible
+ansible-galaxy collection install -r requirements.yml
+```
+
+Now, you can share the ssh key with the server
+```sh
+ssh-copy-id vagrant@test.example.com
 ```
 
 in forklift checkout
@@ -146,7 +163,7 @@ In an example above, ansible was instructed to use specific private key (overrid
 echo -e "[foreman]\foreman.example.com" >> inventories/local_inventory
 ansible-playbook --inventory inventories/local_inventory -e group_name=foreman playbooks/foreman.yml
 ```
-Above you can see another example, at this moment, we have two groups in the `inventories/local_inventory` file. Using the extra vars, we can set the group that we would like to call, here we can see `foreman`, which means, only the server set on this group will be affected. Also, the user vagrant will be used once it's defined as default remote user on `ansible.cfg` file.
+Above you can see another example, at this moment, we have two groups in the `inventories/local_inventory` file. Using the extra vars, we can set the group that we would like to call, here we can see `foreman`, which means, only the server set on this group will be affected, if you omit it, all hosts will be the standard. Also, the user vagrant will be used once it's defined as default remote user on `ansible.cfg` file.
 
 Other playbooks from playbooks/ directory can be used similarly, though some might need more variables and investigating their parameters is recommended first.
 
