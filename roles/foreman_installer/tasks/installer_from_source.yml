@@ -1,0 +1,53 @@
+---
+- name: "clone foreman-installer repository"
+  git:
+    repo: https://github.com/theforeman/foreman-installer.git
+    dest: "/usr/share/foreman-installer"
+    force: yes
+
+- name: "checkout foreman-installer PR"
+  shell: >
+      git fetch origin pull/{{ foreman_installer_git_pr_number }}/head:pr &&
+      git checkout pr
+  args:
+    chdir: "/usr/share/foreman-installer"
+  when: foreman_installer_git_pr_number is defined and foreman_installer_git_pr_number
+
+- name: "ensure ruby-augeas in Gemfile"
+  lineinfile:
+    path: /usr/share/foreman-installer/Gemfile
+    line: gem 'ruby-augeas'
+
+- name: "ensure oauth in Gemfile"
+  lineinfile:
+    path: /usr/share/foreman-installer/Gemfile
+    line: gem 'oauth'
+
+- name: "bundle install"
+  shell: scl enable {{ scl_ruby_version.stdout }} -- bundle install
+  args:
+    chdir: "/usr/share/foreman-installer"
+
+- name: "build installer"
+  shell: scl enable {{ scl_ruby_version.stdout }} -- bundle exec rake build
+  args:
+    chdir: "/usr/share/foreman-installer"
+
+- name: 'Ensure /etc/foreman-installer'
+  file:
+    state: directory
+    path: /etc/foreman-installer
+
+- name: 'Ensure /var/log/redis'
+  file:
+    state: directory
+    path: /var/log/redis
+
+- name: 'Apply correct selinux file context to /var/log/redis'
+  command: restorecon -v /var/log/redis
+
+- name: 'Symlink custom-hiera.yaml'
+  file:
+    src: /usr/share/foreman-installer/config/custom-hiera.yaml
+    dest: /etc/foreman-installer/custom-hiera.yaml
+    state: link

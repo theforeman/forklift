@@ -30,6 +30,15 @@
     - new: '--enable-foreman-plugin-google'
       old: '--enable-foreman-compute-gce'
 
+- name: 'Replace installer command when using installer source'
+  set_fact:
+    foreman_installer_command: scl enable {{ scl_ruby_version.stdout }} -- bundle exec bin/foreman-installer
+  when: foreman_installer_from_source == True
+
+- name: 'setup puppetserver ca'
+  shell: /opt/puppetlabs/bin/puppetserver ca setup
+  when: foreman_installer_from_source == True
+
 - name: 'Run installer'
   shell: >
       {{ foreman_installer_command }} {{ (foreman_installer_verbose|bool) | ternary("-v", "") }}
@@ -39,5 +48,7 @@
       {{ foreman_installer_scenario_flag }} {{ foreman_installer_scenario }}
       {{ foreman_installer_options_joined }}
   when: not foreman_installer_skip_installer
+  args:
+    chdir: /usr/share/foreman-installer/
   tags:
     - installation
