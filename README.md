@@ -142,6 +142,12 @@ ansible-playbook --private-key=~/.ssh/id_rsa --user root --inventory inventories
 
 In an example above, ansible was instructed to use specific private key (overriding the value from ansible.cfg), root user was set as ssh user and playbook variable was set, so that checkout will be made from katello user.
 
+```sh
+echo -e "[foreman]\foreman.example.com" >> inventories/local_inventory
+ansible-playbook --inventory inventories/local_inventory -e group_name=foreman playbooks/foreman.yml
+```
+Above you can see another example, at this moment, we have two groups in the `inventories/local_inventory` file. Using the extra vars, we can set the group that we would like to call, here we can see `foreman`, which means, only the server set on this group will be affected. Also, the user vagrant will be used once it's defined as default remote user on `ansible.cfg` file.
+
 Other playbooks from playbooks/ directory can be used similarly, though some might need more variables and investigating their parameters is recommended first.
 
 ### Credentials
