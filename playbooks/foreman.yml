@@ -1,4 +1,4 @@
-- hosts: " {{ group_name | default('all') }}"
+- hosts: "{{ group_name | default('all') }}"
   become: true
   roles:
     - role: foreman
