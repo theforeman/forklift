@@ -12,6 +12,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
    - [Additional Documentation](#additional-documentation)
    - [Development Environment](#development-environment)
    - [Using Playbooks and Roles Without Vagrant](#using-playbooks-and-roles-without-vagrant)
+     - [Python Venv for MacOS or Non Ansible Linux](#python-venv-for-macos-or-non-ansible-linux)
    - [Credentials](#credentials)
    - [Poor man's DNS a.k.a /etc/hosts](#poor-mans-dns-aka-etchosts)
    - [Adding Custom Boxes](#adding-custom-boxes)
@@ -135,14 +136,22 @@ echo vagrant:redhat | chpasswd
 echo "vagrant	ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers.d/vagrant
 ```
 
+#### Python Venv for MacOS or Non Ansible Linux
+
 Here we can see the initial configuration, when creating the python virtual environment and preparing the setup (MACOS Users or Regular Linux with no ansible)
 ```sh
-git clone https://github.com/theforeman/forklift.git
-cd forklift
 /usr/local/bin/python3-intel64 -m venv ~/.venv/forklift
 source ~/.venv/forklift/bin/activate
 pip install --upgrade pip
 pip install ansible
+```
+Note. Above, you can see `python3-intel64`. This is very specific for MacOS M1 or M2 with arm processors, just to keep the compatibility with x86. If you have a regular x86, feel free to use `python3` and it should be enough.
+
+
+Then you can clone forklift and move on
+```sh
+git clone https://github.com/theforeman/forklift.git
+cd forklift
 ansible-galaxy collection install -r requirements.yml
 ```
 
