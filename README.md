@@ -140,12 +140,12 @@ echo "vagrant	ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers.d/vagrant
 
 Here we can see the initial configuration, when creating the python virtual environment and preparing the setup (MACOS Users or Regular Linux with no ansible)
 ```sh
-/usr/local/bin/python3-intel64 -m venv ~/.venv/forklift
+/usr/local/bin/python3 -m venv ~/.venv/forklift
 source ~/.venv/forklift/bin/activate
 pip install --upgrade pip
 pip install ansible
 ```
-Note. Above, you can see `python3-intel64`. This is very specific for MacOS M1 or M2 with arm processors, just to keep the compatibility with x86. If you have a regular x86, feel free to use `python3` and it should be enough.
+Note. Above, you can see `python3`, this is the standard for any x86 server running Linux. If you are using MacOS M1 or M2 with arm processors, then you should use `/usr/local/bin/python3-intel64` instead, just for the sake of compatibility with x86.
 
 
 Then you can clone forklift and move on
@@ -170,9 +170,9 @@ In an example above, ansible was instructed to use specific private key (overrid
 
 ```sh
 echo -e "[foreman]\foreman.example.com" >> inventories/local_inventory
-ansible-playbook --inventory inventories/local_inventory -e group_name=foreman playbooks/foreman.yml
+ansible-playbook --inventory inventories/local_inventory -l foreman playbooks/foreman.yml
 ```
-Above you can see another example, at this moment, we have two groups in the `inventories/local_inventory` file. Using the extra vars, we can set the group that we would like to call, here we can see `foreman`, which means, only the server set on this group will be affected, if you omit it, all hosts will be the standard. Also, the user vagrant will be used once it's defined as default remote user on `ansible.cfg` file.
+Above you can see another example, at this moment, we have two groups in the `inventories/local_inventory` file. Using the flag `-l`, we can set the group that we would like to call, here we can see `foreman`, which means, only the server set on this group will be affected, if you omit it, all hosts will be the standard. Also, the user vagrant will be used once it's defined as default remote user on `ansible.cfg` file.
 
 Other playbooks from playbooks/ directory can be used similarly, though some might need more variables and investigating their parameters is recommended first.
 
