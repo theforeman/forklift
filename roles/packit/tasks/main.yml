@@ -2,7 +2,7 @@
 - name: setup packit copr
   community.general.copr:
     name: "packit/{{ packit_org }}-{{ packit_repo }}-{{ packit_pr }}"
-    chroot: "centos-stream-{{ ansible_distribution_major_version }}-x86_64"
+    chroot: "rhel-{{ ansible_distribution_major_version }}-x86_64"
   loop: "{{ packit_prs | default([]) }}"
   vars:
     packit_data: "{{ item.lower().replace('https://github.com/', '').replace('/pull', '').split('/') }}"
