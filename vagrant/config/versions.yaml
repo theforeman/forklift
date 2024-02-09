@@ -82,5 +82,6 @@ installers:
     boxes:
       - 'almalinux8'
       - 'centos8-stream'
+      - 'centos9-stream'
       - 'debian11'
       - 'ubuntu2004'
