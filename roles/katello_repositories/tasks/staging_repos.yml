@@ -25,5 +25,4 @@
 - name: 'Add Candlepin repository'
   include_role:
     name: candlepin_repositories
-  when:
-    - candlepin_repositories_version is defined
+  when: candlepin_repositories_version is defined or katello_repositories_staging_source == "stagingyum"
