@@ -6,3 +6,9 @@ boxes:
     scenarios:
       - foreman
       - katello
+  almalinux9:
+    box_name: 'almalinux/9'
+    disk_size: 40
+    pty: true
+    scenarios:
+      - foreman
