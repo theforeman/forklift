@@ -81,6 +81,7 @@ installers:
     puppet: 7
     boxes:
       - 'almalinux8'
+      - 'almalinux9'
       - 'centos8-stream'
       - 'centos9-stream'
       - 'debian11'
