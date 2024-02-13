@@ -14,3 +14,5 @@
   # https://github.com/ansible/ansible/issues/64852
   args:
     creates: /etc/dnf/modules.d/pki-core.module
+  when:
+    - ansible_distribution_major_version == "8"
