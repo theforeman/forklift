@@ -30,3 +30,8 @@
     pytest_project_directory: "{{ smoker_directory }}"
     pytest_project_markers: "{{ smoker_markers }}"
     pytest_project_command_args: "{{ smoker_command_args }}"
+
+- name: 'Archive Smoker HTML report'
+  community.general.archive:
+    path: "{{ smoker_directory }}/report"
+    dest: "{{ smoker_directory }}/report.tar.gz"
