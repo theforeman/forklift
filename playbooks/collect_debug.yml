@@ -27,10 +27,8 @@
         paths: "{{ smoker_output_dir }}"
         patterns:
           - "junit.xml"
-          - "*.html"
-          - "*.css"
-          - "*.png"
-        recurse: True
+          - "report.tar*"
+        recurse: False
       register: smoker_results
 
     - name: "Copy smoker results"
