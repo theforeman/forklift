@@ -43,3 +43,4 @@ boxes:
     libvirt: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-latest.x86_64.vagrant-libvirt.box
     scenarios:
       - foreman
+      - katello
