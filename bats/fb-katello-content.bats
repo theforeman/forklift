@@ -122,8 +122,6 @@ setup() {
 }
 
 @test "export content view version" {
-  tSkipIfPulp339
-
   hammer content-export complete version --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW}" --version="1.0"
   export_version_id=$(hammer --output csv --no-headers content-view version show --version="1.0" --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}" \
@@ -138,8 +136,6 @@ setup() {
 }
 
 @test "import the exported content view" {
-  tSkipIfPulp339
-
   latest_export=$(hammer --output csv --no-headers content-export list --content-view "${CONTENT_VIEW}" --organization "${ORGANIZATION}"\
    --content-view-version="1.0" --fields="Id,Path" --per-page=1 --order="id DESC")
   # 16,,/var/lib/pulp/exports/Test_Organization/Test_CV/1.0/2020-12-11T16-04-08-00-00,Test CV 1.0,6,2020-12-11 16:04:12 UTC,2020-12-11 16:04:12 UTC
@@ -168,8 +164,6 @@ setup() {
 }
 
 @test "compare contents of export and import" {
-  tSkipIfPulp339
-  
   export_version=$(hammer --output csv --no-headers content-view version list --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}"\
                --per-page=1 --fields="Version"  --order="version DESC")
   hammer --output csv --no-headers content-view version show --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}" \
@@ -181,8 +175,6 @@ setup() {
 }
 
 @test "export the library" {
-  tSkipIfPulp339
-
   hammer content-export complete library --organization="${ORGANIZATION}"
   export_version_id=$(hammer --output csv --no-headers content-view version list --content-view="${LIBRARY}" --organization="${ORGANIZATION}" \
     --fields=id --per-page=1 --order="version DESC")
@@ -196,8 +188,6 @@ setup() {
 }
 
 @test "import the library to the new organization" {
-  tSkipIfPulp339
-
   latest_export=$(hammer --output csv --no-headers content-export list --content-view "${LIBRARY}" --organization "${ORGANIZATION}"\
     --fields="Id,Path" --per-page=1 --order="id DESC")
   export_history_id=$(echo $latest_export | cut -d, -f1) # 16
@@ -213,8 +203,6 @@ setup() {
 }
 
 @test "compare contents of library export and import" {
-  tSkipIfPulp339
-
   export_version=$(hammer --output csv --no-headers content-view version list --content-view="${LIBRARY}" --organization="${ORGANIZATION}"\
                --per-page=1 --fields="Version"  --order="version DESC")
   hammer --output csv --no-headers content-view version show --content-view="${LIBRARY}" --organization="${ORGANIZATION}" \
@@ -232,8 +220,6 @@ setup() {
 }
 
 @test "perform an incremental export" {
-  tSkipIfPulp339
-
   export_version_id=$(hammer --output csv --no-headers content-view version list --content-view="${CONTENT_VIEW}" --organization="${ORGANIZATION}" \
     --fields=id --per-page=1 --order="version DESC")
 
@@ -245,8 +231,6 @@ setup() {
 }
 
 @test "perform an incremental library export" {
-  tSkipIfPulp339
-
   hammer content-export incremental library --organization="${ORGANIZATION}"
 
   export_version_id=$(hammer --output csv --no-headers content-view version list --content-view="${LIBRARY}" --organization="${ORGANIZATION}" \

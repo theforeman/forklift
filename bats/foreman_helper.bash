@@ -28,12 +28,6 @@ tKatelloVersion() {
   ) | cut -d. -f1-2
 }
 
-tSkipIfPulp339() {
-  if tPackageExists python3.11-pulpcore; then
-    skip "Skipping on Pulpcore 3.39 until https://github.com/pulp/pulpcore/issues/4777 is fixed"
-  fi
-}
-
 tIsVersionNewer() {
   GIVEN_VERSION="$1"
   WANTED_VERSION="$2"
