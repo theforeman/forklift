@@ -12,3 +12,4 @@ boxes:
     pty: true
     scenarios:
       - foreman
+      - katello
