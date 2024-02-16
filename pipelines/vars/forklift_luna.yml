@@ -28,9 +28,9 @@ server_box:
 
         - "--enable-foreman-plugin-bootdisk"
 
-        - "{{ '--enable-foreman-cli-discovery' if ('9' not in pipeline_os) else '' }}"
-        - "{{ '--enable-foreman-plugin-discovery' if ('9' not in pipeline_os) else '' }}"
-        - "{{ '--enable-foreman-proxy-plugin-discovery' if ('9' not in pipeline_os) else '' }}"
+        - "--enable-foreman-cli-discovery"
+        - "--enable-foreman-plugin-discovery"
+        - "--enable-foreman-proxy-plugin-discovery"
 
         - "--enable-foreman-cli-google"
         - "--enable-foreman-plugin-google"
@@ -81,7 +81,7 @@ proxy_box:
         - foreman-installer-katello
       foreman_installer_options:
         - "--enable-foreman-proxy-plugin-ansible"
-        - "{{ '--enable-foreman-proxy-plugin-discovery' if ('9' not in pipeline_os) else '' }}"
+        - "--enable-foreman-proxy-plugin-discovery"
         - "--enable-foreman-proxy-plugin-openscap"
         - "--enable-foreman-proxy-plugin-remote-execution-script"
         - "--foreman-proxy-content-enable-ostree true"
