@@ -9,12 +9,6 @@ dependencies:
     katello_repositories_staging_source: 'stagingyum'
 #   puppet 6 is still the default for theforeman.operations.puppet_repositories as of release 1.2.3
     foreman_puppet_repositories_version: 7
-  - role: ruby_scl
-    when: ansible_distribution_major_version == "7"
-  - role: nodejs_scl
-    when: ansible_distribution_major_version == "7"
-  - role: postgresql_scl
-    when: ansible_distribution_major_version == "7"
   - role: foreman_installer_devel_scenario
     become: true
   - role: foreman_installer
@@ -24,7 +18,6 @@ dependencies:
       - foreman-installer-katello
     foreman_installer_disable_system_checks: true
     foreman_installer_options_internal_use_only:
-      - "{{ '--katello-devel-scl-ruby=' +  ruby_scl_version if ansible_distribution_major_version == '7' else '' }}"
       - "--katello-devel-admin-password {{ foreman_installer_admin_password }}"
       - "{{ '--katello-devel-github-username=' + katello_devel_github_username if katello_devel_github_username is defined else '' }}"
   - role: customize_home
