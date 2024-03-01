@@ -42,6 +42,9 @@ boxes:
       # Work around external nameservers in generic/ubuntu2204
       # https://github.com/lavabit/robox/issues/11
       sed -i 's/\(addresses:\).\+/\1 []/' /etc/netplan/01-netcfg.yaml
+      # Work around netplan configs having too open permissions
+      # https://github.com/lavabit/robox/issues/296
+      chmod 600 /etc/netplan/*.yaml
       netplan generate
       netplan apply
       sed -i 's/^\(DNS=\)/#\1/' /etc/systemd/resolved.conf
