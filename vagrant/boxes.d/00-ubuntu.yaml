@@ -33,3 +33,17 @@ boxes:
     ansible:
       variables:
         ansible_python_interpreter: /usr/bin/python3
+  ubuntu2204:
+    box_name: 'generic/ubuntu2204'
+    pty: true
+    scenarios:
+      - foreman
+    shell: |
+      # Work around external nameservers in generic/ubuntu2204
+      # https://github.com/lavabit/robox/issues/11
+      sed -i 's/\(addresses:\).\+/\1 []/' /etc/netplan/01-netcfg.yaml
+      netplan generate
+      netplan apply
+      sed -i 's/^\(DNS=\)/#\1/' /etc/systemd/resolved.conf
+      sed -i 's/^DNSSEC=.*/DNSSEC=no/' /etc/systemd/resolved.conf
+      systemctl restart systemd-resolved
