@@ -1,9 +1,4 @@
 ---
-- name: 'install evgeni/vagrant copr'
-  get_url:
-    url: https://copr.fedorainfracloud.org/coprs/evgeni/vagrant/repo/epel-{{ ansible_distribution_major_version }}/evgeni-vagrant-epel-{{ ansible_distribution_major_version }}.repo
-    dest: /etc/yum.repos.d/evgeni-vagrant.repo
-
 - name: 'install vagrant-scp'
   package:
     name: vagrant-scp
