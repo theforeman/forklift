@@ -4,11 +4,19 @@
 
 - name: enable powertools for libdb_cxx used by qpid-cpp-server-linearstore
   command: dnf config-manager --set-enabled powertools
-  when: ansible_distribution_major_version == "8" and ansible_distribution != "RedHat"
+  when:
+    - ansible_distribution_major_version == "8"
+    - ansible_distribution != "RedHat"
+    - katello_repositories_version != 'nightly'
+    - katello_repositories_version is version('4.10', '<')
 
 - name: enable codeready-builder for libdb_cxx used by qpid-cpp-server-linearstore
   command: subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
-  when: ansible_distribution_major_version == "8" and ansible_distribution == "RedHat"
+  when:
+    - ansible_distribution_major_version == "8"
+    - ansible_distribution == "RedHat"
+    - katello_repositories_version != 'nightly'
+    - katello_repositories_version is version('4.10', '<')
 
 - name: 'Clean yum'
   command: 'yum clean all'
