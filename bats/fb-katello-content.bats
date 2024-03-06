@@ -32,13 +32,13 @@ setup() {
 @test "create package repository" {
   hammer repository create --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY}" \
-    --url https://jlsherrill.fedorapeople.org/fake-repos/needed-errata/ | grep -q "Repository created"
+    --url https://fixtures.pulpproject.org/rpm-packages-updateinfo/ | grep -q "Repository created"
 }
 
 @test "upload package" {
-  (cd /tmp; curl -O https://repos.fedorapeople.org/repos/pulp/pulp/demo_repos/test_errata_install/animaniacs-0.1-1.noarch.rpm)
+  (cd /tmp; curl -O https://fixtures.pulpproject.org/rpm-richnweak-deps/bourbon-5-10.noarch.rpm)
   hammer repository upload-content --organization="${ORGANIZATION}"\
-    --product="${PRODUCT}" --name="${YUM_REPOSITORY}" --path="/tmp/animaniacs-0.1-1.noarch.rpm" | grep -q "Successfully uploaded"
+    --product="${PRODUCT}" --name="${YUM_REPOSITORY}" --path="/tmp/bourbon-5-10.noarch.rpm" | grep -q "Successfully uploaded"
 }
 
 @test "sync repository" {
@@ -227,7 +227,7 @@ setup() {
     --content-view="${CONTENT_VIEW}" --id="$export_version_id"
   actual_size=$(du -k "$(hammer --output csv --no-headers content-export list --content-view-version-id=$export_version_id --fields="path" --per-page=1)"/*.tar*  | cut -f 1)
   # actual size of export should be less than 14K
-  [ $actual_size -le 87 ]
+  [ $actual_size -le 100 ]
 }
 
 @test "perform an incremental library export" {
@@ -273,7 +273,7 @@ setup() {
 @test "create and sync modules-rpms repo" {
   hammer repository create --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY_2}" \
-    --url https://partha.fedorapeople.org/test-repos/separated/modules-rpms/ | grep -q "Repository created"
+    --url https://fixtures.pulpproject.org/rpm-with-modules/ | grep -q "Repository created"
   hammer repository synchronize --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --name="${YUM_REPOSITORY_2}"
 }
@@ -282,7 +282,7 @@ setup() {
 @test "create and sync rpm-deps repo" {
   hammer repository create --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY_3}" \
-    --url https://partha.fedorapeople.org/test-repos/separated/rpm-deps/ | grep -q "Repository created"
+    --url https://fixtures.pulpproject.org/rpm-richnweak-deps/ | grep -q "Repository created"
   hammer repository synchronize --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --name="${YUM_REPOSITORY_3}"
 }
@@ -359,7 +359,7 @@ setup() {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
     | grep "${CONTENT_VIEW_2}" | cut -d, -f1)
   hammer content-view version incremental-update --organization="${ORGANIZATION}" \
-    --content-view-version-id=$cvv_id --errata-ids=WALRUS-2013:0002 --propagate-all-composites=true \
+    --content-view-version-id=$cvv_id --errata-ids=RHEA-2012:0055 --propagate-all-composites=true \
     --lifecycle-environments="Library"
 }
 
@@ -383,18 +383,18 @@ setup() {
 @test "ensure component cv 1 latest version has proper content" {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
     | grep "${CONTENT_VIEW_2} 1.1" | cut -d, -f1)
-  hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content
-  diff cvv_content fixtures/component_1_rpms
+  hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content_rpms
+  diff cvv_content_rpms fixtures/component_1_rpms
 
-  hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content
-  diff cvv_content fixtures/component_1_errata
+  hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content_errata
+  diff cvv_content_errata fixtures/component_1_errata
 
   hammer module-stream list --content-view-version-id=$cvv_id --order='stream id' \
-    --fields="module stream name,stream,version,architecture,context" > cvv_content
-  diff cvv_content fixtures/component_1_modulemds
+    --fields="module stream name,stream,version,architecture,context" > cvv_content_modulemds
+  diff cvv_content_modulemds fixtures/component_1_modulemds
 
-  hammer docker tag list --content-view-version-id=$cvv_id --fields="tag" --order="name" > cvv_content
-  diff cvv_content fixtures/component_1_docker_tags
+  hammer docker tag list --content-view-version-id=$cvv_id --fields="tag" --order="name" > cvv_content_docker_tags
+  diff cvv_content_docker_tags fixtures/component_1_docker_tags
 
   # Only checking for the v2 manifest due to Pulp2/Pulp3 differences
   hammer docker manifest list --content-view-version-id=$cvv_id --fields="schema version,digest,tags" \
@@ -404,22 +404,22 @@ setup() {
 @test "ensure component cv 2 latest version has proper content" {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
     | grep "${CONTENT_VIEW} 2.0" | cut -d, -f1)
-  hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content
-  diff cvv_content fixtures/component_2_rpms
+  hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content_rpms_2
+  diff cvv_content_rpms_2 fixtures/component_2_rpms
 
-  hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content
-  diff cvv_content fixtures/component_2_errata
+  hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content_errata_2
+  diff cvv_content_errata_2 fixtures/component_2_errata
 
   hammer module-stream list --content-view-version-id=$cvv_id --order='stream id' \
-    --fields="module stream name,stream,version,architecture,context" > cvv_content
-  diff cvv_content fixtures/component_2_modulemds
+    --fields="module stream name,stream,version,architecture,context" > cvv_content_modulemds_2
+  diff cvv_content_modulemds_2 fixtures/component_2_modulemds
 
-  hammer docker tag list --content-view-version-id=$cvv_id --fields="tag" --order="name" > cvv_content
-  diff cvv_content fixtures/component_2_docker_tags
+  hammer docker tag list --content-view-version-id=$cvv_id --fields="tag" --order="name" > cvv_content_docker_tags_2
+  diff cvv_content_docker_tags_2 fixtures/component_2_docker_tags
 
   hammer docker manifest list --content-view-version-id=$cvv_id --fields="schema version,digest,tags" \
-    --order='tag' > cvv_content
-  diff cvv_content fixtures/component_2_docker_manifests
+    --order='tag' > cvv_content_docker_manifests_2
+  diff cvv_content_docker_manifests_2 fixtures/component_2_docker_manifests
 }
 
 @test "ensure composite cv latest version has proper content" {
@@ -428,18 +428,18 @@ setup() {
 
   # Sorting and removing duplicates due to Pulp2/Pulp3 differences (https://projects.theforeman.org/issues/30755)
   hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' \
-    | awk '!seen[$0]++' > cvv_content
-  diff -w cvv_content fixtures/composite_rpms
+    | awk '!seen[$0]++' > cvv_content_rpms_composite
+  diff -w cvv_content_rpms_composite fixtures/composite_rpms
 
-  hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content
-  diff cvv_content fixtures/composite_errata
+  hammer erratum list --content-view-version-id=$cvv_id --order='id' --fields='Errata ID' > cvv_content_errata_composite
+  diff cvv_content_errata_composite fixtures/composite_errata
 
   hammer module-stream list --content-view-version-id=$cvv_id --order='stream id' \
-    --fields="module stream name,stream,version,architecture,context" > cvv_content
-  diff cvv_content fixtures/composite_modulemds
+    --fields="module stream name,stream,version,architecture,context" > cvv_content_modulemds_composite
+  diff cvv_content_modulemds_composite fixtures/composite_modulemds
 
-  hammer docker tag list --content-view-version-id=$cvv_id --fields="tag" --order="name" > cvv_content
-  diff cvv_content fixtures/composite_docker_tags
+  hammer docker tag list --content-view-version-id=$cvv_id --fields="tag" --order="name" > cvv_content_docker_tags_composite
+  diff cvv_content_docker_tags_composite fixtures/composite_docker_tags
 
   # Only checking for the v2 manifest due to Pulp2/Pulp3 differences
   hammer docker manifest list --content-view-version-id=$cvv_id --fields="schema version,digest,tags" \

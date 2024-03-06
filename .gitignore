@@ -42,3 +42,9 @@ packer/build.*
 
 # mkdocs
 /site
+
+# bats
+bats/cvv_content*
+bats/library_*
+bats/fixtures.pulpproject.org/
+bats/import_repos
