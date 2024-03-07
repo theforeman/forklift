@@ -1,10 +1,16 @@
 ---
-- include_tasks: 'el{{ ansible_distribution_major_version }}.yml'
-  when: not ansible_fips
+- when: not ansible_fips
+  block:
+    - name: Install FIPS package
+      package:
+        name: crypto-policies-scripts
+        state: present
 
-- name: reboot vm
-  reboot:
-  when: not ansible_fips
+    - name: enable fips mode
+      command: /usr/bin/fips-mode-setup --enable
+
+    - name: reboot vm
+      reboot:
 
 - name: 'Verify FIPS enabled - If failed means the machine is not FIPS enabled'
   # not using `ansible_fips` here, as that has not been refreshed yet
