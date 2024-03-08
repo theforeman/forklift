@@ -89,7 +89,7 @@ installers:
 
   - foreman: 'nightly'
     katello: 'nightly'
-    candlepin: '4.3'
+    candlepin: 'nightly'
     pulpcore: '3.39'
     puppet: 7
     boxes:
