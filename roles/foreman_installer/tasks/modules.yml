@@ -1,14 +1,4 @@
 ---
-- name: Enable ruby:2.7 module
-  dnf:
-    name: '@ruby:2.7'
-    state: present
-  when:
-    - foreman_repositories_version is defined
-    - foreman_repositories_version != "nightly"
-    - foreman_repositories_version is version('2.5', '>=')
-    - foreman_repositories_version is version('3.1', '<=')
-
 - name: Switch to PostgreSQL 13
   command: dnf module switch-to postgresql:13 -y
   when:
