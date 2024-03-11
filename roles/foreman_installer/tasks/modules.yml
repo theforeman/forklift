@@ -8,3 +8,9 @@
     - foreman_repositories_version != "nightly"
     - foreman_repositories_version is version('2.5', '>=')
     - foreman_repositories_version is version('3.1', '<=')
+
+- name: Switch to PostgreSQL 13
+  command: dnf module switch-to postgresql:13 -y
+  when:
+    - foreman_repositories_version is defined
+    - foreman_repositories_version == "nightly" or foreman_repositories_version is version('3.11', '>=')
