@@ -17,6 +17,7 @@ playbooks/galaxy_collections
 inventories/local_*
 user_devel_env_files/
 .cache
+ansible_*.cfg
 
 # Vagrant
 .vagrant
