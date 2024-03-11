@@ -13,14 +13,3 @@
   shell: rm -f /boot/*-generic.img
   when:
     - ansible_os_family == 'Debian'
-
-# workaround for https://github.com/puppetlabs/puppet/issues/9268
-- name: never install Puppet 7.29.0 on Debian
-  copy:
-    dest: /etc/apt/preferences.d/puppet.pref
-    content: |
-      Package: puppet-agent
-      Pin: version 7.29.0*
-      Pin-Priority: -10
-  when:
-    - ansible_os_family == 'Debian'
