@@ -24,13 +24,3 @@
       Pin-Priority: -10
   when:
     - ansible_os_family == 'Debian'
-
-# workaround for https://github.com/puppetlabs/puppet/issues/9268
-- name: never install Puppet 7.29.0 on EL
-  community.general.ini_file:
-    path: /etc/dnf/dnf.conf
-    section: main
-    option: excludepkgs
-    value: 'puppet-agent-7.29.0*'
-  when:
-    - ansible_os_family == 'RedHat'
