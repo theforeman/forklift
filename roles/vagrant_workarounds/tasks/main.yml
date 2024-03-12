@@ -13,3 +13,14 @@
   shell: rm -f /boot/*-generic.img
   when:
     - ansible_os_family == 'Debian'
+
+# workaround for broken tomcat due to https://issues.redhat.com/browse/CS-1965
+- name: never install Tomcat on EL8
+  community.general.ini_file:
+    path: /etc/dnf/dnf.conf
+    section: main
+    option: excludepkgs
+    value: 'tomcat,tomcat-lib,tomcat-jsp-2.3-api,tomcat-servlet-4.0-api,tomcat-el-3.0-api'
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version == '8'
