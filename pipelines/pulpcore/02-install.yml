@@ -1,15 +1,20 @@
 ---
-- name: Setup git repo
+- name: Enable Postgresql 12 module if necessary
   become: True
   hosts:
    - "{{ forklift_name }}"
   vars_files:
     - ../vars/forklift_pulpcore.yml
   tasks:
-    - name: Install podman-docker
-      package:
-        name: podman-docker
-        state: installed
+  - name: Enable postgresql 12 module
+    ansible.builtin.dnf:
+      name: '@postgresql:12'
+      state: present
+    when:
+     - pipeline_version is defined
+     - pipeline_version != 'nightly' or pipeline_version is version('3.40', '<')
+     - pipeline_os is defined
+     - pipeline_os is search("centos8-stream")
 
 - name: install pulpcore
   hosts:
@@ -21,13 +26,33 @@
   environment:
     DJANGO_SETTINGS_MODULE: pulpcore.app.settings
   pre_tasks:
-    - when: pipeline_version != 'nightly' and pipeline_version is version('3.28', '<=' )
+    - when: pipeline_version != 'nightly' and pipeline_version is version('3.28', '==' )
       set_fact:
         pulp_pkg_repo: "http://koji.katello.org/releases/yum/pulpcore-{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
-    - when: pipeline_version == 'nightly' or pipeline_version is version('3.39', '>=')
+    - when: pipeline_version != 'nightly' and pipeline_version is version('3.39', '==')
       set_fact:
         pulp_pkg_repo: "https://stagingyum.theforeman.org/pulpcore/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
         pulp_pkg_name_prefix: "python3.11-"
   roles:
-    - epel_repositories
-    - pulp.pulp_installer.pulp_all_services
+    - role: epel_repositories
+      when:
+        - pipeline_version is defined
+        - pipeline_version != 'nightly' and pipeline_version is version('3.28', '==' )
+    - role: pulp.pulp_installer.pulp_all_services
+      when:
+        - pipeline_version is defined
+        - pipeline_version != 'nightly' or pipeline_version is version('3.39', '==')
+
+- name: Setup git repo
+  become: True
+  hosts:
+   - "{{ forklift_name }}"
+  vars_files:
+    - ../vars/forklift_pulpcore.yml
+  vars:
+    beaker_puppet_module: "puppet-pulpcore"
+  roles:
+    - role: beaker
+      when:
+        - pipeline_version is defined
+        - pipeline_version == 'nightly' or pipeline_version is version('3.40', '>=')

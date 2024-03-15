@@ -1,4 +1,4 @@
-forklift_name: "pipe-pulp-{{ pipeline_version }}-{{ pipeline_os }}"
+forklift_name: "pipe-pulpcore-{{ pipeline_version }}-{{ pipeline_os }}"
 
 server_box:
   box: "{{ pipeline_server_os | default(pipeline_os) }}"

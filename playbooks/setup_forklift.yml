@@ -80,7 +80,7 @@
       retries: 3
       when: forklift_install_from_galaxy
 
-    - name: 'Install Forklift Pulp collection dependencies for <3.17'
+    - name: 'Install Forklift Pulp collection dependencies for 3.28'
       command:
         cmd: ansible-galaxy collection install -r requirements-pulp.yml
         chdir: "{{ forklift_dest }}"
@@ -88,33 +88,19 @@
         - forklift_install_pulp_from_galaxy
         - pipeline_version is defined
         - pipeline_version != 'nightly'
-        - pipeline_version is version('3.17', '<=')
+        - pipeline_version is version('3.28', '==')
       retries: 3
       register: result
       until: result is succeeded
 
-    - name: 'Install Forklift Pulp collection dependencies for >3.18'
-      command:
-        cmd: ansible-galaxy collection install -r requirements-pulp-322.yml
-        chdir: "{{ forklift_dest }}"
-      when:
-        - forklift_install_pulp_from_galaxy
-        - pipeline_version is defined
-        - pipeline_version != 'nightly'
-        - pipeline_version is version('3.18', '>=')
-        - pipeline_version is version('3.39', '<')
-      retries: 3
-      register: result
-      until: result is succeeded
-
-    - name: 'Install Forklift Pulp collection dependencies for >3.39'
+    - name: 'Install Forklift Pulp collection dependencies for 3.39'
       command:
         cmd: ansible-galaxy collection install -r requirements-pulp-339.yml
         chdir: "{{ forklift_dest }}"
       when:
         - forklift_install_pulp_from_galaxy
         - pipeline_version is defined
-        - pipeline_version == 'nightly' or pipeline_version is version('3.39', '>=')
+        - pipeline_version is version('3.39', '==')
       retries: 3
       register: result
       until: result is succeeded

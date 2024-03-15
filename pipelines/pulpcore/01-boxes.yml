@@ -3,7 +3,6 @@
   hosts: localhost
   become: False
   vars_files:
-    - ../vars/install_base.yml
-    - ../vars/forklift_{{ pipeline_type }}.yml
+    - ../vars/forklift_pulpcore.yml
   roles:
     - forklift
