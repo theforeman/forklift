@@ -1,5 +1,5 @@
 ---
-- name: run tests
+- name: run tests beaker
   become: True
   hosts:
    - "{{ forklift_name }}"
@@ -7,12 +7,26 @@
     - ../vars/forklift_pulpcore.yml
   tasks:
     - name: Run acceptance tests
-      command: bundle exec rake beaker
-      args:
-        chdir: /src/puppet-pulpcore
-      environment:
-        BEAKER_HYPERVISOR: "docker"
-        BEAKER_provision: "yes"
-        BEAKER_setfile: "centos8-64{hostname=centos8-64.example.com}"
-        BEAKER_destroy: "no"
-        BEAKER_FACTER_PULPCORE_VERSION: "{{ pipeline_version }}"
+      ansible.builtin.include_role:
+        name: beaker
+        tasks_from: test
+      when:
+        - pipeline_version == 'nightly' or pipeline_version is version('3.40, '>=' )
+      vars:
+        beaker_puppet_module: "puppet-pulpcore"
+        beaker_os: "{{ pipeline_os.replace('-stream', '') }}"
+        beaker_environment:
+          BEAKER_FACTER_PULPCORE_BASEURL: "https://stagingyum.theforeman.org/pulpcore/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/x86_64"
+
+- name: run tests ansible
+  become: True
+  hosts:
+   - "{{ forklift_name }}"
+  vars_files:
+    - ../vars/install_base.yml
+    - ../vars/forklift_{{ pipeline_type }}.yml
+  roles:
+    - role: pulp.pulp_installer.pulp_health_check
+      when:
+        - pipeline_version is defined
+        - pipeline_version != 'nightly' or pipeline_version is version('3.39', '<=' )
