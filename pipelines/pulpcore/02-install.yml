@@ -22,7 +22,7 @@
   become: True
   vars_files:
     - ../vars/install_base.yml
-    - ../vars/forklift_{{ pipeline_type }}.yml
+    - ../vars/forklift_pulpcore.yml
   environment:
     DJANGO_SETTINGS_MODULE: pulpcore.app.settings
   pre_tasks:

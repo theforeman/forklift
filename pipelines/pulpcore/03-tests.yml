@@ -24,7 +24,7 @@
    - "{{ forklift_name }}"
   vars_files:
     - ../vars/install_base.yml
-    - ../vars/forklift_{{ pipeline_type }}.yml
+    - ../vars/forklift_pulpcore.yml
   roles:
     - role: pulp.pulp_installer.pulp_health_check
       when:
