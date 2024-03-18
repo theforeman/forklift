@@ -110,7 +110,10 @@
       command:
         cmd: ansible-galaxy role install -r playbooks/galaxy_collections/ansible_collections/pulp/pulp_installer/requirements.yml
         chdir: "{{ forklift_dest }}"
-      when: forklift_install_pulp_from_galaxy
+      when: 
+        - forklift_install_pulp_from_galaxy
+        - pipeline_version is defined
+        - pipeline_version != 'nightly'
       retries: 3
       register: result
       until: result is succeeded
