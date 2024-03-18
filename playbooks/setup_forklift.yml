@@ -100,6 +100,7 @@
       when:
         - forklift_install_pulp_from_galaxy
         - pipeline_version is defined
+        - pipeline_version != 'nightly'
         - pipeline_version is version('3.39', '==')
       retries: 3
       register: result
