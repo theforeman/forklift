@@ -11,14 +11,14 @@
       name: '@postgresql:12'
       state: present
     when:
-     - pipeline_version is defined
-     - pipeline_version != 'nightly' or pipeline_version is version('3.40', '<')
-     - pipeline_os is defined
-     - pipeline_os is search("centos8-stream")
+      - pipeline_version is defined
+      - pipeline_version != 'nightly' and pipeline_version is version('3.39', '<=' )
+      - pipeline_os is defined
+      - pipeline_os is search("centos8-stream")
 
 - name: install pulpcore
   hosts:
-   - "{{ forklift_server_name }}"
+   - "{{ forklift_name }}"
   become: True
   vars_files:
     - ../vars/install_base.yml
@@ -37,11 +37,11 @@
     - role: epel_repositories
       when:
         - pipeline_version is defined
-        - pipeline_version != 'nightly' and pipeline_version is version('3.28', '==' )
+        - pipeline_version != 'nightly' and pipeline_version is version('3.39', '<=' )
     - role: pulp.pulp_installer.pulp_all_services
       when:
         - pipeline_version is defined
-        - pipeline_version != 'nightly' or pipeline_version is version('3.39', '==')
+        - pipeline_version != 'nightly' and pipeline_version is version('3.39', '<=' )
 
 - name: Setup git repo
   become: True
