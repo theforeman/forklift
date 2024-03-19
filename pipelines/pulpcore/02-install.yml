@@ -12,7 +12,8 @@
       state: present
     when:
       - pipeline_version is defined
-      - pipeline_version != 'nightly' and pipeline_version is version('3.39', '<=' )
+      - pipeline_version != 'nightly'
+      - pipeline_version is version('3.39', '<=')
       - pipeline_os is defined
       - pipeline_os is search("centos8-stream")
 
@@ -33,15 +34,21 @@
       set_fact:
         pulp_pkg_repo: "https://stagingyum.theforeman.org/pulpcore/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
         pulp_pkg_name_prefix: "python3.11-"
-  roles:
-    - role: epel_repositories
+  tasks:
+    - name: enable EPEL
+      ansible.builtin.include_role:
+        name: epel_repositories
       when:
         - pipeline_version is defined
-        - pipeline_version != 'nightly' and pipeline_version is version('3.39', '<=' )
-    - role: pulp.pulp_installer.pulp_all_services
+        - pipeline_version != 'nightly'
+        - pipeline_version is version('3.39', '<=')
+    - name: configure all services using pulp_installer
+      ansible.builtin.include_role:
+        name: pulp.pulp_installer.pulp_all_services
       when:
         - pipeline_version is defined
-        - pipeline_version != 'nightly' and pipeline_version is version('3.39', '<=' )
+        - pipeline_version != 'nightly'
+        - pipeline_version is version('3.39', '<=')
 
 - name: Setup git repo
   become: True
