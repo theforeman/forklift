@@ -18,6 +18,7 @@
         beaker_os: "{{ pipeline_os.replace('-stream', '') }}"
         beaker_environment:
           BEAKER_FACTER_PULPCORE_BASEURL: "https://stagingyum.theforeman.org/pulpcore/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/x86_64"
+          BEAKER_FACTER_PULPCORE_VERSION: "{{ pipeline_version }}"
 
 - name: run tests ansible
   become: True
