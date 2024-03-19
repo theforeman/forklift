@@ -26,8 +26,11 @@
   vars_files:
     - ../vars/install_base.yml
     - ../vars/forklift_pulpcore.yml
-  roles:
-    - role: pulp.pulp_installer.pulp_health_check
+  tasks:
+    - name: run pulp_health_check
+      ansible.builtin.include_role:
+        name: pulp.pulp_installer.pulp_health_check
       when:
         - pipeline_version is defined
-        - pipeline_version != 'nightly' or pipeline_version is version('3.39', '<=' )
+        - pipeline_version != 'nightly'
+        - pipeline_version is version('3.39', '<=' )
