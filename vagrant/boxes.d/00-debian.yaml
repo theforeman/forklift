@@ -12,3 +12,5 @@ boxes:
   debian12:
     box_name:   'debian/bookworm64'
     pty:        true
+    scenarios:
+      - foreman
