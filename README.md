@@ -177,7 +177,7 @@ hostmanager_ip_resolver_device: 'eth1'
 Sometimes you want to spin up the same box type (e.g. centos8-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file in vagrant/boxes.d/. For example, to create a custom box on CentOS 8 Stream with nightly and run the installers reset command:
 
 ```yaml
-my-nightly-koji:
+my-nightly-staging:
   box: centos8-stream
   ansible:
     playbook: playbooks/katello.yml

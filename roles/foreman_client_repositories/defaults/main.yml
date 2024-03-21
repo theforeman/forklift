@@ -4,4 +4,3 @@ foreman_client_repositories_environment: release
 foreman_client_repositories_dists:
   RedHat: el
   Fedora: fc
-foreman_client_repositories_staging_source: koji

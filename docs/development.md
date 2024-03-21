@@ -8,7 +8,6 @@ This covers how to setup and configure a development environment using the Forkl
    * [Starting the Development Server](#starting-the-development-server)
    * [Customizing the Development Environment](#customizing-the-development-environment)
    * [Reviewing Pull Requests](#reviewing-pull-requests)
- * [Use Koji Scratch Builds](#koji-scratch-builds)
  * [Packit PR Builds](#packit-pr-builds)
  * [Test Puppet Module Pull Requests](#test-puppet-module)
  * [Hammer Development](#hammer-development)
@@ -175,37 +174,6 @@ git config --global user.name "Your Name"
 Once reviewing is finished, the repository can be reset to develop/master branch by calling `rrpr`. It destroys the review branch after it checkouts back to master branch.
 
 If `rpr` is used in project with `config/database.yml` it will also create a backup of the db in ./tmp/. When `rrpr` is called later and in case previous backup was found, it asks whether it should be restored.
-
-## Koji Scratch Builds
-
-Forklift supports using Koji scratch builds to make RPMs available for testing purposes. For example, if you want to test a change to nightly, with a scratch build of rubygem-katello. This is done by fetching the scratch builds, and deploying a local yum repo to the box you are deploying on. Multiple scratch builds are also supported for testing changes to multiple components at once (e.g. the installer and the rubygem), see examples below. Also, this option may be specified from within `99-local.yaml` via the `options:` option.
-
-
-An Ansible role is provided that can setup and configure a Koji scratch build for testing. If you had an existing playbook such as:
-
-```yaml
-- hosts: server
-  roles:
-    - etc_hosts
-    - foreman_repositories
-    - katello_repositories
-    - katello
-```
-
-The Koji role and task ID variable can be added to download and configure a repository with priority:
-
-```yaml
-- hosts: server
-  vars:
-    koji_task_ids:
-      - 321231
-  roles:
-    - etc_hosts
-    - koji
-    - foreman_repositories
-    - katello_repositories
-    - katello
-```
 
 ## Packit PR Builds
 

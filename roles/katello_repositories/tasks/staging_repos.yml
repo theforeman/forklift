@@ -4,8 +4,14 @@
     name: katello-repos
     state: absent
 
-- ansible.builtin.include_tasks:
-    file: _{{ katello_repositories_staging_source }}_staging_repos.yml
+- name: 'Katello {{ katello_repositories_version }} Staging repository'
+  yum_repository:
+    name: katello-staging
+    description: "Katello {{ katello_repositories_version }} Staging Repository"
+    baseurl: "https://stagingyum.theforeman.org/katello/{{ katello_repositories_version }}/el{{ ansible_distribution_major_version }}/x86_64/"
+    gpgcheck: no
+  tags:
+    - packages
 
 - name: 'Enable katello:el8 module'
   command: dnf module enable -y katello:el8
