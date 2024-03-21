@@ -1,9 +1,0 @@
----
-- name: 'Foreman {{ foreman_client_repositories_version }} Client Staging Repository'
-  yum_repository:
-    name: foreman-client-koji
-    description: "Foreman {{ foreman_client_repositories_version }} Client Koji Repository"
-    baseurl: "http://koji.katello.org/releases/yum/foreman-client-{{ foreman_client_repositories_version }}/{{ foreman_client_repositories_dists[ansible_os_family] }}{{ ansible_distribution_major_version }}/x86_64/"
-    gpgcheck: no
-  tags:
-    - packages
