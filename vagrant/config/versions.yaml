@@ -90,7 +90,7 @@ installers:
   - foreman: 'nightly'
     katello: 'nightly'
     candlepin: '4.3'
-    pulpcore: '3.39'
+    pulpcore: 'nightly'
     puppet: 8
     boxes:
       - 'almalinux8'
