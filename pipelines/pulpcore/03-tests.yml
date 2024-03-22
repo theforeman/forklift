@@ -12,26 +12,10 @@
         tasks_from: test
       when:
         - pipeline_version is defined
-        - pipeline_version == 'nightly' or pipeline_version is version('3.40', '>=' )
+        - pipeline_version == 'nightly' or pipeline_version is version('3.39', '>=' )
       vars:
         beaker_puppet_module: "puppet-pulpcore"
         beaker_os: "{{ pipeline_os.replace('-stream', '') }}"
         beaker_environment:
           BEAKER_FACTER_PULPCORE_BASEURL: "https://stagingyum.theforeman.org/pulpcore/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/x86_64"
           BEAKER_FACTER_PULPCORE_VERSION: "{{ pipeline_version }}"
-
-- name: run tests ansible
-  become: True
-  hosts:
-   - "{{ forklift_name }}"
-  vars_files:
-    - ../vars/install_base.yml
-    - ../vars/forklift_pulpcore.yml
-  tasks:
-    - name: run pulp_health_check
-      ansible.builtin.include_role:
-        name: pulp.pulp_installer.pulp_health_check
-      when:
-        - pipeline_version is defined
-        - pipeline_version != 'nightly'
-        - pipeline_version is version('3.39', '<=' )
