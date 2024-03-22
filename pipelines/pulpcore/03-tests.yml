@@ -10,9 +10,6 @@
       ansible.builtin.include_role:
         name: beaker
         tasks_from: test
-      when:
-        - pipeline_version is defined
-        - pipeline_version == 'nightly' or pipeline_version is version('3.39', '>=' )
       vars:
         beaker_puppet_module: "puppet-pulpcore"
         beaker_os: "{{ pipeline_os.replace('-stream', '') }}"
