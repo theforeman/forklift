@@ -7,22 +7,9 @@
     gpgcheck: no
     enabled: yes
 
-- name: 'Enable pulpcore:el8 module'
-  command: dnf module enable -y pulpcore:el8
-  # can't use the `dnf` module for modules without a default stream
-  # https://github.com/ansible/ansible/issues/56504
-  # https://github.com/ansible/ansible/issues/64852
-  args:
-    creates: /etc/dnf/modules.d/pulpcore.module
-  when:
-    - pulpcore_repositories_version is version('3.16', '>=')
-    - pulpcore_repositories_version is version('3.39', '<')
-    - ansible_distribution_major_version == '8'
-
 - name: 'Disable pulpcore:el8 module'
   file:
     path: /etc/dnf/modules.d/pulpcore.module
     state: absent
   when:
-    - pulpcore_repositories_version is version('3.39', '>=')
     - ansible_distribution_major_version == '8'
