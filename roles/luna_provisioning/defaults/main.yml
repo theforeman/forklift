@@ -9,7 +9,6 @@ luna_provisioning_installer_internal_options:
   - "--enable-foreman-plugin-ansible"
   - "--enable-foreman-plugin-bootdisk"
   - "--enable-foreman-plugin-discovery"
-  - "--enable-foreman-plugin-hooks"
   - "--enable-foreman-plugin-remote-execution"
   - "--enable-foreman-plugin-templates"
   - "--enable-foreman-plugin-virt-who-configure"
