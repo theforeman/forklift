@@ -17,5 +17,4 @@
   args:
     creates: /etc/dnf/modules.d/foreman.module
   when:
-    - foreman_repositories_version == "nightly" or foreman_repositories_version is version('3.2', '>=')
     - ansible_distribution_major_version == '8'

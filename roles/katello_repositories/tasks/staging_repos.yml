@@ -15,7 +15,6 @@
   args:
     creates: /etc/dnf/modules.d/katello.module
   when:
-    - katello_repositories_version == "nightly" or katello_repositories_version is version('4.4', '>=')
     - ansible_distribution_major_version == '8'
 
 - name: 'Add Pulpcore repository'
