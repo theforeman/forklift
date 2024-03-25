@@ -9,13 +9,6 @@
 
 - include_tasks: installer_version.yml
 
-- name: 'Set internal installer options'
-  set_fact:
-    foreman_installer_options_internal_use_only: "{{ [ '--upgrade', '--certs-update-all' ] + foreman_installer_options_internal_use_only }}"
-  when:
-    - foreman_installer_version is version('2.1', '<')
-    - foreman_installer_scenario != 'foreman'
-
 - name: 'Run installer upgrade'
   import_tasks: "install.yml"
   vars:
