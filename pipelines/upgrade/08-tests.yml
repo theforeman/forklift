@@ -26,5 +26,4 @@
       when: pipeline_type != 'foreman'
     - role: foreman_testing
       when:
-        - forklift_upgrade_version_final == 'nightly' or forklift_upgrade_version_final is version('4.1', '>=')
         - pipeline_type != 'foreman'
