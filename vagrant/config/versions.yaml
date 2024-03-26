@@ -91,7 +91,7 @@ installers:
     katello: 'nightly'
     candlepin: '4.3'
     pulpcore: 'nightly'
-    puppet: 8
+    puppet: 7
     boxes:
       - 'almalinux8'
       - 'almalinux9'
