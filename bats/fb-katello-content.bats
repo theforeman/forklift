@@ -32,7 +32,7 @@ setup() {
 @test "create package repository" {
   hammer repository create --organization="${ORGANIZATION}" \
     --product="${PRODUCT}" --content-type="yum" --name "${YUM_REPOSITORY}" \
-    --url https://fixtures.pulpproject.org/rpm-packages-updateinfo/ | grep -q "Repository created"
+    --url https://fixtures.pulpproject.org/rpm-no-comps/ | grep -q "Repository created"
 }
 
 @test "upload package" {
@@ -448,4 +448,16 @@ setup() {
 
 @test "fetch rpm from yum repository on old path" {
   tCheckPulpYumContent "${HOSTNAME}" "pulp/repos" "Library"
+}
+
+@test "clean-up modules-rpms and rpm-deps" {
+  hammer repository delete --organization="${ORGANIZATION}" \
+    --product="${PRODUCT}" --name="${YUM_REPOSITORY_2}" \
+    --remove-from-content-view-versions=true
+  hammer repository delete --organization="${ORGANIZATION}" \
+    --product="${PRODUCT}" --name="${YUM_REPOSITORY_3}" \
+    --remove-from-content-view-versions=true
+
+  echo "::ForemanTasks.sync_task(::Actions::Katello::OrphanCleanup::RemoveOrphans, SmartProxy.pulp_primary)" \
+    | foreman-rake console
 }
