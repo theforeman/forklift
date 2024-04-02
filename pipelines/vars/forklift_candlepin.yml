@@ -6,3 +6,5 @@ server_box:
 
 forklift_boxes:
   "{{ {forklift_name: server_box} }}"
+
+beaker_puppet_module_version: "{{ '15.1-stable' if pipeline_version == '4.3' else 'master' }}"
