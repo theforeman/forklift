@@ -19,6 +19,10 @@
       sync_type: disabled
       libvirt_options:
         volume_cache: unsafe
+        graphics_type: none
+        qemu_args:
+          - :value: '-device'
+          - :value: 'cirrus-vga,id=video0'
       boxes:
         exclude:
           - '^[^p]'
