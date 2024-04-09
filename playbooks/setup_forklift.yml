@@ -22,7 +22,7 @@
         graphics_type: none
         qemu_args:
           - :value: '-device'
-          - :value: 'cirrus-vga,id=video0'
+          - :value: 'cirrus-vga,id=video0,bus=pci.0,addr=0x9'
       boxes:
         exclude:
           - '^[^p]'
