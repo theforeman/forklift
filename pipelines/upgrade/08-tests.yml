@@ -27,3 +27,4 @@
     - role: foreman_testing
       when:
         - pipeline_type != 'foreman'
+        - pipeline_type != 'plugins'
