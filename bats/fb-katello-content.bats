@@ -329,7 +329,7 @@ setup() {
   hammer content-view filter create --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW_2}" --name="${FILTER3}" --inclusion=true --type=modulemd
   modulemd_id=$(hammer --csv --no-headers module-stream list --organization="${ORGANIZATION}" \
-    | grep "5.21" | cut -d, -f1)
+    | grep --max-count=1 "5.21" | cut -d, -f1)
   hammer content-view filter rule create --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW_2}" --content-view-filter="${FILTER3}" --module-stream-ids=$modulemd_id
 }
