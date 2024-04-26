@@ -21,4 +21,4 @@
       scenario_version: "{{ forklift_upgrade_version_intermediate }}"
     - foreman_server_repositories
     - role: foreman_installer
-      foreman_installer_skip_installer: "{{ true if forklift_upgrade_version_start == forklift_upgrade_version_intermediate else false }}"
+      when: forklift_upgrade_version_start != forklift_upgrade_version_intermediate
