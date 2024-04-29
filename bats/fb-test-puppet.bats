@@ -33,7 +33,7 @@ fi
 
   foreman-installer --enable-foreman-plugin-puppet --enable-foreman-cli-puppet --foreman-proxy-puppet true --foreman-proxy-puppetca true --enable-puppet --puppet-server true "${cert_options[@]}"
   # Force hammer to reload the apidoc cache - https://projects.theforeman.org/issues/28283
-  hammer --reload-cache ping
+  tHammerPing
 }
 
 @test "check smart proxy is registered" {
