@@ -154,6 +154,7 @@ tWaitForTask() {
 tHammerPing() {
   local next_wait_time=0
   until [[ "${status:-1}" -eq 0 || $next_wait_time -eq 12 ]]; do
+    # Force hammer to reload the apidoc cache - https://projects.theforeman.org/issues/28283
     run hammer --reload-cache ping
     [[ $status -eq 0 ]] || sleep $(( next_wait_time++ ))
   done
