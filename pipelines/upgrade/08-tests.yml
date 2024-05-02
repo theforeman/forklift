@@ -11,7 +11,7 @@
     bats_test_name_prefix: "{{ pipeline_os }} n-1 upgrade: "
   environment:
     FOREMAN_EXPECTED_VERSION: "{{ foreman_expected_version | default('') }}"
-    ORG_SUFFIX: "_proxy_n-1_upgrade"
+    ORG_SUFFIX: "_n-1_upgrade" # TODO: reset this back to _proxy_n-1_upgrade when CP 4.4.6+ is released
   roles:
     - role: forklift_versions
       scenario: "{{ pipeline_type }}"
