@@ -4,9 +4,7 @@ dependencies:
   - role: foreman_server_repositories
     become: true
     foreman_server_repositories_katello: true
-    foreman_repositories_staging_source: 'stagingyum'
     foreman_server_repositories_foreman_client: true
-    katello_repositories_staging_source: 'stagingyum'
 #   puppet 6 is still the default for theforeman.operations.puppet_repositories as of release 1.2.3
     foreman_puppet_repositories_version: 7
   - role: foreman_installer_devel_scenario
