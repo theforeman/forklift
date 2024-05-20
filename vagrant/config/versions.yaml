@@ -87,6 +87,19 @@ installers:
       - 'debian11'
       - 'ubuntu2004'
 
+  - foreman: '3.11'
+    katello: '4.13'
+    candlepin: '4.4'
+    pulpcore: '3.49'
+    puppet: 7
+    boxes:
+      - 'almalinux8'
+      - 'almalinux9'
+      - 'centos8-stream'
+      - 'centos9-stream'
+      - 'debian11'
+      - 'ubuntu2004'
+
   - foreman: 'nightly'
     katello: 'nightly'
     candlepin: '4.4'
