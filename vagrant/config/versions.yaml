@@ -99,6 +99,7 @@ installers:
       - 'centos9-stream'
       - 'debian11'
       - 'ubuntu2004'
+      - 'ubuntu2204'
 
   - foreman: 'nightly'
     katello: 'nightly'
