@@ -15,4 +15,5 @@
     - role: enable_ipv6
     - role: disable_firewall
     - role: foreman_server_repositories
+    - role: packit
     - role: update_os_packages
