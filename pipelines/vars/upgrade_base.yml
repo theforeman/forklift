@@ -5,6 +5,6 @@ forklift_proxy_name: "pipe-up-{{ pipeline_type }}-proxy-{{ pipeline_version}}-{{
 forklift_smoker_name: "pipe-up-{{ pipeline_type }}-smoker-{{ pipeline_version }}-{{ pipeline_os }}"
 forklift_boxes: "{{ {forklift_server_name: server_box, forklift_smoker_name: smoker_box} }}"
 smoker_box:
-  box: centos8-stream
+  box: centos9-stream
   memory: 2048
 bats_test_name_prefix: "{{ pipeline_os }} {{ pipeline_action }}: "
