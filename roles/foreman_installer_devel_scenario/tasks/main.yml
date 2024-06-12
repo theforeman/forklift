@@ -54,3 +54,11 @@
   gem:
     name: puppet-strings
     executable: /opt/puppetlabs/puppet/bin/gem
+
+- name: 'Install puppet/rhsm puppet module'
+  command: "/opt/puppetlabs/bin/puppet module install puppet-rhsm --target-dir {{ foreman_installer_devel_scenario_modules }}"
+  args:
+    creates: "{{ foreman_installer_devel_scenario_modules }}/rhsm"
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_distribution_major_version == '9'
