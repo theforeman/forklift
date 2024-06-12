@@ -30,10 +30,6 @@ centos8-hammer-devel:
     variables: # defaults in roles/hammer_devel/defaults/main.yml
       #hammer_devel_server: centos8-katello-devel.custom-domain.example.com
 
-katello-remote-execution:
-  box: centos8-katello-nightly
-  installer: --enable-foreman-remote-execution
-
 centos8-proxy-devel:
     box: centos8-stream
     ansible:
@@ -61,12 +57,6 @@ centos8-katello-bats-ci:
   box: centos8-stream
   ansible:
     playbook: 'playbooks/bats_pipeline_katello_nightly.yml'
-    group: 'bats'
-
-centos7-foreman-bats-ci:
-  box: centos7
-  ansible:
-    playbook: 'playbooks/bats_pipeline_foreman_nightly.yml'
     group: 'bats'
 
 centos8-dynflow-devel:
