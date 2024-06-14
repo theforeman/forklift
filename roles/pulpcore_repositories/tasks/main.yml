@@ -4,7 +4,8 @@
     name: pulpcore-repository
     description: Pulpcore {{ pulpcore_repositories_version }}
     baseurl: "https://yum.theforeman.org/pulpcore/{{ pulpcore_repositories_version }}/el{{ ansible_distribution_major_version }}/x86_64/"
-    gpgcheck: no
+    gpgcheck: "{{ 'no' if pulpcore_repositories_version == 'nightly' else 'yes' }}"
+    gpgkey: "https://yum.theforeman.org/pulpcore/{{ pulpcore_repositories_version }}/GPG-RPM-KEY-pulpcore"
     enabled: yes
 
 - name: 'Disable pulpcore:el8 module'
