@@ -4,7 +4,8 @@
     name: candlepin-repository
     description: Candlepin {{ candlepin_repositories_version }}
     baseurl: "https://yum.theforeman.org/candlepin/{{ candlepin_repositories_version }}/el{{ ansible_distribution_major_version }}/$basearch/"
-    gpgcheck: no
+    gpgcheck: "{{ 'no' if candlepin_repositories_version == 'nightly' else 'yes' }}"
+    gpgkey: "https://yum.theforeman.org/candlepin/{{ candlepin_repositories_version }}/RPM-GPG-KEY-candlepin"
     enabled: yes
 
 - name: 'Enable pki-core module'
