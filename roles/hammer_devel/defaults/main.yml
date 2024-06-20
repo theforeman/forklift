@@ -15,7 +15,8 @@ hammer_devel_repositories:
   - theforeman/hammer-cli-foreman-tasks
   - theforeman/hammer_cli_foreman_remote_execution
   - theforeman/hammer-cli-foreman-virt-who-configure
-  - katello/hammer-cli-csv
+  - theforeman/hammer_cli_foreman_azure_rm
+  - theforeman/hammer-cli-foreman-rh-cloud
   - katello/hammer-cli-katello
 hammer_devel_local_gems: |-
   gem 'hammer_cli'
@@ -24,4 +25,14 @@ hammer_devel_local_gems: |-
     gem 'hammer_cli_foreman_tasks'
     gem 'hammer_cli_foreman_remote_execution'
     gem 'hammer_cli_foreman_virt_who_configure'
-    gem 'hammer_cli_csv'
+    gem 'hammer_cli_foreman_azure_rm'
+    gem 'hammer_cli_foreman_rh_cloud'
+
+hammer_config_items:
+  - { key: "hammer-cli-foreman", value: "foreman.yml" }
+  - { key: "hammer-cli-foreman-admin", value: "foreman_admin.yml" }
+  - { key: "hammer-cli-katello", value: "katello.yml" }
+  - { key: "hammer-cli-foreman-rh-cloud", value: "foreman_rh_cloud.yml" }
+  - { key: "hammer_cli_foreman_remote_execution", value: "foreman_remote_execution.yml" }
+  - { key: "hammer-cli-foreman-virt-who-configure", value: "foreman_virt_who_configure.yml" }
+  - { key: "hammer_cli_foreman_azure_rm", value: "foreman_azure_rm.yml" }
