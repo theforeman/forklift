@@ -1,7 +1,25 @@
 ---
-centos8-katello-devel:
+centos9-katello-devel:
   primary: true
-  box: centos8-stream
+  box: centos9-stream
+  ansible:
+    playbook: 'playbooks/katello_devel.yml'
+    group: 'devel'
+    variables:
+      ssh_forward_agent: true
+      foreman_devel_github_push_ssh: True
+      katello_devel_github_username: <REPLACE ME>
+      foreman_repositories_environment: staging
+      katello_repositories_environment: staging
+      foreman_repositories_version: nightly
+      katello_repositories_version: nightly
+      foreman_installer_options:
+        - "--foreman-proxy-content-enable-ostree=true"
+        #- "--katello-devel-modulestream-nodejs=18"
+
+almalinux8-katello-devel:
+  primary: true
+  box: almalinux8
   ansible:
     playbook: 'playbooks/katello_devel.yml'
     group: 'devel'
@@ -15,27 +33,34 @@ centos8-katello-devel:
         - "--foreman-proxy-content-enable-ostree=true"
         - "--katello-devel-modulestream-nodejs=12"
 
-centos8-luna-demo:
-  box: centos8-stream
+almalinux8-luna-demo:
+  box: almalinux8
   memory: 10240
   ansible:
     playbook: playbooks/luna_demo_environment.yml
 
-centos8-hammer-devel:
-  box: centos8-stream
+almalinux8-hammer-devel:
+  box: almalinux8
   memory: 512
   ansible:
     playbook: 'playbooks/hammer_devel.yml'
     group: 'hammer-devel'
     variables: # defaults in roles/hammer_devel/defaults/main.yml
-      #hammer_devel_server: centos8-katello-devel.custom-domain.example.com
+      #hammer_devel_server: almalinux8-katello-devel.custom-domain.example.com
 
-centos8-proxy-devel:
-    box: centos8-stream
+centos9-proxy-devel:
+    box: centos9-stream
     ansible:
       playbook: 'playbooks/foreman_proxy_content_dev.yml'
       group: 'foreman-proxy-content'
-      server: 'centos8-katello-devel'
+      server: 'centos9-katello-devel'
+
+almalinux8-proxy-devel:
+    box: almalinux8
+    ansible:
+      playbook: 'playbooks/foreman_proxy_content_dev.yml'
+      group: 'foreman-proxy-content'
+      server: 'almalinux8-katello-devel'
 
 centos7-katello-client:
   box: centos7
@@ -43,40 +68,39 @@ centos7-katello-client:
     playbook: 'playbooks/katello_client.yml'
     group: 'client'
     variables:
-      katello_client_server: 'centos8-katello-devel'
+      katello_client_server: 'almalinux8-katello-devel'
 
-centos8-katello-client:
-  box: centos8-stream
+almalinux8-katello-client:
+  box: almalinux8
   ansible:
     playbook: 'playbooks/katello_client.yml'
     group: 'client'
     variables:
-      katello_client_server: 'centos8-katello-devel'
+      katello_client_server: 'almalinux8-katello-devel'
 
-centos8-katello-bats-ci:
-  box: centos8-stream
+almalinux8-katello-bats-ci:
+  box: almalinux8
   ansible:
     playbook: 'playbooks/bats_pipeline_katello_nightly.yml'
     group: 'bats'
 
-centos8-dynflow-devel:
-  box: centos8-stream
-  memory: 512
+almalinux8-dynflow-devel:
+  box: almalinux8
   ansible:
     group: 'dynflow_devel'
     playbook: 'playbooks/dynflow_devel.yml'
     variables:
       dynflow_devel_github_fork_remote_name: 'origin'
 
-centos8-katello-nightly-stable:
+almalinux8-katello-nightly-stable:
   box_name: katello/katello-nightly
   memory: 12288
-  hostname: centos8-katello-nightly-stable.example.com
+  hostname: almalinux8-katello-nightly-stable.example.com
 
-centos8-katello-devel-stable:
+almalinux8-katello-devel-stable:
   box_name: katello/katello-devel
   memory: 12288
-  hostname: centos8-katello-devel-stable.example.com
+  hostname: almalinux8-katello-devel-stable.example.com
   ansible:
     playbook: 'playbooks/setup_user_devel_environment.yml'
 
@@ -85,8 +109,8 @@ centos8-katello-devel-stable:
 # ULA range or link local, it should have permission to request resources by
 # default. This depends on a manually defined network with a bridge named
 # virbr3.
-centos8-squid:
-  box: centos8-stream
+almalinux8-squid:
+  box: almalinux8
   ansible:
     playbook: 'playbooks/squid.yml'
   networks:
@@ -95,11 +119,11 @@ centos8-squid:
         dev: 'virbr3'
         type: 'bridge'
 
-centos8-foreman-smoker:
-  box: centos8-stream
+almalinux8-foreman-smoker:
+  box: almalinux8
   ansible:
     playbook: 'playbooks/smoker.yml'
     variables:
-      smoker_base_url: "CHANGEME" # For example: "https://centos8-katello-devel-stable.example.com"
+      smoker_base_url: "CHANGEME" # For example: "https://almalinux8-katello-devel-stable.example.com"
       pytest_project_alias: "foreman_smoker"
       pytest_run_tests: false
