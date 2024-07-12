@@ -84,8 +84,8 @@ almalinux8-katello-bats-ci:
     playbook: 'playbooks/bats_pipeline_katello_nightly.yml'
     group: 'bats'
 
-almalinux8-dynflow-devel:
-  box: almalinux8
+centos9-dynflow-devel:
+  box: centos9-stream
   ansible:
     group: 'dynflow_devel'
     playbook: 'playbooks/dynflow_devel.yml'

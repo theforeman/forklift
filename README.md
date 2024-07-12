@@ -69,24 +69,24 @@ When this is complete, simply follow the next section of this README to try out 
 Spin up your box and start using the latest nightly build of Foreman:
 
 ```sh
-vagrant up centos8-stream-foreman-nightly
+vagrant up centos9-stream-foreman-nightly
 ```
 
 Access the CLI by first connecting to the box via SSH:
 
 ```sh
-vagrant ssh centos8-stream-foreman-nightly
+vagrant ssh centos9-stream-foreman-nightly
 ```
 
 To access the WebUI, it's helpful to have the vagrant-hostmanager plugin installed, so that your Workstation will automatically be able to resolve the hostname of the box to its IP address.
 
-Then you can simply open your browser and navigate to `https://centos8-stream-foreman-nightly.<HOSTNAME>.example.com` where `<HOSTNAME>` is replaced by the shortname of your workstation. The first time you do this you will need to accept the self-signed certicate.
+Then you can simply open your browser and navigate to `https://centos9-stream-foreman-nightly.<HOSTNAME>.example.com` where `<HOSTNAME>` is replaced by the shortname of your workstation. The first time you do this you will need to accept the self-signed certicate.
 
 By default, `forklift` deploys Foreman with `admin`/`changeme` as username and password.
 
 ### Katello Nightly Box
 
-Katello nightly boxes are available as well; simply change `centos8-stream-foreman-nightly` to `centos8-stream-katello-nightly` and the steps are otherwise exactly the same as above.
+Katello nightly boxes are available as well; simply change `centos9-stream-foreman-nightly` to `centos9-stream-katello-nightly` and the steps are otherwise exactly the same as above.
 
 ### Additional Documentation
 
@@ -104,7 +104,7 @@ sed -i "s/<REPLACE ME>/GITHUB_NICK/g" vagrant/boxes.d/99-local.yaml
 Bring up the Katello Development Box:
 
 ```sh
-vagrant up centos8-katello-devel
+vagrant up centos9-katello-devel
 ```
 
 Once the box is running, you can access the shell via SSH and modify the source code in the `~/foreman` and `~/katello` directories. Then start the application to preview your changes:
@@ -114,9 +114,9 @@ cd ~/foreman
 bundle exec foreman start
 ```
 
-Before you can access the WebUI, you must first accept the self-signed certificate on port 3808 by visiting `https://centos8-katello-devel.<HOSTNAME>.example.com:3808` in your browser.
+Before you can access the WebUI, you must first accept the self-signed certificate on port 3808 by visiting `https://centos9-katello-devel.<HOSTNAME>.example.com:3808` in your browser.
 
-Then, navigate to `https://centos8-katello-devel.<HOSTNAME>.example.com/` to access the WebUI and preview your changes.
+Then, navigate to `https://centos9-katello-devel.<HOSTNAME>.example.com/` to access the WebUI and preview your changes.
 
 As above, `<HOSTNAME>` refers to the shortname of your hypervisor.
 
@@ -174,11 +174,11 @@ hostmanager_ip_resolver_device: 'eth1'
 
 ### Adding Custom Boxes
 
-Sometimes you want to spin up the same box type (e.g. centos8-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file in vagrant/boxes.d/. For example, to create a custom box on CentOS 8 Stream with nightly and run the installers reset command:
+Sometimes you want to spin up the same box type (e.g. centos9-katello-devel) from within the forklift directory. While this can be added to the Vagrantfile directly, updates to the forklift repository could wipe out your local changes. To help with this, you can define a custom box re-using the configuration within the Vagrantfile. To do so, create a `99-local.yaml` file in vagrant/boxes.d/. For example, to create a custom box on CentOS 9 Stream with nightly and run the installers reset command:
 
 ```yaml
 my-nightly-staging:
-  box: centos8-stream
+  box: centos9-stream
   ansible:
     playbook: playbooks/katello.yml
     variables:
@@ -225,7 +225,7 @@ Example with custom networking, static IP on custom libvirt network:
 
 ```yaml
 static:
-  box: centos8
+  box: centos9
   hostname: mystatic.box.com
   networks:
     - type: 'private_network'
@@ -239,7 +239,7 @@ Example with custom libvirt management network:
 
 ```yaml
 static:
-  box: centos8
+  box: centos9
   hostname: mystatic.box.com
   libvirt_options:
     management_network_address: 172.23.99.0/24
@@ -251,8 +251,8 @@ Do not forget to set openstack API credentials.
 To use openstack provider as default look [here](https://www.vagrantup.com/docs/providers/default.html).
 
 ```yaml
-openstack-centos8:
-  image_name: 'Centos8'
+openstack-centos9:
+  image_name: 'Centos9'
   username: 'centos'  #root by default
   hostname: 'john-doe'
   openstack_flavor: 'm1.medium'
@@ -266,7 +266,7 @@ Example with sshfs mounting folder from guest to host:
 
 ```yaml
 with-sshfs:
-  box: centos8
+  box: centos9-stream
   sshfs:
     host_path: '/some/host/path'
     guest_path: '/some/guest/path'
@@ -279,7 +279,7 @@ Additonal options may be specified with using `options`.
 
 ```yaml
 with-sshfs-options:
-  box: centos8
+  box: centos9-stream
   sshfs:
     host_path: '/some/host/path'
     guest_path: '/some/guest/path'
@@ -290,7 +290,7 @@ Example with an additional disk (libvirt volume) presented as /dev/vdb in the vm
 
 ```yaml
 static:
-  box: centos8
+  box: centos9-stream
   hostname: mystatic.box.com
   add_disks:
     - size: 100GiB
@@ -306,7 +306,7 @@ Then create your box:
 
 ```yaml
 with-nfs:
-  box: centos8
+  box: centos9-stream
   nfs:
     host_path: '/some/host/path'
     guest_path: '/some/guest/path'
@@ -335,7 +335,7 @@ boxes:
   exclude:
     - "katello" # exclude any box containing "katello"
     - "ubuntu1804-foreman-2\\.0" # exclude only the box "ubuntu1804-foreman-2.0". Notice the escaped '.' character to match the specific character instead of any single character
-    - "^centos7-fips" # exclude any box that starts with "centos7-fips"
+    - "^centos9" # exclude any box that starts with "centos9"
     - "foreman-1\\.(?:[2][0-3])" # exclude any foreman-1.20 to foreman-1.23 version box
 ```
 
@@ -347,7 +347,7 @@ Ansible roles may also be installed directly using the [`ansible-galaxy` command
 
 ```yaml
 ansible:
-  box: centos8-stream-katello-nightly
+  box: centos9-stream-katello-nightly
   ansible:
     playbook:
       - 'user_playbooks/vim.yml'

@@ -15,10 +15,10 @@ reboot:
 
 2. Build a box
 
-    - Option 1: Use the `centos7-provision-nightly` box.
+    - Option 1: Use the `centos9-provision-nightly` box.
 
-    - Option 2: Use an existing katello box (e.g. centos7-katello-p4-nightly) and run the provisioning playbook (it takes a while, as it syncs (on-demand) centos7, puppet 4).   ***Note*: If you are using puppet 4, you need to increase the ram on the box, to something like 8096 otherwise candlepin crashes with OOM.**
-        `ansible-playbook -l centos7-katello-p4-nightly playbooks/katello_provisioning.yml`
+    - Option 2: Use an existing katello box (e.g. centos9-katello-p7-nightly) and run the provisioning playbook (it takes a while, as it syncs (on-demand) centos9, puppet 7).   ***Note*: If you are using puppet 7, you need to increase the ram on the box, to something like 8096 otherwise candlepin crashes with OOM.**
+        `ansible-playbook -l centos9-katello-p7-nightly playbooks/katello_provisioning.yml`
 
 4. Login and create a compute profile, because this isn't possible with hammer or the API.
 
@@ -26,7 +26,7 @@ reboot:
    - Click "libvirt"
    - Click Compute profiles
    - Click 2-Medium
-        - increse ram to 1024MB (required for centos 7)
+        - increse ram to 2048MB (required for centos 9)
         - change network type to NAT, network name = provision
    - Click Submit
 
@@ -37,9 +37,9 @@ reboot:
 
 6. Configure / Host groups
 
-    - Edit Forklift CentOS 7
+    - Edit Forklift CentOS 9
     - Set Compute profile to be "2-Medium"
-    - Assign the `CentOS 7` activation key to the host group
+    - Assign the `CentOS 9` activation key to the host group
 
 7. You're good to go! Let's provision a box!
 
@@ -50,4 +50,4 @@ reboot:
 
      DONE! Click submit :tada:
 
-7. If you want to view the console while it boots, make sure to trust the CA certificate in your browser, it's hosted at https://centos7-katello-nightly.example.com/pub/katello-server-ca.crt, and you'll need to make sure you're accessing the katello via it's proper hostname (add an entry to /etc/hosts)
+7. If you want to view the console while it boots, make sure to trust the CA certificate in your browser, it's hosted at https://centos9-steam-katello-nightly.example.com/pub/katello-server-ca.crt, and you'll need to make sure you're accessing the katello via it's proper hostname (add an entry to /etc/hosts)

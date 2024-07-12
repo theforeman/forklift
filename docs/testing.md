@@ -28,10 +28,10 @@ Included with forklift is a small live test suite.  The current tests are:
 
 ```
 cp boxes.yaml.example boxes.yaml
-vagrant up centos7-katello-bats-ci
+vagrant up centos9-katello-bats-ci
 ```
 
-If you are making changes to bats tests and want to test your updates, edit `centos7-katello-bats-ci` to include:
+If you are making changes to bats tests and want to test your updates, edit `centos9-katello-bats-ci` to include:
 
 ```yaml
 ansible:
@@ -41,7 +41,7 @@ ansible:
     bats_update_forklift: "no"
 ```
 
-Or if you want to run bats from a different repository or branch, edit `centos7-katello-bats-ci` to include:
+Or if you want to run bats from a different repository or branch, edit `centos9-katello-bats-ci` to include:
 
 ```yaml
 ansible:
@@ -79,18 +79,18 @@ When you are finished with the test, you can tear down the associated infrastruc
 ### Existing Pipelines
 
 * `install_pipeline` - Installs a Server and a Proxy VMs and runs the `foreman_testing` role to verify the setup.
-  Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian10)
+  Expects the `pipeline_os` variable to be set to a known OS (currently: centos9-stream, debian10)
   Expects the `pipeline_type` variable to be set to a known type (currently: foreman, katello, luna)
   Expects the `pipeline_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, 3.11, nightly)
 * `upgrade_pipeline` - Installs a VM, upgrades it twice and runs the `foreman_testing` role to verify the final upgrade.
-  Expects the `pipeline_os` variable to be set to a known OS (currently: centos7, debian10)
+  Expects the `pipeline_os` variable to be set to a known OS (currently: centos9-stream, debian10)
   Expects the `pipeline_type` variable to be set to a known type (currently: foreman, katello, luna)
   Expects the `pipeline_version` variable to be set to a known version (currently: 3.8, 3.9, 3.10, 3.11, nightly).
 
 #### Examples
 
     ansible-playbook pipelines/install_pipeline.yml -e forklift_state=up -e pipeline_os=debian10 -e pipeline_type=foreman -e pipeline_version=nightly
-    ansible-playbook pipelines/upgrade_pipeline.yml -e forklift_state=up -e pipeline_os=centos7 -e pipeline_type=katello -e pipeline_version=3.10
+    ansible-playbook pipelines/upgrade_pipeline.yml -e forklift_state=up -e pipeline_os=centos9-stream -e pipeline_type=katello -e pipeline_version=3.10
 
 ### Creating Pipelines
 
@@ -102,11 +102,11 @@ For Katello 3.11, you'd be adding the following two files:
 ```yaml
 forklift_name: pipeline-katello-3.11
 forklift_boxes:
-  pipeline-katello-3.11-centos7:
-    box: centos7
+  pipeline-katello-3.11-centos9:
+    box: centos9-stream
     memory: 8192
-  pipeline-proxy-3.11-centos7:
-    box: centos7
+  pipeline-proxy-3.11-centos9:
+    box: centos9-stream
     memory: 3072
 katello_repositories_version: '3.11'
 foreman_repositories_version: '1.21'

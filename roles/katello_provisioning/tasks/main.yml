@@ -19,7 +19,7 @@
 - name: 'find centos repo'
   shell: >
     {{ katello_provisioning_hammer }} repository info
-    --name "CentOS 7"
+    --name "CentOS 9"
     --product "CentOS"
     --organization "{{ katello_provisioning_organization }}"
   register: katello_provisioning_repo
@@ -30,8 +30,8 @@
     {{ katello_provisioning_hammer }} repository create
     --product="CentOS"
     --content-type="yum"
-    --name "CentOS 7"
-    --url http://mirror.centos.org/centos/7/os/x86_64
+    --name "CentOS 9"
+    --url http://mirror.centos.org/centos/9/os/x86_64
     --download-policy {{ katello_provisioning_download_policy }}
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_repo.stderr.find('not found') != -1
@@ -39,7 +39,7 @@
 - name: 'sync the centos repo'
   shell: >
     {{ katello_provisioning_hammer }} repository synchronize
-    --name "CentOS 7"
+    --name "CentOS 9"
     --product "CentOS"
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_sync_repos
@@ -60,7 +60,7 @@
     --product="CentOS"
     --content-type="yum"
     --name "Foreman Client"
-    --url https://yum.theforeman.org/client/{{ foreman_repositories_version }}/el7/x86_64
+    --url https://yum.theforeman.org/client/{{ foreman_repositories_version }}/el9/x86_64
     --download-policy {{ katello_provisioning_download_policy }}
     --organization "{{ katello_provisioning_organization }}"
   when: foreman_client_repo.stderr.find('not found') != -1
@@ -89,7 +89,7 @@
     --product="CentOS"
     --content-type="yum"
     --name "Puppet 5"
-    --url https://yum.puppetlabs.com/puppet5/el/7/x86_64/
+    --url https://yum.puppetlabs.com/puppet5/el/9/x86_64/
     --download-policy {{ katello_provisioning_download_policy }}
     --organization "{{ katello_provisioning_organization }}"
   when: katello_puppet_repo.stderr.find('not found') != -1
@@ -106,7 +106,7 @@
 - name: 'find epel repo'
   shell: >
     {{ katello_provisioning_hammer }} repository info
-    --name "EPEL 7"
+    --name "EPEL 9"
     --product "CentOS"
     --organization "{{ katello_provisioning_organization }}"
   register: katello_epel_repo
@@ -117,8 +117,8 @@
     {{ katello_provisioning_hammer }} repository create
     --product="CentOS"
     --content-type="yum"
-    --name "EPEL 7"
-    --url "https://dl.fedoraproject.org/pub/epel/7/x86_64"
+    --name "EPEL 9"
+    --url "https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64"
     --download-policy {{ katello_provisioning_download_policy }}
     --organization "{{ katello_provisioning_organization }}"
   when: katello_epel_repo.stderr.find('not found') != -1
@@ -126,7 +126,7 @@
 - name: 'sync the epel repo'
   shell: >
     {{ katello_provisioning_hammer }} repository synchronize
-    --name "EPEL 7"
+    --name "EPEL 9"
     --product "CentOS"
     --organization "{{ katello_provisioning_organization }}"
   when: katello_provisioning_sync_repos
@@ -146,7 +146,7 @@
     --product="CentOS"
     --content-type="yum"
     --name "Foreman Plugins"
-    --url "http://yum.theforeman.org/plugins/{{ foreman_repositories_version }}/el7/x86_64/"
+    --url "http://yum.theforeman.org/plugins/{{ foreman_repositories_version }}/el9/x86_64/"
     --download-policy {{ katello_provisioning_download_policy }}
     --organization "{{ katello_provisioning_organization }}"
   when: "'not found' in katello_foreman_plugins_repo.stderr"
@@ -163,7 +163,7 @@
 - name: 'find activation key'
   shell: >
     {{ katello_provisioning_hammer }} activation-key info
-    --name "CentOS 7"
+    --name "CentOS 9"
     --organization "{{ katello_provisioning_organization }}"
   register: katello_provisioning_activation_key
   ignore_errors: True
@@ -172,7 +172,7 @@
   shell: >
     {{ katello_provisioning_hammer }} activation-key create
     --organization "{{ katello_provisioning_organization }}"
-    --name="CentOS 7"
+    --name="CentOS 9"
     --content-view="Default Organization View"
     --lifecycle-environment="Library"
     --unlimited-hosts
@@ -188,43 +188,43 @@
   shell: >
     {{ katello_provisioning_hammer }} activation-key add-subscription
     --organization '{{ katello_provisioning_organization }}'
-    --name 'CentOS 7'
+    --name 'CentOS 9'
     --subscription-id {{ item.Id }}
   with_items: "{{ subscriptions_json.stdout | from_json }}"
 
 # Associate templates
-- name: 'find CentOS 7'
+- name: 'find CentOS 9'
   shell: >
-    {{ katello_provisioning_hammer }} --output json os info --title "CentOS 7"
-  register: katello_provisioning_centos7_json
+    {{ katello_provisioning_hammer }} --output json os info --title "CentOS 9"
+  register: katello_provisioning_centos9_json
   ignore_errors: True
 
-- name: 'get CentOS 7 info'
+- name: 'get CentOS 9 info'
   set_fact:
-    katello_provisioning_centos7: "{{ katello_provisioning_centos7_json.stdout|from_json }}"
-  when: katello_provisioning_centos7_json is success
+    katello_provisioning_centos9: "{{ katello_provisioning_centos9_json.stdout|from_json }}"
+  when: katello_provisioning_centos9_json is success
 
-- when: "'not found' in katello_provisioning_centos7_json.stderr"
+- when: "'not found' in katello_provisioning_centos9_json.stderr"
   block:
-    - name: 'Create CentOS_Linux 7'
+    - name: 'Create CentOS_Linux 9'
       shell: >
         {{ katello_provisioning_hammer }} os create
-        --name CentOS_Linux --major 7 --architectures x86_64 --family 'Redhat'
+        --name CentOS_Linux --major 9 --architectures x86_64 --family 'Redhat'
 
-    - name: 'find newly created CentOS_Linux 7'
+    - name: 'find newly created CentOS_Linux 9'
       shell: >
-        {{ katello_provisioning_hammer }} --output json os info --name "CentOS_Linux 7" ||
-        {{ katello_provisioning_hammer }} --output json os info --title "CentOS_Linux 7"
-      register: katello_provisioning_centos7_json_new
+        {{ katello_provisioning_hammer }} --output json os info --name "CentOS_Linux 9" ||
+        {{ katello_provisioning_hammer }} --output json os info --title "CentOS_Linux 9"
+      register: katello_provisioning_centos9_json_new
 
-    - name: 'get new CentOS 7 info'
+    - name: 'get new CentOS 9 info'
       set_fact:
-        katello_provisioning_centos7: "{{ katello_provisioning_centos7_json_new.stdout|from_json }}"
+        katello_provisioning_centos9: "{{ katello_provisioning_centos9_json_new.stdout|from_json }}"
 
-- name: 'update partition table for CentOS 7'
+- name: 'update partition table for CentOS 9'
   shell: >
-    {{ katello_provisioning_hammer }} os update --id {{ katello_provisioning_centos7.Id }} --partition-tables 'Kickstart default'
-  register: katello_provisioning_centos7_json
+    {{ katello_provisioning_hammer }} os update --id {{ katello_provisioning_centos9.Id }} --partition-tables 'Kickstart default'
+  register: katello_provisioning_centos9_json
 
 - name: 'find kickstart templates'
   shell: >
@@ -246,26 +246,26 @@
   set_fact:
     katello_kickstart_templates: "{{ katello_kickstart_templates_json.stdout|from_json }}"
 
-- name: 'associate kickstart templates to CentOS 7'
+- name: 'associate kickstart templates to CentOS 9'
   shell: >
-    {{ katello_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS 7'
+    {{ katello_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS 9'
   with_items: "{{ kickstart_templates }}"
 
-- name: 'set default templates for CentOS 7'
+- name: 'set default templates for CentOS 9'
   shell: >
-    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --provisioning-template-id {{ item.Id }}
+    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos9.Id }} --provisioning-template-id {{ item.Id }}
   with_items: "{{ kickstart_templates }}"
 
-- name: 'overwrite default templates with katello specific ones for CentOS 7'
+- name: 'overwrite default templates with katello specific ones for CentOS 9'
   shell: >
-    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos7.Id }} --provisioning-template-id {{ item.Id }}
+    {{ katello_provisioning_hammer }} os set-default-template --id {{ katello_provisioning_centos9.Id }} --provisioning-template-id {{ item.Id }}
   with_items: "{{ katello_kickstart_templates }}"
 
 # Host group
 - name: 'find centos kickstart repo'
   shell: >
     {{ katello_provisioning_hammer }} --output=json repository info
-    --name "CentOS 7"
+    --name "CentOS 9"
     --product "CentOS"
     --organization "{{ katello_provisioning_organization }}"
   register: katello_provisioning_repo
@@ -274,38 +274,38 @@
   set_fact:
     katello_provisioning_repo_json: "{{ katello_provisioning_repo.stdout|from_json }}"
 
-- name: 'find hostgroup Katello CentOS 7'
+- name: 'find hostgroup Katello CentOS 9'
   shell: >
-    {{ katello_provisioning_hammer }} hostgroup info --name 'Katello CentOS 7'
+    {{ katello_provisioning_hammer }} hostgroup info --name 'Katello CentOS 9'
   register: katello_provisioning_hostgroup_katello_centos
   ignore_errors: True
 
-- name: 'create Katello CentOS 7 host group'
+- name: 'create Katello CentOS 9 host group'
   shell: >
     {{ katello_provisioning_hammer }} hostgroup create
-    --name "Katello CentOS 7"
+    --name "Katello CentOS 9"
     --content-view "Default Organization View"
     --lifecycle-environment Library
     --query-organization "{{ katello_provisioning_organization }}"
     --content-source-id {{ foreman_provisioning_smart_proxy.Id }}
     --kickstart-repository-id {{ katello_provisioning_repo_json.Id }}
-    --operatingsystem "CentOS 7"
+    --operatingsystem "CentOS 9"
     --partition-table 'Kickstart default'
     --parent 'Base'
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: katello_provisioning_hostgroup_katello_centos.stderr.find('not found') != -1
 
-- name: 'add activation key to Katello CentOS 7 host group'
+- name: 'add activation key to Katello CentOS 9 host group'
   shell: >
       {{ katello_provisioning_hammer }} hostgroup set-parameter
-      --hostgroup "Katello CentOS 7"
+      --hostgroup "Katello CentOS 9"
       --name kt_activation_keys
-      --value "CentOS 7"
+      --value "CentOS 9"
 
 - name: 'set enable-puppet5 parameter'
   shell: >
     {{ katello_provisioning_hammer }} hostgroup set-parameter
-    --hostgroup "Katello CentOS 7"
+    --hostgroup "Katello CentOS 9"
     --name enable-puppet5
     --value true
 
