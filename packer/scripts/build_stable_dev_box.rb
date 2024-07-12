@@ -47,15 +47,15 @@ end
 def print_message(version_string)
   puts "========================="
   puts "To try out this box:"
-  puts "# vagrant box add centos7-katello-#{version_string}-stable.box --name 'katello/katello-devel-#{version_string}-test' "
+  puts "# vagrant box add centos9-katello-#{version_string}-stable.box --name 'katello/katello-devel-#{version_string}-test' "
   puts ""
   puts "Use this box definition:"
-  puts "centos7-katello-#{version_string}-stable:"
+  puts "centos9-katello-#{version_string}-stable:"
   puts "  box_name: katello/katello-devel-#{version_string}-test"
-  puts "  hostname: centos7-katello-devel-#{version_string}.example.com"
+  puts "  hostname: centos9-katello-devel-#{version_string}.example.com"
   puts ""
   puts "To publish this box, run:"
-  puts "vagrant-upstream cloud publish -d \"katello-devel #{version_string}\" -s \"katello-devel #{version_string}\" katello/katello-devel #{version_string}.0 libvirt centos7-katello-#{version_string}-stable.box"
+  puts "vagrant-upstream cloud publish -d \"katello-devel #{version_string}\" -s \"katello-devel #{version_string}\" katello/katello-devel #{version_string}.0 libvirt centos9-katello-#{version_string}-stable.box"
 end
 
 katello_version = ARGV[0]
@@ -64,7 +64,7 @@ json = ansible_variable_json(version_hash)
 puts "Using configuration: #{json}"
 filename = write_json_file(json)
 
-command = "/usr/bin/packer build --var packer_hostname=centos7-katello-#{katello_version}-stable  --var ansible_variables=\"@#{filename}\" centos7-katello-devel-stable.json"
+command = "/usr/bin/packer build --var packer_hostname=centos9-katello-#{katello_version}-stable  --var ansible_variables=\"@#{filename}\" centos9-katello-devel-stable.json"
 puts "Running: #{command}"
 if system(command)
   print_message(katello_version)
@@ -72,4 +72,3 @@ else
   puts "Build failed, see output above for more details."
   exit -1
 end
-

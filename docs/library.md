@@ -31,9 +31,9 @@ Deploy a file with the base set of boxes the plugin requires:
     vim base_boxes.yaml
 
 ```yaml
-centos7:
-  box_name:   'centos/7'
-  image_name: !ruby/regexp '/CentOS 7.*PV/'
+centos9-stream:
+  box_name:   'centos/stream9'
+  image_name: !ruby/regexp '/CentOS 9.*PV/'
   pty:        true
 ```
 
