@@ -1,25 +1,4 @@
 boxes:
-  centos7:
-    box_name:   'centos/7'
-    google_options:
-      image_family: 'centos-7'
-    pty:        true
-    scenarios:
-      - foreman
-      - katello
-
-  centos7-atomic:
-    box_name: centos7-atomic
-    pty: true
-    libvirt: http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-Vagrant-Libvirt.box
-
-  centos7-fips:
-    box_name: 'pulp/centos7-fips'
-    pty: true
-    scenarios:
-      - foreman
-      - katello
-
   centos8:
     box_name: 'centos/8'
     disk_size: 40

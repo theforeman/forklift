@@ -335,7 +335,7 @@ boxes:
   exclude:
     - "katello" # exclude any box containing "katello"
     - "ubuntu1804-foreman-2\\.0" # exclude only the box "ubuntu1804-foreman-2.0". Notice the escaped '.' character to match the specific character instead of any single character
-    - "^centos7-fips" # exclude any box that starts with "centos7-fips"
+    - "^centos9-stream" # exclude any box that starts with "centos9-stream"
     - "foreman-1\\.(?:[2][0-3])" # exclude any foreman-1.20 to foreman-1.23 version box
 ```
 

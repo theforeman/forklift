@@ -3,7 +3,7 @@
     forklift_name: pipeline-smartproxy-powerdns
     forklift_boxes:
       pipeline-smartproxy-powerdns:
-        box: centos7
+        box: centos9-stream
         memory: 1024
   roles:
     - forklift

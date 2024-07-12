@@ -1,0 +1,40 @@
+- name: "set CentOS medium name"
+  set_fact:
+    centos_medium_name: "CentOS Stream 9 mirror"
+
+- name: "create CentOS 9"
+  shell: >
+    {{ foreman_provisioning_hammer }} os info --title "CentOS 9" ||
+    {{ foreman_provisioning_hammer }} os create
+    --name CentOS --major 9 --architectures x86_64 --family 'Redhat' --media '{{ centos_medium_name }}' --partition-tables 'Kickstart default'
+
+- name: "find CentOS 9"
+  shell: >
+    {{ foreman_provisioning_hammer }} --output json os info --name "CentOS 9" ||
+    {{ foreman_provisioning_hammer }} --output json os info --title "CentOS 9"
+  register: foreman_provisioning_centos_json
+  ignore_errors: True
+
+- name: "get CentOS 9 info"
+  set_fact:
+    foreman_provisioning_centos9: "{{ foreman_provisioning_centos9_json.stdout|from_json }}"
+
+- name: "find kickstart templates"
+  shell: >
+    {{ foreman_provisioning_hammer }} --output=json template list
+    --search 'name ~ "Kickstart default"'
+  register: kickstart_templates_json
+
+- name: "set kickstart templates"
+  set_fact:
+    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+
+- name: "associate kickstart templates to CentOS 9"
+  shell: >
+    {{ foreman_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'CentOS 9'
+  with_items: "{{ kickstart_templates }}"
+
+- name: "set default templates for CentOS 9"
+  shell: >
+    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_centos9.Id }} --provisioning-template-id {{ item.Id }}
+  with_items: "{{ kickstart_templates }}"

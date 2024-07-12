@@ -240,11 +240,11 @@ importing/exporting data via [CSV](https://github.com/Katello/hammer-cli-csv).
 The CLI can be configured to work with any version of Foreman. To facilitate
 development in Hammer or any of its plugins, a lightweight vagrant box is
 provided in the `boxes.yaml.example` file. To use this functionality, copy the
-centos7-hammer-devel configuration from the example file into your `boxes.yaml`
+almalinux8-hammer-devel configuration from the example file into your `boxes.yaml`
 file, changing options as necessary. Then run the following:
 
 ```sh
-vagrant up centos7-hammer-devel
+vagrant up almalinux8-hammer-devel
 ```
 
 In the vagrant box, find the Hammer repositories at `/home/vagrant/` and the
@@ -261,7 +261,7 @@ changing the hostnames as needed
 
 ```yaml
 capsule-dev:
-  box: centos7
+  box: centos9-stream
   ansible:
     playbook: 'playbooks/foreman_proxy_content_dev.yml'
     group: 'foreman-proxy-content'
@@ -283,7 +283,7 @@ capsule-dev:
 
 ```yaml
 capsule-dev:
-  box: centos7
+  box: centos9-stream
   ansible:
     playbook: 'playbooks/foreman_proxy_content_dev.yml'
     group: 'foreman-proxy-content'
@@ -299,7 +299,7 @@ The following example shows some of the extra values that can be set to control 
 
 ```yaml
 katello-client:
-  box: centos7
+  box: centos9-stream
   ansible:
     playbook: 'playbooks/katello_client.yml'
     group: 'client'
@@ -320,19 +320,19 @@ To use this box, copy the configuration from `boxes.yaml.example` to
 `boxes.yaml`, changing options as necessary, then run the following:
 
 ```sh
-vagrant up centos7-dynflow-devel
+vagrant up almalinux8-dynflow-devel
 ```
 
 In the vagrant box, the dynflow repository is cloned to `/home/vagrant/dynflow`.
 
 ## Smoker
 
-The testing tool [smoker](https://github.com/theforeman/smoker) can be set up with the `centos7-foreman-smoker` box and tests can be run against a separate Foreman/Katello instance.
+The testing tool [smoker](https://github.com/theforeman/smoker) can be set up with the `almalinux8-foreman-smoker` box and tests can be run against a separate Foreman/Katello instance.
 
 To use:
 1. Ensure that you have a running instance of Foreman/Katello.
-2. Follow the example box definition in `vagrant/boxes.d/99-local.yaml.example` for `centos7-foreman-smoker` and update the `smoker_base_url` variable. With `pytest_run_tests` set to false, smoker tests will not be run by the playbook, but the box will be set up with pytest and the smoker repository will be cloned to the `vagrant` user's home directory.
-3. Run `vagrant up centos7-foreman-smoker`. A debug message will print showing the command to run smoker tests and the alias that has been set up. The alias is defined in `~/.bash_profile` on the box itself.
+2. Follow the example box definition in `vagrant/boxes.d/99-local.yaml.example` for `almalinux8-foreman-smoker` and update the `smoker_base_url` variable. With `pytest_run_tests` set to false, smoker tests will not be run by the playbook, but the box will be set up with pytest and the smoker repository will be cloned to the `vagrant` user's home directory.
+3. Run `vagrant up almalinux8-foreman-smoker`. A debug message will print showing the command to run smoker tests and the alias that has been set up. The alias is defined in `~/.bash_profile` on the box itself.
 4. You can then ssh into the smoker box. Ensure the hostname of the Foreman/Katello instance can be reached by the smoker box.
 5. From the smoker box, run tests as the vagrant user using the alias or running pytest commands manually. To change the testing options, please see [the smoker documentation](https://github.com/theforeman/smoker) and modify the alias or manually run pytest commands as necessary.
 
@@ -381,7 +381,7 @@ If you choose longer name you're on your own, contributions with fixes welcome! 
 # boxes.d/99-local.yaml
 
 foreman-ad:
-  box: centos7
+  box: centos9-stream
   memory: 4096
   domain: 'example.com' # must be the AD domain
   ansible:
