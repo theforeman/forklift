@@ -1,22 +1,23 @@
 {
   "variables": {
-    "packer_hostname": "centos7-katello-devel-stable",
+    "packer_hostname": "centos9-katello-devel-stable",
     "password": "vagrant",
     "user": "vagrant",
-    "ansible_variables": "{}"
+    "ansible_variables": "{}",
+     "iso_name": "CentOS-Stream-9-latest-x86_64-boot.iso"
   },
   "builders": [
     {
       "accelerator": "kvm",
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+        "<tab> console=tty20 inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
       ],
       "boot_wait": "2s",
       "format": "qcow2",
       "headless": true,
       "http_directory": "http",
-      "iso_checksum": "sha256:07b94e6b1a0b0260b94c83d6bb76b26bf7a310dc78d7a9c7432809fb9bc6194a",
-      "iso_url": "http://packages.oit.ncsu.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
+      "iso_checksum": "sha256:62318426d27ba4e255b509b033e78186ad0fb8b9007650fca73d226ceb2eda6f",
+      "iso_url": "https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-boot.iso",
       "name": "{{ user `packer_hostname` }}.example.com",
       "qemuargs": [
         [
@@ -26,6 +27,10 @@
         [
           "-smp",
           "4"
+        ],
+        [
+          "-cpu",
+          "host"
         ]
       ],
       "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
@@ -58,7 +63,7 @@
       "ansible_env_vars": [
         "ANSIBLE_CONFIG=../ansible.cfg"
       ],
-      "extra_arguments": ["--extra-vars", "{{ user `ansible_variables` }}"],
+      "extra_arguments": ["--extra-vars", "katello_repositories_version=nightly foreman_repositories_version=nightly {{ user `ansible_variables` }}"],
       "playbook_file": "../playbooks/katello_devel.yml",
       "type": "ansible"
     }
