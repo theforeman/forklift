@@ -92,15 +92,15 @@ centos9-dynflow-devel:
     variables:
       dynflow_devel_github_fork_remote_name: 'origin'
 
-almalinux8-katello-nightly-stable:
+centos9-katello-nightly-stable:
   box_name: katello/katello-nightly
   memory: 12288
-  hostname: almalinux8-katello-nightly-stable.example.com
+  hostname: centos9-katello-nightly-stable.example.com
 
-almalinux8-katello-devel-stable:
+centos9-katello-devel-stable:
   box_name: katello/katello-devel
   memory: 12288
-  hostname: almalinux8-katello-devel-stable.example.com
+  hostname: centos9-katello-devel-stable.example.com
   ansible:
     playbook: 'playbooks/setup_user_devel_environment.yml'
 
