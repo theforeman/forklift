@@ -11,6 +11,43 @@
     dest: "{{ ansible_env.HOME }}"
   when: custom_home.stat.isdir is defined and custom_home.stat.isdir
 
+- name: Check if ~/katello/gemfile.d directory exists
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/katello/gemfile.d"
+  register: katello_gemfile_dir
+
+- name: Check if ~/foreman/bundler.d/katello.local.rb file exists
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/foreman/bundler.d/katello.local.rb"
+  register: katello_local_rb_file
+
+- name: Find all .rb filepaths
+  ansible.builtin.find:
+    paths: "{{ ansible_user_dir }}/katello/gemfile.d"
+    patterns: '*.rb'
+  register: found_files
+  when: katello_gemfile_dir.stat.exists and katello_local_rb_file.stat.exists
+
+- name: Read the contents of all .rb files
+  ansible.builtin.slurp:
+    src: "{{ item.path }}"
+  loop: "{{ found_files.files }}"
+  register: found_file_contents
+  when: katello_gemfile_dir.stat.exists and katello_local_rb_file.stat.exists
+
+- name: Ensure encoding is base 64
+  ansible.builtin.fail:
+    msg: "File {{ item.item.path }} is not base64 encoded"
+  loop: "{{ found_file_contents.results }}"
+  when: katello_gemfile_dir.stat.exists and katello_local_rb_file.stat.exists and item.encoding != "base64"
+
+- name: Append .rb file contents to katello.local.rb so we can run local tests
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_user_dir }}/foreman/bundler.d/katello.local.rb"
+    block: "{{ item.content | b64decode }}"
+  loop: "{{ found_file_contents.results }}"
+  when: katello_gemfile_dir.stat.exists and katello_local_rb_file.stat.exists
+
 - name: Remove .gitkeep file copied over from custom directory
   file:
     path: "{{ ansible_env.HOME }}/.gitkeep/"
