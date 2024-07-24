@@ -39,7 +39,13 @@ BACKUP_ONLINE_DIR="${BACKUP_BASE_DIR}/online"
 
   tFileExists "${BACKUP_OFFLINE_DIR}/config_files.tar.gz"
   tFileExists "${BACKUP_OFFLINE_DIR}/metadata.yml"
-  tFileExists "${BACKUP_OFFLINE_DIR}/pgsql_data.tar.gz"
+
+  FOREMAN_VERSION=$(tForemanVersion)
+  if tIsVersionNewer "${FOREMAN_VERSION}" 3.12; then
+    tFileExists "${BACKUP_OFFLINE_DIR}/foreman.dump"
+  else
+    tFileExists "${BACKUP_OFFLINE_DIR}/pgsql_data.tar.gz"
+  fi
 }
 
 @test "check offline backup contents for Katello" {
