@@ -1,5 +1,5 @@
-centos7-infra-kubevirt:
-  box: centos7
+centos9-infra-kubevirt:
+  box: centos9-stream
   cpu_mode: host-passthrough
   ansible:
     playbook: 'playbooks/kubevirt.yml'

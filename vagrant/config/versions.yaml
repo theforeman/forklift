@@ -5,8 +5,6 @@ installers:
     puppet: 7
     boxes:
       - 'almalinux8'
-      - 'centos7'
-      - 'centos7-fips'
       - 'centos8'
       - 'centos8-stream'
       - 'debian10'
