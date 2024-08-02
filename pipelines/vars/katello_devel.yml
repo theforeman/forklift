@@ -1,9 +1,0 @@
-forklift_name: pipeline-katello-devel-centos8
-forklift_boxes:
-  pipeline-katello-devel-centos8:
-    box: centos8-stream
-    memory: 8192
-    variables:
-      katello_repositories_version: nightly
-      foreman_repositories_version: nightly
-      foreman_client_repositories_version: nightly
