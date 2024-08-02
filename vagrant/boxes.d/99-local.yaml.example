@@ -62,8 +62,8 @@ almalinux8-proxy-devel:
       group: 'foreman-proxy-content'
       server: 'almalinux8-katello-devel'
 
-centos7-katello-client:
-  box: centos7
+centos9-katello-client:
+  box: centos9-stream
   ansible:
     playbook: 'playbooks/katello_client.yml'
     group: 'client'

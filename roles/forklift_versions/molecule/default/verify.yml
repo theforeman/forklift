@@ -7,36 +7,22 @@
   vars:
     forklift_versions_file: "{{ playbook_dir }}/fixtures/versions.yaml"
     pipeline_type: katello
-    pipeline_os: centos8-stream
+    pipeline_os: centos9-stream
   tasks:
-    - name: "Include forklift_versions for 4.8 installs"
+    - name: "Include forklift_versions for 4.12 installs"
       include_role:
         name: "forklift_versions"
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
-        scenario_version: "4.8"
+        scenario_version: "4.12"
     - name: Ensure versions have been set correctly
       assert:
         that:
-          - foreman_repositories_version == '3.6'
-          - katello_repositories_version == '4.8'
-          - pulpcore_repositories_version == '3.22'
-          - candlepin_repositories_version is not defined
-
-    - name: "Include forklift_versions for 4.4 installs"
-      include_role:
-        name: "forklift_versions"
-      vars:
-        scenario: "{{ pipeline_type }}"
-        scenario_os: "{{ pipeline_os }}"
-        scenario_version: "4.9"
-    - name: Ensure versions have been set correctly
-      assert:
-        that:
-          - foreman_repositories_version == '3.7'
-          - katello_repositories_version == '4.9'
-          - pulpcore_repositories_version == '3.22'
+          - foreman_repositories_version == '3.10'
+          - katello_repositories_version == '4.12'
+          - pulpcore_repositories_version == '3.39'
+          - candlepin_repositories_version == '4.3'
 
     - name: "Include forklift_versions for nightly installs"
       include_role:
@@ -59,21 +45,21 @@
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
-        scenario_version: "4.9"
+        scenario_version: "4.13"
         upgrade: True
     - name: Ensure upgrade steps have been determined correctly
       assert:
         that:
-          - forklift_upgrade_version_start == '4.7'
-          - forklift_upgrade_version_intermediate == '4.8'
-          - forklift_upgrade_version_final == '4.9'
+          - forklift_upgrade_version_start == '4.12'
+          - forklift_upgrade_version_intermediate == '4.12'
+          - forklift_upgrade_version_final == '4.13'
 
     - name: "Include forklift_versions for upgrades with upgrade_step=2"
       include_role:
         name: "forklift_versions"
       vars:
         scenario: "{{ pipeline_type }}"
-        scenario_os: "{{ pipeline_os }}"
+        scenario_os: "almalinux8"
         scenario_version: "4.9"
         upgrade: True
         upgrade_step: 2

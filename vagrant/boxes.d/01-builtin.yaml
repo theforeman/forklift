@@ -1,14 +1,14 @@
 boxes:
-  centos7-freeipa-server:
-    box: centos7
+  centos9-freeipa-server:
+    box: centos9-stream
     memory: 2048
     ansible:
       playbook: 'playbooks/freeipa_server.yml'
       group: 'freeipa_server'
-      server: 'centos7-katello-nightly'
+      server: 'centos9-stream-katello-nightly'
 
-  centos7-provision-nightly:
-    box: centos7
+  centos9-provision-nightly:
+    box: centos9-stream
     memory: 8096
     cpu_mode: host-passthrough
     ansible:
@@ -17,7 +17,7 @@ boxes:
         - 'playbooks/katello_provisioning.yml'
       group: 'server'
 
-  centos7-luna:
-    box: centos7
+  centos9-luna:
+    box: centos9-stream
     ansible:
       playbook: 'playbooks/luna.yml'

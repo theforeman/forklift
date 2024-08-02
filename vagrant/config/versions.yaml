@@ -52,14 +52,12 @@ installers:
       - 'centos8-stream'
       - 'debian11'
       - 'ubuntu2004'
-
   - foreman: '3.8'
     katello: '4.10'
     pulpcore: '3.28'
     puppet: 7
     boxes:
       - 'almalinux8'
-      - 'centos8-stream'
       - 'debian11'
       - 'ubuntu2004'
 
@@ -70,7 +68,6 @@ installers:
     puppet: 7
     boxes:
       - 'almalinux8'
-      - 'centos8-stream'
       - 'debian11'
       - 'ubuntu2004'
 
@@ -82,7 +79,6 @@ installers:
     boxes:
       - 'almalinux8'
       - 'almalinux9'
-      - 'centos8-stream'
       - 'centos9-stream'
       - 'debian11'
       - 'ubuntu2004'
@@ -95,7 +91,6 @@ installers:
     boxes:
       - 'almalinux8'
       - 'almalinux9'
-      - 'centos8-stream'
       - 'centos9-stream'
       - 'debian11'
       - 'ubuntu2004'
@@ -122,7 +117,6 @@ installers:
     boxes:
       - 'almalinux8'
       - 'almalinux9'
-      - 'centos8-stream'
       - 'centos9-stream'
       - 'debian11'
       - 'ubuntu2004'
