@@ -1,6 +1,6 @@
 pipeline_type: foreman
 pipeline_version: nightly
-pipeline_os: centos7
+pipeline_os: centos9-stream
 foreman_installer_scenario: foreman
 server_box:
   box: "{{ pipeline_os }}"
