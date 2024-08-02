@@ -10,9 +10,9 @@ class TestBoxLoader < Minitest::Test
     loader.load!
 
     assert_instance_of Hash, loader.boxes
-    assert_includes loader.boxes, 'centos8-stream-katello-nightly'
-    assert_equal 'centos8-stream-katello-nightly', loader.boxes['centos8-stream-katello-nightly']['name']
-    assert_equal 'centos/stream8', loader.boxes['centos8-stream-katello-nightly']['box_name']
+    assert_includes loader.boxes, 'centos9-stream-katello-nightly'
+    assert_equal 'centos9-stream-katello-nightly', loader.boxes['centos9-stream-katello-nightly']['name']
+    assert_equal 'centos/stream9', loader.boxes['centos9-stream-katello-nightly']['box_name']
   end
 
   def test_load_with_exclude
