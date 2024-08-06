@@ -1,3 +1,0 @@
----
-- import_playbook: katello_devel/01-boxes.yml
-- import_playbook: katello_devel/02-install.yml

@@ -8,7 +8,7 @@ This section discusses the usage and creation of stable environments.
 
 ## What is a stable box?
 
-A stable box is a box that uses a published vagrant image of a successfully installed environment. These boxes usually have names that end with `-stable`, for example `centos8-katello-devel-stable`.
+A stable box is a box that uses a published vagrant image of a successfully installed environment. These boxes usually have names that end with `-stable`, for example `centos9-katello-devel-stable`.
 
 The boxes are guaranteed to spin up successfully because the installation steps do not happen locally. The boxes are created to make sure an environment is always available even if recent changes are preventing a box from spinning up.
 
@@ -18,7 +18,7 @@ The boxes are guaranteed to spin up successfully because the installation steps 
 To first time you spin up a stable box, you can perform the usual steps:
 
 1. Copy `vagrant/boxes.d/99-local.yaml.example` to `vagrant/boxes.d/99-local.yaml`. If you already have a `99-local.yaml`, you can copy the entries in `99-local.yaml.example` to your `99-local.yaml`.
-2. `vagrant up centos8-katello-devel-stable` to spin up the box (change the box name to the one you want to spin up)
+2. `vagrant up centos9-katello-devel-stable` to spin up the box (change the box name to the one you want to spin up)
 
 The latest stable box image will be downloaded from Vagrant cloud and used for the environment.
 
@@ -28,10 +28,10 @@ The difference between a stable box and the other boxes is when you want to spin
 
 Without updating the box image, Vagrant will use the latest image downloaded locally instead of the latest image published to Vagrant cloud. This workflow is useful when you want an updated "fresh" environment with the latest backend systems, newer deployment changes, and updated packages. You can run the following to destroy your existing box, upgrade the box image to the latest one available, and spin up a new box.
 
-For example with `centos8-katello-devel-stable`:
-1. `vagrant destroy centos8-katello-devel-stable`
-2. `vagrant box update centos8-katello-devel-stable`
-3. `vagrant up centos8-katello-devel-stable`
+For example with `centos9-katello-devel-stable`:
+1. `vagrant destroy centos9-katello-devel-stable`
+2. `vagrant box update centos9-katello-devel-stable`
+3. `vagrant up centos9-katello-devel-stable`
 
 
 ### Managing multiple boxes
@@ -75,16 +75,16 @@ Packer will create an image by bootstrapping an operating system from a kickstar
 
 ### Example publishing workflow
 
-For example, here is the workflow for `centos8-katello-devel-stable`:
+For example, here is the workflow for `centos9-katello-devel-stable`:
 
-1. A cron job or scheduled automation builds the box image with Packer using the `packer/centos8-katello-devel-stable.json` template.
+1. A cron job or scheduled automation builds the box image with Packer using the `packer/centos9-katello-devel-stable.json` template.
 2. This bootstraps CentOS 7 from an ISO and kickstart file and runs our katello devel environment playbook, creating an image.
 3. This image is published to [Vagrant cloud](https://app.vagrantup.com/katello/boxes/katello-devel) using the date as a version to ensure it's the latest version. The image is only published if the katello development environment playbook has successfully ran.
 
 Then locally:
 
-1. A forklift user uses the box definition with `katello/katello-devel` as the base image, most likely the copied `centos8-katello-devel-stable` box definition.
-2. On `vagrant up centos8-katello-devel-stable`, the most recent box image is downloaded from Vagrant clould and the box is created.
+1. A forklift user uses the box definition with `katello/katello-devel` as the base image, most likely the copied `centos9-katello-devel-stable` box definition.
+2. On `vagrant up centos9-katello-devel-stable`, the most recent box image is downloaded from Vagrant clould and the box is created.
 
 ### Key differences
 

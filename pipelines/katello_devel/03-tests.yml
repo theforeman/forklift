@@ -1,8 +1,0 @@
----
-- hosts:
-  - pipeline-katello-devel-centos8
-  become: yes
-  vars_files:
-  - ../vars/repos_staging.yml
-  roles:
-  - katello_test

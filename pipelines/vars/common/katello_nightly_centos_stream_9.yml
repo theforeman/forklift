@@ -1,4 +1,4 @@
 ---
 pipeline_type: katello
-pipeline_os: centos8-stream
+pipeline_os: centos9-stream
 pipeline_version: nightly

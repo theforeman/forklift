@@ -1,6 +1,0 @@
----
-- hosts: localhost
-  vars_files:
-    - ../vars/katello_devel.yml
-  roles:
-    - forklift
