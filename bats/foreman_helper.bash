@@ -163,3 +163,7 @@ tHammerPing() {
 
   [[ "$status" -eq 0 ]]
 }
+
+tForemanAvailable() {
+  tPackageExists foreman || skip 'foreman package is not available'
+}
