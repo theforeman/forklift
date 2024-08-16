@@ -85,5 +85,8 @@ proxy_box:
         - "--enable-foreman-proxy-plugin-openscap"
         - "--enable-foreman-proxy-plugin-remote-execution-script"
         - "--foreman-proxy-content-enable-ostree true"
+      bats_tests:
+        - fb-test-backup.bats
+      bats_teardown: []
 forklift_boxes:
   "{{ {forklift_server_name: server_box, forklift_proxy_name: proxy_box, forklift_smoker_name: smoker_box} }}"

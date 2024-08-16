@@ -58,6 +58,24 @@ BACKUP_ONLINE_DIR="${BACKUP_BASE_DIR}/online"
   tFileExists "${BACKUP_OFFLINE_DIR}/pulp_data.tar"
 }
 
+@test "check offline backup contents for Foreman Proxy Content" {
+  tForemanMaintainAvailable
+
+  if ! tPackageExists foreman && tPackageExists foreman-installer-katello; then
+    tFileExists "${BACKUP_OFFLINE_DIR}/pulp_data.tar"
+    tar -tvf "${BACKUP_OFFLINE_DIR}/config_files.tar.gz" | grep "${HOSTNAME}.tar.gz"
+
+    FOREMAN_VERSION=$(tForemanVersion)
+    if tIsVersionNewer "${FOREMAN_VERSION}" 3.12; then
+      tFileExists "${BACKUP_OFFLINE_DIR}/pulpcore.dump"
+    else
+      tFileExists "${BACKUP_OFFLINE_DIR}/pgsql_data.tar.gz"
+    fi
+  else
+    skip "Stand-alone foreman-proxy with content test"
+  fi
+}
+
 @test "perform online backup" {
   tForemanMaintainAvailable
 
@@ -66,6 +84,7 @@ BACKUP_ONLINE_DIR="${BACKUP_BASE_DIR}/online"
 
 @test "check online backup contests for Foreman" {
   tForemanMaintainAvailable
+  tForemanAvailable
 
   tFileExists "${BACKUP_ONLINE_DIR}/config_files.tar.gz"
   tFileExists "${BACKUP_ONLINE_DIR}/metadata.yml"
@@ -74,6 +93,7 @@ BACKUP_ONLINE_DIR="${BACKUP_BASE_DIR}/online"
 
 @test "check online backup contents for Katello" {
   tForemanMaintainAvailable
+  tForemanAvailable
 
   if ! tPackageExists foreman-installer-katello; then
     skip "Katello specific test"
@@ -82,4 +102,16 @@ BACKUP_ONLINE_DIR="${BACKUP_BASE_DIR}/online"
   tFileExists "${BACKUP_ONLINE_DIR}/pulp_data.tar"
   tFileExists "${BACKUP_ONLINE_DIR}/candlepin.dump"
   tFileExists "${BACKUP_ONLINE_DIR}/pulpcore.dump"
+}
+
+@test "check online backup contents for Foreman Proxy Content" {
+  tForemanMaintainAvailable
+
+  if ! tPackageExists foreman && tPackageExists foreman-installer-katello; then
+    tFileExists "${BACKUP_ONLINE_DIR}/pulp_data.tar"
+    tFileExists "${BACKUP_ONLINE_DIR}/pulpcore.dump"
+    tar -tvf "${BACKUP_ONLINE_DIR}/config_files.tar.gz" | grep "${HOSTNAME}.tar.gz"
+  else
+    skip "Stand-alone foreman-proxy with content test"
+  fi
 }

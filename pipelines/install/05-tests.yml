@@ -2,6 +2,7 @@
 - name: run tests
   hosts:
     - "{{ forklift_server_name }}"
+    - "{{ forklift_proxy_name }}"
   become: true
   vars_files:
     - ../vars/install_base.yml
