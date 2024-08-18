@@ -1,6 +1,5 @@
 ---
 - hosts: server foreman-proxy-content
-  become: true
   vars:
     foreman_proxy_content_server_group: "server-{{ inventory_hostname }}"
     foreman_proxy_content_server: "{{ groups[foreman_proxy_content_server_group][0] }}"
@@ -8,11 +7,16 @@
     katello_repositories_version: nightly
     foreman_repositories_version: nightly
   roles:
-    - foreman_server_repositories
-    - etc_hosts
-    - {role: foreman_proxy_content, foreman_directory: '/home/vagrant/foreman/config/',
-       devel: True, base_foreman_directory: '/home/vagrant/foreman/'}
+    - role: foreman_server_repositories
+      become: true
+    - role: etc_hosts
+      become: true
+    - role: foreman_proxy_content
+      foreman_directory: "{{ ansible_user_dir }}/foreman/config/"
+      devel: true
+      base_foreman_directory: "{{ ansible_user_dir }}/foreman/"
     - role: foreman_installer
+      become: true
       foreman_installer_scenario: foreman-proxy-content
       foreman_installer_disable_system_checks: true
       foreman_installer_options_internal_use_only:
