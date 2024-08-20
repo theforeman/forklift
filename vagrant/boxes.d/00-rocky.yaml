@@ -1,0 +1,17 @@
+boxes:
+  rocky8:
+    box_name: 'rockylinux/8'
+    libvirt: https://dl.rockylinux.org/pub/rocky/8/images/x86_64/Rocky-8-Vagrant-Libvirt.latest.x86_64.box
+    disk_size: 40
+    pty: true
+    scenarios:
+      - foreman
+      - katello
+  rocky9:
+    box_name: 'rockylinux/9'
+    libvirt: https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Vagrant-Libvirt.latest.x86_64.box
+    disk_size: 40
+    pty: true
+    scenarios:
+      - foreman
+      - katello
