@@ -36,6 +36,7 @@ BACKUP_ONLINE_DIR="${BACKUP_BASE_DIR}/online"
 
 @test "check offline backup contests for Foreman" {
   tForemanMaintainAvailable
+  tForemanAvailable
 
   tFileExists "${BACKUP_OFFLINE_DIR}/config_files.tar.gz"
   tFileExists "${BACKUP_OFFLINE_DIR}/metadata.yml"
@@ -50,6 +51,7 @@ BACKUP_ONLINE_DIR="${BACKUP_BASE_DIR}/online"
 
 @test "check offline backup contents for Katello" {
   tForemanMaintainAvailable
+  tForemanAvailable
 
   if ! tPackageExists foreman-installer-katello; then
     skip "Katello specific test"
