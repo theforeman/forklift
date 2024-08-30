@@ -60,12 +60,12 @@
       vars:
         scenario: "{{ pipeline_type }}"
         scenario_os: "almalinux8"
-        scenario_version: "4.9"
+        scenario_version: "4.14"
         upgrade: True
         upgrade_step: 2
     - name: Ensure upgrade steps have been determined correctly
       assert:
         that:
-          - forklift_upgrade_version_start == '4.5'
-          - forklift_upgrade_version_intermediate == '4.7'
-          - forklift_upgrade_version_final == '4.9'
+          - forklift_upgrade_version_start == '4.10'
+          - forklift_upgrade_version_intermediate == '4.12'
+          - forklift_upgrade_version_final == '4.14'

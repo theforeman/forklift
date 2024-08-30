@@ -252,18 +252,6 @@ setup() {
     --name="${ACTIVATION_KEY}" --auto-attach=false
 }
 
-@test "add subscription to activation key" {
-  tSkipIfNewerThan45
-
-  sleep 10
-  activation_key_id=$(hammer --csv --no-headers activation-key info --organization="${ORGANIZATION}" \
-    --name="${ACTIVATION_KEY}" | cut -d, -f2)
-  subscription_id=$(hammer --csv --no-headers subscription list --organization="${ORGANIZATION}" \
-    | grep "${PRODUCT}" | cut -d, -f1)
-  hammer activation-key add-subscription --id=$activation_key_id \
-    --subscription-id=$subscription_id | grep -q "Subscription added to activation key"
-}
-
 @test "promote first content view again" {
   hammer content-view version promote  --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW}" --to-lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" --from-lifecycle-environment="Library"
