@@ -46,13 +46,6 @@ tSkipIfOlderThan43() {
   fi
 }
 
-tSkipIfNewerThan45() {
-  KATELLO_VERSION=$(tKatelloVersion)
-  if tIsVersionNewer "${KATELLO_VERSION}" 4.6; then
-    skip "Skip if Katello is newer than 4.5"
-  fi
-}
-
 tIsPulp2() {
   tPackageExists pulp-server
 }

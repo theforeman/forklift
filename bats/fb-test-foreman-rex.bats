@@ -7,12 +7,7 @@ load os_helper
 load foreman_helper
 
 @test "run 'uptime' via Remote Execution" {
-  FOREMAN_VERSION=$(tForemanVersion)
-  if ! tIsVersionNewer "${FOREMAN_VERSION}" 3.3; then
-    job_template='Run Command - SSH Default'
-  else
-    job_template='Run Command - Script Default'
-  fi
+  job_template='Run Command - Script Default'
 
   SMART_PROXY_NAME=$(hostname -f)
 
