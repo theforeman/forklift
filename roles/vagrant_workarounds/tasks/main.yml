@@ -24,3 +24,11 @@
   when:
     - ansible_os_family == 'RedHat'
     - ansible_distribution_major_version == '9'
+
+- name: force downgrade to libsemanage-3.6-1.el9.x86_64
+  ansible.builtin.package:
+    name: libsemanage-3.6-1.el9.x86_64
+    state: present
+  when:
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version == '9'
