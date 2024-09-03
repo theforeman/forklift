@@ -33,7 +33,7 @@ jobs:
         with:
           python-version: "3"
       - name: Install molecule
-        run: pip install 'molecule<6' ansible
+        run: pip install 'molecule>=6' ansible
       - name: Run tests
         run: |
           for roledir in roles/*/molecule; do
