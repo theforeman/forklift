@@ -1,6 +1,6 @@
 ---
 driver:
-  name: delegated
+  name: default
   options:
     managed: False
     ansible_connection_options:
