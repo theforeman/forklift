@@ -3,7 +3,7 @@
   lineinfile:
     dest: /etc/hosts
     regexp: ".*{{ item.replace('.', '-') }}$"
-    line: "{{ hostvars[item].ansible_host }} {{ item.replace('.', '-') }}.{{ etc_hosts_domain }} {{ item.replace('.', '-') }}"
+    line: "{{ hostvars[item]['ansible_facts']['ansible_default_ipv4']['address'] | default(hostvars[item].ansible_host) }} {{ item.replace('.', '-') }}.{{ etc_hosts_domain }} {{ item.replace('.', '-') }}"
     state: present
   when: hostvars[item].ansible_host is defined
   become: yes
