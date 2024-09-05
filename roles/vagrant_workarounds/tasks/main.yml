@@ -27,9 +27,7 @@
 
 - name: force downgrade to libsemanage-3.6-1.el9.x86_64
   ansible.builtin.package:
-    name:
-      - libsemanage-3.6-1.el9.x86_64
-      - python3-libsemanage-3.6-1.el9.x86_64
+    name: libsemanage-3.6-1.el9.x86_64
     state: present
   when:
     - ansible_distribution == 'CentOS'
