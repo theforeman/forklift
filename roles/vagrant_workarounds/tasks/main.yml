@@ -13,14 +13,3 @@
   shell: rm -f /boot/*-generic.img
   when:
     - ansible_os_family == 'Debian'
-
-# workaround for broken libsemanage due to https://issues.redhat.com/browse/RHEL-55414
-- name: don't install broken libsemanage on EL9
-  community.general.ini_file:
-    path: /etc/dnf/dnf.conf
-    section: main
-    option: excludepkgs
-    value: 'libsemanage-3.6-2.*,python3-libsemanage-3.6-2.*'
-  when:
-    - ansible_os_family == 'RedHat'
-    - ansible_distribution_major_version == '9'
