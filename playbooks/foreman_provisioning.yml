@@ -2,6 +2,12 @@
   become: true
   vars:
     libvirt_tftp: true
+  module_defaults:
+    group/theforeman.foreman.foreman:
+      username: admin
+      password: changeme
+      server_url: "https://localhost/"
+      validate_certs: false
   roles:
     - foreman
     - libvirt

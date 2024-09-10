@@ -1,6 +1,6 @@
 ---
-- name: 'Setup CentOS 7 provisioning'
-  import_tasks: configure_centos_7.yml
+- name: 'Setup CentOS 9 provisioning'
+  import_tasks: configure_centos_9.yml
 
 - name: 'Setup Fedora 27 provisioning'
   import_tasks: configure_fedora_27.yml

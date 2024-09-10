@@ -1,0 +1,21 @@
+- name: "Ensure CentOS Stream 9" # noqa: args[module]
+  theforeman.foreman.operatingsystem:
+    name: CentOS_Stream
+    family: Redhat
+    major: 9
+    architectures:
+      - x86_64
+    media:
+      - CentOS Stream 9 mirror
+    provisioning_templates:
+      - Kickstart default
+    ptables:
+      - Kickstart default
+    state: present
+
+- name: "Set default template for CentOS Stream 9" # noqa: args[module]
+  theforeman.foreman.os_default_template:
+    operatingsystem: "CentOS_Stream 9"
+    template_kind: "provision"
+    provisioning_template: "Kickstart default"
+    state: present
