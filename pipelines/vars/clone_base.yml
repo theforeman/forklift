@@ -12,18 +12,20 @@ backup_dir: /backup
 backup_files:
   offline:
     - .config.snar
-    - .postgres.snar
     - .pulp.snar
     - config_files.tar.gz
     - metadata.yml
-    - pgsql_data.tar.gz
     - pulp_data.tar
+    - candlepin.dump
+    - foreman.dump
+    - pulpcore.dump
   offline_no_pulp:
     - .config.snar
-    - .postgres.snar
     - config_files.tar.gz
     - metadata.yml
-    - pgsql_data.tar.gz
+    - candlepin.dump
+    - foreman.dump
+    - pulpcore.dump
   online:
     - .config.snar
     - .pulp.snar
