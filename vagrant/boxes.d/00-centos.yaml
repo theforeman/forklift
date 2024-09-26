@@ -46,3 +46,6 @@ boxes:
     scenarios:
       - foreman
       - katello
+
+  centos-stream9-bootc:
+    box_name: katello/centos-stream9-bootc
