@@ -21,5 +21,6 @@ load fixtures/content
   CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
   CONTAINER_PUSH_LABEL=$(echo "${ORGANIZATION_LABEL}/${PRODUCT_LABEL}/${CONTAINER_REPOSITORY_LABEL}-bats-$(date -u '+%s')"| tr '[:upper:]' '[:lower:]')
   podman push "${HOSTNAME}/${CONTAINER_PULL_LABEL}" "${HOSTNAME}/${CONTAINER_PUSH_LABEL}"
+  sleep 5
   podman search "${HOSTNAME}/" | grep -q "${CONTAINER_PUSH_LABEL}"
 }
