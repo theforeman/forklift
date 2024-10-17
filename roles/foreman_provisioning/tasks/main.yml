@@ -8,8 +8,8 @@
 - name: 'Setup Debian 12.7 provisioning'
   import_tasks: configure_debian_12_7.yml
 
-- name: 'Setup Ubuntu 17.10 provisioning'
-  import_tasks: configure_ubuntu_17_10.yml
+- name: 'Setup Ubuntu 24.04 provisioning'
+  import_tasks: configure_ubuntu_24_04.yml
 
 # TODO verify - should not be needed, DNS should work just fine
 - name: 'set unattended_url'
