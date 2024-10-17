@@ -49,18 +49,18 @@
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: foreman_provisioning_hostgroup_base.stderr.find('not found') != -1
 
-- name: 'find hostgroup CentOS 7'
+- name: 'find hostgroup CentOS 9'
   shell: >
-    {{ foreman_provisioning_hammer }} hostgroup info --name 'CentOS 7 Mirror'
+    {{ foreman_provisioning_hammer }} hostgroup info --name 'CentOS 9 Mirror'
   register: foreman_provisioning_hostgroup_centos_mirror
   ignore_errors: True
 
-- name: 'create hostgroup CentOS 7 Mirror'
+- name: 'create hostgroup CentOS 9 Mirror'
   shell: >
     {{ foreman_provisioning_hammer }} hostgroup create
-    --name 'CentOS 7 Mirror'
-    --operatingsystem 'CentOS 7'
-    --medium '{{ centos_medium_name }}'
+    --name 'CentOS 9 Mirror'
+    --operatingsystem 'CentOS_Stream 9'
+    --medium 'CentOS Stream 9 mirror'
     --partition-table 'Kickstart default'
     --parent 'Base'
     {{ foreman_provisioning_hammer_taxonomy_params }}
