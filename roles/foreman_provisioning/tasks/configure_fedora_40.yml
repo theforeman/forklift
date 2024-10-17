@@ -1,0 +1,36 @@
+- name: 'create Fedora 40'
+  shell: >
+    {{ foreman_provisioning_hammer }} os info --title "Fedora 40" ||
+    {{ foreman_provisioning_hammer }} os create
+    --name Fedora --major 40 --architectures x86_64 --family 'Redhat' --media 'Fedora mirror' --partition-tables 'Kickstart default'
+
+- name: 'find Fedora 40'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output json os info --name "Fedora 40" ||
+    {{ foreman_provisioning_hammer }} --output json os info --title "Fedora 40"
+  register: foreman_provisioning_fedora40_json
+  ignore_errors: True
+
+- name: 'get Fedora 40 info'
+  set_fact:
+    foreman_provisioning_fedora40: "{{ foreman_provisioning_fedora40_json.stdout|from_json }}"
+
+- name: 'find kickstart templates'
+  shell: >
+    {{ foreman_provisioning_hammer }} --output=json template list
+    --search 'name ~ "Kickstart default"'
+  register: kickstart_templates_json
+
+- name: 'set kickstart templates'
+  set_fact:
+    kickstart_templates: "{{ kickstart_templates_json.stdout|from_json }}"
+
+- name: 'associate kickstart templates to Fedora 40'
+  shell: >
+    {{ foreman_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'Fedora 40'
+  with_items: "{{ kickstart_templates }}"
+
+- name: 'set default templates for Fedora 40'
+  shell: >
+    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_fedora40.Id }} --provisioning-template-id {{ item.Id }}
+  with_items: "{{ kickstart_templates }}"
