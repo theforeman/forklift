@@ -37,7 +37,7 @@
     --name 'Base'
     --architecture x86_64
     --domain {{ foreman_provisioning_domain }}
-    --environment production
+    --puppet-environment production
     --puppet-ca-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
     --puppet-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
     --subnet '{{ foreman_provisioning_network }}/24'
