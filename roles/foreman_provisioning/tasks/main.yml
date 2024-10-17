@@ -5,8 +5,8 @@
 - name: 'Setup Fedora 40 provisioning'
   import_tasks: configure_fedora_40.yml
 
-- name: 'Setup Debian 9.3 provisioning'
-  import_tasks: configure_debian_9_3.yml
+- name: 'Setup Debian 12.7 provisioning'
+  import_tasks: configure_debian_12_7.yml
 
 - name: 'Setup Ubuntu 17.10 provisioning'
   import_tasks: configure_ubuntu_17_10.yml
