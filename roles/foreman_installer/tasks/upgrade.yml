@@ -1,12 +1,4 @@
 ---
-- name: 'Update foreman-maintain'
-  package:
-    name: rubygem-foreman_maintain
-    state: latest
-  when:
-    - foreman_installer_scenario != 'foreman'
-    - ansible_os_family == 'RedHat'
-
 - name: 'Stop services'
   command: foreman-maintain service stop
   when: foreman_installer_scenario != 'foreman'
