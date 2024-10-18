@@ -1,0 +1,5 @@
+collections:
+  - theforeman.foreman
+  - theforeman.operations
+  - community.general
+  - ansible.posix
