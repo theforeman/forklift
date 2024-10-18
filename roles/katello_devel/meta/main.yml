@@ -20,4 +20,7 @@ dependencies:
       - "{{ '--katello-devel-github-username=' + katello_devel_github_username if katello_devel_github_username is defined else '' }}"
       - "--katello-devel-extra-plugins theforeman/foreman_rh_cloud"
       - "--katello-devel-extra-plugins theforeman/foreman_virt_who_configure"
+      - "--katello-devel-foreman-scm-revision={{ foreman_repositories_version is defined | ternary(foreman_repositories_version + '-stable', 'develop') }}"
+      - "--katello-devel-katello-scm-revision={{ katello_repositories_version is defined | ternary('KATELLO-' + katello_repositories_version, 'master') }}"
+      - "--katello-devel-rex-scm-revision={{ foreman_remote_execution_scm_version | default('master') }}"
   - role: customize_home
