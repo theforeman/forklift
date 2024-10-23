@@ -4,13 +4,15 @@ Instead of writing a plugin, Forklift can be used as a library to gain more cont
 
 First, make our example directory and clone Forklift:
 
-    mkdir example
-    cd example
-    git clone https://github.com/theforeman/forklift.git
+```sh
+mkdir example
+cd example
+git clone https://github.com/theforeman/forklift.git
+```
 
 First, add an `ansible.cfg` file:
 
-```
+```ini
 [defaults]
 nocows = 1
 host_key_checking = False
@@ -22,13 +24,17 @@ inventory = forklift/playbooks/inventory/vagrant.py
 
 Now, make directories for playbooks and roles:
 
-    mkdir playbooks
-    mkdir roles
-    mkdir pipelines
+```sh
+mkdir playbooks
+mkdir roles
+mkdir pipelines
+```
 
 Deploy a file with the base set of boxes the plugin requires:
 
-    vim base_boxes.yaml
+```sh
+vim base_boxes.yaml
+```
 
 ```yaml
 centos9-stream:
