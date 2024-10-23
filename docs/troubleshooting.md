@@ -63,6 +63,8 @@ sudo systemctl start virtnetworkd
 sudo systemctl start virtnetworkd-ro.socket
 ```
 
+Another possibility could be, that it's necessary to switch libvirt to a modular daemon setup, see [https://libvirt.org/daemons.html#switching-to-modular-daemons](https://libvirt.org/daemons.html#switching-to-modular-daemons)
+
 ## Forward DNS
 
 If you get this error in the Run installer section:
