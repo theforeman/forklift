@@ -67,5 +67,6 @@ installers:
       - 'almalinux9'
       - 'centos9-stream'
       - 'debian11'
+      - 'debian12'
       - 'ubuntu2004'
       - 'ubuntu2204'
