@@ -133,7 +133,7 @@ centos9-katello-devel-stable:
 
 The contents of the specified repo will be copied to the home directory excluding the `.git` folder and `.gitignore` file.
 
-As an example, you can keep dotfiles such as `.bashrc` in the root of your git repository and install packages [with a `bootstrap` script](#running-a-boostrap-script) using this structure:
+As an example, you can keep dotfiles such as `.bashrc` in the root of your git repository and install packages [with a `bootstrap` script](#running-a-bootstrap-script) using this structure:
 
 ```text
 mygitrepo
@@ -151,13 +151,13 @@ You can have files automatically copied over to the target user's home directory
 
 The directory `user_devel_env_files/` is ignored by git so the files won't be checked into version control. The files added to `user_devel_env_files/` will be copied over to the target user's home directory on the development VM when it is created or provisioned.
 
-As an example, you can symlink files that are on your hypervisor to this directory and install packages [with a bootstrap script](#running-a-boostrap-script)
+As an example, you can symlink files that are on your hypervisor to this directory and install packages [with a bootstrap script](#running-a-bootstrap-script)
 
 *Both of the local file and git repo custom file strategies are completely optional and are not required to spin up a development environment*
 
-#### Running a boostrap script
+#### Running a bootstrap script
 
-For both the git and custom local file strategies, you can run commands from a boostrap script found in root level of the git repo or in `user_devel_env_files`
+For both the git and custom local file strategies, you can run commands from a bootstrap script found in root level of the git repo or in `user_devel_env_files`
 
 A file named `bootstrap` will be looked for in the home directory and executed if found. This can be used to run any commands you would like to during provisioning. Be sure use the proper language [shebang](https://en.wikipedia.org/w/index.php?title=Shebang_(Unix)) at the top.
 
