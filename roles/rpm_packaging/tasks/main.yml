@@ -1,0 +1,54 @@
+---
+- name: Install dependencies for packaging tooling
+  yum:
+    name: "{{ package_list }}"
+    state: present
+  vars:
+    package_list:
+      - git-core
+      - rubygem-nokogiri
+      - make
+      - gcc
+      - redhat-rpm-config
+      - ruby-devel
+      - curl-devel
+      - gem
+      - python3-ruamel-yaml
+      - tito
+      - mock
+      - jq
+      - python3-pip
+      - wget
+      - vim
+      - python3-semver
+  become: true
+
+- name: Install obal and rpmspectool
+  pip:
+    name: "{{ item }}"
+    state: present
+    executable: pip3
+  with_items:
+    - obal
+    - rpmspectool
+  become: true
+
+- name: Install gem2rpm
+  gem:
+    name: gem2rpm
+    state: present
+    user_install: false
+  become: true
+
+- name: Clone foreman-packaging
+  git:
+    repo: https://github.com/theforeman/foreman-packaging.git
+    dest: "/home/{{ rpm_packaging_user }}/foreman-packaging"
+    version: rpm/develop
+
+- name: Add {{ rpm_packaging_user }} user to mock group
+  user:
+    name: "{{ rpm_packaging_user }}"
+    groups: mock
+    append: true
+  become: true
