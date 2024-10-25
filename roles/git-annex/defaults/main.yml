@@ -1,0 +1,1 @@
+git_annex_package: "{{ 'git-annex-standalone' if ansible_distribution == 'RedHat' else 'git-annex' }}"
