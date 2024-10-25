@@ -1,5 +1,5 @@
 ---
 epel_repositories_state: present
-epel_repositories_flavor: "{{ 'epel-next-release' if ansible_distribution_major_version == '9' else 'epel-release' }}"
+epel_repositories_flavor: "{{ 'epel-next-release' if ansible_distribution_major_version == '9' and ansible_distribution == 'CentOS' else 'epel-release' }}"
 epel_repositories_url: https://dl.fedoraproject.org/pub/epel/{{ epel_repositories_flavor }}-latest-{{ ansible_distribution_major_version }}.noarch.rpm
 epel_repositories_name: "{{ epel_repositories_url if (epel_repositories_state == 'present' and ansible_distribution == 'RedHat') else epel_repositories_flavor }}"
