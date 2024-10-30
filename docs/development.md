@@ -21,7 +21,7 @@ This covers how to setup and configure a development environment using the Forkl
 
 ### Deploy a Katello Development Environment
 
-A Katello development environment can be deployed on Fedora and Red Hat flavor distributions. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin. There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
+A Katello development environment can be deployed on Enterprise Linux (EL) distributions. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin. There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
 
 1. Copy `vagrant/boxes.d/99-local.yaml.example` to `vagrant/boxes.d/99-local.yaml`.  
 If you already have a `99-local.yaml`, you can copy the entries in `99-local.yaml.example` to your `99-local.yaml`.

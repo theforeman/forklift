@@ -2,7 +2,7 @@
 
 This directory contains [Packer](https://www.packer.io) templates to create images from provisioned VMs
 
-You can install packer using [the steps in their documentation](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli). For Fedora and Red Hat flavor distributions, be aware there can be another executable installed named `packer`, so you will have to install the `packer` executable under another name or call it with an absolute path. See [their documentation for more info](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli#troubleshooting)
+You can install packer using [the steps in their documentation](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli). For Enterprise Linux (EL) distributions, be aware there can be another executable installed named `packer`, so you will have to install the `packer` executable under another name or call it with an absolute path. See [their documentation for more info](https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli#troubleshooting)
 
 *Be aware* that enabling the hashicorp repo will make an updated vagrant rpm available. If you are using the Fedora-supplied vagrant, disable this repository immediately after installing packer.
 
