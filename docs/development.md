@@ -110,6 +110,7 @@ If you don't need to do any development in the `webpack/` directories, you can t
 in your boxes.yaml entry to configure this on box creation.
 * Start the rails server with `bundle exec foreman start rails` in `~/foreman`
     * Alternatively, you can start the rails server with `bundle exec rails s`
+    * Or with `source .env && BIND=0.0.0.0 bundle exec puma -w 3 -p $PORT --preload` when you want to define the number of workers
 
 #### Additional info
 
