@@ -16,8 +16,8 @@ host.
 2. Build a box
     * Option 1: Use the `centos9-provision-nightly` box.
 
-    * Option 2: Use an existing katello box (e.g. centos9-stream-katello-nightly) and run the provisioning playbook (it takes a while, as it syncs (on-demand) centos9, puppet 7).  
-    NOTE: If you are using puppet 7 or higher, you need to increase the ram on the box, to something like 8096 otherwise candlepin crashes with OOM.
+    * Option 2: Use an existing Katello box (e.g. centos9-stream-katello-nightly) and run the provisioning playbook (it takes a while, as it syncs (on-demand) CentOS Stream 9, Puppet 7).  
+    NOTE: If you are using Puppet 7 or higher, you need to increase the ram on the box, to something like 8096 otherwise candlepin crashes with OOM.
 
         ```
         ansible-playbook -l centos9-stream-katello-nightly playbooks/katello_provisioning.yml
@@ -28,7 +28,7 @@ host.
     * Click "libvirt"
     * Click Compute profiles
     * Click 2-Medium
-        * increse ram to 2048MB (required for centos 9)
+        * increse ram to 2048MB (required for CentOS Stream 9)
         * change network type to NAT, network name = provision
     * Click Submit
 4. Configure Activation Key
