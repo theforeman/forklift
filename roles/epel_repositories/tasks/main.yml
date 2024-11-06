@@ -3,6 +3,7 @@
   yum:
     name: "centos-stream-repos"
     state: latest
+  become: true
   tags:
     - packages
   when:
@@ -14,6 +15,7 @@
     name: "{{ epel_repositories_name }}"
     disable_gpg_check: True
     state: "{{ epel_repositories_state }}"
+  become: true
   tags:
     - packages
   when: ansible_os_family == 'RedHat'

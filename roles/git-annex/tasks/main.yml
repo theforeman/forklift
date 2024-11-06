@@ -9,9 +9,11 @@
     description: git-annex
     baseurl: https://downloads.kitenet.net/git-annex/linux/current/rpms/
     gpgcheck: false
+  become: true
   when: ansible_distribution == 'RedHat'
 
 - name: Install git-annex
   yum:
     name: "{{ git_annex_package }}"
     state: present
+  become: true
