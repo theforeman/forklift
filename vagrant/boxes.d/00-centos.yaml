@@ -7,3 +7,12 @@ boxes:
     scenarios:
       - foreman
       - katello
+
+  centos10-stream:
+    box_name: 'centos/stream10'
+    disk_size: 40
+    libvirt: https://cloud.centos.org/centos/10-stream/x86_64/images/CentOS-Stream-Vagrant-10-latest.x86_64.vagrant-libvirt.box
+    virtualbox: https://cloud.centos.org/centos/10-stream/x86_64/images/CentOS-Stream-Vagrant-10-latest.x86_64.vagrant-virtualbox.box
+    scenarios:
+      - foreman
+      - katello
