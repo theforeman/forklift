@@ -10,7 +10,11 @@ load fixtures/content
 @test "try fetching container content" {
   tPackageExists podman || tPackageInstall podman
   podman login "${HOSTNAME}" -u admin -p changeme
-  CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
+  if tIsVersionNewer "${KATELLO_VERSION}" 4.16; then
+    CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}/${PRODUCT_LABEL}/${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
+  else
+    CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
+  fi
   podman pull "${HOSTNAME}/${CONTAINER_PULL_LABEL}"
 }
 
@@ -19,7 +23,11 @@ load fixtures/content
   tContainerPushSupported
   tPackageExists podman || tPackageInstall podman
   podman login "${HOSTNAME}" -u admin -p changeme
-  CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
+  if tIsVersionNewer "${KATELLO_VERSION}" 4.16; then
+    CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}/${PRODUCT_LABEL}/${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
+  else
+    CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
+  fi 
   CONTAINER_PUSH_LABEL=$(echo "${ORGANIZATION_LABEL}/${PRODUCT_LABEL}/${CONTAINER_REPOSITORY_LABEL}-bats-$(date -u '+%s')"| tr '[:upper:]' '[:lower:]')
   podman push "${HOSTNAME}/${CONTAINER_PULL_LABEL}" "${HOSTNAME}/${CONTAINER_PUSH_LABEL}"
   # Sleep for 5 seconds due to an intermittent issue where pushed content
