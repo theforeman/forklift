@@ -48,8 +48,8 @@ tSkipIfOlderThan43() {
 
 tContainerPushSupported() {
   KATELLO_VERSION=$(tKatelloVersion)
-  if ! tIsVersionNewer "${KATELLO_VERSION}" 4.15; then
-    skip "Container push is only supported on Katello 4.15+"
+  if ! tIsVersionNewer "${KATELLO_VERSION}" 4.14; then
+    skip "Container push is only supported on Katello 4.14+"
   fi
 }
 
