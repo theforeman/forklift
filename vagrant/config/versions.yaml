@@ -59,6 +59,19 @@ installers:
       - 'ubuntu2004'
       - 'ubuntu2204'
 
+  - foreman: '3.13'
+    katello: '4.15'
+    candlepin: '4.4'
+    pulpcore: '3.63'
+    puppet: 8
+    boxes:
+      - 'almalinux9'
+      - 'centos9-stream'
+      - 'debian11'
+      - 'debian12'
+      - 'ubuntu2004'
+      - 'ubuntu2204'
+
   - foreman: 'nightly'
     katello: 'nightly'
     candlepin: '4.4'
