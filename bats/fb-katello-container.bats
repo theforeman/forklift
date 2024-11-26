@@ -10,7 +10,7 @@ load fixtures/content
 @test "try fetching container content" {
   tPackageExists podman || tPackageInstall podman
   podman login "${HOSTNAME}" -u admin -p changeme
-  if tIsVersionNewer "${KATELLO_VERSION}" 4.16; then
+  if tIsVersionNewer "$(tKatelloVersion)" 4.16; then
     CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}/${PRODUCT_LABEL}/${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
   else
     CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
@@ -23,7 +23,7 @@ load fixtures/content
   tContainerPushSupported
   tPackageExists podman || tPackageInstall podman
   podman login "${HOSTNAME}" -u admin -p changeme
-  if tIsVersionNewer "${KATELLO_VERSION}" 4.16; then
+  if tIsVersionNewer "$(tKatelloVersion)" 4.16; then
     CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}/${PRODUCT_LABEL}/${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
   else
     CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')

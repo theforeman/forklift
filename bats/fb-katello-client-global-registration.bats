@@ -77,7 +77,11 @@ load fixtures/content
 @test "try fetching container content" {
   tPackageExists podman || tPackageInstall podman
   podman login "${HOSTNAME}" -u admin -p changeme
-  CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
+  if tIsVersionNewer "$(tKatelloVersion)" 4.16; then
+    CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}/${PRODUCT_LABEL}/${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
+  else
+    CONTAINER_PULL_LABEL=$(echo "${ORGANIZATION_LABEL}-${PRODUCT_LABEL}-${CONTAINER_REPOSITORY_LABEL}"| tr '[:upper:]' '[:lower:]')
+  fi
   podman pull "${HOSTNAME}/${CONTAINER_PULL_LABEL}"
 }
 
