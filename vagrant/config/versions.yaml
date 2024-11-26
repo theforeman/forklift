@@ -65,7 +65,6 @@ installers:
     pulpcore: '3.63'
     puppet: 8
     boxes:
-      - 'almalinux8'
       - 'almalinux9'
       - 'centos9-stream'
       - 'debian11'
@@ -78,7 +77,6 @@ installers:
     pulpcore: 'nightly'
     puppet: 8
     boxes:
-      - 'almalinux8'
       - 'almalinux9'
       - 'centos9-stream'
       - 'debian11'
