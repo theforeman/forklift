@@ -43,7 +43,7 @@
     --subnet '{{ foreman_provisioning_network }}/24'
     {{ foreman_provisioning_compute_profile_option }}
     {{ foreman_provisioning_compute_resource_option }}
-    --root-pass changeme
+    --root-password changeme
     --pxe-loader "PXELinux BIOS"
     --organization '{{ foreman_provisioning_organization }}'
     {{ foreman_provisioning_hammer_taxonomy_params }}
