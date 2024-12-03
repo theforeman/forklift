@@ -1,5 +1,0 @@
----
-- name: 'Restart smart proxy'
-  service:
-    name: foreman-proxy
-    state: restarted

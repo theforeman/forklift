@@ -1,7 +1,6 @@
 ---
 dependencies:
   - role: hammer_credentials
-  - role: ruby_libvirt_gem
   - role: foreman_installer
     foreman_installer_scenario: "{{ foreman_provisioning_scenario }}"
     foreman_installer_options:
