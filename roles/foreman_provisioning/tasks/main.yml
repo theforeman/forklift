@@ -61,7 +61,7 @@
     {{ foreman_provisioning_hammer }} hostgroup create
     --name 'CentOS 9 Mirror'
     --operatingsystem 'CentOS_Stream 9'
-    --medium 'CentOS Stream 9 mirror'
+    --medium '{{ foreman_provisioning_centos_medium_name }}'
     --partition-table 'Kickstart default'
     --parent 'Base'
     {{ foreman_provisioning_hammer_taxonomy_params }}
