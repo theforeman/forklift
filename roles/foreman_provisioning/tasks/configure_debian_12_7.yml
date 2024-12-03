@@ -1,36 +1,30 @@
-- name: 'create Debian 12.7'
-  shell: >
-    {{ foreman_provisioning_hammer }} os info --title "Debian 12.7" ||
-    {{ foreman_provisioning_hammer }} os create
-    --name Debian --major 12 --minor 7 --release-name 'stretch' --architectures x86_64 --family 'Debian' --media 'Debian mirror' --partition-tables 'Preseed default'
+- name: "Find all relevant templates" # noqa: args[module]
+  theforeman.foreman.resource_info:
+    resource: provisioning_templates
+    search: name ~ "Preseed default" or name = "Linux host_init_config default"
+  register: result
 
-- name: 'find Debian 12.7'
-  shell: >
-    {{ foreman_provisioning_hammer }} --output json os info --name "Debian 12.7" ||
-    {{ foreman_provisioning_hammer }} --output json os info --title "Debian 12.7"
-  register: foreman_provisioning_debian127_json
-  ignore_errors: True
+- name: "Ensure Debian 12.7" # noqa: args[module]
+  theforeman.foreman.operatingsystem:
+    name: Debian
+    family: Debian
+    major: 12
+    minor: 7
+    release_name: bookworm
+    architectures:
+      - x86_64
+    media:
+      - Debian mirror
+    provisioning_templates: "{{ result.resources | map(attribute='name') }}"
+    ptables:
+      - Preseed default
+    state: present
+    password_hash: "SHA256"
 
-- name: 'get CentOS 12.7 info'
-  set_fact:
-    foreman_provisioning_debian127: "{{ foreman_provisioning_debian127_json.stdout|from_json }}"
-
-- name: 'find preseed templates'
-  shell: >
-    {{ foreman_provisioning_hammer }} --output=json template list
-    --search 'name ~ "Preseed default"'
-  register: preseed_templates_json
-
-- name: 'set preseed templates'
-  set_fact:
-    preseed_templates: "{{ preseed_templates_json.stdout|from_json }}"
-
-- name: 'associate preseed templates to Debian 12.7'
-  shell: >
-    {{ foreman_provisioning_hammer }} template add-operatingsystem --id {{ item.Id }} --operatingsystem 'Debian 12.7'
-  with_items: "{{ preseed_templates }}"
-
-- name: 'set default templates for Debian 12.7'
-  shell: >
-    {{ foreman_provisioning_hammer }} os set-default-template --id {{ foreman_provisioning_debian127.Id }} --provisioning-template-id {{ item.Id }}
-  with_items: "{{ preseed_templates }}"
+- name: "Set default template for Debian 12.7" # noqa: args[module]
+  theforeman.foreman.os_default_template:
+    operatingsystem: "Debian 12.7"
+    template_kind: "{{ item.template_kind_name }}"
+    provisioning_template: "{{ item.name }}"
+    state: present
+  loop: "{{ result.resources | sort(attribute='name') | unique(attribute='template_kind_name') }}"
