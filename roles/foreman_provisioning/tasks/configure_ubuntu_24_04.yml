@@ -26,4 +26,4 @@
     template_kind: "{{ item.template_kind_name }}"
     provisioning_template: "{{ item.name }}"
     state: present
-  loop: "{{ result.resources | sort(attribute='name') | unique(attribute='template_kind_name') }}"
+  loop: "{{ result.resources | sort(attribute='name', reverse=True) | unique(attribute='template_kind_name') }}"
