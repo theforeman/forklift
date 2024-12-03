@@ -1,22 +1,8 @@
-- name: 'Set templates fact'
-  set_fact:
-    templates:
-      - kind: 'host_init_config'
-        name: 'Linux host_init_config default'
-      - kind: 'provision'
-        name: 'Kickstart default'
-      - kind: 'PXEGrub'
-        name: 'Kickstart default PXEGrub'
-      - kind: 'PXEGrub2'
-        name: 'Kickstart default PXEGrub2'
-      - kind: 'PXELinux'
-        name: 'Kickstart default PXELinux'
-      - kind: 'finish'
-        name: 'Kickstart default finish'
-      - kind: 'iPXE'
-        name: 'Kickstart default iPXE'
-      - kind: 'user_data'
-        name: 'Kickstart default user data'
+- name: "Find all relevant templates" # noqa: args[module]
+  theforeman.foreman.resource_info:
+    resource: provisioning_templates
+    search: name ~ "Kickstart default" or name = "Linux host_init_config default"
+  register: result
 
 - name: "Ensure CentOS Stream 9" # noqa: args[module]
   theforeman.foreman.operatingsystem:
@@ -27,16 +13,16 @@
       - x86_64
     media:
       - CentOS Stream 9 mirror
-    provisioning_templates: "{{ templates | map(attribute='name') }}"
+    provisioning_templates: "{{ result.resources | map(attribute='name') }}"
     ptables:
       - Kickstart default
     state: present
     password_hash: "SHA256"
 
-- name: "Set default templates for CentOS Stream 9" # noqa: args[module]
+- name: "Set default template for CentOS Stream 9" # noqa: args[module]
   theforeman.foreman.os_default_template:
     operatingsystem: "CentOS_Stream 9"
-    template_kind: "{{ item.kind }}"
+    template_kind: "{{ item.template_kind_name }}"
     provisioning_template: "{{ item.name }}"
     state: present
-  loop: "{{ templates }}"
+  loop: "{{ result.resources | sort(attribute='name') | unique(attribute='template_kind_name') }}"
