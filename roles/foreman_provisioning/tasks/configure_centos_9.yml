@@ -17,7 +17,7 @@
     ptables:
       - Kickstart default
     state: present
-    password_hash: "SHA256"
+    password_hash: "SHA512"
 
 - name: "Set default template for CentOS Stream 9" # noqa: args[module]
   theforeman.foreman.os_default_template:
