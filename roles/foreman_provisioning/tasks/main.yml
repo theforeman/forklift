@@ -13,8 +13,9 @@
 
 # TODO verify - should not be needed, DNS should work just fine
 - name: 'set unattended_url'
-  shell: >
-    {{ foreman_provisioning_hammer }} settings set --name unattended_url --value 'http://{{ foreman_provisioning_ip_address }}'
+  theforeman.foreman.setting:
+    name: unattended_url
+    value: "http://{{ foreman_provisioning_ip_address }}"
 
 - name: 'find hostgroup Base'
   shell: >
