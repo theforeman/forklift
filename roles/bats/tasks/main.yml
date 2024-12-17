@@ -43,6 +43,8 @@
       register: "test_output"
       ignore_errors: true
       environment: "{{ bats_environment }}"
+      # Adds -i to Ansible's default
+      become_flags: '-H -S -n -i'
 
     - name: "Read results"
       shell: "cat {{ bats_output_dir }}/{{ item }}.tap"
