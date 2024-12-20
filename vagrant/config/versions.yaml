@@ -79,6 +79,5 @@ installers:
     boxes:
       - 'almalinux9'
       - 'centos9-stream'
-      - 'debian11'
       - 'debian12'
       - 'ubuntu2204'
