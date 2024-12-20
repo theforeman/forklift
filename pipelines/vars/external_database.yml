@@ -1,0 +1,25 @@
+pipeline_type: katello
+pipeline_version: nightly
+pipeline_os: centos9-stream
+foreman_installer_scenario: katello
+server_box:
+  box: "{{ pipeline_os }}"
+  memory: 10240
+  ansible:
+    variables:
+      foreman_server_repositories_katello: true
+      foreman_installer_disable_system_checks: true
+      foreman_installer_scenario: katello
+      foreman_installer_additional_packages:
+        - "foreman-installer-katello"
+database_box:
+  box: "{{ pipeline_os }}"
+  memory: 4096
+  ansible:
+    variables:
+      postgresql_use_evr: true
+forklift_name: "pi-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}-external-database"
+forklift_server_name: "pi-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}-server"
+forklift_database_name: "pi-{{ pipeline_type }}-{{ pipeline_version }}-{{ pipeline_os }}-database"
+forklift_boxes:
+  "{{ {forklift_server_name: server_box, forklift_database_name: database_box} }}"
