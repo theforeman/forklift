@@ -29,4 +29,6 @@
 - name: 'Run FreeIPA Install'
   become: true
   shell:
-    cmd: ipa-server-install -U -r {{ freeipa_server_realm }} -p {{ freeipa_server_directory_manager_password }} -a {{ freeipa_server_directory_admin_password }} creates=/etc/krb5.keytab
+    cmd: ipa-server-install -U -r {{ freeipa_server_realm }} -p {{ freeipa_server_directory_manager_password }} -a {{ freeipa_server_directory_admin_password }}
+  args:
+    creates: /etc/krb5.keytab
