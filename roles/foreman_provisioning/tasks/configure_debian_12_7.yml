@@ -1,27 +1,29 @@
 - name: "Find all relevant templates" # noqa: args[module]
   theforeman.foreman.resource_info:
     resource: provisioning_templates
-    search: name ~ "Kickstart default" or name = "Linux host_init_config default"
+    search: name ~ "Preseed default" or name = "Linux host_init_config default"
   register: result
 
-- name: "Ensure CentOS Stream 9" # noqa: args[module]
+- name: "Ensure Debian 12.7" # noqa: args[module]
   theforeman.foreman.operatingsystem:
-    name: CentOS_Stream
-    family: Redhat
-    major: 9
+    name: Debian
+    family: Debian
+    major: 12
+    minor: 7
+    release_name: bookworm
     architectures:
       - x86_64
     media:
-      - "{{ foreman_provisioning_centos_medium_name }}"
+      - Debian mirror
     provisioning_templates: "{{ result.resources | map(attribute='name') }}"
     ptables:
-      - Kickstart default
+      - Preseed default
     state: present
-    password_hash: "SHA512"
+    password_hash: "SHA256"
 
-- name: "Set default template for CentOS Stream 9" # noqa: args[module]
+- name: "Set default template for Debian 12.7" # noqa: args[module]
   theforeman.foreman.os_default_template:
-    operatingsystem: "CentOS_Stream 9"
+    operatingsystem: "Debian 12.7"
     template_kind: "{{ item.template_kind_name }}"
     provisioning_template: "{{ item.name }}"
     state: present
