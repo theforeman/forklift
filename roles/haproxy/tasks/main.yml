@@ -1,28 +1,25 @@
 ---
-- name: discover foreman proxies
-  setup:
-  delegate_to: "{{ item }}"
-  delegate_facts: yes
-  with_items:
-    - "{{ foreman_proxies }}"
 - name: install haproxy
-  package:
+  ansible.builtin.package:
     name: haproxy
     state: present
+
 - name: set haproxy_connect_any
-  seboolean:
+  ansible.posix.seboolean:
     name: haproxy_connect_any
     state: yes
     persistent: yes
+
 - name: configure haproxy
-  template:
+  ansible.builtin.template:
     dest: /etc/haproxy/haproxy.cfg
     src: haproxy.cfg.j2
     validate: haproxy -c -f %s
   notify:
     - restart haproxy
+
 - name: enable haproxy
-  service:
+  ansible.builtin.service:
     name: haproxy
     state: started
     enabled: yes
