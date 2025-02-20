@@ -1,0 +1,103 @@
+---
+- name: 'Install postgres packages'
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - postgresql-server
+    - python-psycopg2
+    - postgresql-contrib
+
+- when: postgresql_use_evr
+  block:
+    - name: Include foreman server repositories
+      include_role:
+        name: katello_repositories
+
+    - name: 'Install postgresql-evr packages'
+      yum:
+        name: postgresql-evr
+        state: installed
+
+- name: 'Init PostgreSQL database'
+  command: postgresql-setup initdb
+  args:
+    creates: /var/lib/pgsql/data/postgresql.conf
+
+- name: 'Deploy pg_hba.conf'
+  copy:
+    dest: /var/lib/pgsql/data/pg_hba.conf
+    content: |
+      # TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+      # "local" is for Unix domain socket connections only
+      local   all             all                                     ident
+
+      # IPv4 local connections:
+      host    all             all             127.0.0.1/32            md5
+
+      # IPv4 remote connections:
+      host    all             all             0.0.0.0/0               md5
+
+      # IPv6 local connections:
+      host    all             all             ::1/128                 md5
+    force: yes
+    mode: 0600
+    owner: postgres
+    group: postgres
+
+- name: Set listen addresses to *
+  lineinfile:
+    dest: /var/lib/pgsql/data/postgresql.conf
+    regexp: "^listen_addresses"
+    line: "listen_addresses = '*'"
+    state: present
+    backup: yes
+
+- name: 'Ensure PostgreSQL is running'
+  service:
+    name: postgresql
+    state: restarted
+    enabled: yes
+
+- name: 'Add database user'
+  become_user: postgres
+  postgresql_user:
+    state: present
+    name: "foreman"
+    password: "foreman"
+
+- name: 'Create Foreman database'
+  become_user: postgres
+  postgresql_db:
+    state: present
+    name: "foreman"
+    owner: "foreman"
+
+- name: 'Add candlepin database user'
+  become_user: postgres
+  postgresql_user:
+    state: present
+    name: "candlepin"
+    password: "candlepin"
+
+- name: 'Create Candlepin database'
+  become_user: postgres
+  postgresql_db:
+    state: present
+    name: "candlepin"
+    owner: "candlepin"
+
+- name: 'Add pulp database user'
+  become_user: postgres
+  postgresql_user:
+    state: present
+    name: "pulp"
+    password: "pulp"
+
+- name: 'Create Pulp database'
+  become_user: postgres
+  postgresql_db:
+    state: present
+    name: "pulp"
+    owner: "pulp"
