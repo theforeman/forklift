@@ -36,6 +36,8 @@ setup() {
   tPackageInstall http://localhost/pub/katello-ca-consumer-latest.noarch.rpm
   echo "rc=${status}"
   echo "${output}"
+  # Remove after subscription-manager 1.29.46 is released
+  systemctl start rhsmcertd
   subscription-manager register --force --org="${ORGANIZATION_LABEL}" --username=admin --password=changeme --env=Library
 }
 

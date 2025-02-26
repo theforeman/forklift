@@ -47,6 +47,8 @@ load fixtures/content
 
   registration_command=$(echo "${registration_json}" | ruby -e "require 'json'; puts JSON.load(ARGF.read).fetch('registration_command')")
   eval "${registration_command}"
+  # Remove after subscription-manager 1.29.46 is released
+  systemctl start rhsmcertd
   tSubscribedProductOrSCA "${PRODUCT}"
 }
 
