@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - custom_certificates
+    - role: foreman_installer
+      vars:
+        foreman_installer_options_internal_use_only:
+          - "--certs-server-cert {{ custom_certificates_ca_directory_certs }}/{{ custom_certificates_server }}.crt"
+          - "--certs-server-key {{ custom_certificates_ca_directory_keys }}/{{ custom_certificates_server }}.key"
+          - "--certs-server-ca-cert {{ custom_certificates_ca_directory_certs }}/custom_ca.crt"
+          - "--certs-update-server"
+          - "--certs-update-server-ca"
