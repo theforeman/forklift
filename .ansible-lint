@@ -28,3 +28,6 @@ extra_vars:
 mock_roles:
   - pulp.pulp_installer.pulp_all_services
   - pulp.pulp_installer.pulp_health_check
+
+exclude_paths:
+  - playbooks/galaxy_collections

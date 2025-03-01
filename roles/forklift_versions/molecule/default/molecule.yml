@@ -7,3 +7,6 @@ driver:
       ansible_connection: local
 platforms:
  - name: instance
+provisioner:
+  env:
+    ANSIBLE_CONFIG: ../../../../ansible.cfg

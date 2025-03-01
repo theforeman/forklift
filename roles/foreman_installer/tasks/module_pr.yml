@@ -1,7 +1,7 @@
 ---
-- name: set namespace, module_name and ref facts
+- name: set gh_namespace, module_name and ref facts
   set_fact:
-    namespace: "{{ module.split('/')[0] }}"
+    gh_namespace: "{{ module.split('/')[0] }}"
     module_name: "{{ module.split('/')[1] | replace('puppet-', '') | replace('puppetlabs-', '') }}"
     ref: "{{ module.split('/')[2] }}"
 
@@ -36,7 +36,7 @@
 
 - name: Clone puppet module
   git:
-    repo: https://github.com/{{ namespace }}/puppet-{{ module_name }}.git
+    repo: https://github.com/{{ gh_namespace }}/puppet-{{ module_name }}.git
     dest: "{{ module_dir }}/{{ module_name }}"
 
 - name: "fetch git PR"
