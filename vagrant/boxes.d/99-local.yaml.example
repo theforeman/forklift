@@ -33,8 +33,8 @@ almalinux8-katello-devel:
         - "--foreman-proxy-content-enable-ostree=true"
         - "--katello-devel-modulestream-nodejs=12"
 
-almalinux8-luna-demo:
-  box: almalinux8
+centos9-stream-luna-demo:
+  box: centos9-stream
   memory: 10240
   ansible:
     playbook: playbooks/luna_demo_environment.yml
