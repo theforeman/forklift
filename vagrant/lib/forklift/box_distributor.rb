@@ -92,7 +92,7 @@ module Forklift
 
         networks = configure_networks(box.fetch('networks', []))
         configure_shell(machine, box)
-        configure_ansible(machine, box['ansible'], box['name'])
+        configure_multi_ansible(machine, box)
         configure_providers(machine, box, networks)
         configure_synced_folders(machine, box)
         configure_private_network(machine, box)
@@ -174,7 +174,7 @@ module Forklift
       end
     end
 
-    def configure_ansible(machine, ansible, box_name)
+    def configure_ansible(machine, ansible, box_name, extra_vars, provisioner_name)
       return unless ansible
 
       if ansible.key?('group') && !ansible['group'].nil?
@@ -189,9 +189,9 @@ module Forklift
       return unless (playbooks = ansible['playbook'])
 
       [playbooks].flatten.each_with_index do |playbook, index|
-        machine.vm.provision("main#{index}", type: 'ansible') do |ansible_provisioner|
+        machine.vm.provision("#{provisioner_name}-#{index}", type: 'ansible', preserve_order: true) do |ansible_provisioner|
           ansible_provisioner.playbook = playbook
-          ansible_provisioner.extra_vars = ansible['variables']
+          ansible_provisioner.extra_vars = extra_vars
           ansible_provisioner.groups = @ansible_groups
           ansible_provisioner.verbose = ansible['verbose'] || false
           %w[config_file galaxy_role_file inventory_path].each do |key|
@@ -200,6 +200,23 @@ module Forklift
             end
           end
         end
+      end
+    end
+
+    def configure_multi_ansible(machine, box)
+      ansible_provisioner_names = box.fetch('multi_ansible', ['ansible'])
+      return unless ansible_provisioner_names.include?('ansible')
+
+      primary_ansible = box['ansible']
+      return unless primary_ansible
+
+      primary_ansible_vars = primary_ansible['variables']
+      box_name = box['name']
+
+      ansible_provisioner_names.each do |provisioner_name|
+        ansible = box[provisioner_name]
+        extra_vars = ansible.fetch('reuse_vars', false) ? primary_ansible_vars : ansible['variables']
+        configure_ansible(machine, ansible, box_name, extra_vars, provisioner_name)
       end
     end
 
