@@ -3,6 +3,4 @@
   roles:
     - etc_hosts
     - git
-    - role: ruby_scl
-      become: yes
     - hammer_devel
