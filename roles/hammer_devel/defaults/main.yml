@@ -1,5 +1,4 @@
 ---
-hammer_devel_ruby_version: 2.3.1
 hammer_devel_server_group: "server-{{ inventory_hostname }}"
 hammer_devel_server: "centos9-katello-devel"
 hammer_devel_server_protocol: 'https'

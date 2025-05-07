@@ -1,4 +1,13 @@
 ---
+- name: 'Install Ruby'
+  yum:
+    name:
+      - "ruby"
+      - "ruby-devel"
+      - "rubygem-bundler"
+    state: present
+  become: true
+
 - name: 'Clone the hammer repositories'
   git:
     repo: https://github.com/{{ item }}.git
@@ -56,3 +65,4 @@
   bundler:
     chdir: '~/hammer-cli-foreman'
     state: present
+    gem_path: '~/hammer-cli-foreman/.vendor'

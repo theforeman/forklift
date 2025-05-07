@@ -39,14 +39,15 @@ almalinux8-luna-demo:
   ansible:
     playbook: playbooks/luna_demo_environment.yml
 
-almalinux8-hammer-devel:
-  box: almalinux8
-  memory: 512
+centos9-hammer-devel:
+  box: centos9-stream
+  memory: 2048
   ansible:
     playbook: 'playbooks/hammer_devel.yml'
     group: 'hammer-devel'
     variables: # defaults in roles/hammer_devel/defaults/main.yml
-      #hammer_devel_server: almalinux8-katello-devel.custom-domain.example.com
+      hammer_devel_github_username: <REPLACE ME>
+      hammer_devel_server: centos9-katello-devel-stable.example.com
 
 centos9-proxy-devel:
     box: centos9-stream
