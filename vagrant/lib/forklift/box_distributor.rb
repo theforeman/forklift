@@ -60,8 +60,24 @@ module Forklift
       end
     end
 
-    def fetch_from_box_or_settings(box, key)
-      box.fetch(key) { @settings.fetch(key, nil) }
+    def fetch_setting(box, key, default = nil)
+      box.fetch(key) { @settings.fetch(key, default) }
+    end
+
+    def argv_include_any?(tokens)
+      tokens.any? { |token| ARGV.include?(token) }
+    end
+
+    def add_ssh_setting(box, machine, key)
+      return if (value = fetch_setting(box, "ssh_#{key}")).nil?
+      machine.ssh.send("#{key}=", value)
+    end
+
+    def add_ssh_settings(box, machine, keys)
+      return if fetch_setting(box, 'use_ssh_settings_vagrant_ssh_only', false) && !argv_include_any?(%w[ssh ssh-config])
+      keys.each do |key|
+        add_ssh_setting(box, machine, key)
+      end
     end
 
     def define_vm(config, box = {})
@@ -71,11 +87,7 @@ module Forklift
         machine.vm.box = box.fetch('box_name', nil)
         machine.vm.box_version = box.fetch('box_version', nil)
 
-        %w[username forward_agent keys_only].each do |key|
-          unless (value = fetch_from_box_or_settings(box, "ssh_#{key}")).nil?
-            machine.ssh.send("#{key}=", value)
-          end
-        end
+        add_ssh_settings(box, machine, %w[username forward_agent keys_only])
 
         machine.vm.box_check_update = box.fetch('box_check_update', true)
 
