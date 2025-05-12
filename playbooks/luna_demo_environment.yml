@@ -24,12 +24,10 @@
     - plugins/foreman_ansible
   vars:
     katello_provisioning_organization: Demo
-    foreman_repositories_version: 1.22
-    katello_repositories_version: 3.12
+    foreman_repositories_version: 3.14
+    katello_repositories_version: 4.16
     katello_provisioning_location: Belgium
     foreman_installer_scenario: katello
-    foreman_installer_options_internal_use_only:
-      - "--disable-system-checks"
     foreman_installer_additional_packages:
       - rubygem-ruby-libvirt
       - foreman-installer-katello
@@ -37,6 +35,7 @@
       - "--foreman-initial-admin-password {{ foreman_installer_admin_password }}"
       - "--foreman-initial-organization {{ katello_provisioning_organization }}"
       - "--foreman-initial-location {{ katello_provisioning_location }}"
+      - "--tuning development"
       - "--puppet-show-diff=true"
       - "--foreman-proxy-dns true"
       - "--foreman-proxy-dhcp true"
@@ -47,7 +46,7 @@
       - "--foreman-proxy-dhcp-provider libvirt"
       - "--foreman-proxy-libvirt-network provision"
       - "--foreman-proxy-dhcp-interface virbr1"
-      - "--enable-foreman-compute-{libvirt,ec2,gce,openstack,ovirt,vmware}"
+      - "--enable-foreman-compute-{libvirt,ec2,openstack,ovirt,vmware}"
       - "--enable-foreman-plugin-openscap"
       - "--enable-foreman-proxy-plugin-openscap"
       - "--enable-foreman-plugin-ansible"
