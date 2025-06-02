@@ -5,8 +5,7 @@ dependencies:
     become: true
     foreman_server_repositories_katello: true
     foreman_server_repositories_foreman_client: true
-#   puppet 6 is still the default for theforeman.operations.puppet_repositories as of release 1.2.3
-    foreman_puppet_repositories_version: 7
+    foreman_puppet_repositories_version: 8
   - role: foreman_installer_devel_scenario
     become: true
   - role: foreman_installer
