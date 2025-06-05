@@ -8,7 +8,7 @@
     state: present
 
 - name: 'Generate sosreport'
-  command: "sosreport --batch --tmp-dir={{ sosreport_output_dir }}"
+  command: "sos report --batch --tmp-dir={{ sosreport_output_dir }}"
   ignore_errors: true
 
 - include_tasks: 'sosreport_fetch_results.yml'
