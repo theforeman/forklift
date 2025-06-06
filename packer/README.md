@@ -10,9 +10,13 @@ You can install packer using [the steps in their documentation](https://develope
 
 From this directory, use `packer build` followed by the json packer template to create an image
 
-For example: `packer build centos9-katello-devel-stable.json`
+To also upload a new box, you will need the client ID and client secret for the stablebox-creator service principal. You can find that in the Access control section of the katello-devel project in the Hashicorp Cloud.
 
-You can create a box image using the above command and then add that box to Vagrant:
+To build a new box, run: `HCP_CLIENT_ID=id HCP_CLIENT_SECRET=secret packer build -var "version=2025.0606.1303" centos9-katello-devel-stable.json`
+
+Increment the version using the current date: `date +%Y.%m%d.%H%M`
+
+The above command  will create a box and then you can add that box to Vagrant locally to test:
 
 ```sh
 vagrant box add --name centos9-katello-devel-stable centos9-katello-devel-stable.box
