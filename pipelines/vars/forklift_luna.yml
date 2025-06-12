@@ -16,7 +16,6 @@ server_box:
         - "--enable-foreman-compute-ec2"
         - "--enable-foreman-compute-libvirt"
         - "--enable-foreman-compute-openstack"
-        - "--enable-foreman-compute-ovirt"
         - "--enable-foreman-compute-vmware"
 
         - "--enable-foreman-cli-ansible"
