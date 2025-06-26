@@ -18,7 +18,7 @@
 - name: "Enable only RHEL7 base + optional + extras repos"
   rhsm_repository:
     name: "{{ item }}"
-    state: "present"
+    state: "enabled"
   become: true
   with_items:
       - rhel-7-server-rpms
