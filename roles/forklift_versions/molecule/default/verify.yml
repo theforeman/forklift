@@ -16,7 +16,7 @@
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
         scenario_version: "4.12"
-    - name: Ensure versions have been set correctly
+    - name: Ensure versions have been set correctly for 4.12
       assert:
         that:
           - foreman_repositories_version == '3.10'
@@ -31,7 +31,7 @@
         scenario: "{{ pipeline_type }}"
         scenario_os: "{{ pipeline_os }}"
         scenario_version: "nightly"
-    - name: Ensure versions have been set correctly
+    - name: Ensure versions have been set correctly for nightly
       assert:
         that:
           - foreman_repositories_version is defined
@@ -47,7 +47,7 @@
         scenario_os: "{{ pipeline_os }}"
         scenario_version: "4.13"
         upgrade: True
-    - name: Ensure upgrade steps have been determined correctly
+    - name: Ensure upgrade steps have been determined correctly for 4.13
       assert:
         that:
           - forklift_upgrade_version_start == '4.12'
@@ -63,7 +63,7 @@
         scenario_version: "4.14"
         upgrade: True
         upgrade_step: 2
-    - name: Ensure upgrade steps have been determined correctly
+    - name: Ensure upgrade steps have been determined correctly for 4.14
       assert:
         that:
           - forklift_upgrade_version_start == '4.10'
