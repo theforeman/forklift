@@ -16,6 +16,7 @@ server_box:
       bats_tests_additional:
         - fb-katello-proxy.bats
         - "{{ 'fb-test-katello-change-hostname.bats' if pipeline_action == 'install' else ''}}"
+        - "{{ 'fb-verify-selinux.bats' if (pipeline_action == 'install' and (pipeline_version == 'nightly' or pipeline_version is version('4.18', '>='))) else ''}}"
 proxy_box:
   box: "{{ pipeline_proxy_os | default(pipeline_os) }}"
   memory: 3072

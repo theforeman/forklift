@@ -68,6 +68,7 @@ server_box:
         - "fb-test-foreman-templates.bats"
         - "fb-katello-proxy.bats"
         - "{{ 'fb-test-katello-change-hostname.bats' if pipeline_action == 'install' else ''}}"
+        - "{{ 'fb-verify-selinux.bats' if pipeline_action == 'install' else ''}}"
 proxy_box:
   box: "{{ pipeline_proxy_os | default(pipeline_os) }}"
   memory: 3072
