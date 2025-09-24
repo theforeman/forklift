@@ -88,3 +88,15 @@
   lineinfile:
     dest: '~/.bash_profile'
     line: "alias rake='bundle exec rake'"
+
+- name: 'Attempt to get CA certificate from devel server'
+  block:
+    - name: 'Execute command to fetch cert'
+      command: "bundle exec hammer --fetch-ca-cert {{ hammer_devel_host }}"
+      args:
+        chdir: '~/hammer-cli-foreman'
+
+  rescue:
+    - name: 'Report failure to get cert if devel box is not running'
+      debug:
+        msg: "Cert retrieval from {{ hammer_devel_host }} failed. The devel box was likely not running. Please run hammer --fetch-ca-cert {{ hammer_devel_host }} manually."
