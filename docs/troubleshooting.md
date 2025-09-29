@@ -36,7 +36,7 @@ sudo service start nfs-server
 
 ## Low disk space
 
-Your OS may be installed with a large root parition and smaller `/home`
+Your OS may be installed with a large root partition and smaller `/home`
 partition. Vagrant will populate `~/.vagrant.d/` with boxes by default; each of
 which can be over 2GB in size. This may cause disk space issues on your `/home`
 partition.
