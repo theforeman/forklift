@@ -7,7 +7,7 @@ host.
 
 ## How to configure
 
-1. If necessary, enable nested virt on your phyiscal box (see in [Checking if nested virtualization is supported](https://docs.fedoraproject.org/en-US/quick-docs/using-nested-virtualization-in-kvm)). Essentially, add this line to kvm-intel.conf and reboot:
+1. If necessary, enable nested virt on your physical box (see in [Checking if nested virtualization is supported](https://docs.fedoraproject.org/en-US/quick-docs/using-nested-virtualization-in-kvm)). Essentially, add this line to kvm-intel.conf and reboot:
 
     ```
     echo "options kvm-intel nested=1" | sudo tee /etc/modprobe.d/kvm-intel.conf
@@ -16,7 +16,7 @@ host.
 2. Build a box
     * Option 1: Use the `centos9-provision-nightly` box.
 
-    * Option 2: Use an existing Katello box (e.g. centos9-stream-katello-nightly) and run the provisioning playbook (it takes a while, as it syncs (on-demand) CentOS Stream 9, Puppet 7).  
+    * Option 2: Use an existing Katello box (e.g. centos9-stream-katello-nightly) and run the provisioning playbook (it takes a while, as it syncs (on-demand) CentOS Stream 9, Puppet 7).
     NOTE: If you are using Puppet 7 or higher, you need to increase the ram on the box, to something like 8096 otherwise candlepin crashes with OOM.
 
         ```
@@ -28,7 +28,7 @@ host.
     * Click "libvirt"
     * Click Compute profiles
     * Click 2-Medium
-        * increse ram to 2048MB (required for CentOS Stream 9)
+        * increase ram to 2048MB (required for CentOS Stream 9)
         * change network type to NAT, network name = provision
     * Click Submit
 4. Configure Activation Key

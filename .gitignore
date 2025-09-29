@@ -2,6 +2,7 @@
 *.swo
 *.swp
 *.swn
+*~
 
 katello-installer*
 foreman-installer*

@@ -23,7 +23,7 @@ This covers how to setup and configure a development environment using the Forkl
 
 A Katello development environment can be deployed on Enterprise Linux (EL) distributions. Ensure that you have followed the steps to setup Vagrant and the libvirt plugin. There are a variety of useful development environment options that should or can be set when creating a development box. These options are designed to configure your environment ready to use your own fork, and create pull requests. To create a development box:
 
-1. Copy `vagrant/boxes.d/99-local.yaml.example` to `vagrant/boxes.d/99-local.yaml`.  
+1. Copy `vagrant/boxes.d/99-local.yaml.example` to `vagrant/boxes.d/99-local.yaml`.
 If you already have a `99-local.yaml`, you can copy the entries in `99-local.yaml.example` to your `99-local.yaml`.
 2. Fill in any ansible options, examples:
     * `foreman_devel_github_push_ssh`: Force git to push over SSH when HTTPS remote is configured
@@ -360,7 +360,7 @@ To use:
 
 ## Advanced features
 
-These are playbooks, roles and variables provided to use additional funcionalities to test advanced foreman features.
+These are playbooks, roles and variables provided to use additional functionalities to test advanced foreman features.
 This list should be organized by foreman feature.
 
 * [Kerberos](#foreman-with-active-directory)
@@ -371,7 +371,7 @@ This list should be organized by foreman feature.
 
 You need the AD controller with domain controller you want to test this against.
 Easiest is to install Windows server (ideally core to save resources, but its harder to install AD and setup DNS).
-This controller doesn't need to be searchable in your environmnet, we will point libvirt there.
+This controller doesn't need to be searchable in your environment, we will point libvirt there.
 
 I will be using the domain `example.com` and expect your AD controller runs on IP `192.0.2.8`.
 

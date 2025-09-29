@@ -80,7 +80,7 @@ vagrant ssh centos9-stream-foreman-nightly
 
 To access the WebUI, it's helpful to have the vagrant-hostmanager plugin installed, so that your Workstation will automatically be able to resolve the hostname of the box to its IP address.
 
-Then you can simply open your browser and navigate to `https://centos9-stream-foreman-nightly.<HOSTNAME>.example.com` where `<HOSTNAME>` is replaced by the shortname of your workstation. The first time you do this you will need to accept the self-signed certicate.
+Then you can simply open your browser and navigate to `https://centos9-stream-foreman-nightly.<HOSTNAME>.example.com` where `<HOSTNAME>` is replaced by the shortname of your workstation. The first time you do this you will need to accept the self-signed certificate.
 
 By default, `forklift` deploys Foreman with `admin`/`changeme` as username and password.
 
@@ -166,7 +166,7 @@ allows completely automated dns resolution using dnsmasq from host to guest and 
 
 You can disable hostmanager in `vagrant/settings.yaml` by setting `hostmanager_enabled` option.
 
-When using a briged network or with multiple network interfaces, the hostmanager would resolve the internal ip from the ssh-info, you can choose an ip of a particular network interface in `vagrant/settings.yaml` by setting `hostmanager_ip_resolver_device` option with the device name.
+When using a bridged network or with multiple network interfaces, the hostmanager would resolve the internal ip from the ssh-info, you can choose an ip of a particular network interface in `vagrant/settings.yaml` by setting `hostmanager_ip_resolver_device` option with the device name.
 
 ```yaml
 hostmanager_ip_resolver_device: 'eth1'
@@ -211,7 +211,7 @@ Options:
 | primary                  |  set the machine to be the default target of vagrant commands such as 'vagrant ssh' |
 | libvirt_qemu_use_session |  Use qemu session instead of system |
 
-Entirely new boxes can be created that do not orginate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
+Entirely new boxes can be created that do not originate from a box defined within the Vagrantfile. For example, if you had access to a RHEL Vagrant box:
 
 ```yaml
 rhel7:
@@ -275,7 +275,7 @@ with-sshfs:
 
 If you want to mount in the opposite direction, just change `reverse` to `False` or remove it entirely.
 
-Additonal options may be specified with using `options`.
+Additional options may be specified with using `options`.
 
 ```yaml
 with-sshfs-options:

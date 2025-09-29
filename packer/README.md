@@ -49,7 +49,7 @@ To create a version specific dev box, follow the directions above to install pac
 cd ./forklift/packer
 ```
 
-and run this comand (replacing 4.13 with the correct version):
+and run this command (replacing 4.13 with the correct version):
 
 ```sh
 ./scripts/build_stable_dev_box.rb 4.13
