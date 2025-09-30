@@ -4,9 +4,9 @@
   vars:
     vagrant_libvirt: true
   roles:
+    - role: epel_repositories
     - role: libvirt
     - role: vagrant
-    - role: epel_repositories
 
 - hosts: all
   vars:
