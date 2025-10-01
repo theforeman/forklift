@@ -1,9 +1,4 @@
 ---
-- name: 'install pvalena/rubygems copr'
-  get_url:
-    url: https://copr.fedorainfracloud.org/coprs/pvalena/rubygems/repo/epel-{{ ansible_distribution_major_version }}/pvalena-rubygems-epel-{{ ansible_distribution_major_version }}.repo
-    dest: /etc/yum.repos.d/pvalena-rubygems.repo
-
 - name: 'install pvalena/vagrant copr'
   get_url:
     url: https://copr.fedorainfracloud.org/coprs/pvalena/vagrant/repo/epel-{{ ansible_distribution_major_version }}/pvalena-vagrant-epel-{{ ansible_distribution_major_version }}.repo
@@ -13,11 +8,6 @@
   get_url:
     url: https://copr.fedorainfracloud.org/coprs/evgeni/vagrant/repo/epel-{{ ansible_distribution_major_version }}/evgeni-vagrant-epel-{{ ansible_distribution_major_version }}.repo
     dest: /etc/yum.repos.d/evgeni-vagrant.repo
-
-- name: 'do not install nokogiri from pvalena/rubygems'
-  lineinfile:
-    path: /etc/yum.repos.d/pvalena-rubygems.repo
-    line: 'exclude=rubygem-nokogiri*'
 
 - name: 'install vagrant'
   package:
