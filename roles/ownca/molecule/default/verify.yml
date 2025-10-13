@@ -1,0 +1,21 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: find ca cert
+      stat:
+        path: "/opt/ownca/private/cakey.crt"
+      register: cacert
+    - name: ensure ca cert exists
+      assert:
+        that:
+          - cacert.stat.exists
+    - name: find cert
+      stat:
+        path: "/opt/ownca/host.example.com/host.example.com.crt"
+      register: cert
+    - name: ensure cert exists
+      assert:
+        that:
+          - cert.stat.exists
