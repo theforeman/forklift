@@ -4,6 +4,8 @@
   package:
     name: "{{ pytest_project_packages }}"
     state: present
+  when:
+    - pytest_project_packages | length > 0
 
 - name: Clone project
   git:

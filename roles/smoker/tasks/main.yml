@@ -3,6 +3,8 @@
   become: true
   package:
     name: '{{ smoker_browser_packages }}'
+  when:
+    - smoker_browser_packages | length > 0
 
 - name: 'Install Smoker via pytest_project'
   include_role:
