@@ -247,11 +247,6 @@ setup() {
     --unlimited-hosts | grep -q "Activation key created"
 }
 
-@test "disable auto-attach" {
-  hammer activation-key update --organization="${ORGANIZATION}" \
-    --name="${ACTIVATION_KEY}" --auto-attach=false
-}
-
 @test "promote first content view again" {
   hammer content-view version promote  --organization="${ORGANIZATION}" \
     --content-view="${CONTENT_VIEW}" --to-lifecycle-environment="${LIFECYCLE_ENVIRONMENT}" --from-lifecycle-environment="Library"

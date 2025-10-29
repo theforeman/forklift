@@ -31,14 +31,11 @@ host.
         * increase ram to 2048MB (required for CentOS Stream 9)
         * change network type to NAT, network name = provision
     * Click Submit
-4. Configure Activation Key
-    * Content / Activation Keys
-    * Assign all available subscriptions to the activation key
-5. Configure / Host groups
+4. Configure / Host groups
     * Edit Forklift CentOS 9
     * Set Compute profile to be "2-Medium"
     * Assign the `CentOS 9` activation key to the host group
-6. You're good to go! Let's provision a box!
+5. You're good to go! Let's provision a box!
     * Click Hosts / New Host
     * Fill in:
         * org, location, host group
@@ -46,4 +43,4 @@ host.
 
     DONE! Click submit :tada:
 
-7. If you want to view the console while it boots, make sure to trust the CA certificate in your browser, it's hosted at [https://centos9-stream-katello-nightly.example.com/pub/katello-server-ca.crt](https://centos9-stream-katello-nightly.example.com/pub/katello-server-ca.crt), and you'll need to make sure you're accessing the katello via it's proper hostname (add an entry to /etc/hosts).
+6. If you want to view the console while it boots, make sure to trust the CA certificate in your browser, it's hosted at [https://centos9-stream-katello-nightly.example.com/pub/katello-server-ca.crt](https://centos9-stream-katello-nightly.example.com/pub/katello-server-ca.crt), and you'll need to make sure you're accessing the katello via it's proper hostname (add an entry to /etc/hosts).
