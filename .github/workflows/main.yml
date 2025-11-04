@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3"
+          python-version: "3.12"
       - name: Install ansible-lint
         run: pip install ansible-lint ansible
       - name: Run tests
@@ -31,7 +31,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3"
+          python-version: "3.12"
       - name: Install molecule
         run: pip install 'molecule>=6' ansible
       - name: Run tests
