@@ -16,6 +16,8 @@
     - role: disable_firewall
     - role: foreman_server_repositories
     - role: packit
+    - role: fips
+      when: foreman_fips | default(false)
     - role: fapolicyd
       when: foreman_fapolicyd | default(false)
     - role: update_os_packages

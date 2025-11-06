@@ -2,6 +2,8 @@
 dependencies:
   - role: umask
   - role: selinux
+  - role: fips
+    when: foreman_fips | default(false)
   - role: fapolicyd
     when: foreman_fapolicyd | default(false)
   - role: etc_hosts
