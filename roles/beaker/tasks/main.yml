@@ -14,14 +14,6 @@
     name: git
     state: installed
 
-- name: Enable ruby 2.7 module
-  command: dnf module enable -y ruby:2.7
-  when: ansible_distribution_major_version == "8"
-
-- name: enable powertools
-  command: dnf config-manager --set-enabled powertools
-  when: ansible_distribution_major_version == "8"
-
 - name: enable CRB
   command: dnf config-manager --set-enabled crb
   when: ansible_distribution_major_version == "9"
