@@ -107,7 +107,7 @@ installers:
   - foreman: '3.17'
     katello: '4.19'
     candlepin: '4.6'
-    pulpcore: '3.73'
+    pulpcore: '3.85'
     puppet: 8
     boxes:
       - 'almalinux9'
