@@ -2,19 +2,20 @@
 - name: 'Setup CentOS 9 provisioning'
   import_tasks: configure_centos_9.yml
 
-- name: 'Setup Fedora 27 provisioning'
-  import_tasks: configure_fedora_27.yml
+- name: 'Setup Fedora 40 provisioning'
+  import_tasks: configure_fedora_40.yml
 
-- name: 'Setup Debian 9.3 provisioning'
-  import_tasks: configure_debian_9_3.yml
+- name: 'Setup Debian 12.7 provisioning'
+  import_tasks: configure_debian_12_7.yml
 
-- name: 'Setup Ubuntu 17.10 provisioning'
-  import_tasks: configure_ubuntu_17_10.yml
+- name: 'Setup Ubuntu 24.04 provisioning'
+  import_tasks: configure_ubuntu_24_04.yml
 
 # TODO verify - should not be needed, DNS should work just fine
 - name: 'set unattended_url'
-  shell: >
-    {{ foreman_provisioning_hammer }} settings set --name unattended_url --value 'http://{{ foreman_provisioning_ip_address }}'
+  theforeman.foreman.setting:
+    name: unattended_url
+    value: "http://{{ foreman_provisioning_ip_address }}"
 
 - name: 'find hostgroup Base'
   shell: >
@@ -37,30 +38,30 @@
     --name 'Base'
     --architecture x86_64
     --domain {{ foreman_provisioning_domain }}
-    --environment production
+    --puppet-environment production
     --puppet-ca-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
     --puppet-proxy-id {{ foreman_provisioning_smart_proxy.Id }}
     --subnet '{{ foreman_provisioning_network }}/24'
     {{ foreman_provisioning_compute_profile_option }}
     {{ foreman_provisioning_compute_resource_option }}
-    --root-pass changeme
+    --root-password changeme
     --pxe-loader "PXELinux BIOS"
     --organization '{{ foreman_provisioning_organization }}'
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: foreman_provisioning_hostgroup_base.stderr.find('not found') != -1
 
-- name: 'find hostgroup CentOS 7'
+- name: 'find hostgroup CentOS 9'
   shell: >
-    {{ foreman_provisioning_hammer }} hostgroup info --name 'CentOS 7 Mirror'
+    {{ foreman_provisioning_hammer }} hostgroup info --name 'CentOS 9 Mirror'
   register: foreman_provisioning_hostgroup_centos_mirror
   ignore_errors: True
 
-- name: 'create hostgroup CentOS 7 Mirror'
+- name: 'create hostgroup CentOS 9 Mirror'
   shell: >
     {{ foreman_provisioning_hammer }} hostgroup create
-    --name 'CentOS 7 Mirror'
-    --operatingsystem 'CentOS 7'
-    --medium '{{ centos_medium_name }}'
+    --name 'CentOS 9 Mirror'
+    --operatingsystem 'CentOS_Stream 9'
+    --medium '{{ foreman_provisioning_centos_medium_name }}'
     --partition-table 'Kickstart default'
     --parent 'Base'
     {{ foreman_provisioning_hammer_taxonomy_params }}
