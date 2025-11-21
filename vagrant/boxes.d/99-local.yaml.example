@@ -1,4 +1,27 @@
 ---
+centos9-katello-413-devel:
+  primary: true
+  box: centos9-stream
+  hostname: centos9-katello-413-devel.example.com
+  ansible:
+    playbook: 'playbooks/katello_devel.yml'
+    group: 'devel'
+    variables:
+      ssh_forward_agent: true
+      foreman_devel_github_push_ssh: True
+      katello_devel_github_username: <REPLACE ME>
+      foreman_repositories_environment: staging
+      katello_repositories_environment: staging
+      foreman_repositories_version: "3.11"
+      foreman_client_repositories_version: "3.11"
+      katello_repositories_version: "4.13"
+      pulpcore_repositories_version: "3.49"
+      foreman_puppet_repositories_version: 7
+      foreman_remote_execution_scm_version: "v13.1.0"
+      foreman_installer_options:
+        - "--foreman-proxy-content-enable-ostree=true"
+        - "--katello-devel-modulestream-nodejs=18"
+
 centos9-katello-devel:
   primary: true
   box: centos9-stream
@@ -15,6 +38,8 @@ centos9-katello-devel:
       katello_repositories_version: nightly
       foreman_installer_options:
         - "--foreman-proxy-content-enable-ostree=true"
+        - "--katello-devel-extra-plugins theforeman/foreman_rh_cloud"
+        - "--katello-devel-extra-plugins theforeman/foreman_virt_who_configure"
         #- "--katello-devel-modulestream-nodejs=18"
 
 almalinux8-katello-devel:
