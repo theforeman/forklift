@@ -111,6 +111,16 @@ setup() {
     --name="${CONTENT_VIEW}" --repository-id="$repo_id" | grep -q "The repository has been associated"
 }
 
+@test "create auto publish composite content view" {
+  hammer content-view create --organization="${ORGANIZATION}" \
+    --name="${AUTO_PUBLISH_COMPOSITE_VIEW}" --auto-publish=true --composite
+}
+
+@test "add first component to auto publish composite" {
+  hammer content-view component add --organization="${ORGANIZATION}" \
+    --latest --component-content-view="${CONTENT_VIEW}" --composite-content-view="${AUTO_PUBLISH_COMPOSITE_VIEW}"
+}
+
 @test "publish content view" {
   hammer content-view publish --organization="${ORGANIZATION}" \
     --name="${CONTENT_VIEW}"
@@ -317,6 +327,11 @@ setup() {
     --content-view="${CONTENT_VIEW_2}" --content-view-filter="${FILTER3}" --module-stream-ids=$modulemd_id
 }
 
+@test "add second component to auto publish composite" {
+  hammer content-view component add --organization="${ORGANIZATION}" \
+    --latest --component-content-view="${CONTENT_VIEW_2}" --composite-content-view="${AUTO_PUBLISH_COMPOSITE_VIEW}"
+}
+
 @test "publish first component content view" {
   hammer content-view publish --organization="${ORGANIZATION}" \
     --name="${CONTENT_VIEW_2}"
@@ -324,9 +339,9 @@ setup() {
 
 @test "create composite content view" {
   cv_id1=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_2} 1.0" | cut -d, -f1)
+    --content-view="${CONTENT_VIEW_2}" --fields=id --per-page=1)
   cv_id2=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW} 2.0" | cut -d, -f1)
+    --content-view="${CONTENT_VIEW}" --fields=id --per-page=1 --page=2)
   hammer content-view create --organization="${ORGANIZATION}" \
     --name="${CONTENT_VIEW_3}" --composite --component-ids=$cv_id1,$cv_id2
 }
@@ -340,7 +355,7 @@ setup() {
 
 @test "incremental update first component cv with composite propagation" {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_2}" | cut -d, -f1)
+    --content-view="${CONTENT_VIEW_2}" --fields=id --per-page=1)
   hammer content-view version incremental-update --organization="${ORGANIZATION}" \
     --content-view-version-id=$cvv_id --errata-ids=RHEA-2012:0055 --propagate-all-composites=true \
     --lifecycle-environments="Library"
@@ -348,7 +363,7 @@ setup() {
 
 @test "ensure component cv 1 version 1.1 has proper environments" {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_2} 1.1" | cut -d, -f1)
+    --content-view="${CONTENT_VIEW_2}" --fields=id --per-page=1)
   envs_found=$(hammer content-view version info --organization="${ORGANIZATION}" \
     --id=$cvv_id | awk '/Lifecycle Environments/{flag=1;next}/Repositories/{flag=0}flag' | grep "Name:")
   echo $envs_found | grep -q -E "Name:\s+Library"
@@ -356,7 +371,7 @@ setup() {
 
 @test "ensure composite cv version 1.1 has proper environments" {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_3} 1.1" | cut -d, -f1)
+    --content-view="${CONTENT_VIEW_3}" --fields=id --per-page=1)
   envs_found=$(hammer content-view version info --organization="${ORGANIZATION}" \
     --id=$cvv_id | awk '/Lifecycle Environments/{flag=1;next}/Repositories/{flag=0}flag' | grep "Name:")
   echo $envs_found | grep -q -E "Name:\s+Library"
@@ -365,7 +380,7 @@ setup() {
 
 @test "ensure component cv 1 latest version has proper content" {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_2} 1.1" | cut -d, -f1)
+    --content-view="${CONTENT_VIEW_2}" --fields=id --per-page=1)
   hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content_rpms
   diff cvv_content_rpms fixtures/component_1_rpms
 
@@ -386,7 +401,7 @@ setup() {
 
 @test "ensure component cv 2 latest version has proper content" {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW} 2.0" | cut -d, -f1)
+    --content-view="${CONTENT_VIEW}" --fields=id --per-page=1)
   hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' > cvv_content_rpms_2
   diff cvv_content_rpms_2 fixtures/component_2_rpms
 
@@ -407,7 +422,7 @@ setup() {
 
 @test "ensure composite cv latest version has proper content" {
   cvv_id=$(hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
-    | grep "${CONTENT_VIEW_3} 1.1" | cut -d, -f1)
+    --content-view="${CONTENT_VIEW_3}" --fields=id --per-page=1)
 
   # Sorting and removing duplicates due to Pulp2/Pulp3 differences (https://projects.theforeman.org/issues/30755)
   hammer package list --content-view-version-id=$cvv_id --order='name DESC' --fields='filename' \
@@ -427,6 +442,13 @@ setup() {
   # Only checking for the v2 manifest due to Pulp2/Pulp3 differences
   hammer docker manifest list --content-view-version-id=$cvv_id --fields="schema version,digest,tags" \
     --order='tag' | grep 'sha256:13280b5914050853a87d662c3229d42b61544e36dd4515f06e188835f3407468'
+}
+
+@test "ensure auto publish composite was auto published" {
+  hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
+    --content-view="${AUTO_PUBLISH_COMPOSITE_VIEW}" --fields=description > auto_publish_composite_versions
+
+  diff auto_publish_composite_versions fixtures/auto_publish_composite_versions
 }
 
 @test "fetch rpm from yum repository on old path" {
