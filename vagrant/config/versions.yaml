@@ -115,6 +115,17 @@ installers:
       - 'debian12'
       - 'ubuntu2204'
 
+  - foreman: '3.18'
+    katello: '4.20'
+    candlepin: '4.6'
+    pulpcore: '3.85'
+    puppet: 8
+    boxes:
+      - 'almalinux9'
+      - 'centos9-stream'
+      - 'debian12'
+      - 'ubuntu2204'
+
   - foreman: 'nightly'
     katello: 'nightly'
     candlepin: '4.6'
