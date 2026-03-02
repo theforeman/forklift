@@ -1,7 +1,9 @@
 ---
-- name: 'Install git'
+- name: 'Install development dependencies'
   package:
-    name: git
+    name:
+      - git
+      - libffi-devel
     state: present
 
 - name: 'Ensure /etc/foreman-installer'
