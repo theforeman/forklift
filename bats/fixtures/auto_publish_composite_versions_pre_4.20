@@ -1,0 +1,11 @@
+Auto Publish - Triggered by 'Component 1 1.1'
+"Errata:
+    RHEA-2012:0055
+
+Packages:
+    penguin-0.9.1-1.noarch
+    shark-0.1-1.noarch
+    walrus-5.21-1.noarch"
+Auto Publish - Triggered by 'Component 1 1.0'
+Auto Publish - Triggered by 'Test CV 2.0'
+Auto Publish - Triggered by 'Test CV 1.0'

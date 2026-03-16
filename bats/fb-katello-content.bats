@@ -448,7 +448,11 @@ setup() {
   hammer --csv --no-headers content-view version list --organization="${ORGANIZATION}" \
     --content-view="${AUTO_PUBLISH_COMPOSITE_VIEW}" --fields=description > auto_publish_composite_versions
 
-  diff auto_publish_composite_versions fixtures/auto_publish_composite_versions
+  if tIsVersionNewer "$(tKatelloVersion)" 4.20; then
+    diff auto_publish_composite_versions fixtures/auto_publish_composite_versions
+  else
+    diff auto_publish_composite_versions fixtures/auto_publish_composite_versions_pre_4.20
+  fi
 }
 
 @test "fetch rpm from yum repository on old path" {
