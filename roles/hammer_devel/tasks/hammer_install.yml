@@ -58,7 +58,9 @@
 - name: 'Install gem native dependencies'
   become: true
   yum:
-    name: gcc-c++
+    name:
+      - gcc-c++
+      - libffi-devel
     state: present
 
 - name: 'Install gems'
