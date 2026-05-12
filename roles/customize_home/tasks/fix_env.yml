@@ -8,4 +8,4 @@
     path: "{{ ansible_user_dir }}/foreman/.env"
     regexp: '(.*)--public [a-zA-Z0-9-\.]*(.*)'
     replace: '\1--public {{ ansible_fqdn }}\2'
-  when: stat_result
+  when: stat_result is defined and stat_result | length > 0
