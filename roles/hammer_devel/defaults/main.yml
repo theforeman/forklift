@@ -10,7 +10,6 @@ hammer_devel_github_fork_remote_name: "{{ hammer_devel_github_username }}"
 hammer_devel_repositories:
   - theforeman/hammer-cli
   - theforeman/hammer-cli-foreman
-  - theforeman/hammer-cli-foreman-admin
   - theforeman/hammer-cli-foreman-tasks
   - theforeman/hammer_cli_foreman_remote_execution
   - theforeman/hammer-cli-foreman-virt-who-configure
@@ -20,7 +19,6 @@ hammer_devel_repositories:
 hammer_devel_local_gems: |-
   gem 'hammer_cli'
     gem 'hammer_cli_katello'
-    gem 'hammer_cli_foreman_admin'
     gem 'hammer_cli_foreman_tasks'
     gem 'hammer_cli_foreman_remote_execution'
     gem 'hammer_cli_foreman_virt_who_configure'
