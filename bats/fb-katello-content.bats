@@ -253,7 +253,7 @@ setup() {
 
 @test "create activation key" {
   hammer activation-key create --organization="${ORGANIZATION}" \
-    --name="${ACTIVATION_KEY}" --content-view-environments="${LIFECYCLE_ENVIRONMENT}/${CONTENT_VIEW}" \
+    --name="${ACTIVATION_KEY}" --content-view-environments="${LIFECYCLE_ENVIRONMENT}/${CONTENT_VIEW_LABEL}" \
     --unlimited-hosts | grep -q "Activation key created"
 }
 
