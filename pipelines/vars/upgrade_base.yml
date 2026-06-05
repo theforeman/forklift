@@ -6,5 +6,5 @@ forklift_smoker_name: "pipe-up-{{ pipeline_type }}-smoker-{{ pipeline_version }}
 forklift_boxes: "{{ {forklift_server_name: server_box, forklift_smoker_name: smoker_box} }}"
 smoker_box:
   box: centos9-stream
-  memory: 2048
+  memory: 4096
 bats_test_name_prefix: "{{ pipeline_os }} {{ pipeline_action }}: "
