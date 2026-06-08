@@ -14,7 +14,6 @@
       - "--enable-foreman-cli-rh-cloud"
       - "--enable-foreman-cli-tasks"
       - "--enable-foreman-cli-templates"
-      - "--enable-foreman-cli-virt-who-configure"
       - "--enable-foreman-cli-webhooks"
       - "--enable-foreman-plugin-ansible"
       - "--enable-foreman-plugin-azure"

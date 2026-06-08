@@ -55,7 +55,6 @@ server_box:
         - "--enable-foreman-cli-templates"
         - "--enable-foreman-plugin-templates"
 
-        - "--enable-foreman-cli-virt-who-configure"
         - "--enable-foreman-plugin-virt-who-configure"
 
         - "--enable-foreman-cli-webhooks"
