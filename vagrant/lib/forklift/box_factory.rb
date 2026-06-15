@@ -102,7 +102,8 @@ module Forklift
         'foreman_client_repositories_version' => version['foreman'],
         'katello_repositories_version' => version['katello'],
         'pulpcore_repositories_version' => version['pulpcore'],
-        'foreman_puppet_repositories_version' => version['puppet']
+        'foreman_puppet_repositories_version' => version['puppet'],
+        'foreman_openvox_repositories_version' => version['puppet']
       )
 
       box['ansible'] = {

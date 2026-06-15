@@ -12,6 +12,12 @@
   when:
     - foreman_server_repositories_puppet|bool
 
+- name: load openvox_repositories
+  include_role:
+    role: theforeman.operations.openvox_repositories
+  when:
+    - foreman_server_repositories_openvox|bool
+
 - name: load foreman_repositories
   include_role:
     role: foreman_repositories
