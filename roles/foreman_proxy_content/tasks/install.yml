@@ -6,7 +6,7 @@
 
 - name: 'Get Server Hostname'
   set_fact:
-    server_fqdn: "{{ hostvars[foreman_proxy_content_server].ansible_nodename }}"
+    server_fqdn: "{{ hostvars[foreman_proxy_content_server].ansible_facts['nodename'] }}"
 
 - name: 'Get Foreman settings'
   slurp:

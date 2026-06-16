@@ -14,7 +14,7 @@
       - python-pip
     state: present
   when:
-    - ansible_os_family == "RedHat"
+    - ansible_facts['os_family'] == "RedHat"
     - realm_pexpect_from_pip
 
 - name: Ensure pexpect to answer password from pip
@@ -22,5 +22,5 @@
   pip:
     name: pexpect
   when:
-    - ansible_os_family == "RedHat"
+    - ansible_facts['os_family'] == "RedHat"
     - realm_pexpect_from_pip

@@ -8,8 +8,8 @@
   become: true
   lineinfile:
     dest: /etc/hosts
-    regexp: ".*{{ ansible_nodename }}.*localhost.*"
-    line: "{{ freeipa_server_ip }} {{ ansible_nodename }}"
+    regexp: ".*{{ ansible_facts['nodename'] }}.*localhost.*"
+    line: "{{ freeipa_server_ip }} {{ ansible_facts['nodename'] }}"
     state: present
 
 - name: 'Fix /etc/hosts freeipa installation'

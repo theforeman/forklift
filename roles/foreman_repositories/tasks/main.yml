@@ -1,2 +1,2 @@
 ---
-- include_tasks: "{{ ansible_os_family|lower }}_{{ foreman_repositories_environment }}_repos.yml"
+- include_tasks: "{{ ansible_facts['os_family']|lower }}_{{ foreman_repositories_environment }}_repos.yml"

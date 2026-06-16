@@ -101,7 +101,7 @@
         state: started
 
     - name: init cluster
-      command: kubeadm init --pod-network-cidr={{ pod_network }} --apiserver-advertise-address={{ ansible_eth0['ipv4']['address'] }}
+      command: kubeadm init --pod-network-cidr={{ pod_network }} --apiserver-advertise-address={{ ansible_facts['eth0']['ipv4']['address'] }}
       args:
         creates: /etc/kubernetes/admin.conf
 

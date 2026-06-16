@@ -14,4 +14,4 @@
         beaker_puppet_module: "puppet-candlepin"
         beaker_os: "{{ pipeline_os.replace('-stream', '') }}"
         beaker_environment:
-          BEAKER_FACTER_CANDLEPIN_BASEURL: "https://stagingyum.theforeman.org/candlepin/{{ pipeline_version }}/el{{ ansible_distribution_major_version }}/x86_64"
+          BEAKER_FACTER_CANDLEPIN_BASEURL: "https://stagingyum.theforeman.org/candlepin/{{ pipeline_version }}/el{{ ansible_facts['distribution_major_version'] }}/x86_64"

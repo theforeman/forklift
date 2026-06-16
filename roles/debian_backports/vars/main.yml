@@ -1,2 +1,2 @@
 ---
-debian_backports_distribution: "{{ ansible_distribution_release }}"
+debian_backports_distribution: "{{ ansible_facts['distribution_release'] }}"

@@ -47,7 +47,7 @@ countryName            = US
 stateOrProvinceName    = NC
 localityName           = Raleigh
 organizationName       = Foreman
-commonName             = {{ ansible_fqdn }}
+commonName             = {{ ansible_facts['fqdn'] }}
 
 [ v3_ca ]
 basicConstraints        = CA:TRUE
@@ -65,7 +65,7 @@ extendedKeyUsage     = serverAuth, clientAuth
 subjectAltName       = @alt_names
 
 [alt_names]
-DNS.1 = {{ ansible_fqdn }}
+DNS.1 = {{ ansible_facts['fqdn'] }}
 
 [ ssl_server ]
 basicConstraints        = CA:FALSE

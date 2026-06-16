@@ -1,7 +1,7 @@
 - name: Set up EPEL
   include_role:
     name: epel_repositories
-  when: ansible_distribution != 'RedHat'
+  when: ansible_facts['distribution'] != 'RedHat'
 
 - name: Set up git-annex repository
   yum_repository:
@@ -10,7 +10,7 @@
     baseurl: https://downloads.kitenet.net/git-annex/linux/current/rpms/
     gpgcheck: false
   become: true
-  when: ansible_distribution == 'RedHat'
+  when: ansible_facts['distribution'] == 'RedHat'
 
 - name: Install git-annex
   yum:

@@ -1,6 +1,6 @@
 ---
 - name: add distribution-specific variables
-  include_vars: "{{ ansible_distribution }}.yml"
+  include_vars: "{{ ansible_facts['distribution'] }}.yml"
 
 - name: add backports repository
   apt_repository:

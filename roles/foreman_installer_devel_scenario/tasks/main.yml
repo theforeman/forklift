@@ -62,5 +62,5 @@
   args:
     creates: "{{ foreman_installer_devel_scenario_modules }}/rhsm"
   when:
-    - ansible_distribution == 'RedHat'
-    - ansible_distribution_major_version == '9'
+    - ansible_facts['distribution'] == 'RedHat'
+    - ansible_facts['distribution_major_version'] == '9'

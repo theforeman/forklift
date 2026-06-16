@@ -6,12 +6,12 @@
   delegate_to: "{{ foreman_proxy_content_server }}"
 
 - name: 'Generate Certs'
-  command: foreman-proxy-certs-generate --foreman-proxy-fqdn {{ ansible_nodename }} --certs-tar {{ foreman_proxy_content_certs_tar }} {{ foreman_proxy_content_certs_args }}
+  command: foreman-proxy-certs-generate --foreman-proxy-fqdn {{ ansible_facts['nodename'] }} --certs-tar {{ foreman_proxy_content_certs_tar }} {{ foreman_proxy_content_certs_args }}
   delegate_to: "{{ foreman_proxy_content_server }}"
   when: foreman_proxy_certs_generate_exists.rc == 0
 
 - name: 'Generate Certs'
-  command: capsule-certs-generate --capsule-fqdn {{ ansible_nodename }} --certs-tar {{ foreman_proxy_content_certs_tar }}
+  command: capsule-certs-generate --capsule-fqdn {{ ansible_facts['nodename'] }} --certs-tar {{ foreman_proxy_content_certs_tar }}
   delegate_to: "{{ foreman_proxy_content_server }}"
   when: foreman_proxy_certs_generate_exists.rc != 0
 
