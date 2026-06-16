@@ -7,8 +7,8 @@
   tags:
     - packages
   when:
-    - ansible_distribution_major_version == '9'
-    - ansible_distribution == 'CentOS'
+    - ansible_facts['distribution_major_version'] == '9'
+    - ansible_facts['distribution'] == 'CentOS'
 
 - name: 'Setup Epel Repository'
   yum:
@@ -18,4 +18,4 @@
   become: true
   tags:
     - packages
-  when: ansible_os_family == 'RedHat'
+  when: ansible_facts['os_family'] == 'RedHat'

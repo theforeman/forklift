@@ -3,4 +3,4 @@
     name: libnss-myhostname
     state: present
   # On EL7 it's always installed
-  when: ansible_os_family == "Debian" and ansible_distribution_release != 'xenial'
+  when: ansible_facts['os_family'] == "Debian" and ansible_facts['distribution_release'] != 'xenial'

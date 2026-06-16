@@ -7,7 +7,7 @@
 
 - name: 'Install Foreman {{ foreman_repositories_version }} repository'
   apt_repository:
-    repo: "deb http://stagingdeb.theforeman.org {{ ansible_distribution_release }} theforeman-{{ foreman_repositories_version }}"
+    repo: "deb http://stagingdeb.theforeman.org {{ ansible_facts['distribution_release'] }} theforeman-{{ foreman_repositories_version }}"
     state: present
 
 - name: 'Setup Foreman {{ foreman_repositories_version }} plugins repository'

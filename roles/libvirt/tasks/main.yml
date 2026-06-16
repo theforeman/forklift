@@ -1,6 +1,6 @@
 ---
 - name: 'Set OS version dependent variables'
-  include_vars: "el{{ ansible_distribution_major_version }}.yml"
+  include_vars: "el{{ ansible_facts['distribution_major_version'] }}.yml"
 
 - name: 'install the virtualization hypervisor package group'
   yum:

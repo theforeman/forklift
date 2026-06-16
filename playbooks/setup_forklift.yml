@@ -11,7 +11,7 @@
 - hosts: all
   vars:
     forklift_url: "https://github.com/theforeman/forklift"
-    forklift_dest: "{{ ansible_env.HOME }}/forklift"
+    forklift_dest: "{{ ansible_facts['env'].HOME }}/forklift"
     forklift_version: master
     forklift_install_from_galaxy: True
     forklift_install_pulp_from_galaxy: False
@@ -45,7 +45,7 @@
         state: 'present'
       when:
         - forklift_telemetry|default(false)
-        - ansible_distribution_major_version != '7'
+        - ansible_facts['distribution_major_version'] != '7'
 
     - name: 'install telemetry dependencies'
       become: true
@@ -58,7 +58,7 @@
         executable: pip3.11
       when:
         - forklift_telemetry|default(false)
-        - ansible_distribution_major_version != '7'
+        - ansible_facts['distribution_major_version'] != '7'
 
     - name: 'Clone Forklift'
       git:

@@ -8,7 +8,7 @@
   yum_repository:
     name: katello-staging
     description: "Katello {{ katello_repositories_version }} Staging Repository"
-    baseurl: "https://stagingyum.theforeman.org/katello/{{ katello_repositories_version }}/el{{ ansible_distribution_major_version }}/x86_64/"
+    baseurl: "https://stagingyum.theforeman.org/katello/{{ katello_repositories_version }}/el{{ ansible_facts['distribution_major_version'] }}/x86_64/"
     gpgcheck: no
   tags:
     - packages
@@ -21,7 +21,7 @@
   args:
     creates: /etc/dnf/modules.d/katello.module
   when:
-    - ansible_distribution_major_version == '8'
+    - ansible_facts['distribution_major_version'] == '8'
 
 - name: 'Add Pulpcore repository'
   include_role:

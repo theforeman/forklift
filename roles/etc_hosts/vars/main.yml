@@ -1,2 +1,2 @@
 ---
-etc_hosts_domain: "{{ ansible_domain }}"
+etc_hosts_domain: "{{ ansible_facts['domain'] }}"

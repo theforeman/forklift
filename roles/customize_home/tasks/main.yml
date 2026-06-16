@@ -8,12 +8,12 @@
 - name: Copy files to home directory
   copy:
     src: "{{ playbook_dir | dirname }}/user_devel_env_files/"
-    dest: "{{ ansible_env.HOME }}"
+    dest: "{{ ansible_facts['env'].HOME }}"
   when: custom_home.stat.isdir is defined and custom_home.stat.isdir
 
 - name: Remove .gitkeep file copied over from custom directory
   file:
-    path: "{{ ansible_env.HOME }}/.gitkeep/"
+    path: "{{ ansible_facts['env'].HOME }}/.gitkeep/"
     state: absent
 
 - include_tasks: clone_specified_repo.yml
@@ -23,7 +23,7 @@
 
 - name: Check custom bootstrap script exists
   stat:
-    path: "{{ ansible_env.HOME }}/{{ customize_home_bootstrap_script }}"
+    path: "{{ ansible_facts['env'].HOME }}/{{ customize_home_bootstrap_script }}"
   register: bootstrap_script_path
 
 - include_tasks: boostrap_script.yml

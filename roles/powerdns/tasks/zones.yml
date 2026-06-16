@@ -7,6 +7,6 @@
   with_items: "{{ powerdns_zones }}"
 
 - name: "Create zones"
-  command: "pdnsutil create-zone {{ item.item }} {{ ansible_hostname }}"
+  command: "pdnsutil create-zone {{ item.item }} {{ ansible_facts['hostname'] }}"
   when: item.rc != 0
   with_items: "{{ powerdns_zones_result.results }}"

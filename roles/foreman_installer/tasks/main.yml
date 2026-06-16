@@ -2,7 +2,7 @@
 - include_tasks: packages.yml
 
 - include_tasks: locales.yml
-  when: ansible_os_family == 'Debian'
+  when: ansible_facts['os_family'] == 'Debian'
 
 - include_tasks: module_prs.yml
   when: (foreman_installer_module_prs|length > 0) or (foreman_installer_module_branches|length > 0)

@@ -6,7 +6,7 @@ Before=httpd.service
 [Service]
 Environment=LAUNCH_JBOSS_IN_BACKGROUND=1
 Environment=WILDFLY_BIND=::
-User={{ ansible_env.USER }}
+User={{ ansible_facts['env'].USER }}
 LimitNOFILE=102642
 PIDFile=/run/keycloak/keycloak.pid
 ExecStart={{ keycloak_directory }}/bin/standalone.sh -b $WILDFLY_BIND
