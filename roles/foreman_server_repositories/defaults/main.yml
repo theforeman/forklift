@@ -1,7 +1,8 @@
 ---
 foreman_server_repositories_epel: true
 foreman_server_repositories_ansible: true
-foreman_server_repositories_puppet: true
+foreman_server_repositories_puppet: false
+foreman_server_repositories_openvox: true
 foreman_server_repositories_foreman: true
 foreman_server_repositories_katello: false
 foreman_server_repositories_foreman_client: false

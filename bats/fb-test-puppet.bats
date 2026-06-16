@@ -41,10 +41,10 @@ fi
 
 @test "assert puppet version" {
   if tIsRedHatCompatible ; then
-    run grep -q -E 'puppet(labs)?\.com' /etc/yum.repos.d/*.repo
+    run grep -q -E '(puppet(labs)?\.com|voxpupuli\.org)' /etc/yum.repos.d/*.repo
     IS_NATIVE=$status
   elif tIsDebianCompatible ; then
-    run grep -q -E 'puppet(labs)?\.com' -R /etc/apt/sources.list*
+    run grep -q -E '(puppet(labs)?\.com|voxpupuli\.org)' -R /etc/apt/sources.list*
     IS_NATIVE=$status
   else
     IS_NATIVE=1
@@ -52,15 +52,20 @@ fi
 
   if tPackageExists puppet-agent ; then
     PACKAGE=puppet-agent
+    UPSTREAM_VENDOR="Puppet Labs"
+  elif tPackageExists openvox-agent ; then
+    PACKAGE=openvox-agent
+    UPSTREAM_VENDOR="Vox Pupuli"
   else
     PACKAGE=puppet
+    UPSTREAM_VENDOR="Puppet Labs"
   fi
 
   tPackageExists $PACKAGE
   if [[ $IS_NATIVE == 1 ]] ; then
-    tPackageVendor $PACKAGE | grep -v "Puppet Labs"
+    tPackageVendor $PACKAGE | grep -v "${UPSTREAM_VENDOR}"
   else
-    tPackageVendor $PACKAGE | grep "Puppet Labs"
+    tPackageVendor $PACKAGE | grep "${UPSTREAM_VENDOR}"
   fi
 }
 

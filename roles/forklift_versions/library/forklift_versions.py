@@ -84,6 +84,7 @@ def main():
                         'foreman_client_repositories_version': version['foreman'],
                         'katello_repositories_version': version['katello'],
                         'foreman_puppet_repositories_version': version['puppet'],
+                        'foreman_openvox_repositories_version': version['puppet'],
                         'pulpcore_repositories_version': version['pulpcore'],
                         }
                 if 'candlepin' in version:

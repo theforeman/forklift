@@ -6,6 +6,7 @@ dependencies:
     foreman_server_repositories_katello: true
     foreman_server_repositories_foreman_client: true
     foreman_puppet_repositories_version: 8
+    foreman_openvox_repositories_version: 8
   - role: foreman_installer_devel_scenario
     become: true
   - role: foreman_installer
