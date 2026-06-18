@@ -57,6 +57,7 @@
     name: puppet-strings
     executable: /opt/puppetlabs/puppet/bin/gem
     user_install: false
+    force: true
 
 - name: 'Install puppet/rhsm puppet module'
   command: "/opt/puppetlabs/bin/puppet module install puppet-rhsm --target-dir {{ foreman_installer_devel_scenario_modules }}"
