@@ -4,8 +4,3 @@ centos9-infra-kubevirt:
   ansible:
     playbook: 'playbooks/kubevirt.yml'
     group: 'devel'
-  networks:
-    - type: 'private_network'
-      options:
-        ip: 192.168.150.3
-        libvirt__network_name: foremankubevirt
