@@ -15,3 +15,5 @@
         beaker_os: "{{ pipeline_os.replace('-stream', '') }}"
         beaker_environment:
           BEAKER_FACTER_CANDLEPIN_BASEURL: "https://stagingyum.theforeman.org/candlepin/{{ pipeline_version }}/el{{ ansible_facts['distribution_major_version'] }}/x86_64"
+          BEAKER_FACTER_CANDLEPIN_JAVA_PACKAGE: "{{ 'java-25-openjdk-headless' if pipeline_version is version('4.8', '>=') else 'java-17-openjdk-headless' }}"
+          BEAKER_FACTER_CANDLEPIN_JAVA_HOME: "{{ '/usr/lib/jvm/jre-25' if pipeline_version is version('4.8', '>=') else '/usr/lib/jvm/jre-17' }}"
