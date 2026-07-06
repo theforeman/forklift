@@ -47,14 +47,14 @@
     update: yes
     version: "{{ katello_devel_branch }}"
 
-- name: 'Install puppet-agent'
+- name: 'Install openvox-agent'
   package:
-    name: puppet-agent
+    name: openvox-agent
     state: present
 
 - name: "Install gems to rebuild the kafo module cache"
   gem:
-    name: puppet-strings
+    name: openvox-strings
     executable: /opt/puppetlabs/puppet/bin/gem
     user_install: false
 

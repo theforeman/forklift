@@ -9,7 +9,7 @@
     name: "{{ item }}"
     executable: /opt/puppetlabs/puppet/bin/gem
   with_items:
-    - puppet-strings
+    - openvox-strings
   when: puppetlabs_gem.stat.exists
   tags:
     - packages
