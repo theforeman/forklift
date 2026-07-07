@@ -13,3 +13,24 @@
   shell: rm -f /boot/*-generic.img
   when:
     - ansible_facts['os_family'] == 'Debian'
+
+# workaround for https://issues.redhat.com/browse/RHEL-192424
+- name: don't install broken openssl on EL9
+  community.general.ini_file:
+    path: /etc/dnf/dnf.conf
+    section: main
+    option: excludepkgs
+    value: 'openssl-3.5.7-1.*,openssl-libs-3.5.7-1.*,openssl-fips-provider-3.5.7-1.*'
+  when:
+    - ansible_facts['os_family'] == 'RedHat'
+    - ansible_facts['distribution_major_version'] == '9'
+
+- name: force downgrade to openssl-3.5.5-3.el9
+  ansible.builtin.package:
+    name:
+      - openssl-3.5.5-3.el9
+      - openssl-libs-3.5.5-3.el9
+    state: present
+  when:
+    - ansible_facts['os_family'] == 'RedHat'
+    - ansible_facts['distribution_major_version'] == '9'
