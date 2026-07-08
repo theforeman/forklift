@@ -23,7 +23,7 @@
   when:
     - ansible_facts['os_family'] == 'RedHat'
     - ansible_facts['distribution_major_version'] == '9'
-    - ansible_facts['ansible_distribution_release'] == 'Stream'
+    - ansible_facts['distribution'] == 'CentOS'
 
 - name: don't install broken openssl on EL9
   community.general.ini_file:
@@ -34,4 +34,4 @@
   when:
     - ansible_facts['os_family'] == 'RedHat'
     - ansible_facts['distribution_major_version'] == '9'
-    - ansible_facts['ansible_distribution_release'] == 'Stream'
+    - ansible_facts['distribution'] == 'CentOS'
