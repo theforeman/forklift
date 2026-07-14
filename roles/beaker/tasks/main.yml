@@ -42,6 +42,7 @@
       - redhat-rpm-config
       - libffi-devel
       - libyaml-devel
+      - openssl-devel
 
 - name: Clone puppet module
   ansible.builtin.git:
