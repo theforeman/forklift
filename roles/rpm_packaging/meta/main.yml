@@ -1,4 +1,4 @@
 ---
 dependencies:
-  - role: git-annex
+  - role: git_annex
   - role: epel_repositories
