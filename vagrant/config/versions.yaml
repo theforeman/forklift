@@ -143,7 +143,9 @@ installers:
     pulpcore: 'nightly'
     puppet: 8
     boxes:
+      - 'almalinux10'
       - 'almalinux9'
+      - 'centos10-stream'
       - 'centos9-stream'
       - 'debian12'
       - 'ubuntu2204'
