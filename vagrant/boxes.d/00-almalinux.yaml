@@ -13,3 +13,10 @@ boxes:
     scenarios:
       - foreman
       - katello
+  almalinux10:
+    box_name: 'almalinux/10'
+    disk_size: 40
+    pty: true
+    scenarios:
+      - foreman
+      - katello
