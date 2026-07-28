@@ -14,3 +14,8 @@ boxes:
     pty:        true
     scenarios:
       - foreman
+  debian13:
+    box_name:   'debian/trixie64'
+    pty:        true
+    scenarios:
+      - foreman
