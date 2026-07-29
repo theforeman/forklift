@@ -50,3 +50,13 @@ boxes:
       sed -i 's/^\(DNS=\)/#\1/' /etc/systemd/resolved.conf
       sed -i 's/^DNSSEC=.*/DNSSEC=no/' /etc/systemd/resolved.conf
       systemctl restart systemd-resolved
+  ubuntu2404:
+    box_name: 'bento/ubuntu-24.04'
+    pty: true
+    scenarios:
+      - foreman
+  ubuntu2604:
+    box_name: 'bento/ubuntu-26.04'
+    pty: true
+    scenarios:
+      - foreman
