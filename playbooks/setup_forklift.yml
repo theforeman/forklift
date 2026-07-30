@@ -32,7 +32,7 @@
       become: true
       package:
         name:
-          - ansible
+          - ansible-core
           - git-core
           - rubygem-deep_merge
         state: 'present'
