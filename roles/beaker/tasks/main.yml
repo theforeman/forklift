@@ -4,6 +4,22 @@
     name: podman-docker
     state: installed
 
+- name: Create containers.conf.d directory
+  file:
+    path: /etc/containers/containers.conf.d
+    state: directory
+    mode: "0755"
+  when: ansible_facts['distribution_major_version'] == "10"
+
+- name: Align podman's default network name with its reported NetworkMode
+  copy:
+    dest: /etc/containers/containers.conf.d/99-default-network.conf
+    content: |
+      [network]
+      default_network = "bridge"
+    mode: "0644"
+  when: ansible_facts['distribution_major_version'] == "10"
+
 - name: Start podman
   service:
     name: podman
@@ -28,7 +44,7 @@
 
 - name: enable CRB
   command: dnf config-manager --set-enabled crb
-  when: ansible_facts['distribution_major_version'] == "9"
+  when: ansible_facts['distribution_major_version'] in ["9", "10"]
 
 - name: Install Ruby
   package:
