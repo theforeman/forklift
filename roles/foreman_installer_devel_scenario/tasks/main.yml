@@ -4,6 +4,7 @@
     name:
       - git
       - libffi-devel
+      - libcap-devel
     state: present
 
 - name: 'Ensure /etc/foreman-installer'
