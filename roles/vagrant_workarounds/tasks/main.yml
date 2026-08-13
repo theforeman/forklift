@@ -13,3 +13,27 @@
   shell: rm -f /boot/*-generic.img
   when:
     - ansible_facts['os_family'] == 'Debian'
+
+# workaround for https://redhat.atlassian.net/browse/RHEL-236545
+- name: force downgrade to selinux-policy-38.1.83-1.el9
+  ansible.builtin.dnf:
+    name:
+      - selinux-policy-38.1.83-1.el9
+      - selinux-policy-targeted-38.1.83-1.el9
+    state: present
+    allow_downgrade: true
+  when:
+    - ansible_facts['os_family'] == 'RedHat'
+    - ansible_facts['distribution_major_version'] == '9'
+    - ansible_facts['distribution'] == 'CentOS'
+
+- name: don't install broken selinux-policy on EL9
+  community.general.ini_file:
+    path: /etc/dnf/dnf.conf
+    section: main
+    option: excludepkgs
+    value: 'selinux-policy-38.1.84-1.*,selinux-policy-targeted-38.1.84-1.*'
+  when:
+    - ansible_facts['os_family'] == 'RedHat'
+    - ansible_facts['distribution_major_version'] == '9'
+    - ansible_facts['distribution'] == 'CentOS'
