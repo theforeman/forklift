@@ -1,0 +1,4 @@
+---
+ownca_deploy: true
+ownca_bin_path: /usr/local/bin/ownca
+ownca_ca_path: /opt/ownca/

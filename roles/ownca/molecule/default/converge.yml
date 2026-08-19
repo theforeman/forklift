@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  vars:
+    ownca_cert_name: host.example.com
+  roles:
+    - ownca

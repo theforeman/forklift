@@ -1,0 +1,22 @@
+---
+- name: Deploy OwnCA
+  include_tasks: deploy.yml
+  when: ownca_deploy
+
+- name: Create CA directory
+  file:
+    path: "{{ ownca_ca_path }}"
+    state: directory
+
+- name: Generate CA
+  command:
+    cmd: "{{ ownca_bin_path }} ca"
+    creates: "{{ ownca_ca_path }}/private/cakey.crt"
+    chdir: "{{ ownca_ca_path }}"
+
+- name: Generate certificate
+  command:
+    cmd: "{{ ownca_bin_path }} cert {{ ownca_cert_name }}"
+    creates: "{{ ownca_ca_path }}/{{ ownca_cert_name }}/{{ ownca_cert_name }}.crt"
+    chdir: "{{ ownca_ca_path }}"
+  when: ownca_cert_name is defined

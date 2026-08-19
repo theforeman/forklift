@@ -1,0 +1,16 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: ${DRIVER_NAME:-podman}
+platforms:
+  - name: centos8
+    image: centos:stream8
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
+lint: |
+  set -e
+  yamllint -c ../../.yamllint .
+  ansible-lint .

@@ -1,0 +1,11 @@
+---
+- name: Install OpenSSL
+  package:
+    name: openssl
+    state: present
+
+- name: Deploy OwnCA
+  get_url:
+    url: https://raw.githubusercontent.com/ekohl/ownca/master/ownca
+    dest: "{{ ownca_bin_path }}"
+    mode: '0755'
