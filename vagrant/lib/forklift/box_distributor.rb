@@ -88,6 +88,7 @@ module Forklift
                                 "#{box.fetch('name').to_s.tr('.', '-')}.#{domain}"
                               end
 
+        ENV['LC_ALL'] = 'C.UTF-8'
         resize_disk(machine) if box.fetch('disk_size', false)
 
         networks = configure_networks(box.fetch('networks', []))
