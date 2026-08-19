@@ -1,15 +1,18 @@
+require:
+  - rubocop-minitest
+  - rubocop-rake
+
 AllCops:
   Include:
     - '**/Rakefile'
     - 'lib/**/*.rb'
     - 'test/**/*.rb'
   Exclude:
-    - !ruby/regexp /katello-installer/
-    - !ruby/regexp /.spec/
     - 'vendor/**/*'
-  TargetRubyVersion: 2.0
+  TargetRubyVersion: '2.7'
+  NewCops: enable
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Metrics/ClassLength:
@@ -18,14 +21,14 @@ Metrics/ClassLength:
 Metrics/BlockLength:
   Max: 50
 
-Documentation:
+Style/Documentation:
   Enabled: false # don't require documentation
 
-MethodLength:
+Metrics/MethodLength:
   Description: 'Avoid methods longer than 30 lines of code.'
   Max: 30
 
-HashSyntax:
+Style/HashSyntax:
   Enabled: false # don't force 1.9 hash syntax
 
 Layout/EmptyLinesAroundClassBody:
