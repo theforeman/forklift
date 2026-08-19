@@ -12,6 +12,7 @@ Forklift provides tools to create Foreman/Katello environments for development, 
    - [Additional Documentation](#additional-documentation)
    - [Development Environment](#development-environment)
    - [Using Playbooks and Roles Without Vagrant](#using-playbooks-and-roles-without-vagrant)
+     - [Python Venv for MacOS or Non Ansible Linux](#python-venv-for-macos-or-non-ansible-linux)
    - [Credentials](#credentials)
    - [Poor man's DNS a.k.a /etc/hosts](#poor-mans-dns-aka-etchosts)
    - [Adding Custom Boxes](#adding-custom-boxes)
@@ -131,7 +132,32 @@ In case using Vagrant is not desired, ansible playbooks and roles from this repo
 on test.example.com machine, where the dev env should be deployed
 ```sh
 useradd vagrant
+echo vagrant:redhat | chpasswd
 echo "vagrant	ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers.d/vagrant
+```
+
+#### Python Venv for MacOS or Non Ansible Linux
+
+Here we can see the initial configuration, when creating the python virtual environment and preparing the setup (MACOS Users or Regular Linux with no ansible)
+```sh
+/usr/local/bin/python3 -m venv ~/.venv/forklift
+source ~/.venv/forklift/bin/activate
+pip install --upgrade pip
+pip install ansible
+```
+Note. Above, you can see `python3`, this is the standard for any x86 server running Linux. If you are using MacOS M1 or M2 with arm processors, then you should use `/usr/local/bin/python3-intel64` instead, just for the sake of compatibility with x86.
+
+
+Then you can clone forklift and move on
+```sh
+git clone https://github.com/theforeman/forklift.git
+cd forklift
+ansible-galaxy collection install -r requirements.yml
+```
+
+Now, you can share the ssh key with the server
+```sh
+ssh-copy-id vagrant@test.example.com
 ```
 
 in forklift checkout
@@ -141,6 +167,12 @@ ansible-playbook --private-key=~/.ssh/id_rsa --user root --inventory inventories
 ```
 
 In an example above, ansible was instructed to use specific private key (overriding the value from ansible.cfg), root user was set as ssh user and playbook variable was set, so that checkout will be made from katello user.
+
+```sh
+echo -e "[foreman]\foreman.example.com" >> inventories/local_inventory
+ansible-playbook --inventory inventories/local_inventory -l foreman playbooks/foreman.yml
+```
+Above you can see another example, at this moment, we have two groups in the `inventories/local_inventory` file. Using the flag `-l`, we can set the group that we would like to call, here we can see `foreman`, which means, only the server set on this group will be affected, if you omit it, all hosts will be the standard. Also, the user vagrant will be used once it's defined as default remote user on `ansible.cfg` file.
 
 Other playbooks from playbooks/ directory can be used similarly, though some might need more variables and investigating their parameters is recommended first.
 
