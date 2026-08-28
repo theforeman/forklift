@@ -1,0 +1,32 @@
+---
+- name: "Install client packages on Red Hat based distributions"
+  ansible.builtin.dnf:
+    name:
+      - "krb5-workstation"
+      - "krb5-libs"
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: "Install client packages on Debian based distributions"
+  ansible.builtin.apt:
+    name: "krb5-user"
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: "Copy Kerberos client configuration from Host"
+  ansible.builtin.copy:
+    src: "{{ inherit_kerberos_config }}"
+    dest: /etc/krb5.conf
+    owner: root
+    group: root
+    mode: '0644'
+  when: inherit_kerberos_config is defined
+
+- name: "Copy Kerberos credential cache from Host"
+  ansible.builtin.copy:
+    src: "{{ inherit_kerberos_ccache }}"
+    dest: "{{ inherit_kerberos_ccache }}"
+    owner: "{{ inherit_kerberos_local_user_name }}"
+    group: "{{ inherit_kerberos_local_user_groupname | default(inherit_kerberos_local_user_name) }}"
+    mode: '0600'
+  when: inherit_kerberos_ccache is defined
