@@ -1,13 +1,20 @@
 ---
-- when: not ansible_fips
+- when: not ansible_facts['fips']
   block:
     - name: Install FIPS package
       package:
         name: crypto-policies-scripts
         state: present
 
-    - name: enable fips mode
+    - name: enable fips mode using fips-mode-setup
       command: /usr/bin/fips-mode-setup --enable
+      when:
+        - ansible_facts['distribution_major_version'] | int < 10
+
+    - name: enable fips mode using grubby (unsupported)
+      shell: grubby --update-kernel=$(grubby --default-kernel) --args=fips=1
+      when:
+        - ansible_facts['distribution_major_version'] | int >= 10
 
     - name: reboot vm
       reboot:
