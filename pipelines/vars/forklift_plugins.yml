@@ -27,8 +27,8 @@ server_box:
         - "--enable-foreman-plugin-discovery"
         - "--enable-foreman-proxy-plugin-discovery"
 
-        - "--enable-foreman-cli-google"
-        - "--enable-foreman-plugin-google"
+        - "{{ '--enable-foreman-cli-google' if pipeline_os != 'debian13' else '' }}"
+        - "{{ '--enable-foreman-plugin-google' if pipeline_os != 'debian13' else '' }}"
 
         - "--enable-foreman-plugin-hdm"
         - "--enable-foreman-proxy-plugin-hdm"
