@@ -148,6 +148,7 @@ installers:
       - 'centos10-stream'
       - 'centos9-stream'
       - 'debian12'
+      - 'debian13'
       - 'ubuntu2204'
       - 'ubuntu2404'
 
