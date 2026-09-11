@@ -1,6 +1,6 @@
 ---
 - name: 'create the provisioning libvirt network'
-  virt_net:
+  community.libvirt.virt_net:
     command: define
     name: provision
     xml: '{{ lookup("template", "../templates/network.xml.j2") }}'
@@ -14,7 +14,7 @@
     path: /etc/libvirt/qemu/networks/autostart/provision.xml
 
 - name: 'create the provisioning storage'
-  virt_pool:
+  community.libvirt.virt_pool:
     command: define
     name: provision
     xml: '{{ lookup("template", "../templates/storage.xml.j2") }}'
@@ -58,13 +58,13 @@
   shell: set -o pipefail && find /var/lib/tftpboot/ -type d | xargs chmod g+s
 
 - name: 'start the provision libvirt network'
-  virt_net:
+  community.libvirt.virt_net:
     state: active
     name: provision
     autostart: yes
 
 - name: 'start the provision libvirt storage pool'
-  virt_pool:
+  community.libvirt.virt_pool:
     state: active
     name: provision
     autostart: yes
