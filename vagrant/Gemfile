@@ -1,9 +1,4 @@
-# rubocop:disable Naming/FileName
 source 'https://rubygems.org'
-
-if RUBY_VERSION < '2.1'
-  gem 'psych', '~> 2.0'
-end
 
 group :test do
   gem 'deep_merge'
@@ -11,11 +6,11 @@ group :test do
   gem 'minitest'
   gem 'mocha'
   gem 'rake'
-  if RUBY_VERSION < '3.1'
-    # we need a rubocop that still can manage Ruby 2.0 code
-    # but 0.49.x is not compatible with Ruby 3.1
-    gem 'rubocop', '<0.50'
-  end
-end
 
-# rubocop:enable Naming/FileName
+  # Make sure the Ruby version is supported
+  # https://docs.rubocop.org/rubocop/compatibility.html#support-matrix
+  gem 'rubocop', '~> 1.56.0'
+  gem 'rubocop-minitest'
+  gem 'rubocop-performance'
+  gem 'rubocop-rake'
+end

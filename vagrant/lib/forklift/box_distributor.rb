@@ -5,7 +5,7 @@ require_relative 'settings'
 module Forklift
   class BoxDistributor
 
-    VAGRANTFILE_API_VERSION = '2'.freeze
+    VAGRANTFILE_API_VERSION = '2'
 
     def initialize(boxes)
       @ansible_groups = {}
@@ -177,12 +177,12 @@ module Forklift
     def configure_ansible(machine, ansible, box_name)
       return unless ansible
 
-      if ansible.key?('group') && !ansible['group'].nil?
+      unless ansible['group'].nil?
         @ansible_groups[ansible['group'].to_s] ||= []
         @ansible_groups[ansible['group'].to_s] << box_name
       end
 
-      if ansible.key?('server') && !ansible['server'].nil?
+      unless ansible['server'].nil?
         @ansible_groups["server-#{box_name}"] = ansible['server']
       end
 
