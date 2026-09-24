@@ -1,0 +1,43 @@
+- hosts: localhost
+  vars_files:
+    - vars/external_database.yml
+  roles:
+    - forklift
+
+- hosts: "{{ forklift_database_name }}"
+  become: yes
+  vars_files:
+    - vars/external_database.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
+      scenario_version: "{{ pipeline_version }}"
+    - role: postgresql
+
+- hosts: "{{ forklift_server_name }}"
+  become: yes
+  vars_files:
+    - vars/external_database.yml
+  roles:
+    - role: forklift_versions
+      scenario: "{{ pipeline_type }}"
+      scenario_os: "{{ pipeline_os }}"
+      scenario_version: "{{ pipeline_version }}"
+    - role: foreman_server_repositories
+    - role: etc_hosts
+    - role: update_os_packages
+    - role: foreman_installer
+      foreman_installer_options_internal_use_only:
+        - "--foreman-db-manage false"
+        - "--foreman-db-host {{ forklift_database_name }}"
+        - "--foreman-db-database foreman"
+        - "--foreman-db-password foreman"
+        - "--katello-candlepin-manage-db false"
+        - "--katello-candlepin-db-host {{ forklift_database_name }}"
+        - "--katello-candlepin-db-name candlepin"
+        - "--katello-candlepin-db-password candlepin"
+        - "--foreman-proxy-content-pulpcore-manage-postgresql false"
+        - "--foreman-proxy-content-pulpcore-postgresql-host {{ forklift_database_name }}"
+        - "--foreman-proxy-content-pulpcore-postgresql-db-name pulp"
+        - "--foreman-proxy-content-pulpcore-postgresql-password pulp"
