@@ -1,0 +1,5 @@
+---
+- name: Restart fapolicyd
+  service:
+    name: fapolicyd
+    state: restarted

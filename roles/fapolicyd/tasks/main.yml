@@ -4,6 +4,13 @@
     name: fapolicyd
     state: installed
 
+- name: Configure fapolicyd subject cache
+  lineinfile:
+    path: /etc/fapolicyd/fapolicyd.conf
+    regexp: '^subj_cache_size\s*='
+    line: 'subj_cache_size = {{ fapolicyd_subj_cache_size }}'
+  notify: Restart fapolicyd
+
 - name: Start fapolicyd
   service:
     name: fapolicyd
