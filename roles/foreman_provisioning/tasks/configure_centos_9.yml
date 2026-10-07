@@ -12,7 +12,7 @@
     architectures:
       - x86_64
     media:
-      - CentOS Stream 9 mirror
+      - "{{ foreman_provisioning_centos_medium_name }}"
     provisioning_templates: "{{ result.resources | map(attribute='name') }}"
     ptables:
       - Kickstart default
