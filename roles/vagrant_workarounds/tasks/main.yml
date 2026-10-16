@@ -37,3 +37,25 @@
     - ansible_facts['os_family'] == 'RedHat'
     - ansible_facts['distribution_major_version'] == '9'
     - ansible_facts['distribution'] == 'CentOS'
+
+# workaround for mirrors.edge.kernel.org being unroutable from some CI networks,
+# it is the default mirror in /etc/apt/sources.list of the generic/ubuntu* boxes
+- name: find apt sources using mirrors.edge.kernel.org
+  ansible.builtin.find:
+    paths:
+      - /etc/apt
+      - /etc/apt/sources.list.d
+    patterns: 'sources.list,*.list,*.sources'
+    contains: 'mirrors\.edge\.kernel\.org'
+  register: kernel_mirror_apt_sources
+  when:
+    - ansible_facts['distribution'] == 'Ubuntu'
+
+- name: point apt at archive.ubuntu.com
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: 'https?://mirrors\.edge\.kernel\.org/ubuntu'
+    replace: 'http://archive.ubuntu.com/ubuntu'
+  loop: "{{ kernel_mirror_apt_sources.files | default([]) }}"
+  loop_control:
+    label: "{{ item.path }}"
