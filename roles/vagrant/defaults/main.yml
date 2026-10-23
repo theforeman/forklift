@@ -1,3 +1,4 @@
 ---
 vagrant_libvirt: true
+vagrant_qemu: true
 vagrant_scp: false
