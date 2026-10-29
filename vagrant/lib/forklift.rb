@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift File.dirname(__FILE__)
+$LOAD_PATH.unshift __dir__
 
-files = Dir[File.dirname(__FILE__) + '/forklift/**/*.rb']
+files = Dir["#{__dir__}/forklift/**/*.rb"]
 files.uniq.each { |f| require f }
 
 module Forklift
