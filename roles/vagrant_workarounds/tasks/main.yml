@@ -46,7 +46,7 @@
       - /etc/apt
       - /etc/apt/sources.list.d
     patterns: 'sources.list,*.list,*.sources'
-    contains: 'mirrors\.edge\.kernel\.org'
+    contains: '.*mirrors\.edge\.kernel\.org'
   register: kernel_mirror_apt_sources
   when:
     - ansible_facts['distribution'] == 'Ubuntu'
