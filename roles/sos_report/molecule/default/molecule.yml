@@ -1,0 +1,12 @@
+---
+driver:
+  name: default
+  options:
+    managed: false
+    ansible_connection_options:
+      ansible_connection: local
+platforms:
+  - name: instance
+provisioner:
+  env:
+    ANSIBLE_CONFIG: ../../../../ansible.cfg

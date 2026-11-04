@@ -1,0 +1,12 @@
+---
+- name: Verify Debian package selection
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Load Debian variables
+      ansible.builtin.include_vars: "{{ playbook_dir }}/../../vars/Debian.yml"
+
+    - name: Verify the package that provides sos on Debian 13
+      ansible.builtin.assert:
+        that:
+          - sos_package == 'sos'
