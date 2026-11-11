@@ -103,20 +103,20 @@
 # Puppet
 - name: 'find environment'
   shell: >
-    {{ foreman_provisioning_hammer }} environment info --name "production"
+    {{ foreman_provisioning_hammer }} puppet-environment info --name "production"
   register: foreman_provisioning_environment
   ignore_errors: True
 
 - name: 'create environment'
   shell: >
-    {{ foreman_provisioning_hammer }} environment create
+    {{ foreman_provisioning_hammer }} puppet-environment create
     --name production
     {{ foreman_provisioning_hammer_taxonomy_params }}
   when: foreman_provisioning_environment.stderr.find('not found') != -1
 
 - name: 'update environment'  # it may have been automatically created by puppet if katello reports first
   shell: >
-    {{ foreman_provisioning_hammer }} environment update
+    {{ foreman_provisioning_hammer }} puppet-environment update
     --name production
     {{ foreman_provisioning_hammer_taxonomy_params }}
 
