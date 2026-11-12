@@ -9,16 +9,28 @@
     - name: Install cloud-utils-growpart package
       package:
         name: cloud-utils-growpart
+      register: cloud_utils_install
+      retries: 5
+      delay: 30
+      until: cloud_utils_install is succeeded
       when: ansible_facts['os_family'] == 'RedHat'
 
     - name: Install cloud-guest-utils package
       package:
         name: cloud-guest-utils
+      register: cloud_guest_utils_install
+      retries: 5
+      delay: 30
+      until: cloud_guest_utils_install is succeeded
       when: ansible_facts['os_family'] == 'Debian'
 
     - name: Install e2fsprogs package
       package:
         name: e2fsprogs
+      register: e2fsprogs_install
+      retries: 5
+      delay: 30
+      until: e2fsprogs_install is succeeded
       when: '"ext4" in root_partition.stdout'
 
     - name: Extend partition
