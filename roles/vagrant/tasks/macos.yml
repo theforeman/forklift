@@ -1,0 +1,53 @@
+---
+- name: 'install vagrant cask'
+  community.general.homebrew_cask:
+    name: vagrant
+    state: present
+  when: vagrant_qemu
+
+- name: 'install qemu'
+  community.general.homebrew:
+    name: qemu
+    state: present
+  when: vagrant_qemu
+
+- name: 'check for vagrant-qemu plugin'
+  ansible.builtin.command:
+    cmd: vagrant plugin list
+  register: vagrant_plugin_list
+  changed_when: false
+  when: vagrant_qemu
+
+- name: 'install vagrant-qemu plugin'
+  ansible.builtin.command:
+    cmd: vagrant plugin install vagrant-qemu
+  when:
+    - vagrant_qemu
+    - "'vagrant-qemu' not in vagrant_plugin_list.stdout"
+
+# forklift's own Vagrantfile uses vagrant-hostmanager to resolve VM hostnames
+# on the host (see vagrant/lib/forklift/box_distributor.rb); foremanctl's
+# Vagrantfile follows the same pattern for its qemu/macOS path.
+- name: 'install vagrant-hostmanager plugin'
+  ansible.builtin.command:
+    cmd: vagrant plugin install vagrant-hostmanager
+  when:
+    - vagrant_qemu
+    - "'vagrant-hostmanager' not in vagrant_plugin_list.stdout"
+
+- name: 'install socket_vmnet'
+  community.general.homebrew:
+    name: socket_vmnet
+    state: present
+  when: vagrant_qemu
+
+# socket_vmnet's daemon holds the root vmnet.framework membership so that
+# `vagrant up` itself never needs sudo (unlike the plugin's other vmnet
+# backends, which do and leave root-owned state files behind).
+- name: 'start the socket_vmnet daemon'
+  become: true
+  ansible.builtin.command:
+    cmd: brew services start socket_vmnet
+  register: socket_vmnet_service_result
+  changed_when: "'Successfully started' in socket_vmnet_service_result.stdout"
+  when: vagrant_qemu
