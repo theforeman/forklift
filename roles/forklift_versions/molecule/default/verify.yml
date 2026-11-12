@@ -24,6 +24,30 @@
           - pulpcore_repositories_version == '3.39'
           - candlepin_repositories_version == '4.3'
 
+    - name: Check Foreman 5.1 install and upgrade versions by OS
+      include_tasks: tasks/verify_51_case.yml
+      loop:
+        - {os: almalinux9, scenario: foreman}
+        - {os: centos9-stream, scenario: foreman}
+        - {os: debian12, scenario: foreman}
+        - {os: debian13, scenario: foreman}
+        - {os: ubuntu2204, scenario: foreman}
+        - {os: ubuntu2404, scenario: foreman}
+        - {os: almalinux9, scenario: foreman, upgrade: true}
+        - {os: centos9-stream, scenario: foreman, upgrade: true}
+        - {os: debian12, scenario: foreman, upgrade: true}
+        - {os: debian13, scenario: foreman, upgrade: true}
+        - {os: ubuntu2204, scenario: foreman, upgrade: true}
+        - {os: ubuntu2404, scenario: foreman, upgrade: true}
+        - {os: almalinux9, scenario: katello}
+        - {os: centos9-stream, scenario: katello}
+        - {os: centos9-stream, scenario: katello, upgrade: true}
+        - {os: almalinux10, scenario: katello, unsupported: true}
+        - {os: centos10-stream, scenario: katello, unsupported: true}
+      loop_control:
+        loop_var: version_case
+        label: "{{ version_case.scenario }} {{ version_case.os }}{{ ' upgrade' if version_case.upgrade | default(false) else ' install' }}"
+
     - name: "Include forklift_versions for nightly installs"
       include_role:
         name: "forklift_versions"
