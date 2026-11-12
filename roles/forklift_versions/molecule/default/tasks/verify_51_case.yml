@@ -1,0 +1,42 @@
+---
+- name: Include forklift_versions for Foreman 5.1
+  include_role:
+    name: forklift_versions
+  vars:
+    forklift_versions_file: "{{ playbook_dir }}/../../../../vagrant/config/versions.yaml"
+    scenario: "{{ version_case.scenario }}"
+    scenario_version: '5.1'
+    scenario_os: "{{ version_case.os }}"
+    upgrade: "{{ version_case.upgrade | default(false) }}"
+
+- name: Ensure supported installations select Foreman 5.1
+  assert:
+    that:
+      - forklift_versions.versions.foreman_repositories_version == '5.1'
+      - forklift_versions.versions.katello_repositories_version == '5.1'
+      - forklift_versions.versions.pulpcore_repositories_version == '3.118'
+      - forklift_versions.versions.candlepin_repositories_version == '4.8'
+  when:
+    - not (version_case.upgrade | default(false))
+    - not (version_case.unsupported | default(false))
+
+- name: Ensure unsupported EL10 installations have no 5.1 mapping
+  assert:
+    that:
+      - forklift_versions.versions == {}
+  when: version_case.unsupported | default(false)
+
+- name: Ensure upgrade paths reach 5.1
+  assert:
+    that:
+      - forklift_upgrade_version_final == '5.1'
+  when: version_case.upgrade | default(false)
+
+- name: Ensure the Katello EL9 upgrade path includes supported releases
+  assert:
+    that:
+      - forklift_upgrade_versions.versions == ['4.21', '5.0', '5.1']
+  when:
+    - version_case.scenario == 'katello'
+    - version_case.os == 'centos9-stream'
+    - version_case.upgrade | default(false)
